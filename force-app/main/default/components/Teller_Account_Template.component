@@ -1,0 +1,1307 @@
+<apex:component >
+
+<style>
+    .transactionItemRecord:hover {
+        box-shadow: 1px 1px 8px #5A5A5A;
+    } 
+    
+    .accountExpanderHeader{
+        padding-left:7px;
+    }
+    
+    .posting-item{
+            border-bottom:1px solid rgb(223, 213, 190); 
+            
+           
+    }
+    
+    .posting-item:hover{
+              background-color:whitesmoke;
+    }
+    
+    .tab-button:hover{
+        box-shadow: 1px 1px 8px #5A5A5A;
+    }
+</style>
+
+
+    <apex:attribute name="accountStatus" type="String" required="true" description="the account status"/>
+
+    <div style="margin-bottom: 10px;">
+        <span id="anchor{{account.Name}}" class="anchor{{account.Name}}"></span>
+        <label class="accountTitle pageSubTitleGray hidden-xs" style="margin-left: 5px;">Account: {{account.AccountType}} ({{account.Name | filter_accountNumber}})</label>
+        <label class="accountTitle pageSubTitleGray visible-xs-block" style="margin-left: 5px;">Account: {{account.AccountType}} <br/> ({{account.Name | filter_accountNumber}})</label>
+    </div>
+    <div class="verticalScroller verticalScrollSection" ng-controller="controllerAccount" ng-init="SelectedAccount=account" >
+        
+        
+        <label class="sectionTitle hidden-xs">Summary</label>
+        <div class="summaryContainer">
+            <div class="accountInfoHeader" ng-init="openAccDSX = false"  ng-mouseover="openAccDSX = true" ng-mouseleave="openAccDSX = false" style="float: left; width: 490px; height: 71px; border: rgb(192, 192, 192) solid 1px; background: rgb(184, 184, 184);">
+                <div class="hidden-xs" style="float: left;">
+                    <img ng-src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/account.png')}" style="height: 70px; margin-left: 10px; opacity: 0.4;"></img>
+                </div>
+                <div style="margin-left:30px; margin-right:30px; float:right; margin-top:9px;">
+                    <div class="textWhite">{{account.Title}}</div>
+                    <div class="textMediumDarkGray" style="float: right; position: relative;">{{account.AccountShortName}}</div>
+                    <div style="position: relative;">
+                    <div ng-show="openAccDSX" style="position: absolute; margin-top:-76px;z-index: 1;">                       
+                        <div class="GrayCircleItems" style="position: relative;" ng-click="PopoutAccountDSXDetails(account.AccountNo)">
+                            <div class="GrayCircle GoldCircleButton" ng-class="{'GrayCirleOpen' : openAccDSX}"   style="box-shadow: rgb(137, 137, 137) 1px 1px 2px; margin-bottom: 15px; margin-left: 4px; background: rgb(0, 161, 224); border: 1px solid rgb(149, 149, 149);">
+                            <img width="80%"      style="margin-left:4px; margin-top:3px;"                        
+                                ng-src="/resource/1430213855000/Teller_Includes/Teller_Includes/media/dsxLogo.png"  onerror="this.onerror=null; this.src='/resource/1431522913000/Teller_Includes/Teller_Includes/media/user_error.png';">                                
+                                <!-- <div class="textSmallerWhiteBold GrayCircleLabel" ng-class="{'GrayCircleLabelHover' : openAccDSX}">{{holder.Name}}</div> -->                               
+                            </img>
+                            </div>
+                            <div class="textSmallerWhiteBold GrayCircleLabel" ng-class="{'GrayCircleLabelHover' : openAccDSX}">DSX Record</div>
+                        </div>
+                    </div>
+                </div>  
+                    
+                    
+                    
+                    
+                </div>                
+            </div>
+                        
+            <div class="mb-accountOptions visible-xs-block" ng-init="mbAccMenu = false" ng-click="mbAccMenu == true ?  mbAccMenu = false : mbAccMenu = true">
+                <img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/grid.png')}"></img>
+            </div>
+            
+            <div class="smallTile hidden-xs" ng-class="GetAccountStatusTileClass('{!AccountStatus}')" style="float: right; border: rgb(205, 205, 205) solid 1px;">
+                <div class="tileIndicator"></div>
+                <div class="tileBody" style="
+                    /* min-height: 65px; */
+                    min-width: 150px;
+                    background: rgb(253, 253, 253);
+                    ">
+                    <div class="tileContent">
+                        <label class="tileValue tileValueText ng-binding">{!AccountStatus}</label>
+                        <label class="tileTitle tileTitleText">Account Status</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tileContent goldTile" style="float: left;" ng-style="account.AccountHolders != null && {'width' : '286px'}">
+                <div class="tileTitle tileTitleText" style="color: white; margin-left: 10px; margin-top: 5px;">{{account.Lines[0].Title}}</div>
+                <div class="tileValue tileValueText" style="color: white; float: right; margin-right: 20px;">{{account.Lines[0].Ccy | filter_currencytosymbol}}{{account.Lines[0].Amount | number: 2}}</div>
+            </div>
+            <div class="tileContent goldTile accStatusTile" style="float:right;" ng-style="account.AccountHolders != null && {'width' : '286px', 'float' : 'left', 'margin-left' : '5px'}">
+                <div class="tileTitle tileTitleText" style="color: white; margin-left: 10px; margin-top: 5px;">{{account.Lines[1].Title}}</div>
+                <div class="tileValue tileValueText" style="color: white; float: right; margin-right: 20px;">{{account.Lines[1].Ccy | filter_currencytosymbol}}{{account.Lines[1].Amount | number: 2}}</div>
+            </div>          
+            <div ng-if="account.AccountHolders != null" ng-init="openAccHolders = false" class="tileContent goldTile hidden-xs" style="float: left;margin-left: 5px;width: 69px;background: rgb(107, 134, 179); position:relative; cursor: pointer;" ng-mouseover="openAccHolders = true" ng-mouseleave="openAccHolders = false">
+                <div style="color:  white; text-align: center; margin-top: 20px;" class="tileValue tileValueText ng-binding">J</div>
+                <div style="position: absolute; height: 30px; width:  100%;"></div>
+                <div ng-show="openAccHolders" style="position: absolute; left: 11px; margin-top: 30px; z-index: 1;">
+                    <div class="GrayCircleItems" ng-class="{'GrayCircleItemsOpen' : openAccHolders}" ng-repeat="holder in account.AccountHolders.Items track by holder.Id" style="position: relative;" ng-click="GotoJointAccountHolder(holder)">
+                        <img class="GrayCircle GoldCircleButton" ng-class="{'GrayCirleOpen' : openAccHolders}" 
+                            style="box-shadow: rgb(137, 137, 137) 1px 1px 2px; margin-bottom: 15px; margin-left: 4px; background: rgb(0, 161, 224); border: 1px solid rgb(149, 149, 149);" 
+                            ng-src="{{holder.ImageURL}}"  onerror="this.onerror=null; this.src='/resource/1431522913000/Teller_Includes/Teller_Includes/media/user_error.png';">                                
+                            <!-- <div class="textSmallerWhiteBold GrayCircleLabel" ng-class="{'GrayCircleLabelHover' : openAccHolders}">{{holder.Name}}</div> -->                               
+                        </img>
+                        <div class="textSmallerWhiteBold GrayCircleLabel" ng-class="{'GrayCircleLabelHover' : openAccHolders}">{{holder.Name}}</div>
+                    </div>
+                </div>  
+            </div>  
+
+            <div class="mb-accountOptionsMenu visible-xs-block" ng-show="mbAccMenu == true">
+                <ul class="mb-accountOptionsMenuList">
+                    <li class="mb-accountOptionsMenuListItem" ng-click="ActivateOption('TransactionHistory')">
+                        <div class="textSmallerWhite">TH</div>
+                        <div class="textBlack">Transaction History</div>
+                    </li>
+                    <li class="mb-accountOptionsMenuListItem" ng-click="ActivateOption('OnlineBankingPayments')">
+                        <div class="textSmallerWhite">TH</div>
+                        <div class="textBlack">Online Banking Payments</div>
+                    </li>
+                    <li class="mb-accountOptionsMenuListItem" ng-click="ActivateOption('AccountMandates')">
+                        <div class="textSmallerWhite">SM</div>
+                        <div class="textBlack">Signatories &amp; Mandates</div>
+                    </li>
+                    <li class="mb-accountOptionsMenuListItem" ng-click="ActivateOption('AwaitingApproval')">
+                        <div class="textSmallerWhite">AA</div>
+                        <div class="textBlack">Awaiting Authorisation</div>
+                    </li>
+                </ul>
+            </div>          
+        </div>
+        
+        <!-- ng-controller="controllerAccount" ng-init="SelectedAccount=account" -->
+        <div class="accountExpanderContainer">  
+                 
+        
+            
+            <div class="hidden-xs sectionTitle accountExpanderHeader" ng-click="ExpandedTab = 'FunctionGroups';FullScreenOption = !FullScreenOption;" ng-class="{accountExpanderHeaderSelected : ExpandedTab == 'FunctionGroups'}"
+            ng-show="!FullScreenOption || ExpandedTab == 'FunctionGroups'">
+              
+                 Function Groups     
+    
+           
+            </div>
+            <div class="accountExpanderContent verticalScroller hidden-xs" ng-show="ExpandedTab == 'FunctionGroups'">
+            
+            
+                    <div style="" ng-controller="controllerAccountFunctions" ng-init="Account=SelectedAccount">                        
+                        <ul class="accountFunctionRootsContainer textSmallerWhite" ng-init="Initialise()">
+                            <li class="accountFunctionRoot" ng-repeat="root in account.AccountFunctionRoots track by root.RootId" ng-click="onClickFunctionRoot(root)" ng-class="GetAccountFunctionRootTileClass(root.Title)">
+                                <div class="accountFunctionRootContent" ng-bind-html="root.Title"></div>                        
+                                <img class="accountFunctionRootIcon" ng-src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/more.png')}"></img>
+                            </li>
+
+                            <li> 
+                                <div class="accountFunctionContainer" ng-class="{accountFunctionContainerShow : SelectedRoot != null}">
+                                     <div class="textSmallDarkGray" style="margin-top: 10px; margin-left: 15px;" ng-bind-html="SelectedRoot.Title"></div>
+                                     <img class="closeBtn" ng-src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/close.png')}" ng-click="onClickCloseFunctions()" style="top: 0;"></img>
+                                     <div class="accountFunctionsListContainer">
+                                         <ul class="accountFunctionList" style="visibility: visible;">
+                                            <li class="accountFunction" ng-repeat="function in SelectedRoot.AccountFunctions track by function.FunctionId" ng-click="onClickFunction(function)">
+                                                <div class="accountFunctionContent" ng-bind-html="function.Title"></div>                                            
+                                            </li>
+                                         </ul>
+                                     </div>
+                                </div>
+
+                            </li>
+                        </ul>
+                    </div>
+            </div>
+
+            <!-- <div class="sectionTitle accountExpanderHeader" ng-click="ExpandedTab = 'TransactionHistory'" ng-class="{accountExpanderHeaderSelected : ExpandedTab == 'TransactionHistory'}"> -->
+            <div class="sectionTitle accountExpanderHeader" ng-click="ExpandedTab = 'TransactionHistory'; FullScreenOption = !FullScreenOption;" ng-class="GetAccountFunctionClass('TransactionHistory')"
+            
+            ng-show="!FullScreenOption || ExpandedTab == 'TransactionHistory'">
+            
+      
+                 Transaction History
+           
+            </div>  
+            <div class="THContent" ng-style="{ height: FullScreenOption ? 'calc(100% - 43px)' : 'calc(100% - 215px)' }"
+            style="position: relative;" ng-show="ExpandedTab == 'TransactionHistory'" ng-controller="controllerTransactionHistory" ng-init="Initialise(account.Name, CustomerDetails.Salutation + ' ' + CustomerDetails.FirstName + ' ' + CustomerDetails.LastName)">
+                
+                <div class="smalltoolbarButton" style="position: absolute; top: -36px; right: 240px;" >
+                            <div >
+                                <input style="width:160px;height:30px;padding-left:5px;border:2px solid #b3995d;" type="text" ng-model="tranFilter" placeholder="Narrative"/>
+                            </div>                  
+                        </div>
+                        
+                <div class="smalltoolbarButton" style="position: absolute; top: -36px; right: 130px;" >
+                            <div >
+                                <input style="width:100px;height:30px;padding-left:5px;border:2px solid #b3995d;" type="text" ng-model="tranFilterAmount" placeholder="Amount"/>
+                            </div>                  
+                        </div>
+                
+                <div class="smalltoolbarButton" style="position: absolute; top: -36px; right: 15px;" ng-click="GetTransactionHistory()">
+                            <div class="imgCircle">
+                                <img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_refresh.png')}"></img>
+                            </div>                  
+                        </div>
+                <div class="smalltoolbarButton" style="position: absolute; top: -36px; right: 55px;" ng-click="Print()">
+                            <div class="imgCircle">
+                                <img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_print.png')}"></img>
+                            </div>                  
+                        </div>
+                <div class="smalltoolbarButton" style="position: absolute; top: -36px; right: 95px;" ng-click="ShowHideFilterPopup($event)">
+                            <div class="imgCircle">
+                                <img ng-src="{{Filtered == true && '{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_filter_filled.png')}' || '{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_filter.png')}'}}"></img>
+                            </div>                  
+                        </div>
+                
+                <div class="accountExpanderContent" style="overflow-y: hidden; height:100%;">
+                <div ng-class="GetContainerClassName()" style="margin: 5px; margin-right: 0px; height: 100%; position: relative;">     
+                        
+                        <div style="background: rgb(249, 249, 249); margin: -5px;" class="verticalScroller transactionHistoryContainer">
+                            <!--<div class="transactionItem" ng-repeat="transaction in Transactions.ResponseRoot.transactionDetailsField">-->
+                            <div class="transactionItem" ng-repeat="transaction in GetFilteredTransactions()">
+                                <div style="margin: 4px;margin-left: 4px;background: rgb(223, 213, 190);width: 13px;display: table-cell;border: 4px solid white;">
+                                </div>
+                                <div style="margin-left: 3px; margin-top: 3px;display: table-cell;vertical-align: middle;">
+                                    <div class="tileTitleTextBold" style="margin-top: 3px; color: #BAB2A1;">
+                                        <span>{{transaction.TransactionDateField | date : 'dd/MM/yyyy'}}</span>
+                                        <span> - </span>                                        
+                                        <span ng-bind-html="transaction.TransactionNameField"></span>
+                                    </div>
+                                    <div class="sm-mobileText textBlack" style="margin-top: 2px;white-space: initial;line-height: 16px;margin-bottom: 3px;">
+                                        <div ng-if="transaction.TransactionReferenceField != ''" ng-bind-html="transaction.TransactionReferenceField"></div>
+                                        <div ng-if="transaction.TransactionValueDateField != ''">Value Date: {{transaction.TransactionValueDateField | date : 'dd/MM/yyyy'}}</div>
+                                        <div ng-if="transaction.NarrativeLine1Field != ''" ng-bind-html="transaction.NarrativeLine1Field"></div>
+                                        <div ng-if="transaction.NarrativeLine2Field != ''" ng-bind-html="transaction.NarrativeLine2Field"></div>
+                                        <div ng-if="transaction.NarrativeLine3Field != ''" ng-bind-html="transaction.NarrativeLine3Field"></div>
+                                        <div ng-if="transaction.NarrativeLine4Field != ''" ng-bind-html="transaction.NarrativeLine4Field"></div>                                        
+                                        <div style="color:white;" ng-if="transaction.TransactionReferenceField == '' && transaction.NarrativeLine1Field == '' && transaction.NarrativeLine2Field == '' && transaction.NarrativeLine3Field == '' && transaction.NarrativeLine4Field == ''">.</div>
+                                        
+                                    </div>
+<!--                                    <div class="textBlack" style="overflow: hidden; max-width: 630px; color: white;" ng-if="transaction.NarrativeLine1Field == ''">
+                                        {{transaction.NarrativeLine1Field}}, {{transaction.NarrativeLine2Field}}, {{transaction.NarrativeLine3Field}}, {{transaction.NarrativeLine4Field}}, {{transaction.TransactionReferenceField}}
+                                    </div> -->
+                                </div>
+                                
+                                
+                                <div style="display: table-cell;vertical-align: middle;">
+                                    <div style="float:right; right:0; padding-left: 5px; padding-right: 8px; background: white;">
+                                    <div>
+                                        <div class="textMediumDarkGray colorGreen" style="font-size: 18px; float:  right;" ng-if="transaction.MoneyInField.length > 0">
+                                            <div style="float: right;">{{transaction.CCYField | filter_currencytosymbol}}{{transaction.MoneyInField | number : 2}}</div>
+                                            <!-- <img style="height: 10px; margin-right: 3px;" src="{!URLFOR($Resource.Teller_Includes_Temp, '/Teller_Includes_Temp/arrow_up_green.png')}"/>  -->
+                                        </div>
+                                        <div class="textMediumDarkGray colorRed" style="font-size: 18px; float:  right;" ng-if="transaction.MoneyOutField.length > 0">                                          
+                                            <div style="float: right;">-{{transaction.CCYField | filter_currencytosymbol}}{{transaction.MoneyOutField | number : 2}}</div>
+                                            <!-- <img style="height: 10px; margin-right: 3px;" src="{!URLFOR($Resource.Teller_Includes_Temp, '/Teller_Includes_Temp/arrow_down_red.png')}"/>  -->
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="tileTitleText" style="margin-top:  -2px; float:  right; text-align: right;">
+                                            Balance: {{transaction.CCYField | filter_currencytosymbol}}{{transaction.RunningBalanceField | number: 2}}
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            
+                            <div class="transactionItem" style="background: rgb(190, 175, 139);">
+                                <div style="float: left;margin: 4px;margin-left: 4px;background: rgb(223, 213, 190);width: 5px;height: 42px;"></div>    
+                                 <div class="tileValueText" style="float: left; margin-left: 3px; margin-top: 3px; margin-left: 11px; margin-top: 11px; color:white;">
+                                     Available Balance
+                                 </div>
+                                <div class="tileValueText" style="float:right; margin-top: 10px; position: absolute; right:0; padding-left: 5px; padding-right: 18px; color: white;">
+                                     {{Transactions.ResponseRoot.transactionDetailsField[0].CCYField  | filter_currencytosymbol}}{{Transactions.ResponseRoot.availableBalanceField | number : 2}}                           
+                                </div>
+                            </div>
+                            
+                        </div>
+                        
+                        <div class="transactionHistoryContainer" style="background: white; position: absolute; top: 5px; margin:-5px; overflow: hidden; height: 100%;" ng-show="Loading">
+                            <div id="spacer" style="height:  40%;"></div>
+                            <img class="kendo-loading" src="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/styles/Material/loading-image.gif')}"></img>
+                        </div>
+                        
+                            <div class="filterpopup" ng-if="FilterOpen" ng-init="InitialiseKendoInputs()" style="height: 177px; width: 300px; background: white; border: solid 1px rgb(221, 220, 220); right: 5px; position: absolute; top: 3px; box-shadow: 1px 1px 3px black;">
+                        
+                            <div class="md_group" style="margin-top: 26px; margin-left: 10px; width: 280px;">
+                                <div class="md_input" style="height: 37px; position: absolute; width: 270px;"></div>
+                                <input class="kendoInputFromDate" kendo-date-picker="kendo-date-picker" k-format="'dd/MM/yyyy'" k-on-change="OnKendoDateTimeChanged(kendoEvent)" ng-model="DateFrom" style="font-size:16px; width: 280px;  margin-top: 0.5px; border: none;"></input>                            
+                                <span class="md_highlight"></span>
+                                <span class="md_bar" style="z-index: 2; margin-top: 4px;"></span>
+                                <label class="md_label">From</label>
+                            </div>
+                            <div class="md_group" style="margin-top: 26px; margin-left: 10px; width: 280px;">
+                                <div class="md_input" style="height: 37px; position: absolute; width: 270px;"></div>
+                                <input class="kendoInputToDate" kendo-date-picker="kendo-date-picker" k-format="'dd/MM/yyyy'" k-on-change="OnKendoDateTimeChanged(kendoEvent)" ng-model="DateTo" style="font-size:16px; width: 280px;  margin-top: 0.5px; border: none;"></input>                            
+                                <span class="md_highlight"></span>
+                                <span class="md_bar" style="z-index: 2; margin-top: 4px;"></span>
+                                <label class="md_label">To</label>
+                            </div>
+                            <div style="float:left; margin-left: 10px;">
+                                <input class="goldButton" type="button" value="CLOSE" ng-click="ShowHideFilterPopup($event)"></input>
+                            </div>
+                            <div style="float:right; margin-right: 5px;">
+                                <input class="goldButton" type="button" value="CLEAR" ng-click="OnClear()"></input>
+                                <input class="goldButton" type="submit" value="APPLY" ng-click="GetTransactionHistory()"></input>
+                            </div>      
+                        </div>
+                        
+                        <div ng-show="false">
+                            <div class="MiniStatement" arb-Dynamic-Html="arbDynamicHtml" dynamic-template="{{PrintTemplate}}"></div>
+                        </div>
+
+                         <!-- <div kendo-grid="kendo-grid" class="{{account.Name}} transactionHistory" style="font-size: 15px;" options="mainGridOptions" k-on-filter-menu-init="kendofilterInit(kendoEvent)" ng-init="Initialise(account.Name)"></div>  -->
+                     </div>
+            </div>
+            </div>
+            
+            
+            
+            <!-- ONLINE BANKING START -->
+            <div class="sectionTitle accountExpanderHeader" ng-click="ExpandedTab = 'OnlineBankingPayments'; FullScreenOption = !FullScreenOption;" ng-class="GetAccountFunctionClass('OnlineBankingPayments')"
+            
+            ng-show="!FullScreenOption || ExpandedTab == 'OnlineBankingPayments'">
+            
+      
+                 Online Banking Payments
+           
+            </div>  
+            <div class="THContent" ng-style="{ height: FullScreenOption ? 'calc(100% - 43px)' : 'calc(100% - 215px)' }"
+            style="position: relative;" ng-show="ExpandedTab == 'OnlineBankingPayments'" ng-controller="controllerOnlineBanking" ng-init="Initialise(account.Name, CustomerDetails.Salutation + ' ' + CustomerDetails.FirstName + ' ' + CustomerDetails.LastName)">
+                
+                <div class="smalltoolbarButton" style="position: absolute; top: -36px; right: 240px;" >
+                            <div >
+                                <input style="width:160px;height:30px;padding-left:5px;border:2px solid #b3995d;" type="text" ng-model="tranFilter" placeholder="Narrative"/>
+                            </div>                  
+                        </div>
+                        
+                <div class="smalltoolbarButton" style="position: absolute; top: -36px; right: 130px;" >
+                            <div >
+                                <input style="width:100px;height:30px;padding-left:5px;border:2px solid #b3995d;" type="text" ng-model="tranFilterAmount" placeholder="Amount"/>
+                            </div>                  
+                        </div>
+                
+                <div class="smalltoolbarButton" style="position: absolute; top: -36px; right: 15px;" ng-click="GetOnlineBankingPayments()">
+                            <div class="imgCircle">
+                                <img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_refresh.png')}"></img>
+                            </div>                  
+                        </div>
+                <div class="smalltoolbarButton" style="position: absolute; top: -36px; right: 55px;" ng-click="Print()" ng-show="false">
+                            <div class="imgCircle">
+                                <img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_print.png')}"></img>
+                            </div>                  
+                        </div>
+                        
+                <!--        
+                <div class="smalltoolbarButton" style="position: absolute; top: -36px; right: 95px;" ng-click="ShowHideFilterPopup($event)">
+                            <div class="imgCircle">
+                                <img ng-src="{{Filtered == true && '{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_filter_filled.png')}' || '{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_filter.png')}'}}"></img>
+                            </div>                  
+                        </div>
+                        -->
+                
+                <div class="accountExpanderContent" style="overflow-y: hidden; height:100%;">
+                <div ng-class="GetContainerClassName()" style="margin: 5px; margin-right: 0px; height: 100%; position: relative;">     
+                        
+                        <div style="background: rgb(249, 249, 249); margin: -5px;" class="verticalScroller transactionHistoryContainer">
+                            <!--<div class="transactionItem" ng-repeat="transaction in Transactions.ResponseRoot.transactionDetailsField">-->
+                            
+                            <!--
+                            {{Transactions}}<br/>
+                            {{GetFilteredTransactions()}}
+                            -->
+                                                   
+                            
+                            
+                            <div class="transactionItem" ng-repeat="transaction in GetFilteredTransactions()">
+                                <div style="margin: 4px;margin-left: 4px;background: rgb(223, 213, 190);width: 13px;display: table-cell;border: 4px solid white;">
+                                </div>
+                                <div style="margin-left: 3px; margin-top: 3px;display: table-cell;vertical-align: middle;">
+                                <div>
+                                    <div class="tileTitleTextBold" style="margin-top: 3px; ">
+                                        <div style="width:50%;display:inline-block">
+                                            <div style="color: #BAB2A1;width:80px;display:inline-block;">Input Date :</div>
+                                            {{transaction.DateReceived | date : 'dd/MM/yyyy'}}
+                                            
+                                         </div>
+                                         <div style="width:50%;display:inline-block">
+                                            <span style="color: #BAB2A1;">Action Date :</span>
+                                            {{transaction.PayStatusDate | date : 'dd/MM/yyyy'}}
+                                            
+                                         </div>
+                                     </div>   
+                                        
+                                        
+                                           
+                                                                         
+                                      
+                                    </div>
+                                    <div class="sm-mobileText " style="margin-top: 2px;white-space: initial;line-height: 16px;margin-bottom: 3px;">
+                                        
+                                        <div class="tileTitleTextBold" style="display:inline-block;width:80px;color: #BAB2A1;">
+                                            Payee:
+                                        </div>
+                                    
+                                        <div style="display:inline-block;min-width:150px;">{{transaction.PayeeName}}</div>
+                                        <div style="display:inline-block;width:60px;">{{transaction.PayBranchNo}}</div> 
+                                        <div style="display:inline-block;width:60px;">
+                                         {{transaction.PayAccountNo}}
+                                        </DIV>
+                                    </div>
+                             
+                                    <div class="sm-mobileText " style="margin-top: 2px;white-space: initial;line-height: 16px;margin-bottom: 3px;">                                        
+                                        <div class="tileTitleTextBold" style="display:inline-block;min-width:80px;color: #BAB2A1;">
+                                            Ref:
+                                        </div>
+                                        <div style="display:inline-block;">
+                                         {{transaction.Memo}} ({{transaction.PaymentType}})
+                                        </div>
+                                    </div>
+                              
+                                    <div class="sm-mobileText" style="margin-top: 2px;white-space: initial;line-height: 16px;margin-bottom: 3px;">
+                                        
+                                        <div class="tileTitleTextBold" style="display:inline-block;min-width:80px;color: #BAB2A1;">
+                                            User:
+                                        </div>
+                                        <div style="display:inline-block;">
+                                         {{transaction.Username}}
+                                        </div>
+                                    </div>
+                                    
+                                   <div ng-hide="transaction.FailReason == 'OK'" style="color:red;">
+                                       {{transaction.FailReason}}
+                                   </div>
+                                    
+                                    
+                                </div>
+                                    
+                             
+                                
+                                
+                                <div style="display: table-cell;vertical-align: middle;">
+                                    <div style="float:right; right:0; padding-left: 5px; padding-right: 8px; background: white;">
+                                    <div>
+                                        <div class="textMediumDarkGray colorGreen" style="font-size: 18px; float:  right;" ng-if="transaction.Amount.length > 0">
+                                            <div style="float: right;">{{transaction.CCYField | filter_currencytosymbol}}{{transaction.Amount| number : 2}}</div>                                  
+                                        </div>
+                                 
+                                    </div>
+                                    <div>
+                                        <div class="tileTitleText" style="margin-top:  -2px; float:  right; text-align: right;">
+                                             {{transaction.AmountCurrency}} : {{transaction.Amount | number: 2}}
+                                             <div>
+                                             {{transaction.PaymentStatus}}
+                                             </div>
+                                        </div>
+                                     
+                                    </div>
+                                </div>
+                                   </div>
+                            </div>  
+                            
+                        </div>
+                        
+                        <div class="transactionHistoryContainer" style="background: white; position: absolute; top: 5px; margin:-5px; overflow: hidden; height: 100%;" ng-show="Loading">
+                            <div id="spacer" style="height:  40%;"></div>
+                            <img class="kendo-loading" src="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/styles/Material/loading-image.gif')}"></img>
+                        </div>
+                        
+                            <div class="filterpopup" ng-if="FilterOpen" ng-init="InitialiseKendoInputs()" style="height: 177px; width: 300px; background: white; border: solid 1px rgb(221, 220, 220); right: 5px; position: absolute; top: 3px; box-shadow: 1px 1px 3px black;">
+                        
+                            <div class="md_group" style="margin-top: 26px; margin-left: 10px; width: 280px;">
+                                <div class="md_input" style="height: 37px; position: absolute; width: 270px;"></div>
+                                <input class="kendoInputFromDate" kendo-date-picker="kendo-date-picker" k-format="'dd/MM/yyyy'" k-on-change="OnKendoDateTimeChanged(kendoEvent)" ng-model="DateFrom" style="font-size:16px; width: 280px;  margin-top: 0.5px; border: none;"></input>                            
+                                <span class="md_highlight"></span>
+                                <span class="md_bar" style="z-index: 2; margin-top: 4px;"></span>
+                                <label class="md_label">From</label>
+                            </div>
+                            <div class="md_group" style="margin-top: 26px; margin-left: 10px; width: 280px;">
+                                <div class="md_input" style="height: 37px; position: absolute; width: 270px;"></div>
+                                <input class="kendoInputToDate" kendo-date-picker="kendo-date-picker" k-format="'dd/MM/yyyy'" k-on-change="OnKendoDateTimeChanged(kendoEvent)" ng-model="DateTo" style="font-size:16px; width: 280px;  margin-top: 0.5px; border: none;"></input>                            
+                                <span class="md_highlight"></span>
+                                <span class="md_bar" style="z-index: 2; margin-top: 4px;"></span>
+                                <label class="md_label">To</label>
+                            </div>
+                            <div style="float:left; margin-left: 10px;">
+                                <input class="goldButton" type="button" value="CLOSE" ng-click="ShowHideFilterPopup($event)"></input>
+                            </div>
+                            <div style="float:right; margin-right: 5px;">
+                                <input class="goldButton" type="button" value="CLEAR" ng-click="OnClear()"></input>
+                                <input class="goldButton" type="submit" value="APPLY" ng-click="GetOnlineBankingPayments()"></input>
+                            </div>      
+                        </div>
+                        
+                        <div ng-show="false">
+                            <div class="MiniStatement" arb-Dynamic-Html="arbDynamicHtml" dynamic-template="{{PrintTemplate}}"></div>
+                        </div>
+
+                         <!-- <div kendo-grid="kendo-grid" class="{{account.Name}} transactionHistory" style="font-size: 15px;" options="mainGridOptions" k-on-filter-menu-init="kendofilterInit(kendoEvent)" ng-init="Initialise(account.Name)"></div>  -->
+                     </div>
+            </div>
+            </div>
+            
+            
+            
+            
+            
+            
+            <!-- ONLINE BANKING END -->
+            
+            
+            
+            
+            
+            <!-- <div class="sectionTitle accountExpanderHeader" ng-click="ExpandedTab = 'AccountMandates'" ng-class="{accountExpanderHeaderSelected : ExpandedTab == 'AccountMandates'}"> -->
+            <div class="sectionTitle accountExpanderHeader" ng-click="ExpandedTab = 'AccountMandates';FullScreenOption = !FullScreenOption;" ng-class="GetAccountFunctionClass('AccountMandates')"
+            ng-show="!FullScreenOption || ExpandedTab == 'AccountMandates'">
+       
+              Signatories &amp; Mandates
+     
+            </div>  
+            <div class="SMContent" ng-style="{ height: FullScreenOption ? 'calc(100% - 43px)' : 'calc(100% - 215px)' }"
+             style="position: relative; background: rgb(251, 251, 251);" ng-controller="controllerAccountMandates" ng-show="ExpandedTab == 'AccountMandates'">
+                
+                <div class="transactionHistoryContainer verticalScroller" style="position: absolute; height: 100%;">                    
+                    <!-- <div class="sectionTitle" style="padding: 5px; padding-left:10px; font-size: 16px;">Signatories ({{MandateSignatories.signatories.length}})</div> -->
+                    
+                    <div class="sectionTitle" ng-if="ErrorFlag" style="padding: 5px; font-size: 16px; padding-left:10px;">{{ErrorMsg}}</div>
+                    
+                    <ul class="verticalScroller accountsMenu sigMandatesList" style="margin-top: 5px; height: auto; padding: 5px; min-width: 530px; padding-left: 10px; padding-right: 10px;" ng-if="ErrorFlag == false">           
+                        <li ng-repeat="item in MandateSignatories.signatories" style="cursor:pointer; -webkit-user-select: none;" ng-click="GotoCustomer(item)">                
+                            <div class="signatoryItem" style="height: 75px; background: rgb(247, 247, 247); margin-bottom: 3px;">
+                                <div class="signatoryIndicator" ng-class="{'signatoryIndicatorSelected' : isSelected(item.ProspectCustomerId) == true}" style="width: 7px; background: rgb(125, 125, 125); float: left;height: 100%;"></div>
+                                <div style="float: left; position: relative; border-bottom: #B9B9B9 1px solid;">
+                                    <img width="74px" height="74px" src="/servlet/servlet.FileDownload?file={{item.ImageId}}" onerror="this.onerror=null; this.src='{!URLFOR($Resource.Teller_Includes,'/Teller_Includes/media/user_error.png')}';"></img>                                  
+                                </div>
+                                <div class="hidden-xs" style="float: left; height: 100%;background: rgb(221, 221, 221);border: solid 1px rgb(221, 221, 221);margin-left: 3px;">
+                                    <div style="width: 100%; height: 55px;">
+                                        <img ng-class="imageClass" src="/servlet/servlet.FileDownload?file={{item.SignatureId}}" width="150" style="background: white;"></img>
+                                    </div>
+                                    <div class="tileTitleText" style="padding-left: 5px; margin-top: 2px; color: #646464; font-size:12px; background: #F4F4F4;">Signature</div>
+                                </div>                  
+                                
+                                <div class="mb-sig-info" style="float: left; height: 100%; width: calc(100% - 240px); background: rgb(189, 189, 189); margin-left: 3px; padding: 7px; position:relative;">
+                                    
+                                    <div style="position:absolute; bottom: 7px; right: 7px;">
+                                        <div class="textSmallerWhite tag groupTag xs-mobileText" ng-if="item.SignatoryGroup !== undefined">GROUP {{item.SignatoryGroup | uppercase}}</div>  
+                                        <div class="textSmallerWhiteBold tag primaryTag xs-mobileText" ng-if="item.PrimaryAccountHolder == 'Yes'" title="Primary Account Holder">P</div>                                    
+                                    </div>
+                                    
+                                    <div class="sm-mobileText textSmallerWhiteBold" style="width:100%; word-wrap: break-word; white-space: pre-wrap;">{{item.CustomerName}} ({{item.CustomerEBSId}})</div>
+                                    <div class="sm-mobileText textBlack" style="font-size: 13px;">Relationship: {{item.RelationshipToPrimaryApplicant}}</div>
+                                    <div class="sm-mobileText textBlack" style="font-size: 13px;">Type: {{item.RelationshipType}}</div>
+                                </div>
+                                </div>
+                        </li>           
+                    </ul>   
+                    
+                    <div class="sectionTitle" style="padding: 5px; font-size: 16px; padding-left:10px;" ng-if="ErrorFlag == false">Mandates ({{MandateSignatories.mandates.length}})</div>
+                    <div style="width: 100%; padding: 5px; padding-left: 10px; padding-right: 10px;" ng-if="ErrorFlag == false">
+                        <table style="width:100%;font-family: simpleMedium;">
+                            <tbody>                     
+                                <tr ng-repeat="item in MandateSignatories.mandates" style="border-bottom: rgb(251, 251, 251) 2px solid;">
+                                    <td class="mandateAmount sm-mobileText" style="padding: 10px; background: #767676; color: white; width: 240px; border-right: solid 3px rgb(251, 251, 251);">{{item.CcySymbol}}{{item.MandateLimit | number : 2}}</td>
+                                    <td class="sm-mobileText" style="padding: 10px; background: #BDBDBD; color: black;">{{item.Grouping}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>              
+                    
+                </div>
+                
+                <div class="transactionHistoryContainer" style="background: white; position: absolute; overflow: hidden; height: 100%;" ng-show="Loading">
+                    <div id="spacer" style="height:  40%;"></div>
+                    <img class="kendo-loading" src="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/styles/Material/loading-image.gif')}"></img>
+                </div>
+                
+            </div>  
+            
+            <!-- <div class="sectionTitle accountExpanderHeader" ng-click="ExpandedTab = 'AwaitingApproval'" ng-class="{accountExpanderHeaderSelected : ExpandedTab == 'AwaitingApproval'}"> -->
+            <div class="sectionTitle accountExpanderHeader" ng-click="ExpandedTab = 'AwaitingApproval';FullScreenOption = !FullScreenOption;" ng-class="GetAccountFunctionClass('AwaitingApproval')"
+            ng-show="!FullScreenOption || ExpandedTab == 'AwaitingApproval'">
+            
+           
+              Awaiting Approval
+           
+            </div>
+            
+            <!-- height: calc(100% - 215px);    ng-style="{ height: FullScreenOption ? '100%' : 'height: calc(100% - 215px)' }"-->
+            <div class="AAContent" ng-style="{ height: FullScreenOption ? 'calc(100% - 43px)' : 'calc(100% - 215px)' }"
+             style="position: relative; background: rgb(251, 251, 251);" ng-controller="controllerAccountActivity" ng-init="InitialiseSearchCriteria(account.Name)" ng-show="ExpandedTab == 'AwaitingApproval'">
+                <div class="transactionHistoryContainer verticalScroller" style="position: absolute; height: 100%; background: white; padding: 5px;" >
+                    
+                    <div ng-repeat="activity in Activity" class="searchResultItem accSearchResultItem" ng-click="OpenActivity(activity)">                                   
+                        <div class="accSearchResultActivityDateTime" style="padding-right: 15px; border-right: 1px solid gainsboro; width: 95px; display: table-cell;">
+                            <div class="accItemText textMediumDarkGray">{{activity.Activity_Date_Time__c | date:'dd/MM/yyyy' : 'UTC'}}</div>
+                            <div class="accItemText textDarkGray" style="margin-top: -2px;">{{activity.Activity_Date_Time__c | date:'HH:mm:ss'}}</div>
+                        </div>
+                        
+                        <div class="accSearchResultActivityDetails" style="padding-left: 15px; padding-right:15px; display: table-cell; width: 100%;">
+                            <span class="accItemText textMediumDarkGray" ng-bind-html="activity.Activity_Type__c"></span>
+                            <span class="accItemText"> : </span>
+                            <span class="accItemText textMediumDarkGray" ng-bind-html="activity.Activity_Description__c"></span>
+                            <div class="accItemText textDarkGray" style="margin-top: -2px;">{{activity.Created_By_User__r.Name}}</div>
+                        </div>
+                        
+                        <div class="accSearchResultActivityStatus" style="display: table-cell; padding-right:15px; padding-left: 15px; border-left: 1px solid gainsboro;">
+                            <div class="accItemText textDarkGray ng-binding" style="font-size: 12px; margin-top: 1px;">Status</div>
+                            <div class="accItemText textMediumDarkGray ng-binding" style="font-size: 16px; float:left;margin-top:  -2px;">{{activity.Status__c}}</div>
+                        </div>                                      
+                        <!-- <div ng-if="activity.Activity_Type__c == 'Transaction'" ng-class="{colorRed : activity.Activity_Amount__c < 0, colorGreen : activity.Activity_Amount__c > 0}" class="mobileText textMediumDarkGray" style="font-size: 18px; padding-left:15px; border-left: 1px solid gainsboro; display: table-cell; vertical-align: middle;">{{activity.Activity_Currency__c | filter_currencytosymbol}}</div> -->
+                        <div ng-if="activity.Activity_Type__c == 'Transaction'" ng-class="{colorRed : activity.Activity_Amount__c < 0, colorGreen : activity.Activity_Amount__c > 0}" class="accSearchResultActivityAmount accItemText textMediumDarkGray" style="font-size: 18px; display: table-cell; vertical-align: middle; padding-left:15px; border-left: 1px solid gainsboro;">{{activity.Activity_Currency__c | filter_currencytosymbol}}{{activity.Activity_Amount__c | number : 2}}</div>                                                                                                         
+                    </div>  
+                </div>
+                
+                <div class="transactionHistoryContainer" style="background: white; position: absolute; overflow: hidden; height: 100%;" ng-show="Loading">
+                    <div id="spacer" style="height:  40%;"></div>
+                    <img class="kendo-loading" src="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/styles/Material/loading-image.gif')}"></img>
+                </div>
+            </div>
+            
+            <!-- MB 2016-02-26 Add deal informatio start -->
+            <style>
+                .tooltipMo {
+                    position: relative;
+                    display: inline-block;                  
+                }
+
+                .tooltipMo .tooltiptext {
+                    visibility: hidden;
+                    min-width: 250px;
+                    background-color:rgb(152, 152, 152);
+                    color: #fff;
+                    border-radius: 2px;
+                    padding: 5px;
+
+                    /* Position the tooltip */
+                    position: absolute;
+                    z-index: 1;
+                    opacity:0;
+
+                    transition: opacity 1s ease;
+                }
+
+                .tooltipMo:hover .tooltiptext {
+                    visibility: visible;
+                    opacity:1;
+                }
+                </style>
+             <div class="sectionTitle accountExpanderHeader" style="cursor:default" ng-show="account.Deal==false && false">
+              &nbsp;
+            </div> 
+            <div  class="sectionTitle accountExpanderHeader" ng-click="ExpandedTab = 'DealInformation';FullScreenOption = !FullScreenOption" ng-class="GetAccountFunctionClass('DealInformation')" ng-show="account.Deal && (!FullScreenOption || ExpandedTab == 'DealInformation' )">
+                 
+                  {{account.depositAccount === true?'Deposit Information':'Finance Information'}} 
+          
+            </div>
+            <div class="AAContent" ng-style="{ height: FullScreenOption ? 'calc(100% - 43px)' : 'height: calc(100% - 215px)' }"
+                style="position: relative; background: rgb(251, 251, 251);font-size:13px;" ng-controller="controllerAccountActivity" ng-init="account.depositAccount === true?InitialiseDealInfo(account.Name,account.depositAccount):''" ng-show="ExpandedTab == 'DealInformation' && account.depositAccount === true">
+                <div class="accountExpanderContent" style="overflow-y: hidden; height:100%;" ng-show="Loading==false">
+                    <div style="margin: 5px; margin-right: 0px; height: 100%; position: relative;">     
+                        
+                        <div class="verticalScroller transactionHistoryContainer" style="background: rgb(249, 249, 249); margin: -5px;"> 
+                            
+                            <div  ng-click="dealTran.Expand = !dealTran.Expand" ng-repeat="dealTran in dealInfo.depositsInformationField" style="box-shadow: 0 2px 6px -2px #777;">   <!-- style="background: rgb(223, 213, 190);box-shadow: 0 10px 6px -6px #777;padding:5px;" -->
+                            <div class="transactionItem transactionItemRecord">
+                                 <div class="itemBookmark" style="margin: 4px;margin-left: 4px;background: rgb(223, 213, 190);width: 13px;display: table-cell;border: 4px solid white;">
+                                </div> 
+                                
+                                
+                               <div style="display:table;width:100%;"> <!-- main row --> 
+                                <div style="margin-left: 3px; margin-top: 3px;display: table-cell;vertical-align: middle;">
+                                    <div class="tileTitleTextBold" style="margin-top: 3px; color: #b3995d;font-size: 16px;"><!--  -->
+                                        <span>Ref: {{dealTran.dealBranchField}} {{dealTran.dealTypeField}}-{{dealTran.dealRefField}}</span> <div> {{dealTran.dealTypeDescField}}</div>
+                                      
+                                  
+                                     
+                                        
+                                        
+                                        <!-- {{dealTran.profitCapitalisedField=='Y'?'Profit Capitalised':'Profit Not Capitalised'}} -->
+                                        <!--
+                                        
+                                        <span class="tooltipMo">
+                                            <img src="/resource/1430213855000/Teller_Includes/Teller_Includes/media/info.png" style="height: 20px;"></img>
+                                            <span class="tooltiptext">
+                                                <div class="tileTitleTextBold">Maturity Instruction</div>
+                                                <div>S/C: {{dealTran.payMaturitySCField}}</div>
+                                                <div>Acc: {{dealTran.payMaturityACField}}</div>
+                                            </span>
+                                        </span>
+                                        -->
+                                    </div>
+                                    
+                                   <div class="tileTitleTextBold">
+                                        <span>Deal period: {{dealTran.dealStartDateField | date : 'dd/MM/yyyy'}} - {{dealTran.dealMaturityDateField | date : 'dd/MM/yyyy'}} </span>
+                                    </div>
+                                                                 
+                                </div>                
+                                
+                                                
+                                <div style="display: table-cell;vertical-align: top;">
+                                    <div class="textMediumDarkGray colorGreen ng-binding" style="margin-top:  -2px; float:  right; text-align: right;font-size: 18px;">
+                                            £{{dealTran.dealCurrentAmtField | number:2}}
+                                        </div>
+                                </div>
+                                <div style="display: table-cell;vertical-align: top;">
+                                    <div style="float:right; right:0; padding-left: 5px; padding-right: 8px;">
+                                    <div>
+                                        <!-- ngIf: transaction.MoneyInField.length > 0 -->
+                                        <div class="textMediumDarkGray colorGreen ng-scope" style="font-size: 18px; ">
+                                            <div style="float: right;"> Rate: {{dealTran.dealProfitRateField| number:2}}%</div>
+                                            
+                                        </div>
+                                        
+                                        <div class="textMediumDarkGray ng-scope" style="font-size: 12px; ">
+                                            <div style="float: right;">If reinvested (AER) {{dealTran.aERField | number:2}}%</div>
+                                            
+                                        </div>
+                                        
+                                        
+                                        <!-- end ngIf: transaction.MoneyInField.length > 0 -->
+                                        <!-- ngIf: transaction.MoneyOutField.length > 0 -->
+                                    </div>
+                                </div>
+                                
+                                
+                                
+                               
+                                
+                                </div>
+                            
+                            </div><!-- main row --> 
+                                 <div class="" ng-show="dealTran.Expand || ExpandAll || dealInfo.depositsInformationField.length < 4" style="background-color:white;padding:3px;display:table;width:100%;padding-left:15px;padding-right:15px;">
+                                    
+                                    <div style="display: table-cell;vertical-align: middle;" ng-show="dealTran.payMaturitySCField">
+                                    <div class="tileTitleTextBold">Maturity Instruction</div>
+                                                <div>S/C: {{dealTran.payMaturitySCField}}</div>
+                                                <div>Acc: {{dealTran.payMaturityACField}}</div>
+                                </div>     
+                                <div style="display: table-cell;vertical-align: middle;" ng-show="dealTran.payProfitSCField">
+                                    <div class="tileTitleTextBold">Profit Instruction</div>
+                                                <div>S/C: {{dealTran.payProfitSCField}}</div>
+                                                <div>Acc: {{dealTran.payProfitACField}}</div>
+                                </div> 
+                                    
+                                    
+                                    <div style="margin-left: 3px; margin-top: 3px;display: table-cell;vertical-align: top;">
+                                  
+                                    <div class="sm-mobileText" style="white-space: initial;line-height: 16px;margin-bottom: 3px;">
+                                    
+                                        <!-- ngIf: transaction.TransactionReferenceField != '' -->
+                                        <div class="tileTitleTextBold">Period: {{dealTran.dealPeriodCodeDescField}}</div>
+                                        <div ng-show="dealTran.profitCapitalisedField">Capitalised: {{dealTran.profitCapitalisedField}}</div>
+                                        
+                                        <!-- end ngIf: transaction.TransactionReferenceField != '' -->
+                                        <!-- ngIf: transaction.TransactionValueDateField != '' -->
+                                      
+                                    </div>                                  
+                                </div>       
+                                
+                                
+                                
+                                
+                                
+                                                    
+                                
+                                <div style="display: table-cell;vertical-align: top;">
+                                    <div style="padding-left: 5px; padding-right: 8px;">
+                                    
+                                    <div>
+                                        <div class="tileTitleText ng-binding" style="margin-top:  -2px; text-align: right;">
+                                            Original :<span style="display: inline-block;width:80px;"> £{{dealTran.dealOriginalAmtField | number:2}}</span>
+                                        </div>
+                                    </div>
+                                    <!--<div>
+                                        <div class="tileTitleText ng-binding" style="margin-top:  -2px; float:  right; text-align: right;">
+                                            Current: £{{dealTran.dealCurrentAmtField | number:2}}
+                                        </div>
+                                    </div>-->
+                                    <div>
+                                        <div class="tileTitleText ng-binding" style="margin-top:  -2px; color: #b3995d; text-align: right;" ng-show="dealTran.dealNextProfitDateField">
+                                            Next Profit Date :<span style="display: inline-block;width:80px;"> {{dealTran.dealNextProfitDateField | date : 'dd/MM/yyyy'}}</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="tileTitleText ng-binding" style="margin-top:  -2px; color: #b3995d; text-align: right;" ng-show="dealTran.dealNextProfitAmountField">
+                                            Next Profit :<span style="display: inline-block;width:80px;"> £{{dealTran.dealNextProfitAmountField| number:2}}</span>
+                                        </div>
+                                    </div>  
+                                    
+                                    <div>
+                                        <div class="tileTitleText ng-binding" style="margin-top:  -2px; color: #b3995d; text-align: right;" ng-show="dealTran.dealTotalProfitAmount ">
+                                            Total Profit :<span style="display: inline-block;width:80px;"> £{{dealTran.dealTotalProfitAmount | number:2}}</span>
+                                        </div>
+                                    </div>                                  
+                                </div>                                
+                                
+                                
+                                
+                              
+                                
+                                </div>
+                                
+                                <div style="display: table-cell;vertical-align: middle;text-align:right;">
+                                     <i class="fa fa-angle-double-down" ng-class="{'fa-angle-double-down' : !dealTran.ShowPostings, 'fa-angle-double-up' : dealTran.ShowPostings  }" aria-hidden="true" style="font-size:24px;background-color:#b3995d;padding:5px;color:#fff;" ng-click="dealTran.ShowPostings = !dealTran.ShowPostings"></i>
+                                    
+                                </div>
+                           
+                                    
+                                   
+                                    
+                                    
+                               
+                                </div>
+                                
+                                
+                                <!--{{dealTran}}-->
+                                
+                                
+                            
+                                <div ng-show="dealTran.ShowPostings" style="border:1px solid rgb(190, 175, 139);margin-bottom:5px;margin-right:3px;" >
+                                    <div  ng-repeat="posting in dealTran.dealPostingsField">
+                                        <div ng-repeat="postingItem in posting.dealPostingItemField" class="tileTitleText posting-item">   
+                                            
+                                            <div ng-show="postingItem.tranDate" style="color:#fff;background-color:rgb(190, 175, 139);padding:3px;">
+                                                {{postingItem.tranDateField | date : 'dd/MM/yyyy'}}
+                                            </div>
+                                            
+                                            <div style="display:table;width:100%;padding:3px;">
+                                                <div style="display: table-cell;vertical-align: middle;width:90px;">
+                                                    <!--<div>{{postingItem.tranDateField | date : 'dd/MM/yyyy'}}</div>-->
+                                                    <div style="color:red;" ng-show="postingItem.tranDateField != postingItem.tranVDateField">{{postingItem.tranVDateField | date : 'dd/MM/yyyy'}}</div>
+                                                </div>
+                                                
+                                                <div style="display: table-cell;vertical-align: middle;padding-left:5px;width:calc (100% - 210px );">
+                                                    <div>{{postingItem.acctNoField}} ({{postingItem.transactionCodeField}}) - {{postingItem.acctShortNameField}}</div>
+                                                    <div>{{postingItem.tranNameField}}</div>
+                                                </div>
+                                                                                 
+                                                <div style="display: table-cell;vertical-align: top;text-align:right;width:120px;">
+                                                    <div>({{postingItem.postingCcyField}}) {{postingItem.tranAmaField | number:2}}</div>
+                                                </div>
+                                            </div>                                      
+                                        </div>    
+                                    </div>
+                                    
+                                    
+                                    
+                              </div>      
+                                
+                                 
+                            </div>
+                          </div> 
+                        </div>                      
+                     </div>
+                </div>
+                
+                <div class="transactionHistoryContainer" style="background: white; position: absolute; overflow: hidden; height: 100%;" ng-show="Loading">
+                    <div id="spacer" style="height:  40%;"></div>
+                    <img class="kendo-loading" src="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/styles/Material/loading-image.gif')}"></img>
+                </div>
+            </div>
+            <div class="AAContent" ng-style="{ height: FullScreenOption ? 'calc(100% - 43px)' : 'calc(100% - 215px)' }"
+            style="position: relative; background: rgb(251, 251, 251);" ng-controller="controllerAccountActivity" ng-init="account.depositAccount === false?InitialiseDealInfo(account.Name,account.depositAccount):''" ng-show="ExpandedTab == 'DealInformation' && account.depositAccount === false">
+                <!-- Would need to add an entry in $scope.$watch('ExpandedTab', function() in controller_accounts.js line 36: switch case: -->
+                <!-- <div class="smalltoolbarButton" style="position: absolute; top: -36px; right: 15px;" ng-click="GetTransactionHistory()">
+                    <div class="imgCircle">
+                        <img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_refresh.png')}"></img>
+                    </div>                  
+                </div>
+                <div class="smalltoolbarButton" style="position: absolute; top: -36px; right: 55px;" ng-click="Print()">
+                    <div class="imgCircle">
+                        <img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_print.png')}"></img>
+                    </div>                  
+                </div>
+                <div class="smalltoolbarButton" style="position: absolute; top: -36px; right: 95px;" ng-click="ShowHideFilterPopup($event)">
+                    <div class="imgCircle">
+                        <img ng-src="{{Filtered == true && '{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_filter_filled.png')}' || '{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_filter.png')}'}}"></img>
+                    </div>                  
+                </div> -->
+                
+                 <div class="transactionHistoryContainer verticalScroller" style="position: absolute; height: 100%; background: white; padding: 5px;" > 
+                    <div style="padding:10px;background:whitesmoke;margin-bottom:6px" ng-click="" ng-show="Loading==false">                                  
+                        <div style="padding-right: 15px; width:50%; float:left">                            
+                            <!-- <div style="color:rgb(194, 194, 194);font-size: 120%;">Finance Account</div> -->
+                            <div>
+                                <span class="accItemText textMediumDarkGray colorGreen" style="width:120px;display:inline-block;font-size:16px !important;">Current Balance</span>
+                                <span class="accItemText"> : </span>
+                                <span class="accItemText colorGreen" style="font-size:16px !important;">£ {{dealInfo.repaymentScheduleField[0].repaymentScheduleSummaryField[0].dealCurrentAmtField | number:2}}</span>
+                            </div>
+                            <div>
+                                <span class="accItemText textMediumDarkGray" style="width:120px;display:inline-block;">Original Amount</span>
+                                <span class="accItemText"> : </span>
+                                <span class="accItemText textMediumDarkGray" >£ {{dealInfo.repaymentScheduleField[0].repaymentScheduleSummaryField[0].dealOriginalAmtField | number:2}}</span>     
+                            </div>                                                        
+                            <div>
+                                <span class="accItemText textMediumDarkGray" style="width:120px;display:inline-block;">Deal Type</span>
+                                <span class="accItemText"> : </span>
+                                <span class="accItemText textDarkGray">{{ dealInfo.repaymentScheduleField[0].repaymentScheduleSummaryField[0].dealTypeField}}</span>  
+                            </div>
+                             <div>
+                                <span class="accItemText textMediumDarkGray" style="width:120px;display:inline-block;">Deal Period</span>
+                                <span class="accItemText"> : </span>
+                                <span class="accItemText textDarkGray">{{ dealInfo.repaymentScheduleField[0].repaymentScheduleSummaryField[0].startDateField| date : 'dd/MM/yyyy' }}
+                                - {{ dealInfo.repaymentScheduleField[0].repaymentScheduleSummaryField[0].rCEMaturityDateField| date : 'dd/MM/yyyy' }}
+                                </span>  
+                            </div>
+                            <div>
+                                <span class="accItemText textMediumDarkGray" style="width:120px;display:inline-block;">Product Code</span>
+                                <span class="accItemText"> : </span>
+                                <span class="accItemText textDarkGray">{{ dealInfo.repaymentScheduleField[0].repaymentScheduleSummaryField[0].marketingProductCodeField}}</span>  
+                            </div>
+                           
+                            <div ng-show="dealInfo.repaymentScheduleField[0].repaymentScheduleSummaryField[0].fixedExpiryDateField">
+                                <span class="accItemText textMediumDarkGray" style="width:120px;display:inline-block;">Expiry Date</span>
+                                <span class="accItemText"> : </span>
+                                <span class="accItemText textDarkGray">{{ dealInfo.repaymentScheduleField[0].repaymentScheduleSummaryField[0].fixedExpiryDateField | date : 'dd/MM/yyyy' }}</span>  
+                            </div>
+                            
+                            
+                            
+                        </div>
+                        
+                       
+                        
+                        
+                        <div style="padding-left: 15px; width:40%; float:left;text-align: right;">
+                            <div>
+                                <span class="accItemText textMediumDarkGray colorGreen" style="font-size:16px !important;">Current Rate</span>
+                                <span class="accItemText"> : </span>
+                                <span class="accItemText colorGreen" style="font-size:16px !important;">{{ dealInfo.repaymentScheduleField[0].repaymentScheduleSummaryField[0].rentRateField | number:2 }}%</span>
+                            </div>
+                            <div>
+                                <span class="accItemText textMediumDarkGray colorGreen" style="font-size:16px !important;">Term</span>
+                                <span class="accItemText"> : </span>
+                                <span class="accItemText colorGreen" style="font-size:16px !important;">{{ dealInfo.repaymentScheduleField[0].repaymentScheduleSummaryField[0].spare1Field }}</span>
+                            </div>
+                            <div>
+                                <span class="accItemText textMediumDarkGray" style="width:120px;display:inline-block;">Monthly Payment</span>
+                                <span class="accItemText"> : </span>
+                                <span class="accItemText textMediumDarkGray">£{{ dealInfo.repaymentScheduleField[0].repaymentScheduleSummaryField[0].totalRepaymentField | number:2 }}</span>  
+                            </div>
+                            
+                            <div>
+                                <span class="accItemText textMediumDarkGray" style="width:120px;display:inline-block;">Finance Status</span>
+                                <span class="accItemText"> : </span>
+                                <span class="accItemText textMediumDarkGray">{{ dealInfo.repaymentScheduleField[0].repaymentScheduleSummaryField[0].financeStatusField}}</span>  
+                            </div>
+                            
+                            
+                          
+  
+                                 <div ng-show="dealInfo.repaymentScheduleField[0].repaymentScheduleSummaryField[0].directDebitSortCodeField" style="margin-top:10px;">
+                                    <div class="tileTitleTextBold">DD Information</div>
+                                                <div>S/C: {{dealInfo.repaymentScheduleField[0].repaymentScheduleSummaryField[0].directDebitSortCodeField}}</div>
+                                                <div>Acc: {{dealInfo.repaymentScheduleField[0].repaymentScheduleSummaryField[0].directDebitAccountNumberField}}</div>
+                                </div> 
+                           
+                            
+                            
+                            
+                            
+                            
+                        </div>      
+                        <div style="clear:both;"></div>
+                    
+                   
+                        <div style="display:table;">
+                            <div style="display:table-cell;padding:3px;color:#fff;">
+                                <div style="padding:5px;background-color:#333333;" ng-show="ShowTab == 'Statement'" class="tab-button">
+                                    Schedule
+                                </div>                                
+                                <div style="padding:5px;background-color:rgb(190, 175, 139);cursor: pointer;" ng-show="ShowTab != 'Statement'" ng-click="ShowTab = 'Statement'" class="tab-button">
+                                    Schedule
+                                </div>
+                            </div>
+                           
+                            <div style="display:table-cell;padding:3px;color:#fff;">
+                                <div style="padding:5px;background-color:#333333;" ng-show="ShowTab == 'Postings'" class="tab-button">
+                                    Postings
+                                </div>                                
+                                <div style="padding:5px;background-color:rgb(190, 175, 139);cursor: pointer;" ng-show="ShowTab != 'Postings'" ng-click="ShowTab = 'Postings'" class="tab-button">
+                                    Postings
+                                </div>
+                            </div>                     
+                        </div>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                       <div ng-show="ShowTab == 'Statement'"> 
+                        
+                        <!-- <div style="color:#ded4c1;"> -->
+                        <div class="transactionItem" style="height:inherit;box-shadow: 0 2px 6px -2px #777; padding:5px; background: rgb(190, 175, 139);color:#fff;" >   <!-- style="background: rgb(223, 213, 190);box-shadow: 0 10px 6px -6px #777;padding:5px;" -->
+                            <div style="margin: 4px;margin-left: 4px;background: rgb(223, 213, 190);width: 13px;display: table-cell;border: 4px solid rgb(190, 175, 139);">
+                            </div>
+                            <div style="width:20%; float:left;">
+                                Date
+                            </div>
+                            <div style="width:20%; float:left;">
+                                Acqu
+                            </div>
+                            <div style="width:20%; float:left;">
+                                Rent
+                            </div>
+                            <div style="width:20%; float:left;">
+                                Total
+                            </div>
+                            <div style="width:20%; float:left;text-align: right;">
+                                Balance
+                            </div>
+                        </div>
+                        <div style="clear:both;"></div>
+                        
+                        
+                        
+                        
+                        
+                        <div class="transactionItem" ng-repeat="dealTran in dealInfo.repaymentScheduleField[0].repaymentDetailField" style="box-shadow: 0 2px 6px -2px #777; padding:5px;">   <!-- style="background: rgb(223, 213, 190);box-shadow: 0 10px 6px -6px #777;padding:5px;" -->
+                            <div style="margin: 4px;margin-left: 4px;background: rgb(223, 213, 190);width: 13px;display: table-cell;border: 4px solid white;">
+                            </div> 
+                        
+                            
+                            <div ng-show="dealTran.schedulePrintLineField" style="font-weight:bold;text-align:center;">                         
+                                {{dealTran.schedulePrintLineField}}
+                            </div>
+                            
+                            <div ng-hide="dealTran.schedulePrintLineField">
+                                <div style="width:20%; float:left;">
+                                    <div ng-style="dealTran.rentFullyPaidOnField==dealTran.repaymentDateField || !dealTran.rentFullyPaidOnField  ?'':{'text-decoration':'line-through','color':'red'}">
+                                        {{dealTran.repaymentDateField | date: 'dd/MM/yyyy'}}
+                                    </div>
+                                    <div ng-show="dealTran.rentFullyPaidOnField!=dealTran.repaymentDateField">
+                                        {{dealTran.rentFullyPaidOnField | date: 'dd/MM/yyyy'}}
+                                    </div>
+                                </div>
+                                <div style="width:20%; float:left;">
+                                    {{dealTran.acquisitionAmountField}}
+                                </div>
+                                <div style="width:20%; float:left;">
+                                    {{dealTran.rentField}}
+                                </div>
+                                <div style="width:20%; float:left;">
+                                    {{dealTran.totalRepaymentField}}
+                                </div>
+                                <div style="color:#78c678 !important; width:20%; float:left;text-align: right;">
+                                    £{{dealTran.runningBalField}}
+                                </div>
+                            </div>
+                        </div>  
+                        </div> <!-- end of statement -->   
+                        
+                        
+                     
+                        <div ng-show="ShowTab == 'Postings'">
+                        
+                            <div style="border:1px solid rgb(190, 175, 139);margin-bottom:5px;margin-right:3px;background-color:#fff;" >
+                                    <div  ng-repeat="posting in dealInfo.repaymentScheduleField[0].dealPostingsField">
+                                        <div ng-repeat="postingItem in posting.dealPostingItemField" class="tileTitleText posting-item">   
+                                            
+                                            <div ng-show="postingItem.tranDate" style="color:#fff;background-color:rgb(190, 175, 139);padding:3px;">
+                                                {{postingItem.tranDateField | date : 'dd/MM/yyyy'}}
+                                            </div>
+                                            
+                                            <div style="display:table;width:100%;padding:3px;">
+                                                <div style="display: table-cell;vertical-align: middle;width:90px;">
+                                                    <!--<div>{{postingItem.tranDateField | date : 'dd/MM/yyyy'}}</div>-->
+                                                    <div style="color:red;" ng-show="postingItem.tranDateField != postingItem.tranVDateField">{{postingItem.tranVDateField | date : 'dd/MM/yyyy'}}</div>
+                                                </div>
+                                                
+                                                <div style="display: table-cell;vertical-align: middle;padding-left:5px;width:calc (100% - 210px );">
+                                                    <div>{{postingItem.acctNoField}} ({{postingItem.transactionCodeField}}) - {{postingItem.acctShortNameField}}</div>
+                                                    <div>{{postingItem.tranNameField}}</div>
+                                                </div>
+                                                                                 
+                                                <div style="display: table-cell;vertical-align: top;text-align:right;width:120px;">
+                                                    <div>({{postingItem.postingCcyField}}) {{postingItem.tranAmaField | number:2}}</div>
+                                                </div>
+                                            </div>                                      
+                                        </div>    
+                                    </div>
+                              </div>  
+                        </div> <!-- END of postings -->
+                        
+                                          
+                    </div>  
+                 </div> 
+                
+                <div class="transactionHistoryContainer" style="background: white; position: absolute; overflow: hidden; height: 100%;" ng-show="Loading">
+                    <div id="spacer" style="height:  40%;"></div>
+                    <img class="kendo-loading" src="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/styles/Material/loading-image.gif')}"></img>
+                </div>
+            </div>
+            <!-- MB 2016-02-26 Add deal informatio end -->
+        </div>
+
+    </div>
+    
+    <!-- 
+    
+        <div style="margin-bottom: 10px;">
+        <span id="anchor{{account.Name}}" class="anchor{{account.Name}}"></span>
+        <label class="pageSubTitleGray" style="margin-left: 5px;">Account: {{account.AccountType}} ({{account.Name | filter_accountNumber}})</label>
+    </div>
+    <div class="verticalScroller verticalScrollSection">
+        
+        
+        <label class="sectionTitle">Summary</label>
+        <div class="summaryContainer">
+            <div style="float: left; width: 490px; height: 71px; border: rgb(192, 192, 192) solid 1px; background: rgb(184, 184, 184);">
+                <div style="float: left;">
+                    <img ng-src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/account.png')}" style="height: 70px; margin-left: 10px; opacity: 0.4;"></img>
+                </div>
+                <div style="margin-left:30px; margin-right:30px; float:right; margin-top:9px;">
+                    <div class="textWhite">{{account.Title}}</div>
+                    <div class="textMediumDarkGray" style="float: right; position: relative;">{{account.AccountShortName}}</div>
+                </div>                
+            </div>
+            <div class="smallTile" ng-class="GetAccountStatusTileClass('{!AccountStatus}')" style="float: right; border: rgb(205, 205, 205) solid 1px;">
+                <div class="tileIndicator"></div>
+                <div class="tileBody" style="
+                    /* min-height: 65px; */
+                    min-width: 150px;
+                    background: rgb(253, 253, 253);
+                    ">
+                    <div class="tileContent">
+                        <label class="tileValue tileValueText ng-binding">{!AccountStatus}</label>
+                        <label class="tileTitle tileTitleText">Account Status</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tileContent goldTile" style="float: left;" ng-style="account.AccountHolders != null && {'width' : '286px'}">
+                <div class="tileTitle tileTitleText" style="color: white; margin-left: 10px; margin-top: 5px;">{{account.Lines[0].Title}}</div>
+                <div class="tileValue tileValueText" style="color: white; float: right; margin-right: 20px;">{{account.Lines[0].Ccy | filter_currencytosymbol}}{{account.Lines[0].Amount | number: 2}}</div>
+            </div>
+            <div class="tileContent goldTile" style="float:right;" ng-style="account.AccountHolders != null && {'width' : '286px', 'float' : 'left', 'margin-left' : '5px'}">
+                <div class="tileTitle tileTitleText" style="color: white; margin-left: 10px; margin-top: 5px;">{{account.Lines[1].Title}}</div>
+                <div class="tileValue tileValueText" style="color: white; float: right; margin-right: 20px;">{{account.Lines[1].Ccy | filter_currencytosymbol}}{{account.Lines[1].Amount | number: 2}}</div>
+            </div>          
+            <div ng-if="account.AccountHolders != null" ng-init="openAccHolders = false" class="tileContent goldTile" style="float: left;margin-left: 5px;width: 69px;background: rgb(107, 134, 179); position:relative; cursor: pointer;" ng-mouseover="openAccHolders = true" ng-mouseleave="openAccHolders = false">
+                <div style="color:  white; text-align: center; margin-top: 20px;" class="tileValue tileValueText ng-binding">J</div>
+                <div style="position: absolute; height: 30px; width:  100%;"></div>
+                <div ng-show="openAccHolders" style="position: absolute; left: 11px; margin-top: 30px; z-index: 1;">
+                    <div class="GrayCircleItems" ng-class="{'GrayCircleItemsOpen' : openAccHolders}" ng-repeat="holder in account.AccountHolders.Items track by holder.Id" style="position: relative;" ng-click="GotoJointAccountHolder(holder)">
+                        <img class="GrayCircle GoldCircleButton" ng-class="{'GrayCirleOpen' : openAccHolders}" 
+                            style="box-shadow: rgb(137, 137, 137) 1px 1px 2px; margin-bottom: 15px; margin-left: 4px; background: rgb(0, 161, 224); border: 1px solid rgb(149, 149, 149);" 
+                            ng-src="{{holder.ImageURL}}"  onerror="this.onerror=null; this.src='/resource/1431522913000/Teller_Includes/Teller_Includes/media/user_error.png';">                                                             
+                        </img>
+                        <div class="textSmallerWhiteBold GrayCircleLabel" ng-class="{'GrayCircleLabelHover' : openAccHolders}">{{holder.Name}}</div>
+                    </div>
+                </div>  
+            </div>  
+
+        </div>
+        
+        
+        <div class="accountExpanderContainer" ng-controller="controllerAccount" ng-init="SelectedAccount=account">
+            
+            <div class="sectionTitle accountExpanderHeader" ng-click="FunctionGroupsExpanded = true" ng-class="{accountExpanderHeaderSelected : FunctionGroupsExpanded == true}">
+              Function Groups
+            </div>
+            <div class="accountExpanderContent verticalScroller" ng-show="FunctionGroupsExpanded">
+                    <div style="" ng-controller="controllerAccountFunctions" ng-init="Account=SelectedAccount">                        
+                        <ul class="accountFunctionRootsContainer textSmallWhite" ng-init="Initialise()">
+                            <li class="accountFunctionRoot" ng-repeat="root in account.AccountFunctionRoots track by root.RootId" ng-click="onClickFunctionRoot(root)" ng-class="GetAccountFunctionRootTileClass(root.Title)">
+                                <div class="accountFunctionRootContent" ng-bind-html="root.Title"></div>                        
+                                <img class="accountFunctionRootIcon" ng-src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/more.png')}"></img>
+                            </li>
+
+                            <li> 
+                                <div class="accountFunctionContainer" ng-class="{accountFunctionContainerShow : SelectedRoot != null}">
+                                     <div class="textMediumDarkGray" style="margin-top: 10px; margin-left: 15px;" ng-bind-html="SelectedRoot.Title"></div>
+                                     <img class="closeBtn" ng-src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/close.png')}" ng-click="onClickCloseFunctions()" style="top: 0;"></img>
+                                     <div class="accountFunctionsListContainer">
+                                         <ul class="accountFunctionList" style="visibility: visible;">
+                                            <li class="accountFunction" ng-repeat="function in SelectedRoot.AccountFunctions track by function.FunctionId" ng-click="onClickFunction(function)">
+                                                <div class="accountFunctionContent" ng-bind-html="function.Title"></div>                                            
+                                            </li>
+                                         </ul>
+                                     </div>
+                                </div>
+
+                            </li>
+                        </ul>
+                    </div>
+            </div>
+
+            <div class="sectionTitle accountExpanderHeader" ng-click="OnExpandTransactionHistory()" ng-class="{accountExpanderHeaderSelected : FunctionGroupsExpanded == false}">
+              Transaction History
+            </div>  
+            <div style="position: relative; height: calc(100% - 98px);" ng-show="!FunctionGroupsExpanded" ng-controller="controllerTransactionHistory" ng-init="Initialise(account.Name, CustomerDetails.Salutation + ' ' + CustomerDetails.FirstName + ' ' + CustomerDetails.LastName)">
+                
+                <div class="smalltoolbarButton" style="position: absolute; top: -39px; right: 15px;" ng-click="GetTransactionHistory()">
+                            <div class="imgCircle">
+                                <img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_refresh.png')}"></img>
+                            </div>                  
+                        </div>
+                <div class="smalltoolbarButton" style="position: absolute; top: -39px; right: 55px;" ng-click="Print()">
+                            <div class="imgCircle">
+                                <img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_print.png')}"></img>
+                            </div>                  
+                        </div>
+                <div class="smalltoolbarButton" style="position: absolute; top: -39px; right: 95px;" ng-click="ShowHideFilterPopup($event)">
+                            <div class="imgCircle">
+                                <img ng-src="{{Filtered == true && '{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_filter_filled.png')}' || '{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_filter.png')}'}}"></img>
+                            </div>                  
+                        </div>
+                
+                <div class="accountExpanderContent" style="overflow-y: hidden; height:100%;">
+                <div ng-class="GetContainerClassName()" style="margin: 5px; height: 100%; position: relative;">     
+                        
+                        <div style="background: rgb(249, 249, 249); margin: -5px;" class="verticalScroller transactionHistoryContainer">
+                            <div class="transactionItem" ng-repeat="transaction in Transactions.ResponseRoot.transactionDetailsField">
+                                <div style="margin: 4px;margin-left: 4px;background: rgb(223, 213, 190);width: 13px;display: table-cell;border: 4px solid white;">
+                                </div>
+                                <div style="margin-left: 3px; margin-top: 3px;display: table-cell;vertical-align: middle;">
+                                    <div class="tileTitleTextBold" style="margin-top: 3px; color: #BAB2A1;">
+                                        <span>{{transaction.TransactionDateField | date : 'dd/MM/yyyy'}}</span>
+                                        <span> - </span>                                        
+                                        <span ng-bind-html="transaction.TransactionNameField"></span>
+                                    </div>
+                                    <div class="textBlack" style="margin-top: 2px;white-space: initial;line-height: 16px;margin-bottom: 3px;">
+                                        <div ng-if="transaction.TransactionReferenceField != ''" ng-bind-html="transaction.TransactionReferenceField"></div>
+                                        <div ng-if="transaction.TransactionValueDateField != ''">Value Date: {{transaction.TransactionValueDateField | date : 'dd/MM/yyyy'}}</div>
+                                        <div ng-if="transaction.NarrativeLine1Field != ''" ng-bind-html="transaction.NarrativeLine1Field"></div>
+                                        <div ng-if="transaction.NarrativeLine2Field != ''" ng-bind-html="transaction.NarrativeLine2Field"></div>
+                                        <div ng-if="transaction.NarrativeLine3Field != ''" ng-bind-html="transaction.NarrativeLine3Field"></div>
+                                        <div ng-if="transaction.NarrativeLine4Field != ''" ng-bind-html="transaction.NarrativeLine4Field"></div>                                        
+                                        <div style="color:white;" ng-if="transaction.TransactionReferenceField == '' && transaction.NarrativeLine1Field == '' && transaction.NarrativeLine2Field == '' && transaction.NarrativeLine3Field == '' && transaction.NarrativeLine4Field == ''">.</div>
+                                        
+                                    </div>
+                                </div>
+                                
+                                
+                                <div style="display: table-cell;vertical-align: middle;">
+                                    <div style="float:right; right:0; padding-left: 5px; padding-right: 8px; background: white;">
+                                    <div>
+                                        <div class="textMediumDarkGray colorGreen" style="font-size: 18px; float:  right;" ng-if="transaction.MoneyInField.length > 0">
+                                            <div style="float: right;">{{transaction.CCYField | filter_currencytosymbol}}{{transaction.MoneyInField | number : 2}}</div>>
+                                        </div>
+                                        <div class="textMediumDarkGray colorRed" style="font-size: 18px; float:  right;" ng-if="transaction.MoneyOutField.length > 0">                                          
+                                            <div style="float: right;">-{{transaction.CCYField | filter_currencytosymbol}}{{transaction.MoneyOutField | number : 2}}</div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="tileTitleText" style="margin-top:  -2px; float:  right;">
+                                            Balance: {{transaction.CCYField | filter_currencytosymbol}}{{transaction.RunningBalanceField | number: 2}}
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            
+                            <div class="transactionItem" style="background: rgb(190, 175, 139);">
+                                <div style="float: left;margin: 4px;margin-left: 4px;background: rgb(223, 213, 190);width: 5px;height: 42px;"></div>    
+                                 <div class="tileValueText" style="float: left; margin-left: 3px; margin-top: 3px; margin-left: 11px; margin-top: 11px; color:white;">
+                                     Available Balance
+                                 </div>
+                                <div class="tileValueText" style="float:right; margin-top: 10px; position: absolute; right:0; padding-left: 5px; padding-right: 18px; color: white;">
+                                    £{{Transactions.ResponseRoot.availableBalanceField | number : 2}}                           
+                                </div>
+                            </div>
+                            
+                        </div>
+                        
+                        <div class="transactionHistoryContainer" style="background: white; position: absolute; top: 5px; margin:-5px; overflow: hidden; height: 100%;" ng-show="Loading">
+                            <img class="kendo-loading" src="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/styles/Material/loading-image.gif')}"></img>
+                        </div>
+                        
+                            <div class="filterpopup" ng-if="FilterOpen" ng-init="InitialiseKendoInputs()" style="height: 177px; width: 300px; background: white; border: solid 1px rgb(221, 220, 220); right: 5px; position: absolute; top: 3px; box-shadow: 1px 1px 3px black;">
+                        
+                            <div class="md_group" style="margin-top: 26px; margin-left: 10px; width: 280px;">
+                                <div class="md_input" style="height: 37px; position: absolute; width: 270px;"></div>
+                                <input class="kendoInputFromDate" kendo-date-picker="kendo-date-picker" k-format="'dd/MM/yyyy'" k-on-change="OnKendoDateTimeChanged(kendoEvent)" ng-model="DateFrom" style="font-size:16px; width: 280px;  margin-top: 0.5px; border: none;"></input>                            
+                                <span class="md_highlight"></span>
+                                <span class="md_bar" style="z-index: 2; margin-top: 4px;"></span>
+                                <label class="md_label">From</label>
+                            </div>
+                            <div class="md_group" style="margin-top: 26px; margin-left: 10px; width: 280px;">
+                                <div class="md_input" style="height: 37px; position: absolute; width: 270px;"></div>
+                                <input class="kendoInputToDate" kendo-date-picker="kendo-date-picker" k-format="'dd/MM/yyyy'" k-on-change="OnKendoDateTimeChanged(kendoEvent)" ng-model="DateTo" style="font-size:16px; width: 280px;  margin-top: 0.5px; border: none;"></input>                            
+                                <span class="md_highlight"></span>
+                                <span class="md_bar" style="z-index: 2; margin-top: 4px;"></span>
+                                <label class="md_label">To</label>
+                            </div>
+                            <div style="float:left; margin-left: 10px;">
+                                <input class="goldButton" type="button" value="CLOSE" ng-click="ShowHideFilterPopup($event)"></input>
+                            </div>
+                            <div style="float:right; margin-right: 5px;">
+                                <input class="goldButton" type="button" value="CLEAR" ng-click="OnClear()"></input>
+                                <input class="goldButton" type="submit" value="APPLY" ng-click="GetTransactionHistory()"></input>
+                            </div>      
+                        </div>
+                        
+                        <div ng-show="false">
+                            <div class="MiniStatement" arb-Dynamic-Html="arbDynamicHtml" dynamic-template="{{PrintTemplate}}"></div>
+                        </div>
+                        
+                     </div>
+            </div>
+            </div>
+
+        </div>
+
+    </div>
+    -->
+</apex:component>

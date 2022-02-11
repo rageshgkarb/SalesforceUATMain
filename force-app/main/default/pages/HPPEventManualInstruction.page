@@ -1,0 +1,179 @@
+<!-- C00098 new page and controller -->
+<apex:page controller="HPPEventManualInstructionController" sidebar="false" showHeader="false" title="Manual Valuation Report" action="{!autoRun}">
+    <head>
+        <c:KendoResource ></c:KendoResource>
+        <style>
+.Section {
+    padding: 20px;
+}
+
+.valtitle {
+    text-align: right;
+    padding-right: 10px;
+    font-weight: bold;
+}
+
+.numberVal {
+    text-align: right;
+    padding-right: 10px;
+}
+
+.box {
+    border: solid 1px #666;
+    padding: 10px;
+}
+
+.highLight {
+    border: solid 2px red;
+}
+</style>
+    </head>
+    <body>
+        <apex:form >  
+             <div id="formWrapper">
+                <c:HPPSummary objAcc="{!Accounts[0]}" objOpp="{!opp}" objExOpp="{!ExOpp}" Product="{!Prod}" />
+                <div id="container" >
+                    <table width="100%">
+                        <tr>
+                            <td valign="top" id="sidebar">
+                                <c:HPPBOMenu oppId="{!Opp.Id}"  DirectorId="{!Opp.ProductEventDirector__c}" />
+                            </td>
+                            <td valign="top" id="contenttd">
+                                <div id="content">
+                                    <h1>Manual Valuation Report</h1>
+                                
+                                    <apex:outputPanel id="mainPageBlock">
+                                    <apex:pageMessages />
+                                    
+                                        <div class="pbSubheader" >
+                                            <h3>Section 1</h3>
+                                        </div>    
+                                        <div>
+                                            <apex:outputPanel id="section1">
+                                            
+                                            
+                                            
+                                            <apex:pageBlock >
+                                                <apex:pageBlockSection >
+                                                    <apex:pageBlockSectionItem >
+                                                        <apex:outputLabel value="CaseReference"/>
+                                                        <apex:inputField value="{!valuationReport.CaseReference__c}"/>
+                                                    </apex:pageBlockSectionItem>
+                                                     <apex:pageBlockSectionItem >    
+                                                        <apex:outputLabel value="Property Postcode"/>
+                                                        <apex:inputField value="{!valuationReport.Property_Postcode__c}"/>
+                                                    </apex:pageBlockSectionItem>
+                                                     <apex:pageBlockSectionItem >    
+                                                        <apex:outputLabel value="LenderReference"/>
+                                                        <apex:inputField value="{!valuationReport.LenderReference__c}"/>
+                                                    </apex:pageBlockSectionItem>
+                                                    <apex:pageBlockSectionItem >
+                                                        <apex:outputLabel value="Property Tenure"/>
+                                                        <apex:inputField value="{!valuationReport.Property_Tenure__c}"/>
+                                                    </apex:pageBlockSectionItem>
+                                                     <apex:pageBlockSectionItem >    
+                                                        <apex:outputLabel value="Opportunity"/>
+                                                        <apex:inputField value="{!valuationReport.Opportunity__c}"/>
+                                                    </apex:pageBlockSectionItem>
+                                                    <apex:pageBlockSectionItem >
+                                                        <apex:outputLabel value="Unexpired Term"/>
+                                                        <apex:inputField value="{!valuationReport.Unexpired_Term__c}"/>
+                                                    </apex:pageBlockSectionItem>
+                                                     </apex:pageBlockSection>
+                                            </apex:pageBlock>
+                                            <!-- Need a break in here -->
+                                            </apex:outputPanel>
+                                            </div>
+                                             <div class="pbSubheader" >
+                                            <h3>Section 2</h3>
+                                        </div>    
+                                            <div>                                             
+                                            <apex:pageBlock >
+                                                <apex:pageBlockSection >
+                                                    <apex:pageBlockSectionItem >
+                                                        <apex:outputLabel value="Surveyor Firm"/>
+                                                        <apex:inputField value="{!valuationReport.Surveyor_Firm__c}"/>
+                                                    </apex:pageBlockSectionItem>
+                                                    <apex:pageBlockSectionItem >
+                                                        <apex:outputLabel value="Property Type"/>
+                                                        <apex:inputField value="{!valuationReport.Property_Type__c}"/>
+                                                    </apex:pageBlockSectionItem>
+                                                     <apex:pageBlockSectionItem >   
+                                                        <apex:outputLabel value="Date of Instruction"/>
+                                                        <apex:inputField value="{!valuationReport.Date_of_Instruction__c}"/>
+                                                    </apex:pageBlockSectionItem>
+                                                    <apex:pageBlockSectionItem >
+                                                        <apex:outputLabel value="Roof"/>
+                                                        <apex:inputField value="{!valuationReport.Roof__c}"/>
+                                                    </apex:pageBlockSectionItem>
+                                                    <apex:pageBlockSectionItem >    
+                                                        <apex:outputLabel value="Date of Inspection"/>
+                                                        <apex:inputField value="{!valuationReport.Date_of_Inspection__c}"/>
+                                                    </apex:pageBlockSectionItem>
+                                                    <apex:pageBlockSectionItem >  
+                                                    </apex:pageBlockSectionItem>
+                                                    <apex:pageBlockSectionItem >    
+                                                        <apex:outputLabel value="Date of Report"/>
+                                                        <apex:inputField value="{!valuationReport.Date_of_Report__c}"/>
+                                                    </apex:pageBlockSectionItem>
+                                                    <apex:pageBlockSectionItem >    
+                                                        <apex:outputLabel value="Market Value Present Condition"/>
+                                                        <apex:inputField value="{!valuationReport.Market_Value_Present_Condition__c}"/>
+                                                    </apex:pageBlockSectionItem>
+                                                    <apex:pageBlockSectionItem >
+                                                        <apex:outputLabel value="Report expiry date"/>
+                                                        <apex:inputField value="{!valuationReport.Report_expiry_date__c}"/>
+                                                    </apex:pageBlockSectionItem>
+                                                    <apex:pageBlockSectionItem >    
+                                                        <apex:outputLabel value="Market Value After Repairs/Completion"/>
+                                                        <apex:inputField value="{!valuationReport.Market_Value_After_Repairs_Completion__c}"/>
+                                                    </apex:pageBlockSectionItem>
+                                                    <apex:pageBlockSectionItem >    
+                                                        <apex:outputLabel value="Days until valuation report expires"/>
+                                                        <apex:inputField value="{!valuationReport.Days_until_valuation_report_expires__c}"/>
+                                                    </apex:pageBlockSectionItem>
+                                                    <apex:pageBlockSectionItem >
+                                                        <apex:outputLabel value="90-day (Restricted Value)"/>
+                                                        <apex:inputField value="{!valuationReport.X90_day_Restricted_Value__c}"/>
+                                                    </apex:pageBlockSectionItem>
+                                                    <apex:pageBlockSectionItem >  
+                                                    </apex:pageBlockSectionItem>
+                                                    <apex:pageBlockSectionItem >    
+                                                        <apex:outputLabel value="Fair Market Rental (pcm)"/>
+                                                        <apex:inputField value="{!valuationReport.Fair_Market_Rental_pcm__c}"/>
+                                                    </apex:pageBlockSectionItem>
+                                                    <apex:pageBlockSectionItem >  
+                                                    </apex:pageBlockSectionItem>
+                                                     <apex:pageBlockSectionItem >
+                                                        <apex:outputLabel value="Building reinstatement value"/>
+                                                        <apex:inputField value="{!valuationReport.Building_reinstatement_value__c}"/>
+                                                    </apex:pageBlockSectionItem>
+                                                  </apex:pageBlockSection> 
+                                                <apex:pageBlockButtons location="bottom" id="page_block_buttons">
+                                                    <!--apex:commandButton styleClass="blueBtn" value="Complete Event" action="{!complete}" rendered="{!NOT(IsCompleted)}" /-->
+                                                    <apex:commandButton styleClass="redBtn" value="Manual Valuation Report" action="{!complete}" />                                                   
+                                                </apex:pageBlockButtons>
+                                            </apex:pageBlock>
+                                            
+                                            
+                                        </div>
+                                    </apex:outputPanel>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div id="fade"></div>
+                <div id="overlay">
+                    Create Valuation Report...
+                    <br/>
+                    <br/>
+                    This may take a few seconds.
+                <div style="padding-top: 50px;" >
+                    <img src="{!URLFOR($Resource.ibbstyle, 'images/269.gif')}"></img>
+                </div>
+            </div>    
+        </apex:form>
+    </body>
+</apex:page>

@@ -1,0 +1,159 @@
+<apex:page showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false" controller="CAA_Product_Detail_Controller">
+
+
+<apex:composition template="CAA_Template">
+        <apex:define name="body">
+<div ng-controller="controllerProductDetails">
+
+<div class="row">
+<div class="col-md=9">
+
+<div class="SectionHeader">
+    <div class="numberCircleReverse">1</div>
+    <div>Product Details</div>
+</div>
+<div class="PanelContents">
+
+<div class="DPAText" ng-show="Product.ExistingAlRayanIsa == 'yes'">
+    As you have subscribed to your ISA allowance in this current tax year, you will need to transfer this whole amount to your new ISA
+</div>
+
+<div>
+<div>
+    <label>Do you currently hold an ISA with Al Rayan Bank which you have subscribed to this tax year?</label>    
+</div>
+<div>
+    <label class="radio-inline"><input type="radio" name="optExistingAlRayanIsa" value="yes" ng-model="Product.ExistingAlRayanIsa"/>Yes</label>
+    <label class="radio-inline"><input type="radio" name="optExistingAlRayanIsa" value="no" ng-model="Product.ExistingAlRayanIsa"/>No</label>
+</div>
+<hr/>
+
+
+<div>
+    <label>For which tax year are you applying?</label>    
+</div>
+<div>
+    <label class="radio-inline"><input type="radio" name="optExistingAlRayanIsa" value="2013/2014" ng-model="Product.ExistingAlRayanIsa"/>2013/2014</label>
+</div>
+<hr/>
+
+<div>
+    <label>Please provide your national insurance number</label>    
+</div>
+<div class="row">
+    <div class="col-sm-4">
+    <input type="text" class="form-control arbBox" ng-model="Product.NI" />
+    </div>
+</div>
+<hr/>
+
+<div class="SectionTitle">
+    Linked account details
+</div>
+<div class="row">
+    <div class="col-sm-4">
+        <label>Account number (?)</label>
+        <input type="text" class="form-control arbBox" ng-model="Product.LinkedAccountNumber"/>
+    </div>
+    <div class="col-sm-4">
+        <label>Sort Code</label>
+        <input type="text" class="form-control arbBox" ng-model="Product.LinkedSortCode"/>
+    </div>
+</div>
+<hr/>
+
+
+
+  <div class="DPAText">
+ <div class="">
+     <label>I declare that.</label>
+ </div>
+ <div style="font-weight:normal;">
+     <div class="row">
+         <div class="col-xs-1">
+         <input type="checkbox" name="chkISA1" ng-model="Product.ISA1"/>
+         </div>
+         <div class="col-xs-11">
+             <label>All subscriptions made, and to be made, belong to me</label>
+         </div>        
+    </div>
+    <div class="row">
+         <div class="col-xs-1">
+         <input type="checkbox" name="chkISA2" ng-model="Product.ISA2"/>
+         </div>
+         <div class="col-xs-11">
+             <label>I am 16 years of age or over</label>
+         </div>        
+    </div>
+    <div class="row">
+         <div class="col-xs-1">
+         <input type="checkbox" name="chkISA3" ng-model="Product.ISA3"/>
+         </div>
+         <div class="col-xs-11">
+             <label>I have not subscribed and will not subscribe more than the overall subscription limit in total to a cash ISA and a stocks and shares ISA in the same year</label>
+         </div>        
+    </div>
+    <div class="row">
+         <div class="col-xs-1">
+         <input type="checkbox" name="chkISA4" ng-model="Product.ISA4"/>
+         </div>
+         <div class="col-xs-11">
+             <label>I have not subscribed and will not subscribe more than the cash ISA subscription limit to a cash ISA</label>
+         </div>        
+    </div>
+    <div class="row">
+         <div class="col-xs-1">
+         <input type="checkbox" name="chkISA5" ng-model="Product.ISA5"/>
+         </div>
+         <div class="col-xs-11">
+             <label>I have not subscribed and will not subscribe to another cash ISA in the same tax year that I subscribe to this cash ISA</label>
+         </div>        
+    </div>
+    <div class="row">
+         <div class="col-xs-1">
+         <input type="checkbox" name="chkISA6" ng-model="Product.ISA6"/>
+         </div>
+         <div class="col-xs-11">
+             <label>I am resident and ordinarily resident in the United Kingdom for tax purposes or, if not so resident, either perform duties which, by virtue of Section 28 of Income Tax (Earnings &amp; Pensions) Act 2003 (Crown employees serving overseas), are treated as being performed in the United Kingdom, or I am married to, or in a civil partnership with, a person who performs such duties. I will inform Al Rayan Bank Plc if I cease to be so resident and ordinarily resident or to perform such duties or to be married to, or in a civil partnership with, a person who performs such duties</label>
+         </div>        
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    </div>
+ </div>
+ 
+ 
+ 
+
+
+
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="col-md-3">
+                    <c:CAA_Progress rendered="{!IsGuest}" Stage="1"></c:CAA_Progress>
+                </div>
+
+
+</div>
+</apex:define>
+
+
+
+
+
+        <apex:define name="Menu">
+        
+  </apex:define>
+</apex:composition>              
+        
+        
+</apex:page>

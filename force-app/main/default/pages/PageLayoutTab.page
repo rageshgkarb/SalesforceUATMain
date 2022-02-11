@@ -1,0 +1,1021 @@
+<apex:page applyBodyTag="false" applyHtmlTag="false" standardStylesheets="false" showHeader="false" sidebar="false"  docType="html-5.0"  controller="PageLayoutController" >
+<html>
+<head>
+
+
+
+<apex:includeScript value="https://code.jquery.com/jquery-1.11.3.min.js"/>
+   <!-- Bootstrap -->
+    <apex:stylesheet value="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <apex:stylesheet value="https://maxcdn.bootstrapcdn.com/bootswatch/3.2.0/spacelab/bootstrap.min.css"/>
+    <!--<apex:stylesheet value="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"/>-->
+    <apex:includeScript value="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"/>
+    
+  
+    
+    <apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.11/angular.min.js"/>
+<apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.11/angular-animate.min.js"/>
+<apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.11/angular-sanitize.js"/>
+<apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular-messages.js"/>
+
+<!--
+<link rel="stylesheet" href="https://kendo.cdn.telerik.com/2016.1.112/styles/kendo.common.min.css" />
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2016.1.112/styles/kendo.blueopal.min.css" />
+    <script src="https://kendo.cdn.telerik.com/2016.1.112/js/kendo.all.min.js"></script>
+-->
+  <link rel="stylesheet" href="https://codyhouse.co/demo/breadcrumbs-multi-steps-indicator/css/style.css"/>
+  
+  <apex:stylesheet value="{!URLFOR($Resource.CAA_Includes, '/css/wait.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.CAA_Includes, '/css/structure.css')}"/>
+  
+ <!-- <link rel="stylesheet" href="https://marceljuenemann.github.io/angular-drag-and-drop-lists/demo/framework/vendor/bootstrap-theme.min.css"/>
+  <link rel="stylesheet" href="https://marceljuenemann.github.io/angular-drag-and-drop-lists/demo/framework/demo-framework.css"/>
+  <link rel="stylesheet" href="https://marceljuenemann.github.io/angular-drag-and-drop-lists/demo/nested/nested.css"/>
+  
+  <script src="https://marceljuenemann.github.io/angular-drag-and-drop-lists/angular-drag-and-drop-lists.js"/>
+  
+  <script src="https://marceljuenemann.github.io/angular-drag-and-drop-lists/demo/framework/vendor/prism.js"/>
+  <script src="https://marceljuenemann.github.io/angular-drag-and-drop-lists/demo/framework/demo-framework.js"/> -->
+  
+  <apex:includescript value="{!URLFOR($Resource.DropDownFrameWork, 'drop-down-list.js')}" />
+  <apex:includescript value="{!URLFOR($Resource.DropDownFrameWork, 'Prism.js')}" />
+  <apex:includescript value="{!URLFOR($Resource.DropDownFrameWork, 'demoframewok.js')}" />
+  
+  <link rel="stylesheet" href="{!URLFOR($Resource.DropDownFrameWork, 'demo-framework.css')}"/>
+  <link rel="stylesheet" href="{!URLFOR($Resource.DropDownFrameWork, 'Nested.css')}"/>
+  <link rel="stylesheet" href="{!URLFOR($Resource.DropDownFrameWork, 'bootstrapDropDown.css')}"/>
+  
+  
+  <!--
+  <c:Page_Layout_JS />
+  -->
+<style>
+
+
+body{
+    padding-top:0px;
+}
+
+.nestedDemo .dropzone li {
+    border:none;
+}
+
+.gridcolumn {
+    border-right:none;
+}
+
+  .md_input {
+    font-size: 15px;
+    padding: 5px;
+    display: block;
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #E4E4E4;
+    background: transparent;
+}
+
+.md_label {
+    color: #A9A9A9;
+    /*font-family: simpleMedium;*/
+    font-size: 12px;
+    font-weight: normal;
+    
+    pointer-events: none;
+    left: 5px;
+    /*top: 5px;*/
+    transition: 0.2s ease all;
+    -moz-transition: 0.2s ease all;
+    -webkit-transition: 0.2s ease all;
+}
+
+.nav-tabs>li>a {
+    background-color: #b3995d;
+    color:#fff;
+}
+
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus {
+    background-color: #333333;
+    color:#fff;
+}
+
+.nav-tabs>li>a:hover {
+    border-color: #b3995d;
+    cursor:pointer;
+}
+
+.nav>li>a:hover, .nav>li>a:focus {
+    background-color: #b3995d;
+}
+
+.md_label {
+    
+    
+    color: #8C733A;
+}
+
+.headerBar {
+    background-color: #b3995d;
+    width: 100%;
+    height: 40px;
+}
+
+.textSmallerWhiteBold {
+    color: white;
+    font-family: simpleBold;
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+.textSmallerWhite {
+    color: white;
+    font-family: simpleMedium;
+    font-size: 14px;
+    vertical-align: middle;
+    font-weight: normal;
+}
+
+.tab-content{
+    border: 2px solid #b3995d;
+}
+
+
+.pageContentLeft {
+    background-color: #F4F4F4;
+    min-width: 175px;
+    max-width: 175px;
+    height: calc(100% - 40px);
+    position: absolute;
+    min-height: 570px;
+}
+
+.pageContentRight {
+    position: absolute;
+    left: 180px;
+    height: calc(100% - 50px);
+    /*height:100%;*/
+    width: calc(100% - 190px);
+    /*padding-top:10px;*/
+}
+
+.leftMenuBtn{
+    width:100%;
+    background-color: #b3995d;
+    color:#fff;
+}
+.leftMenuBtn:hover{
+    background-color: #333;
+} 
+
+
+.customBtn{
+    background-color: #333;
+    color:#fff;
+}
+.customBtn:hover{
+    background-color: #555;
+}
+
+
+.container-element.item-related{
+    margin:0px;
+}
+
+.stage-bar{
+    /*font-weight:bold;*/
+
+   /* height:100px;*/
+    
+}
+
+.stages-bar{
+    /*font-weight:bold;*/
+    /*padding:10px;*/
+    
+}
+
+.box-yellow{
+    border-color: rgb(184, 184, 184);
+}
+
+.box-yellow > h3{
+    background-color : rgb(184, 184, 184);
+    color:#fff;
+    background-image:none;
+    
+}
+
+
+
+.event-completed{
+    background-color:#5cb85c;
+    border:solid 1px #5cb85c;
+    color:#fff;
+}
+
+.event-open{
+    background-color:#bbb;
+    border:solid 1px #aaa;
+}
+
+.event-current{
+    background-color:#57aed1;
+    border:solid 1px #57aed1;
+    color:#fff;
+}
+
+.visited{
+    background-color: rgb(131,209,134);
+}
+
+.current{
+    background-color: rgb(47,123,199);
+}
+
+.cd-breadcrumb li.visited span{
+    background-color: rgb(131,209,134);
+    border-color: rgb(131,209,134);
+    color:#fff;
+}
+
+.cd-breadcrumb li.current span{
+    background-color: rgb(47,123,199);
+    border-color: rgb(47,123,199);
+    color:#fff;
+}
+
+.cd-breadcrumb.triangle li.current > *{
+    background-color: rgb(47,123,199);
+    border-color: rgb(47,123,199);
+    color:#fff;
+}
+
+a {
+    color: #3399f3;
+}
+
+@-webkit-keyframes myanimation {
+  from {
+    left: 0%;
+  }
+  to {
+    left: 50%;
+  }
+}
+h1 {
+  text-align: center;
+  font-family: 'PT Sans Caption', sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+  padding: 20px 0;
+  color: #777;
+}
+
+.checkout-wrap {
+  color: #444;
+  font-family: 'PT Sans Caption', sans-serif;
+  margin: 40px auto;
+  max-width: 1200px;
+  position: relative;
+}
+
+ul.checkout-bar li {
+  color: #ccc;
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 14px 20px 14px 80px;
+  position: relative;
+}
+ul.checkout-bar li:before {
+  -webkit-box-shadow: inset 2px 2px 2px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 2px 2px 2px 0px rgba(0, 0, 0, 0.2);
+  background: #ddd;
+  border: 2px solid #FFF;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  left: 20px;
+  line-height: 37px;
+  height: 35px;
+  position: absolute;
+  text-align: center;
+  text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+  top: 4px;
+  width: 35px;
+  z-index: 999;
+}
+ul.checkout-bar li.active {
+  color: #8bc53f;
+  font-weight: bold;
+}
+ul.checkout-bar li.active:before {
+  background: #8bc53f;
+  z-index: 99999;
+}
+ul.checkout-bar li.visited {
+  background: #ECECEC;
+  color: #57aed1;
+  z-index: 99999;
+}
+ul.checkout-bar li.visited:before {
+  background: #57aed1;
+  z-index: 99999;
+}
+ul.checkout-bar li:nth-child(1):before {
+  content: "1";
+}
+ul.checkout-bar li:nth-child(2):before {
+  content: "2";
+}
+ul.checkout-bar li:nth-child(3):before {
+  content: "3";
+}
+ul.checkout-bar li:nth-child(4):before {
+  content: "4";
+}
+ul.checkout-bar li:nth-child(5):before {
+  content: "5";
+}
+ul.checkout-bar li:nth-child(6):before {
+  content: "6";
+}
+ul.checkout-bar li:nth-child(7):before {
+  content: "7";
+}
+ul.checkout-bar li:nth-child(8):before {
+  content: "8";
+}
+ul.checkout-bar li:nth-child(9):before {
+  content: "9";
+}
+ul.checkout-bar a {
+  color: #57aed1;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+@media all and (min-width: 800px) {
+  .checkout-bar li.active:after {
+    -webkit-animation: myanimation 3s 0;
+    background-size: 35px 35px;
+    background-color: #8bc53f;
+    background-image: -webkit-linear-gradient(-45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent);
+    background-image: -moz-linear-gradient(-45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent);
+    -webkit-box-shadow: inset 2px 2px 2px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 2px 2px 2px 0px rgba(0, 0, 0, 0.2);
+    content: "";
+    height: 15px;
+    width: 100%;
+    left: 50%;
+    position: absolute;
+    top: -50px;
+    z-index: 0;
+  }
+
+  .checkout-wrap {
+    margin: 80px auto;
+  }
+
+  ul.checkout-bar {
+    -webkit-box-shadow: inset 2px 2px 2px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 2px 2px 2px 0px rgba(0, 0, 0, 0.2);
+    background-size: 35px 35px;
+    background-color: #EcEcEc;
+    background-image: -webkit-linear-gradient(-45deg, rgba(255, 255, 255, 0.4) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0.4) 75%, transparent 75%, transparent);
+    background-image: -moz-linear-gradient(-45deg, rgba(255, 255, 255, 0.4) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0.4) 75%, transparent 75%, transparent);
+    border-radius: 15px;
+    height: 15px;
+    margin: 0 auto;
+    padding: 0;
+    position: absolute;
+    width: 95%;
+  }
+  ul.checkout-bar:before {
+    background-size: 35px 35px;
+    background-color: #57aed1;
+    background-image: -webkit-linear-gradient(-45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent);
+    background-image: -moz-linear-gradient(-45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent);
+    -webkit-box-shadow: inset 2px 2px 2px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 2px 2px 2px 0px rgba(0, 0, 0, 0.2);
+    border-radius: 15px;
+    content: " ";
+    height: 15px;
+    left: 0;
+    position: absolute;
+    width: 10%;
+  }
+  ul.checkout-bar li {
+    display: inline-block;
+    margin: 50px 0 0;
+    padding: 0;
+    text-align: center;
+    width: 12%;
+  }
+  ul.checkout-bar li:before {
+    height: 45px;
+    left: 40%;
+    line-height: 45px;
+    position: absolute;
+    top: -65px;
+    width: 45px;
+    z-index: 99;
+  }
+  ul.checkout-bar li.visited {
+    background: none;
+  }
+  ul.checkout-bar li.visited:after {
+    background-size: 35px 35px;
+    background-color: #57aed1;
+    background-image: -webkit-linear-gradient(-45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent);
+    background-image: -moz-linear-gradient(-45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent);
+    -webkit-box-shadow: inset 2px 2px 2px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 2px 2px 2px 0px rgba(0, 0, 0, 0.2);
+    content: "";
+    height: 15px;
+    left: 50%;
+    position: absolute;
+    top: -50px;
+    width: 100%;
+    z-index: 99;
+  }
+}
+
+
+
+
+
+
+
+
+</style>
+<c:Page_Layout_JS />
+  </head>
+  
+  <body ng-app="demo" style="font-size:12px">
+  
+  <div ng-controller="NestedListsDemoController" class="nestedDemo" ng-init="Setup('{!layoutId}','{!PrimaryObjectId}');Name='{!Name}';  PrimaryObjectId ='{!PrimaryObjectId}';Related = [ {Name:'test'},{Name:'test2'}];" >
+
+<div class="headerBar" style="display:none;">
+            <div id="TellerResourceLocation" style="display: none; position:absolute; z-index:-99999; visibility: collapse !important;">/resource/1456480612000/Teller_Includes</div>
+            <div id="TellerResourceDenomintationLocation" style="display: none; position:absolute; z-index:-99999; visibility: collapse !important;">/resource/1454671511000/Teller_Denominations</div>
+           
+            <div class="barContentLeft visible-xs" style="height: 40px; width: 50px; background: rgb(140, 115, 58); margin-left: 0px;">
+                <div class="burger" ng-class="{'burger' : menuOpen == 'false', 'burger active' : menuOpen == 'true'}" ng-click="menuOpen == 'true' ? menuOpen = 'false' : menuOpen = 'true'" style="margin-top: 11px; cursor:pointer;">
+                    <div class="line"></div>
+                    <div class="line"></div>
+                    <div class="line"></div>
+                </div>
+            </div>
+            
+            <div class="barContentLeft">
+                <span class="textSmallerWhiteBold" style="font-size:20px;padding-left:5px;">Opportunity</span>
+                <span class="textSmallerWhite" style="font-size:20px;">: {{Name}}</span>
+            </div>
+          
+        </div>
+
+
+  <!-- Markup for lists inside the dropzone. It's inside a seperate template
+     because it will be used recursively. The dnd-list directive enables
+     to drop elements into the referenced array. The dnd-draggable directive
+     makes an element draggable and will transfer the object that was
+     assigned to it. If an element was dragged away, you have to remove
+     it from the original list yourself using the dnd-moved attribute -->
+<script type="text/ng-template" id="list.html">
+    <ul dnd-list="list">
+    {{showJson?list : ''}}
+        <li ng-repeat="item in list"
+           
+            ng-include="item.type + '.html'">{{::item}}
+        </li>
+    </ul>
+</script>
+
+<script type="text/ng-template" id="zlist.html">
+    <ul dnd-list="list.items">
+    {{showJson?list : ''}}
+        <li ng-repeat="item in list.items"
+            
+            ng-include="item.type + '.html'">
+        </li>
+    </ul>
+</script>
+
+<!-- This template is responsible for rendering a container element. It uses
+     the above list template to render each container column -->
+<script type="text/ng-template" id="container.html">
+    <div class="container-element box " ng-hide="$eval(item.hide)" style="margin:0px;">
+        <h3 ng-show="item.title">{{item.title}}</h3>
+        <div class="gridcolumn col-sm-12" ng-repeat="list in item.columns" ng-include="'list.html'"></div>
+        <div class="clearfix"></div>
+    </div>
+</script>
+
+<script type="text/ng-template" id="tab.html">
+    <div class="container-element box">
+    
+    <!--
+    <div id="tab{{item.id}}" kendo-tab-strip="tabstrip" k-on-select="onSelect(kendoEvent)">
+            
+            <ul>
+              <li id="{{$index}}" ng-repeat="list in item.columns">{{$index}}</li>
+            </ul>
+    
+            <div ng-repeat="list in item.columns">
+                {{$index}}
+            </div>
+    </div>
+    -->
+    
+    <ul class="nav nav-tabs" id="tab{{item.id}}">
+        <li ng-repeat="list in item.columns" ng-class="{'active' : $index == item.selected}">
+            <a ng-click="item.selected=$index">{{item.col[$index].label}}</a>
+        </li>
+    </ul>
+    
+    <div class="tab-content">
+        <div ng-repeat="list in item.columns" id="tab{{item.id}}{{$index}}" class="tab-pane" ng-class="{'active' : $index == item.selected}" ng-include="'list.html'">
+           
+        </div>
+    </div>
+
+    </div>
+</script>
+
+
+
+<!-- This template is responsible for rendering a container element. It uses
+     the above list template to render each container column -->
+<script type="text/ng-template" id="container3.html">
+    <div class="container-element box " style="margin:0px;">
+         <h3 ng-show="item.title">{{item.title}}</h3>
+        <div class="col-sm-4 gridcolumn "  ng-repeat="list in item.columns" ng-include="'list.html'"></div>
+        <div class="clearfix"></div>
+    </div>
+</script>
+
+<!-- This template is responsible for rendering a container element. It uses
+     the above list template to render each container column -->
+<script type="text/ng-template" id="container2.html">
+    <div class="container-element box " style="margin:0px;">
+      <h3 ng-show="item.title">{{item.title}}</h3>
+        <div class="col-sm-6 gridcolumn " ng-repeat="list in item.columns" ng-include="'list.html'"></div>
+        <div class="clearfix"></div>
+    </div>
+</script>
+
+<script type="text/ng-template" id="button.html">
+
+
+<a href="{{GetButtonUrl(item)}}" target="_blank" class="customBtn btn" style="width:inherit">{{item.Label}}</a>
+
+</script>
+
+<script type="text/ng-template" id="activity.html">
+
+        <table class="table">
+             <thead>
+                 <tr>
+                 <th></th>
+                 <th>View</th>
+                 <th>Subject</th>
+                 <th>Comments</th>
+                 <th>Name</th>
+                 <th width="60">Task</th>
+                 <th width="120">Created By</th>
+                 <th width="140">Last Modified Date/Time</th>
+                 </tr>
+             </thead>
+         <tbody>
+        <tr class="row" ng-repeat="item in Activity">  
+            <td><a href="/{{item.ID}}" target="_blank">View</a></td>          
+            <td>{{item.Subject}}</td>
+            <td>{{item.Comments}}</td>
+            <td>{{item.AssignedTo}}</td>
+            <td><input type="checkbox" ng-model="item.IsTask" readonly="readonly"/></td>
+            <td>{{item.Owner}}</td>
+            <td>{{item.LastModified}}</td>
+        </tr>        
+        </tbody>
+        </table>
+
+</script>
+
+
+<script type="text/ng-template" id="note.html">
+
+         <table class="table">
+             <thead>
+                 <tr>
+                 <th></th>
+                 
+                 <th width="150">Title</th>
+                 <th>Body</th>
+                 <th width="120">Last Modified</th>
+                 <th width="120">Created By</th>
+                 </tr>
+             </thead>
+         <tbody>
+        <tr class="row" ng-repeat="item in Notes">            
+            <td>{{item.Name}}</td>
+            <td>{{item.Body}}</td>
+            <td>{{item.LastModified}}</td>
+            <td>{{item.CreatedBy}}</td>
+        </tr>        
+        </tbody>
+        </table>
+</script>
+
+<script type="text/ng-template" id="attachmentval.html">   
+         <table class="table">
+             <thead>
+                 <tr>
+                 <th></th>
+                 <th>Action</th>
+                 <th>Title</th>
+                 <th>Last Modified</th>
+                 <th>Created By</th>
+                 </tr>
+             </thead>
+         <tbody>
+        <tr class="row" ng-repeat="item in AttachmentsVal">
+            <td><a href="{{item.URL}}" target="_blank">View</a></td>
+            <td>{{item.Name}}</td>
+            <td>{{item.LastModified}}</td>
+            <td>{{item.CreatedBy}}</td>
+        </tr>
+        </tbody>
+        </table>
+</script>
+
+<script type="text/ng-template" id="attachmentq.html">    
+         <table class="table">
+             <thead>
+                 <tr>
+                 <th></th>
+                 <th>Action</th>
+                 <th>Title</th>
+                 <th>Last Modified</th>
+                 <th>Created By</th>
+                 </tr>
+             </thead>
+         <tbody>
+        <tr class="row" ng-repeat="item in AttachmentsQuote">
+            <td><a href="{{item.URL}}" target="_blank">View</a></td>
+            <td>{{item.Name}}</td>
+            <td>{{item.LastModified}}</td>
+            <td>{{item.CreatedBy}}</td>
+        </tr>
+        </tbody>
+        </table>
+</script>
+
+<script type="text/ng-template" id="attachment.html">    
+         <table class="table">
+             <thead>
+                 <tr>
+                 <th></th>
+                 <th>Action</th>
+                 <th>Title</th>
+                 <th>Last Modified</th>
+                 <th>Created By</th>
+                 </tr>
+             </thead>
+         <tbody>
+        <tr class="row" ng-repeat="item in Attachments">
+            <td><a href="{{item.URL}}" target="_blank">View</a></td>
+            <td>{{item.Name}}</td>
+            <td>{{item.LastModified}}</td>
+            <td>{{item.CreatedBy}}</td>
+        </tr>
+        </tbody>
+        </table>
+</script>
+
+<!-- Related List -->
+<script type="text/ng-template" id="related.html">
+    <div class="container-element box item-related" style="margin:0px;" ng-init="item.index=0;"><!--{{::item}}-->
+       <h2>{{item.Title}}</h2><!--<button ng-click="item.hide=!item.hide">Toggle</button>-->
+      
+      
+      
+      <div ng-show="item.asTab">
+       <!-- tab header -->
+    
+       <ul class="nav nav-tabs">
+       <li ng-repeat="rg in tt[item.Name.toLowerCase()].Records" ng-class="{'active' : $index == item.index}">
+          
+  
+       
+           <a ng-click="item.index=$index" ng-show="item.tabLabelField">  {{rg[item.Name.toLowerCase() + "-" + item.tabLabelField.toLowerCase() ]}}</a>
+           <a ng-click="item.index=$index" ng-hide="item.tabLabelField">Item - {{$index}}</a>
+       </li>
+       </ul>
+       
+       <div class="tab-content">
+           <div ng-repeat="rg in tt[item.Name.toLowerCase()].Records"  ng-show="$index == item.index" class="tab-pane" ng-class="{'active' : $index == item.index}"
+           id="tab{{item.Name}}{{$index}}">
+           
+           
+           
+                <div class="col-sm-12 gridcolumn" ng-repeat="list in item.columns" ng-include="'list.html'"></div>
+                <div class="clearfix"></div> 
+           </div>
+       </div>
+       </div>
+ 
+       
+       <div ng-hide="item.asTab">
+       <div ng-repeat="rg in tt[item.Name.toLowerCase()].Records">
+            <div class="col-sm-12 gridcolumn" ng-repeat="list in item.columns" ng-include="'list.html'"></div>
+            <div class="clearfix"></div>         
+           
+           
+       </div>
+       </div>
+      
+    </div>
+</script>
+
+
+
+<!-- Template for a normal list item -->
+<script type="text/ng-template" id="item.html">
+
+
+<!--
+    <div class="item col-sm-4"><label>{{item.label}}</label></div>
+    <div class="item col-sm-8">{{getFieldValue(item)}} <span ng-show="item.helptext" class="pull-right" class="glyphicon glyphicon-info-sign">i</span></div> 
+-->    
+    
+    
+    <div class="row" style="padding:5px;" ng-hide="::item.hide">
+    
+    <!--
+        <div ng-show="item.lookupId">
+            <div class="col-sm-4 md_label" style="text-align:right">{{::item.label}}</div>
+            <div class="col-sm-8 md-input" ng-bind-html="getFieldValueLink(item)">
+                
+            </div>        
+        </div>
+    -->
+    
+    
+        <div ng-hide="item.label2">
+            <div class="col-sm-4 md_label" style="text-align:right">{{::item.label}}</div>
+            <div class="col-sm-8 md-input">
+                <!-- one way binding on getFieldValue doesn't seem to work on some pc's -->
+                <div ng-show="item.fieldtype == 'BOOLEAN'">
+                   <input type="checkbox" checked="getFieldValue(item)" disabled="true"/>
+                </div>
+           
+                <div ng-hide="item.fieldtype == 'BOOLEAN'">
+               
+                <!--<span ng-bind-html="::trustAsHtml(getFieldValue(item))"></span>-->
+                <span ng-bind-html="getFieldValue(item)"></span>
+                <span " ng-show="::item.helptext" class="pull-right" class="glyphicon glyphicon-info-sign">i</span><!--{{$parent.item}}-->  <!--{{::item}}-{{list}}-->
+                </div>
+                
+                
+               <!-- OLD <span ng-bind-html="getFieldValue(item)"></span>-->
+            </div>
+        </div>
+        <div ng-show="item.label2">
+            <div class="col-sm-2 md_label" style="text-align:right">{{::item.label}}</div>
+            <div class="col-sm-10 md-input">
+                <!-- one way binding on getFieldValue doesn't seem to work on some pc's -->
+               <div ng-show="item.fieldtype == 'BOOLEAN'">
+                   <input type="checkbox" checked="getFieldValue(item)" disabled="true"/>
+                </div>
+           
+                <div ng-hide="item.fieldtype == 'BOOLEAN'">
+                
+                <span ng-bind-html="getFieldValue(item)"/>
+                
+        
+                <span " ng-show="::item.helptext" class="pull-right" class="glyphicon glyphicon-info-sign">i</span><!--{{$parent.item}}-->  <!--{{::item}}-{{list}}-->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    <!--
+    <div class="md_label">{{item.label}}</div>
+    <div class="md_input" ng-show="!EditMode ">{{getFieldValue(item)}}</div> 
+    <div class="md_input" ng-show="EditMode ">
+    <input ng-model="FieldData[item.varname]"/>
+    </div>    
+    -->
+    <div class="clearfix"></div>
+</script>
+
+
+<!-- Template for a normal list item -->
+<script type="text/ng-template" id="relateditem.html">
+<div class="row" style="padding:5px" ng-hide="::item.hide">
+
+<div ng-hide="item.label2">
+    <div class="col-sm-4 md_label" style="text-align:right">{{::item.label}}</div>
+    <div class="col-sm-8"><!--{{item.apiname}}-->    
+   
+        <div ng-show="item.fieldtype == 'BOOLEAN'">
+           <input type="checkbox" checked="rg[item.objectname+'-'+ item.apiname]" disabled="true"/>
+        </div>
+   
+        <div ng-hide="item.fieldtype == 'BOOLEAN'">
+        <!--<span ng-hide="item.ShowHtml">  {{::rg[item.objectname+'-'+ item.apiname]}}  </span>-->
+        <span ng-bind-html="::trustAsHtml(getFieldValueRelated(rg,item))"/ >
+        <span " ng-show="::item.helptext" class="pull-right" class="glyphicon glyphicon-info-sign">i</span><!--{{$parent.item}}-->  <!--{{::item}}-{{list}}-->
+        </div>
+    </div>
+</div>
+        
+        
+<div ng-show="item.label2">
+    <div class="col-sm-2 md_label" style="text-align:right">{{::item.label}}</div>
+    <div class="col-sm-10"><!--{{item.apiname}}-->    
+   
+        <div ng-show="item.fieldtype == 'BOOLEAN'">
+           <input type="checkbox" checked="rg[item.objectname+'-'+ item.apiname]" disabled="true"/>
+        </div>
+   
+        <div ng-hide="item.fieldtype == 'BOOLEAN'">
+        <span ng-hide="item.ShowHtml">  {{::rg[item.objectname+'-'+ item.apiname]}}  </span>
+        <span ng-bind-html="::trustAsHtml(rg[item.objectname+'-'+ item.apiname])"/ ng-show="::item.ShowHtml">
+        <span " ng-show="::item.helptext" class="pull-right" class="glyphicon glyphicon-info-sign">i</span><!--{{$parent.item}}-->  <!--{{::item}}-{{list}}-->
+        </div>
+    </div>
+</div>        
+        
+        
+        
+        
+        <!--{{tt['applicant__c']['applicant__c-id']}}
+        {{item.apiname}}-->
+<!--                {{tt[item.objectname][item.objectname+'-'+ item.apiname]}} -->
+        
+</div>  
+    </div>    
+    <div class="clearfix"></div>
+</script>
+
+<!-- Template for a normal list item -->
+<script type="text/ng-template" id="label.html">
+    <div ng-class="item.class" ng-show="!item.apiname">{{item.label}}</div>
+
+    
+</script>
+
+<script type="text/ng-template" id="grid2.html">
+<table width="100%" >
+       
+        <tr ng-repeat="row in item.rows">
+        
+            
+            <td ng-repeat="list in row.columns" ng-include="'list.html'" valign="top"> 
+               
+            </td> 
+        </tr>
+        </table>
+
+</script>
+
+
+
+
+<div class="row">
+<div class="pageContentLeft">
+
+<div style="padding:10px;padding-left:25px;">
+
+
+
+
+<div ng-repeat="list in models.dropzones"  style="padding-bottom:5px;">
+    <!--<button class="btn btn-info" style="width:80px" ng-click="$parent.selecteddropzone =$index"><i class="fa" ng-class="list.icon"></i></button>-->
+    <button class="leftMenuBtn btn" style="white-space:normal;"  ng-click="$parent.selecteddropzone =$index;$parent.showDetail=false;">{{list.label}}</button>
+   
+</div>
+   <!-- <div  style="padding-bottom:5px;">
+        <button class="leftMenuBtn btn"  ng-click="showDetail = true;selecteddropzone =-1;">Salesforce</button>
+    </div>-->
+</div>
+
+</div>
+<div class="pageContentRight" style="overflow-y: auto;">
+
+<!--
+<div class="stage-bar"> 
+    <ul class="checkout-bar">
+        <li ng-repeat="item in StageData" ng-class="item.Type">{{item.Name}}</li>
+    </ul>
+</div>
+-->
+
+<!--
+<div class="stages-bar">
+  <table width="100%">
+    <tr>
+        <td ng-repeat="item in StageData" style="min-width:100px;padding:10px;" ng-class="{'event-completed' : item.Type =='visited', 'event-current':item.Type == 'active', 'event-open': item.Type == 'next' }">{{item.Name}}</td>
+    </tr>
+    </table>
+</div>
+-->
+
+<nav class="stages-bar" style="text-align:center">
+    <div class="alert alert-danger" ng-show="StageData.Lost" style="margin-top:10px;height:50px;color:#fff;font-size:1.6em;background-image:none;background-color:#b94a48;">
+        Opportunity Lost
+    </div>
+
+
+  <ol class="cd-breadcrumb triangle text-center" style="max-width:100%;width:100%;" ng-hide="StageData.Lost">
+    <li style="height:48px" ng-repeat="item in StageData.Items"  ng-class="{'visited' : item.Type =='visited', 'current':item.Type == 'active'}">
+   
+    <span style="height:50px;" href="#">{{item.Name}}</span>
+    </li>
+    </ol>
+</nav>
+
+<!-- Main area with dropzones and source code -->
+<div class="col-md-12">
+    <div class="row">
+        <div ng-repeat="(zone, list) in models.headerzone" class="col-sm-12">
+            <div class="dropzone">                          
+                <div ng-include="'list.html'"></div>
+            </div>
+        </div>
+        
+    
+        <!--
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingOne">
+              <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  {{Heading}}
+                </a>
+              </h4>
+            </div>
+            <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                  <div ng-repeat="(zone, list) in models.headerzone" class="col-sm-12">
+                        <div class="dropzone box ">                          
+                            <div ng-include="'list.html'"></div>
+                        </div>
+                    </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        -->
+    </div>
+
+    <div class="row">
+        <div ng-repeat=" list in models.dropzones" class="col-sm-12" >
+            <div class="dropzone box box-yellow" ng-show="$index == selecteddropzone">
+                <h3>{{list.label}}</h3>
+                
+                <div ng-include="'zlist.html'"></div>
+            </div>
+        </div>
+    </div>
+ 
+
+    
+
+
+
+</div>
+
+
+</div>
+</div>
+
+<!-- Load Screen -->
+ 
+        <div class="regionLoad" ng-cloak="ng-cloak" ng-show="WaitingForResponses > 0" style="box-sizing: content-box !important; -webkit-box-sizing: content-box !important;">
+            <div class="regionWaitBackground" style="box-sizing: content-box !important; -webkit-box-sizing: content-box !important;"></div>
+            <div class="regionWaitMessage text-center" style="box-sizing: content-box !important; -webkit-box-sizing: content-box !important;">
+                <div class="regionSpinner">
+                    
+                </div>
+                <div class="regionTitle">
+                    Please wait
+                </div>
+                                
+            </div>
+        </div>
+
+
+</div>
+  
+  
+  
+  
+  
+  </body>
+  </html>
+</apex:page>

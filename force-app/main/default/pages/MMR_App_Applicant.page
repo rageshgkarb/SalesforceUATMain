@@ -1,0 +1,32 @@
+<apex:page showHeader="false" sidebar="false" controller="MMR_App_Applicant" docType="html-5.0" action="{!Setup}">
+<head>
+    <c:MMR_PageHeader ></c:MMR_PageHeader>   
+
+</head>
+<body>
+
+  
+  <c:MMR_Header title="Application - Additional Applicant Information" numapps="{!numapplying}" opp="{!bopp}" hide="{!IsCredit}"/>
+
+      <div class="container">
+              <c:MMR_App_Nav active="1"  EventId="{!EventId}" rendered="{!!IsCredit && !IsCompleted}"/>
+              <c:MMR_App_Nav_Links active="1"  EventId="{!EventId}" rendered="{!!IsCredit && IsCompleted}"/>
+              
+              <c:MMR_Credit_Nav EventId="{!eventid}" ActiveSection="D" active="0" rendered="{!IsCredit}"/>
+    
+        <apex:form id="aForm" styleClass="form-horizontal">
+        <div class="row"> <!-- C0644 Added in name param-->
+            <c:MMR_App_Applicant acc="{!Accs[0]}" applicantno="1" rendered="{!numapplying > 0}" type="Applicant" name="{!Applicants[0].ApplicantName__c}" />
+            <c:MMR_App_Applicant acc="{!Accs[1]}" applicantno="2" rendered="{!numapplying > 1}" type="Applicant" name="{!Applicants[1].ApplicantName__c}" />
+            <div class="clearfix"/>
+            <c:MMR_App_Applicant acc="{!Accs[2]}" applicantno="3" rendered="{!numapplying > 2}" type="Applicant" name="{!Applicants[2].ApplicantName__c}" />
+            <c:MMR_App_Applicant acc="{!Accs[3]}" applicantno="4" rendered="{!numapplying > 3}" type="Applicant" name="{!Applicants[3].ApplicantName__c}" />
+        </div>
+        
+        <apex:commandButton value="Previous" styleClass="btn-primary" action="{!Prev}" rendered="{!!IsCredit && !IsCompleted}"/>
+      <apex:commandButton value="Save" styleClass="btn-success" action="{!Save}" rendered="{!!IsCompleted || IsCredit }"/>
+            <apex:commandButton value="Next" styleClass="btn-danger" action="{!GoAdditional}" rendered="{!!IsCredit && !IsCompleted}"/>
+        </apex:form>
+    </div>
+</body>
+</apex:page>

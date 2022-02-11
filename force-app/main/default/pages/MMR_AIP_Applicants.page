@@ -1,0 +1,220 @@
+<apex:page showHeader="false" sidebar="false" controller="MMR_AIP_Applicants_Controller" docType="html-5.0" action="{!Setup}">
+<head>
+    <c:MMR_PageHeader ></c:MMR_PageHeader>
+   <style>
+.nav-pills>li>a {
+    font-size:14px;
+}
+</style>
+</head>
+<body>
+ 
+
+<c:MMR_Header title="AIP" numapps="{!numapplying}" opp="{!bopp}"/>
+    <apex:form id="aForm2" styleClass="form-horizontal">
+    
+     <div class="container">
+    <div class="row" style="padding:20px;" >
+    <h2>
+            <apex:outputPanel rendered="{!IsHPP}">
+                <a href="{!HPPDocument}" target="_blank">Face to Face IDD</a>
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!IsBTL}">
+                <a href="{!BTLDocument}"  target="_blank">Face to Face IDD</a>
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!IsPrem}">
+                <a href="{!PremierDocument}"  target="_blank">Face to Face IDD</a>
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!IsHPS}">
+                <a href="{!HPSDocument}"  target="_blank">Face to Face IDD</a>
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!IsHTB}">
+                <a href="{!HTBDocument}"  target="_blank">Face to Face IDD</a>
+            </apex:outputPanel>
+            <!--C0782 REAC changes start-->
+            <apex:outputPanel rendered="{!IsREACHPP}">
+                <a href="{!HPPDocument}"  target="_blank">Face to Face IDD</a>
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!IsREACHPS}">
+                <a href="{!HPSDocument}"  target="_blank">Face to Face IDD</a>
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!IsREACBTL}">
+                <a href="{!BTLDocument}"  target="_blank">Face to Face IDD</a>
+            </apex:outputPanel>
+            <apex:outputPanel rendered="{!IsREACBTLS}">
+                <a href="{!BTLDocument}"  target="_blank">Face to Face IDD</a>
+            </apex:outputPanel>
+            <!--C0782 REAC changes end-->
+            </h2>
+    </div>
+   
+    
+    <ul class="nav nav-pills nav-justified">
+    <li class="active"><a href="#">Manage Applicants</a></li>
+    <li ><a href="/apex/MMR_AIP?id={!EventId}">AIP</a></li>   
+</ul>
+    
+    <div class="row">
+        <apex:pageMessages ></apex:pageMessages>
+    </div>
+    
+    <div class="row">
+    <apex:dataTable value="{!Applicants}" var="item" id="criteriaTable" styleClass="table">
+                
+   
+         
+            <apex:column >
+            <apex:facet name="header">No.</apex:facet>
+             <apex:outputLabel value="{!item.Applicant_Number__c}"> </apex:outputLabel>
+         </apex:column>
+          <apex:column >
+            <apex:facet name="header">EBS ID</apex:facet>
+             <apex:outputLabel value="{!item.Prospect_Customer__r.EBS_ID__c}"> </apex:outputLabel>
+         </apex:column>
+                <apex:column >
+            <apex:facet name="header">Title</apex:facet>
+             <apex:outputLabel value="{!item.Prospect_Customer__r.Salutation}"> </apex:outputLabel>
+         </apex:column>
+         
+          <apex:column >
+            <apex:facet name="header">First Name</apex:facet>
+             <apex:outputLabel value="{!item.Prospect_Customer__r.FirstName}"> </apex:outputLabel>
+         </apex:column>
+         
+                   <apex:column >
+            <apex:facet name="header">Last Name</apex:facet>
+             <apex:outputLabel value="{!item.Prospect_Customer__r.LastName}"> </apex:outputLabel>
+         </apex:column>
+         
+           <apex:column >
+            <apex:facet name="header">Date of Birth</apex:facet>
+             
+         
+    <apex:outputText value="{0,date,dd'/'MM'/'yyyy}">
+    <apex:param value="{!item.Prospect_Customer__r.Date_of_Birth__c}" />
+     </apex:outputText>
+             
+             
+         </apex:column>
+         
+               <apex:column >
+            <apex:facet name="header">Remove</apex:facet>
+            <apex:outputLabel value="Primary Applicant" rendered="{!item.Applicant_Number__c  == 1}"></apex:outputLabel>
+            
+            <apex:commandLink styleClass="redBtn" action="{!delItem}" value="Del"  immediate="true" rendered="{!item.Applicant_Number__c != 1}">
+                <apex:param name="whichLine" value="{!item.Applicant_Number__c}" assignTo="{!whichLine}"/>
+            </apex:commandLink>
+         </apex:column>
+                     
+
+
+                     
+</apex:dataTable>
+      </div>
+      
+       
+   
+   
+   <div class="row">
+       <div class="col-md-6">
+           <div class="panel panel-primary">
+               <div class="panel-heading">
+                   Look up existing customer
+               </div>
+               <div class="panel-body">
+               <div class="col-sm-12">
+                   <div class="row">
+                       <apex:inputField styleClass="form-control" value="{!ap.AccountLookup__c}"/>
+                   </div>
+                   <div class="row">
+                       Please enter the full name of the customer
+                   </div>
+                   <div class="row">
+                       <apex:commandButton styleClass="btn-primary" value="Add existing customer" action="{!LookupApplicant}"/>
+                   </div>
+               </div> 
+               </div>              
+           </div>       
+       </div>
+       <div class="col-md-6">
+           <div class="panel panel-primary">
+               <div class="panel-heading">
+                   Add new prospect/customer
+               </div>
+               <div class="panel-body">
+               <div class="col-sm-12">
+                   <div class="row">
+                       <div class="form-group">
+                           <div class="col-sm-6">
+                               <label>Title</label>
+                           </div>
+                           <div class="col-sm-6">
+                               <apex:selectList styleClass="form-control" value="{!TempTitle}" size="1">
+                                    <apex:selectOptions value="{!Titles}" ></apex:selectOptions>
+                                </apex:selectList>
+                           </div>
+                       </div>                   
+                   </div>
+                   
+                   <div class="row">
+                       <div class="form-group">
+                           <div class="col-sm-6">
+                               <label>First Name</label>
+                           </div>
+                           <div class="col-sm-6">
+                               <apex:inputText styleClass="form-control" value="{!TempFirstName}" label="First Name"/>
+                           </div>
+                       </div>                   
+                   </div>
+                   
+                   <div class="row">
+                       <div class="form-group">
+                           <div class="col-sm-6">
+                               <label>Last Name</label>
+                           </div>
+                           <div class="col-sm-6">
+                               <apex:inputtext styleClass="form-control" value="{!TempLastName}" label="Last Name"/>
+                           </div>
+                       </div>                   
+                   </div>
+                   
+                   <div class="row">
+                       <div class="form-group">
+                           <div class="col-sm-6">
+                               <label>Date of birth</label>
+                           </div>
+                           <div class="col-sm-6">
+                               <apex:inputField styleClass="form-control" value="{!TempAccount.Date_of_Birth__c}" label="Date of birth"/>
+                           </div>
+                       </div>                   
+                   </div>
+                   <div class="row">
+                       <div class="col-sm-offset-1">
+                           <apex:commandButton styleClass="btn-primary" value="Add new prospect/customer" action="{!AddApplicant}"/>
+                       </div>
+                   </div>
+               
+               </div>
+               </div>               
+           </div>        
+       </div>
+   
+   </div>
+   
+   
+   
+   <div class="row">
+       <div class="pull-right">
+           <apex:commandButton value="Next" action="{!NextAIP}" styleClass="btn-danger"/>
+       </div>
+   </div>
+</div>
+   
+
+   
+    </apex:form>
+
+
+
+</body>
+</apex:page>

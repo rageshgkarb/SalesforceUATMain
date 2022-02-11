@@ -1,0 +1,72 @@
+<!-- C0252 Focus on the Basics Survey KD -->
+
+
+<apex:page standardController="Focus_on_the_Basics__c" sidebar="false" showHeader="false">
+
+    <apex:form >
+        <apex:pageBlock >
+  
+          <h1>Strategic Initiatives - Focus on the Basics</h1>
+          <div></div>       
+         <div></div>
+          <div></div>
+          <apex:pageBlockSection >
+                <img src="https://{!$Label.Domain_URL}/servlet/servlet.ImageServer?id=015D00000035aYe&oid=00D20000000MKv1&lastMod=1418039257000">
+</img>
+          
+          
+          <apex:outputField label="Name" value="{!Focus_on_the_Basics__c.Name}" />
+          
+          
+          </apex:pageBlockSection> 
+          <apex:pageBlockSection >
+              <apex:outputField label="Department name" value="{!Focus_on_the_Basics__c.Department_Name__c}" />
+              <apex:outputField label="Date" value="{!Focus_on_the_Basics__c.Date__c}" />  
+              <apex:outputField label="1. I have heard about risk management and the way this is dealt within Al Rayan Bank" value="{!Focus_on_the_Basics__c.Heard_about_Risk_Management__c}" />              
+              <apex:outputField label="10. I have completed my Personal Basic Statement and it has been reviewed by my superviso " value="{!Focus_on_the_Basics__c.Controls_I_operate_are_reviewed__c}" />    
+              <apex:outputField label="2. I appreciate the importance of risk management within Al Rayan Bank" value="{!Focus_on_the_Basics__c.Importance_of_risk_management__c}" />
+              <apex:outputField label="11. Al Rayan Bank uses a recognised training method in providing me with suitable training to allow me to complete my role effectively" value="{!Focus_on_the_Basics__c.Recognised_training_method__c}" /> 
+              <apex:outputField label="3. I understand the policies and procedures relevant to me working at the bank" value="{!Focus_on_the_Basics__c.Understand_policies_and_procedures__c}" />          
+              <apex:outputField label="12. The management of risk and their control is included in my objectives and PDP" value="{!Focus_on_the_Basics__c.Included_in_my_objectives_and_PDP__c}" />           
+              <apex:outputField label="4. I understand the risks that may impact the area I work in" value="{!Focus_on_the_Basics__c.Risks_that_may_impact_the_area_I_work_in__c}" />
+              <apex:outputField label="13. My own competency and training in the management of risk is recognized by my line manager" value="{!Focus_on_the_Basics__c.Competency_and_training_in_management__c}" />
+              <apex:outputField label="5. I understand the controls that are operated to mitigate those risks and the reason I do them" value="{!Focus_on_the_Basics__c.Controls_that_are_operated_to_mitigate__c}"/>   
+              <apex:outputField label="14. My manager is receptive to suggestions for improvements regarding risks and controls" value="{!Focus_on_the_Basics__c.Manager_is_receptive_to_suggestions__c}" /> 
+              <apex:outputField label="6. I understand the consequences of not completing the controls" value="{!Focus_on_the_Basics__c.Consequences_of_not_completing__c}" /> 
+              <apex:outputField label="15. Al Rayan Bank has identified key people in supporting me in the management of risk within my area." value="{!Focus_on_the_Basics__c.Identified_key_people_in_supporting_me__c}" /> 
+              <apex:outputField label="7. If I identify a problem whilst completing a control I understand what action to take" value="{!Focus_on_the_Basics__c.Problem_whilst_completing_a_control__c}" />              
+              <apex:outputField label="16. I understand the Board’s and Executive managements approach towards risk within Al Rayan Bank" value="{!Focus_on_the_Basics__c.Board_s_and_Executive_Management__c}" /> 
+              <apex:outputField label="8. I know what to do if a risk is not properly identified or not being properly controlled" value="{!Focus_on_the_Basics__c.If_a_risk_is_not_properly_identified__c}" />
+               <apex:outputField label="17. The way controls are operated within my department has been explained to me" value="{!Focus_on_the_Basics__c.Controls_operated_within_my_department__c}" />
+              <apex:outputField label="9. I know who to turn to if I have a risk or issue that needs resolving" value="{!Focus_on_the_Basics__c.Turn_to_if_I_have_a_risk_or_issue__c}" />              
+                          
+                             
+                            
+             
+              
+              
+              
+              
+              
+              
+              
+              
+           </apex:pageBlockSection>
+           <apex:pageBlockSection columns="1">
+           <apex:pageblockSectionItem >
+               <apex:outputLabel value="18. You receive communication in key changes and decisions that impact your area of responsibility?" for="Priority" />
+                    <apex:outputField value="{!Focus_on_the_Basics__c.Communication_In_Key_Changes__c}" id="Priority" /> 
+           </apex:pageblockSectionItem>
+           <apex:pageblockSectionItem >
+               <apex:outputLabel value="19. You feel able to report and communicate risks and issues openly and honestly?" for="Service" />
+                    <apex:outputField value="{!Focus_on_the_Basics__c.Report_and_communicate_ris__c}" id="Service" /> 
+           </apex:pageblockSectionItem>
+           <apex:pageblockSectionItem >
+               <apex:outputLabel value="20. Senior Management and Executives lead by example and promote a risk aware culture?" for="Comments" />
+                    <apex:outputField value="{!Focus_on_the_Basics__c.Managers_and_Execs_promote_Risk_Culture__c}" id="Comments" /> 
+           </apex:pageblockSectionItem>
+           </apex:pageBlockSection>              
+           
+      </apex:pageBlock>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,646 @@
+<apex:page controller="EligibilityController"   sidebar="false" showHeader="false" title="Applicant Eligibility" action="{!Setup}">
+<head>
+<apex:includeScript value="{!$Resource.pca__LookupComponent}"/>
+<apex:includeScript value="{!$Resource.pca__EditPageLauncher}"/>
+<apex:includeScript value="{!$Page.pca__EditPageSettings}"/>
+
+<apex:stylesheet value="http://fast.fonts.net/cssapi/127ef530-1eee-4efb-8ebe-815719f876a3.css"/>
+
+<c:ExternalKendo ></c:ExternalKendo> 
+
+<script>
+                $(document).ready(function() {
+                
+                $('select.salutation').change(function() {
+                
+                var sal = $("select.salutation").val();
+               
+                       if(sal == 'Other')
+                {
+                    $(".salother").removeClass('hide');
+                }
+                else
+                {
+                $(".salother").addClass('hide');
+                }
+                
+                
+                });
+                
+                
+                var errorCount =  $(".message").children().length;
+                
+                
+                //var ddl= $("[id$='emp1']").data("kendoDropDownList");
+               // ddl.list.width(400);
+                
+                
+                if(errorCount > 0)
+                {   
+                    $("#errorContent").hide();                
+                  //  $("#noErrors").text(errorCount);
+                }
+                else
+                {
+                $("#errorPanel").hide();
+                }
+                
+                
+                
+                $("#errorHeader").click(function()
+                {
+                    $("#errorContent").slideToggle(500);
+                }               
+                );  
+                
+                     $(".BTLHide").parent().parent().addClass('hide');   
+               
+                    
+                     $(".BTLHide").parent().parent().addClass('hide');
+                    
+                    $(".BTLSelect").change(function() {
+                 
+                    var btlval =  $("select.BTLSelect").val();
+                    
+                    if(btlval == 'Buy to Let')
+                    {
+                         
+                         $(".BTLHide").parent().parent().removeClass('hide');
+                    }
+                    else
+                    {
+                          $(".BTLHide").parent().parent().addClass('hide');
+                    }
+                     
+                });
+                });
+                </script>
+</head>
+<body>
+
+<apex:form id="aForm" >
+
+<div id="formWrapper" >
+<div class="header" >
+<h1>Eligibility Assessment</h1>
+</div>
+
+<style>
+
+h1{
+font-size: 24px;
+}
+h2{
+font-size: 20px;
+}
+h3{
+font-size: 18px;
+}
+
+#navlist li
+{
+display: inline;
+list-style-type: none;
+
+tr.hide td, tr.hide th { display:none }
+
+
+background-color: #CCC;
+margin-left: 0px;
+padding: 20px;
+}
+
+#navlist li a
+{
+font-weight:bold;
+color: #162F61;
+}
+
+.k-textbox
+{
+    width: 200px;
+}
+
+.k-dropdown
+{
+    width: 200px;
+}
+
+
+#navlist ul
+{
+background-color: #CCC;
+padding: 20px;
+}
+
+#appTable td
+{
+padding: 5px;
+}
+
+#errorHeader
+{
+    background-color: #C00;    
+    color: #ffffff;
+    font-size: 12pt;
+    font-weight: bold;
+    padding: 10px;
+    cursor: pointer;
+}
+
+
+.errorTab
+{
+   
+    color: #fff;
+    background-color: #C00;
+}
+
+.errorTab a
+{
+    color: #fff;
+}
+
+.errorTab.k-state-active
+{
+    color:inherit;
+}
+
+.delete-message {
+    width: 200px;
+}
+
+.bPageBlock .detailList .labelCol
+{
+    width: 30%;
+}
+
+.bPageBlock .detailList .dataCol
+{
+    width: 60%;
+}
+
+.bPageBlock .detailList .data2Col
+{
+    width: 60%;
+}
+
+
+
+</style>
+<div id="pageContent">
+<apex:pageBlock rendered="{!IsFirstPage}">
+
+<apex:pagemessages />
+<apex:pageBlockSection columns="1" >
+
+<apex:pageBlockSectionItem >
+<apex:outputLabel value="Number of Applicants" for="recent"/>
+<apex:selectList style="width:200px;"  value="{!Opp.Number_of_People_Applying__c }"  id="recent" size="1" >            
+            <apex:selectoption itemLabel="1" itemValue="1"></apex:selectoption>
+            <apex:selectoption itemLabel="2" itemValue="2"></apex:selectoption>
+            <apex:selectoption itemLabel="3" itemValue="3"></apex:selectoption>
+            <apex:selectoption itemLabel="4" itemValue="4"></apex:selectoption>
+</apex:selectList> 
+
+</apex:pageBlockSectionItem>
+
+<apex:pageBlockSectionItem >
+<apex:outputLabel value="Product Type" for="addInterest"/>
+<apex:inputField style="width:200px;" value="{!Opp.Interested_in__c}" id="addInterest"  label="Interested In" styleClass="BTLSelect"   />
+</apex:pageBlockSectionItem>
+
+
+ 
+
+
+
+
+</apex:pageBlockSection>
+</apex:pageBlock>
+
+
+
+<apex:pageBlock rendered="{!!IsFirstPage }" >
+
+<apex:outputPanel rendered="{!WasAccountFound}">
+<div id="existingAccount">
+An existing customer has been found on the system.
+
+Customers found are:
+
+
+<table>
+<thead>
+<th>Name</th>
+<th>First Name</th>
+<th>Last Name</th>
+</thead>
+
+<apex:repeat rendered="{!WasAccountFound}" value="{!AccountsFound}" var="aFound">
+    <tr>
+        <td><a href="/{!aFound.id}">{!aFound.name}</a></td>
+        <td>{!aFound.FirstName}</td>
+        <td>{!aFound.LastName}</td>
+       
+    </tr>
+</apex:repeat>
+</table>
+</div>
+
+</apex:outputPanel>
+
+
+<div id="errorPanel">
+<div id="errorHeader">
+Please click here to review error message(s)
+</div>
+
+
+
+
+
+<div id="errorContent">
+
+<apex:messages styleClass="message errorM3"/>
+</div>
+</div>
+
+                    <div id="d1" class="title" style="margin:20px;padding:20px;border:1px solid #ccc;background-color:#EDF3FF">
+                    
+
+
+
+
+<h1>Personal Details</h1>
+<table class="detailList" >
+    <tbody>
+    <tr>
+        <td class="labelCol">Title</td><td class="dataCol"><apex:selectList size="1" value="{!Title}" styleClass="salutation" id="addTitle" required="false" label="Title" >
+            <apex:selectOptions value="{!Titles}"/>
+            </apex:selectList>
+        </td>
+       </tr><tr> <td class="labelCol">
+        First Name</td><td class="dataCol"><apex:inputtext styleClass="required"  value="{!FirstName}" id="addFirst"  label="First Name" /></td><td></td>
+    </tr>
+    
+    <tr>
+        <td class="labelCol">Last Name</td><td class="dataCol"><apex:inputtext styleClass="required" value="{!Surname}" id="addLast"  label="Last Name"    /></td><td></td>
+      </tr><tr>  <td class="labelCol">Current Address Country</td><td class="dataCol"><apex:inputField styleClass="required" value="{!Applicant1.BillingCountry}" id="addrCountry"  label="Current Address Country" /></td><td></td>
+    </tr>
+    
+    <tr>
+        <td class="labelCol">Current Address Post Code</td><td class="dataCol"><apex:inputField value="{!Applicant1.BillingPostalCode}" id="addrPostCode" required="false" label="Current Address Post Code" /></td><td></td>
+      </tr><tr>  <td class="labelCol"><apex:outputLabel for="addrStreet" value="Customer Address" title="-Please key if unable to locate using postcode search">
+   <img src="/s.gif" alt="Help-" class="helpIcon"/>
+</apex:outputlabel></td><td class="dataCol"><apex:inputField styleClass="required" value="{!Applicant1.BillingStreet}" id="addrStreet"  label="Customer address" /></td><td></td>
+    </tr>
+                
+                
+    <tr>
+        <td class="labelCol">Current Address City</td><td class="dataCol"><apex:inputField styleClass="required" value="{!Applicant1.BillingCity}" id="addrCity"  label="Current Address City" /></td><td></td>
+       </tr><tr> <td class="labelCol">Phone</td><td class="dataCol"><apex:inputField styleClass="required" value="{!Applicant1.Home_Telephone_No__c}" id="addPhone"  label="Phone" /></td><td></td>
+    </tr>
+    
+    <tr>
+        <td class="labelCol">Email</td><td class="dataCol"><apex:inputField styleClass="required email" value="{!Applicant1.PersonEmail}" id="addPersonEmail"  label="Email" /> </td><td></td>
+       </tr><tr> <td colspan="2"><apex:inputHidden id="addrHouseNo" value="{!Applicant1.Customer_Address_House_No__c}"/></td>
+    </tr>    
+    </tbody>
+    </table>
+</div>                   
+                   
+                    
+
+              
+                    
+                    
+                    <div id="d2" class="title" style="margin:20px;padding:20px;border:1px solid #ccc;background-color:#FFF2DB">
+                    
+
+
+<div>
+<h2>Applicant 1</h2>
+ <apex:pageBlockSection showHeader="false" title="First Applicant" columns="1" id="App1" lang="">
+   <apex:inputField styleClass="dateInput" value="{!Applicant1.Date_of_Birth__c}" id="dob1"  />
+   <apex:inputField value="{!Applicant1.Employment_Type__c}" id="emp1" />
+  <apex:inputField value="{!Applicant1.Net_Monthly_Income__c}" id="income1" /> 
+    <apex:inputField value="{!Applicant1.Total_monthly_financial_commitments__c }" id="commintments1" /> 
+  </apex:pageBlockSection>
+  </div>
+
+<apex:outputPanel Rendered="{!Opp.Number_of_People_Applying__c > 1}">
+<div>
+  <h2>Applicant 2</h2>
+  <apex:pageBlockSection showHeader="false" title="Second Applicant" columns="1" id="App2" lang="" dir=""  >
+
+ <apex:inputField value="{!Applicant2.Date_of_Birth__c}" id="dob2" />
+    
+    
+   
+    
+   <apex:inputField value="{!Applicant2.Employment_Type__c}" id="emp2" />
+  <apex:inputField value="{!Applicant2.Net_Monthly_Income__c}" id="income2" />
+      <apex:inputField value="{!Applicant2.Total_monthly_financial_commitments__c }" id="commintments2" />  
+  </apex:pageBlockSection>
+  </div>
+  </apex:outputPanel>
+
+<apex:outputPanel Rendered="{!Opp.Number_of_People_Applying__c > 2}">
+ <div>
+  <h2>Applicant 3</h2>
+ <apex:pageBlockSection showHeader="false" title="Third Applicant" columns="1" id="App3" lang="" >
+   
+   <apex:inputField value="{!Applicant3.Date_of_Birth__c}" id="dob3" />
+   <apex:inputField value="{!Applicant3.Employment_Type__c}" id="emp3" />
+  <apex:inputField value="{!Applicant3.Net_Monthly_Income__c}" id="income3" /> 
+      <apex:inputField value="{!Applicant3.Total_monthly_financial_commitments__c }" id="commintments3" /> 
+  </apex:pageBlockSection>
+    </div>
+</apex:outputPanel>
+
+<apex:outputPanel Rendered="{!Opp.Number_of_People_Applying__c > 3}">
+ <div >    
+ <h2>Applicant 4</h2>
+  <apex:pageBlockSection showHeader="false" title="Fourth Applicant" columns="1" id="App4" lang="" >
+    <apex:inputField value="{!Applicant4.Date_of_Birth__c}" id="dob4" />
+   <apex:inputField value="{!Applicant4.Employment_Type__c}" id="emp4" />
+  <apex:inputField value="{!Applicant4.Net_Monthly_Income__c}" id="income4" /> 
+      <apex:inputField value="{!Applicant4.Total_monthly_financial_commitments__c }" id="commintments4" /> 
+  </apex:pageBlockSection>
+    </div>
+</apex:outputPanel>
+ 
+ 
+
+                    
+                    </div>
+                    
+                    
+                    
+                     <div id="d4" class="title" style="margin:20px;padding:20px;border:1px solid #ccc;background-color:#EDF3FF">
+                     <h1>Property Details</h1>
+                    <apex:pageBlockSection showHeader="false" title="Fourth Applicant" columns="1" id="propertyForm" lang="" >
+                    
+            
+                   
+              
+                    
+                    <apex:inputField value="{!Opp.Property_type__c}" id="addtPropType"  label="Property Type" />
+                    <apex:inputField value="{!Opp.Purpose_of_Finance__c}" id="addPurpose"  label="Purpose of Finance" />
+                    <apex:inputField value="{!Opp.Purchase_price_market_value__c}" id="oppPrice"  label="Purchase price/market value" />
+                    <apex:inputField value="{!Opp.Term_of_Finance__c}" id="oppTerms"  label="Term of Finance" />
+
+<apex:inputField value="{!Opp.Finance_Required__c}" id="addFinReq"  label="Finance required" />
+ 
+<apex:inputField value="{!Opp.Have_you_ever_had_a_CCJ_or_been_bankrupt__c}" id="ccj"  label="Please tick if you have a CCJ or are bankrupt " />
+<apex:inputField value="{!Opp.Will_the_property_be_the_main_residence__c }" id="mainres"  label="Will the property be the main residence? " rendered="{!Opp.Interested_in__c != 'Buy To Let Purchase Plan'}" />
+
+
+
+
+<apex:pageBlockSectionItem rendered="{!Opp.Interested_in__c == 'Buy To Let Purchase Plan'}">
+                    <apex:outputLabel value="Do you currently own a property which you owned for more than 12 months?" for="ownproperty" rendered="{!Opp.Interested_in__c == 'Buy To Let Purchase Plan'}"/>
+                    <apex:inputField value="{!opp.Do_you_currently_own_a_property__c }"  id="ownproperty" rendered="{!Opp.Interested_in__c == 'Buy To Let Purchase Plan'}"/>
+</apex:pageBlockSectionItem>
+<apex:inputField value="{!Opp.Monthly_rental_income__c}" id="rental"  rendered="{!Opp.Interested_in__c == 'Buy To Let Purchase Plan'}" />
+
+
+</apex:pageBlockSection>
+
+                    </div>
+                    
+                    
+                    
+                    <div id="d3" class="title" style="margin:20px;padding:20px;border:1px solid #ccc;background-color:#FFF2DB">
+                    <h1>Marketing</h1>
+                    <apex:pageBlockSection showHeader="false" title="Fourth Applicant" columns="1" id="marketForm" lang="" >
+                    <apex:inputField value="{!Opp.CampaignId}" id="addCamp"  label="Campaign" />
+<apex:inputField value="{!Applicant1.Are_you_happy_for_IBB_to_hold_your_data__c}" id="addHappy"  label="Are you happy for Al Rayan Bank to hold your data?" />
+<a target="_blank" href="/resource/1337159017000/MarketingConsent">Link To DPA statement</a>
+
+
+<style>
+
+#emailList
+{
+padding-top: 10px;
+}
+
+#emailList li
+{
+display: inline;
+list-style-type: none;
+margin-left:20px;
+
+} 
+</style> 
+
+
+<apex:inputField value="{!Opp.How_did_you_hear_about_IBB__c }" id="addhowHear"  label="How did you hear about Al Rayan Bank?" />
+<apex:inputField value="{!Opp.Other_heard_about_IBB__c }" id="howhearother" required="false" label="Other" />
+
+
+
+
+</apex:pageBlockSection>  
+
+<div style="padding-top: 20px">
+Please indicate if you DO NOT wish to be contacted by Al Rayan Bank by any of the following
+
+<div id="emailList" >
+ <ul>
+ <li>Email : <apex:inputCheckbox value="{!HasEmail}" title="Email"/></li>
+  <li>Mail : <apex:inputCheckbox value="{!HasMail}" title="Mail"/></li>
+   <li>Phone : <apex:inputCheckbox value="{!HasPhone}" title="Phone"/></li>
+    <li>SMS : <apex:inputCheckbox value="{!HasSMS}" title="SMS"/></li>
+  
+
+ 
+ </ul>
+</div>
+</div>                  
+                    </div>  
+</apex:pageBlock>
+
+
+
+<div style="padding: 15px;">
+<table width="100%">
+<tr>
+<td>
+<input id="btnClose"  type="button" name="backButton" value="Close" style="display:none;" 
+       
+       />
+</td>
+<td align="right">
+
+       
+       
+<apex:commandButton styleClass="redBtn" value="Next" action="{!changeNumApps}" rendered="{!IsFirstPage}"    />       
+       <apex:commandButton styleClass="redBtn" value="Check Eligibility" action="{!check}" id="but" rendered="{!!IsFirstPage && !Completed}"  />
+</td>
+</tr>
+</table>
+</div>
+
+
+
+<div>
+<table width="100%">
+<tr>
+<td valign="top">
+
+
+
+<div style="padding: 20px">
+<apex:image url="/servlet/servlet.ImageServer?id=015L000000097aO&oid=00DL00000000S4r&lastMod=1351094699000" rendered="{!Opp.StageName == 'HPP -Eligible Opportunity'}"  />
+<apex:image url="/servlet/servlet.ImageServer?id=015L000000097aP&oid=00DL00000000S4r&lastMod=1351094699000" rendered="{!Opp.StageName == 'Not Eligible - HPP'}" />
+<div>
+<br/><br/>
+
+
+
+
+<apex:outputText value="{!EligibleOutput}" escape="false" />
+
+
+
+
+</div>
+</div>
+
+
+<apex:pageBlock rendered="{!Opp.StageName == 'HPP -Eligible Opportunity' && !Completed   }">
+<apex:commandButton value="Complete Eligibility" action="{!CompleteAIP}"    />
+</apex:pageBlock>
+<apex:pageBlock rendered="{!Opp.StageName == 'HPP -Eligible Opportunity' && AllowAIP  && !Completed  }">
+<apex:commandButton value="Start AIP" action="{!AIP}"    />
+
+</apex:pageBlock>
+
+<apex:pageBlock rendered="{!Opp.StageName == 'Not Eligible - HPP' && !Completed   }">
+<apex:commandButton value="Complete Eligibility" action="{!CompleteAIP}"    />
+</apex:pageBlock>
+
+
+</td>
+<td valign="top">
+
+<apex:outputPanel id="MeetingPanel" rendered="{!Opp.StageName == 'Eligible Opportunity'}">
+    <h1>Book Appointment</h1>
+    <div>
+<a target="_blank" href="{!BdmLink}" >Book Appointment for {!BdmName} </a>
+</div>
+</apex:outputPanel>
+</td>
+</tr>
+
+</table>
+</div>
+
+
+
+<!-- footer 
+<div style="background-color: #e31b1d; height: 30px;">
+
+</div>-->
+</div>
+</div>
+
+
+
+
+
+
+
+
+  </apex:form>   
+  
+   <script type="text/javascript"> 
+  $(document).ready(function() {
+
+    // validate signup form on keyup and submit
+    $("form[id$='aForm']").validate();
+    
+    
+jQuery.validator.messages.required = "Please enter a value";
+   
+});
+  
+  
+
+</script>
+
+
+
+
+<span id="pca_status" style="display:none;" />
+<script type="text/javascript">
+    pca_Load();
+</script>
+
+<span id="hideMyParent"></span>
+<script type="text/javascript">
+$(document).ready(function() { 
+
+
+
+
+
+
+var now = new Date();
+var startYear=now.getFullYear()-100;
+var endYear=now.getFullYear();
+var optionsString=''; 
+if(startYear<endYear){
+    for(i=startYear;i<endYear+1;i++){
+        optionsString += "<option value=\""+i+"\">"+i+"</option>";
+       
+    } 
+    $('#calYearPicker').html(optionsString);
+} 
+//$('#sidebarDiv #hideMyParent').parent().parent().hide();
+});
+
+
+
+
+$("#btnClose").click(function(e) {
+    e.preventDefault();
+    
+    var kendoWindow = $("<div />").kendoWindow({
+            title: "Confirm",
+            resizable: false,
+            modal: true
+        });
+    
+    kendoWindow.data("kendoWindow")
+        .content($("#delete-confirmation").html())
+        .center().open();
+    
+    kendoWindow
+        .find(".delete-confirm,.delete-cancel")
+            .click(function() {
+                if ($(this).hasClass("delete-confirm")) {
+                    window.close();
+                }
+                
+                kendoWindow.data("kendoWindow").close();
+            })
+            .end()
+});
+
+
+</script>
+
+<script id="delete-confirmation" type="text/x-kendo-template">
+    <p class="delete-message">Are you sure?</p>
+
+    <button class="delete-confirm k-button">Yes</button>
+ <a href="#" class="delete-cancel">No</a>
+</script>
+
+
+  </body>
+</apex:page>

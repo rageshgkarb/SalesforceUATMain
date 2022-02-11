@@ -1,0 +1,33 @@
+<apex:page standardController="Account" extensions="AccountEmailExtension">
+<apex:form >
+
+
+<style>
+
+#navlist li
+{
+display: inline;
+list-style-type: none;
+margin-left:0;
+}
+</style>
+
+<b>Please indicate if you DO NOT wish to be contacted by IBB by any of the following</b><br> </br>
+<b>If THE CUSTOMER REQUIRES MARKETING BY ALL FORMS, PLEASE PRESS SAVE WITH NO BOXES TICKED</b>
+
+ <h2></h2>
+ <div id="navlist">
+ <ul>
+ <li>Email : <apex:inputCheckbox value="{!HasEmail}" title="Email"/></li>
+  <li>Mail : <apex:inputCheckbox value="{!HasMail}" title="Mail"/></li>
+   <li>Phone : <apex:inputCheckbox value="{!HasPhone}" title="Phone"/></li>
+    <li>SMS : <apex:inputCheckbox value="{!HasSMS}" title="SMS"/></li>
+  
+<li> <apex:commandButton action="{!save}" value="Save"/>
+</li>
+ 
+ </ul>
+ </div>
+
+ </apex:form>
+</apex:page>

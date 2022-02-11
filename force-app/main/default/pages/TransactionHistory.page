@@ -1,0 +1,45 @@
+<apex:page controller="TransactionHistory"    >
+<apex:image url="{!$Resource.CorporateLogo}"/>
+<apex:pageBlock title="Transaction History">
+
+
+<apex:form >
+<apex:commandLink value="<<Back to Account with IBB" action="{!redirectAccountWithIBB}"/>
+<br/><br/>
+<b><apex:outputLabel value="Account "></apex:outputLabel></b>
+<b><apex:outputLabel value="{!ebsIdDisplay}"></apex:outputLabel></b>
+<br/><br/>
+<b><apex:outputLabel value="Display Transactions From "></apex:outputLabel></b>
+<apex:inputField value="{!cal.Date_From__c}" />
+<b><apex:outputLabel value=" Up To "></apex:outputLabel></b>
+<apex:inputField value="{!cal.Date_To__c}" />
+<apex:commandButton action="{!retrieveTransactionHistory}" value="GO" />
+<br/><br/>
+<apex:commandButton action="{!clearDates}" value="Clear Dates" />
+<apex:outputPanel id="errorMsgs" rendered="true"> <apex:pageMessages rendered="true"/> </apex:outputPanel>
+
+
+</apex:form>
+
+</apex:pageBlock>
+<!--<apex:pageMessages />-->
+<apex:pageBlock title="Transaction History Detail">
+<b><apex:outputLabel value="Starting Balance "></apex:outputLabel></b>
+<b><apex:outputLabel value="{!startingBalanceDisplay}"></apex:outputLabel></b>
+<br/><br/>
+
+<apex:pageBlockTable var="item" value="{!tranList}" id="tranHistory" >
+    <apex:column headerValue="Posting Date" width="10%" value="{!item.itemPostingDate}"></apex:column>
+    <apex:column headerValue="Value Date" width="10%" value="{!item.itemValueDate}"></apex:column>      
+    <apex:column headerValue="Transaction Name" width="15%" value="{!item.itemTranName}"></apex:column> 
+    <apex:column headerValue="Reference" width="15%" value="{!item.itemRef}"></apex:column>
+    <apex:column headerValue="Description" width="20%" value="{!item.itemDesc}"></apex:column>     
+    <apex:column headerValue="Debits" width="10%" style="text-align: right;" value="{!item.itemDisplayDebit}"></apex:column>
+    <apex:column headerValue="Credits" width="10%" style="text-align: right;" value="{!item.itemDisplayCredit}"></apex:column>     
+    <apex:column headerValue="Account Balance" width="20%" style="text-align: right;" value="{!item.itemDisplayRunningBalance}"></apex:column> 
+</apex:pageBlockTable>
+</apex:pageBlock>
+
+ <c:calHackOneYearBack />
+<script>function setFocusOnLoad() {}</script>
+</apex:page>

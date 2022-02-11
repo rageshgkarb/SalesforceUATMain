@@ -1,0 +1,52 @@
+@charset "UTF-8";
+/* CSS Document print styles for IBB by nick@neamus.net */
+@import url("modules/advertPromos.css");
+@import url("modules/tables.css");
+@import url("modules/formsmaster.css");
+
+
+body { 
+	background:white;
+	font-size: 12pt;
+	font-family:Arial, Helvetica, sans-serif;
+}
+#accessibility,
+.otherSearch,
+.headerLogo,
+#topNav,
+#rightColumn,
+#footer,
+.footerMenus,
+#extras,
+.shadow,
+#badges,
+.textOnly,
+#header .logo { display:none;}
+
+.printMe { display:block;}
+.crumb { font-size:8pt;}
+
+.wrapper, #contents {
+	width: auto; 
+	margin: 0 2.5% 0 0;
+	padding: 0; 
+	border: 0;
+	float: none !important;
+	color: black; 
+	background: transparent;
+}
+div#contents {
+   padding-top: 1em;
+}
+
+
+a:link, 
+a:visited {
+	color: #0033CC;
+	background: transparent;
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+
+

@@ -1,0 +1,753 @@
+<apex:component >
+<script>
+
+Array.prototype.move = function (old_index, new_index) {
+    while (old_index < 0) {
+        old_index += this.length;
+    }
+    while (new_index < 0) {
+        new_index += this.length;
+    }
+    if (new_index >= this.length) {
+        var k = new_index - this.length;
+        while ((k--) + 1) {
+            this.push(undefined);
+        }
+    }
+    this.splice(new_index, 0, this.splice(old_index, 1)[0]);
+    return this; // for testing purposes
+};
+
+
+var demoApp = angular.module("demo",["dndLists","kendo.directives" ]);
+
+    /**
+ * The controller doesn't do much more than setting the initial data model
+ */
+ 
+
+ 
+ 
+ 
+angular.module("demo").controller("NestedListsDemoController", ["$scope","$timeout","servicePage", function($scope,$timeout,servicePage) {
+
+    $scope.AddZone = function()
+    {
+        $scope.models.dropzones.push({label:"zone", icon:'', items:[]});
+    }
+    
+    
+    
+    $scope.addTab = function(item)
+    {
+        item.columns.push([]);
+    }
+    
+    $scope.removeTab = function(item,index)
+    {
+        item.columns.splice(index,1);
+        item.col.splice(index,1);
+    }
+    
+    $scope.MoveZoneUp = function(currentIndex){
+        if(currentIndex != 0)
+        {
+            $scope.models.dropzones.move(currentIndex,currentIndex -1);
+        }
+    }
+    
+    $scope.MoveZoneDown = function(currentIndex){
+        if(currentIndex   < $scope.models.dropzones.length -1)
+        {
+            $scope.models.dropzones.move(currentIndex,currentIndex +1);
+        }
+    }
+    
+    $scope.DeleteZone = function(currentIndex){
+        $scope.models.dropzones.splice(currentIndex, 1);
+    }
+    
+    $scope.Save= function()
+        {
+            //serviceApplication.LoadShow('Processing...');
+            
+            
+            
+            
+            
+            $scope.buildFieldList();
+            
+         
+            
+            var data = {Name:$scope.LayoutName, config: JSON.stringify(angular.copy($scope.models)),ButtonFields:$scope.ButtonFields, fields: $scope.SFfields, ID:$scope.id, related: $scope.RelatedItems}
+            
+            
+            
+            
+            servicePage.Save(data)
+                    .then(
+                        function(result){
+                        alert(result);
+                        
+                        },
+                        function(error){
+                            //serviceApplication.LoadHide(false);  
+                        }
+                    ); 
+        }   
+    
+    
+    
+   
+    
+    $scope.FilteredItems = [];
+    
+    $scope.FilterFields = function(){
+        $scope.FilteredItems = $scope.FilteredFields();    
+    }
+    
+    
+    
+    
+    
+    
+
+    $scope.Drop = function(item){
+        
+        if(item.type == 'tab')
+        {
+            
+        
+        
+            //call kendo?
+            //var t = $("#tab" + item.id).data("kendoTabStrip");
+            //var g = 1;
+            /*
+            window.setTimeout(function() {
+               var s = "#tab" + (item.id -1) + " a";
+               var g = $("#tab" + item.id).data("kendoTabStrip");
+                   $(s).click(function(e){
+                        e.preventDefault();
+                        $(this).tab('show');
+                    });
+                 
+           }, 1000);
+            */
+        }
+        item.id = item.id + 1;
+        
+    }
+    
+    $scope.getField = function(key){
+       for(var prop in $scope.fields)
+       {
+           if($scope.fields[prop].key == key) return $scope.fields[prop];
+       }
+       return;
+    }
+    
+    $scope.getFieldValue = function(key){
+       for(var prop in $scope.fields)
+       {
+           if($scope.fields[prop].key == key) return $scope.fields[prop].value;
+       }
+       return;
+    }
+    
+    
+    
+    $scope.fields = [
+        {key :"account__c",  value: "a04534343DfdFD", objectname: "account"}
+    ];
+
+    $scope.buildFieldList = function(){
+    
+        //find all fields with in the configured template
+        
+        $scope.SFfields = [];
+        $scope.RelatedItems = [];
+        $scope.Buttons = [];
+        
+        var a = $scope.models.headerzone.A;
+        
+        $scope.findField(a);
+        
+        for(var obj in $scope.models.dropzones)
+        {
+            $scope.findField($scope.models.dropzones[obj].items);
+        }
+    }
+    
+    
+    
+    
+    
+    $scope.GetRelatedFields = function()
+    {
+        if(!$scope.models.selected || !$scope.models.selected.Name) return;    
+        var name = $scope.models.selected.Name;       
+        
+        servicePage.GetRelatedFields(name)
+                    .then(
+                        function(result){                       
+                        for(var x = 0; x < result.length; x++)
+                        {
+                            var r = result[x];
+                            for(var y = 0; y < r.fields.length; y++){
+                                r.fields[y].type = 'relateditem';
+                            }
+                            
+                            if(r.fieldname === 'master') r.fieldname = 'MASTER OBJECT';
+                        }
+                       
+                       $scope.RelatedFields = result;
+                       $scope.SelectedRelated = 'MASTER OBJECT'; 
+          
+                        },
+                        function(error){
+                            //serviceApplication.LoadHide(false);  
+                        }
+                    );         
+    }
+    
+    
+    
+    $scope.GetFields = function(objectName)
+    {             
+        
+        servicePage.GetRelatedFields(objectName)
+                    .then(
+                        function(result){                       
+                        for(var x = 0; x < result.length; x++)
+                        {
+                            var r = result[x];
+                            for(var y = 0; y < r.fields.length; y++){
+                                r.fields[y].type = 'item';
+                            }
+                            
+                            if(r.fieldname === 'master') r.fieldname = 'MASTER OBJECT';
+                        }
+                       
+                       $scope.MasterFields = result;
+                       $scope.SelectedMaster = 'MASTER OBJECT'; 
+          
+                        },
+                        function(error){
+                            //serviceApplication.LoadHide(false);  
+                        }
+                    );         
+    }
+    /*
+    $scope.GetFields= function(objectName)
+        {
+            
+            servicePage.GetObjectFields(objectName)
+                    .then(
+                        function(result){
+                        
+                        
+                        
+                        //for(var x = 0; x < result.Items.length; x++)
+                        for(var x = 0; x < result.length; x++)
+                        {
+                            result[x].type = 'item';
+                        }
+                        $scope.FieldData = result;
+                        $scope.FilteredItems = result;
+                        
+                    
+                    //$scope.SetupData(id);
+                    //$scope.$apply();
+                        },
+                        function(error){
+                            //serviceApplication.LoadHide(false);  
+                        }
+                    ); 
+        } */
+        
+  
+        $scope.RelatedFieldsFilter = function(relatedfieldFilter, apiornameRelated, selectedRelated )
+        {
+          if(!selectedRelated || !$scope.RelatedFields ) return null ;
+          var selectedList = null;
+          
+          for(var x = 0; x < $scope.RelatedFields.length; x ++)
+          {
+              if(selectedRelated == $scope.RelatedFields[x].fieldname){
+                  selectedList = $scope.RelatedFields[x];
+                  break;
+              }              
+          }
+          
+          if(!selectedList) return null;
+          
+          if(!relatedfieldFilter) return selectedList.fields;
+          
+          
+          var lst = [];
+          
+          for(var x = 0; x < selectedList.fields.length; x++)
+          {
+              if(apiornameRelated == 'name')
+              {
+                  if($scope.RelatedFields [x].label){
+                      if(selectedList.fields[x].label.toLowerCase().indexOf(relatedfieldFilter.toLowerCase()) != -1)
+                          lst.push(selectedList.fields [x]);
+                  }
+              }
+              else
+              {
+                  if(selectedList.fields[x].apiname.toLowerCase().indexOf(relatedfieldFilter.toLowerCase()) != -1)
+                      lst.push(selectedList.fields[x]);
+              }
+          }
+          
+          return lst;
+      }  
+      
+      
+      $scope.MasterFieldsFilter = function()
+      {
+            var apiornameRelated = $scope.apiorname;
+            var relatedfieldFilter = $scope.fieldFilter;
+            var selectedRelated = $scope.SelectedMaster; 
+            
+            
+        
+          if(!selectedRelated || !$scope.MasterFields ) return null ;
+          var selectedList = null;
+          
+          for(var x = 0; x < $scope.MasterFields .length; x ++)
+          {
+              if(selectedRelated == $scope.MasterFields [x].fieldname){
+                  selectedList = $scope.MasterFields [x];
+                  break;
+              }              
+          }
+          
+          
+          
+          
+          if(!selectedList) return null;
+          
+          if(!relatedfieldFilter) return selectedList.fields;
+          
+          
+          var lst = [];
+          
+          for(var x = 0; x < selectedList.fields.length; x++)
+          {
+              if(apiornameRelated == 'name')
+              {
+                  if($scope.MasterFields [x].label){
+                      if(selectedList.fields[x].label.toLowerCase().indexOf(relatedfieldFilter.toLowerCase()) != -1)
+                          lst.push(selectedList.fields [x]);
+                  }
+              }
+              else
+              {
+                  if(selectedList.fields[x].apiname.toLowerCase().indexOf(relatedfieldFilter.toLowerCase()) != -1)
+                      lst.push(selectedList.fields[x]);
+              }
+          }
+          
+          return lst;
+      }  
+  
+        
+      $scope.FilteredFields = function()
+      {
+          if(!$scope.fieldFilter || !$scope.FieldData) return $scope.FieldData;
+          
+          var lst = [];
+          
+          for(var x = 0; x < $scope.FieldData.length; x++)
+          {
+              if($scope.apiorname == 'name')
+              {
+                  if($scope.FieldData[x].label){
+                      if($scope.FieldData[x].label.toLowerCase().indexOf($scope.fieldFilter.toLowerCase()) != -1)
+                          lst.push($scope.FieldData[x]);
+                  }
+              }
+              else
+              {
+                  if($scope.FieldData[x].apiname.toLowerCase().indexOf($scope.fieldFilter.toLowerCase()) != -1)
+                      lst.push($scope.FieldData[x]);
+              }
+          }
+          
+          return lst;
+      }  
+      
+      
+      $scope.AddGridRow =function(item){
+          var cells = [];
+          for(var i =0; i< item.columns.length; i++){
+              cells.push({});
+          }
+      
+          var row = {'columns':[]};
+          for(var i=0; i <item.columns;i++){
+              row.columns.push([]);
+          }
+      
+          item.rows.push(row);
+      }
+      
+      $scope.AddColumnRow = function(item)
+      {
+          item.columns += 1;
+          
+          for(var i=0; i<item.rows.length;i++){
+              item.rows[i].columns.push([]);
+          }          
+      }
+        
+        
+    $scope.ToggleFilter = function(){
+        if($scope.apiorname == 'name'){        
+            $scope.apiorname = 'api';
+        }
+        else{
+            $scope.apiorname = 'name';
+        }
+    }    
+    
+    $scope.ToggleFilterRelated = function(apiornameRelated){
+        if(apiornameRelated == 'name'){        
+            apiornameRelated = 'api';
+        }
+        else{
+           apiornameRelated = 'name';
+        }
+    }
+    
+    $scope.Setup= function(id)
+        {
+            $scope.id = id;
+        
+            if(!id || id == '' ) return;
+        
+        
+            $scope.id = id;
+            //serviceApplication.LoadShow('Processing...');
+            
+            $scope.GetFields('opportunity');
+            $scope.GetRelatedLists();
+            
+            servicePage.GetConfig(id)
+                    .then(
+                        function(result){
+                        //alert(result);
+                        var s = result.Data__c.replace('\&quot;','"');
+                        s = s.replace('&quot;','"');                        
+                        //var obj = JSON.parse(s);
+                        $scope.models = JSON.parse(s);  
+                        
+                        $scope.LayoutName = result.Name;                  
+                    
+                        $scope.models.templates= [
+                            {type: "item", id: 2, apiname:"", label:"Field"},
+                            {type: "relateditem", id: 2, apiname:"", label:"RelatedField"},
+                            {type: "tab", id: 2, apiname:"", selected: 0, label:"tabs",col: [{label:"Tab 1"},{label:"Tab 2"},{label:"Tab 3"}], columns: [[], [],[]]},
+                            {type: "label", id: 2, title:"SomeTitle", class:"title-md"},
+                            {type: "container", id: 1, columns: [[]], label:"1"},
+                            {type: "container2", id: 2, columns: [[], []], label:"2"},
+                            {type: "container3", id: 3, columns: [[], [],[]], label:"3"},
+                            {type: "related", id: 4, columns: [[]], label:"Related List"},
+                            {type: "grid2", id: 5, rows:[{t:1,columns: [[], []]}], columns: 2, label:"Grid"},
+                            {type: "attachment", id: 6, label:"Attachment"},
+                            {type: "attachmentval", id: 10, label:"Attachment Val"},
+                            {type: "note", id: 7, label:"Note"},
+                            {type: "activity", id:8, label:"Activity"},
+                            {type: "button", id:9, label:"Button"},
+                            {type: "buttonlist", id:9, label:"Button List", columns: [[]]},
+                            {type: "attachmentq", id: 6, label:"Attachment Quote"}
+                        ];
+                    
+                    $scope.models.trash = {headerzone: {
+            "A":[]
+        }};
+                    
+                    //$scope.SetupData(id);
+                    //$scope.$apply();
+                        },
+                        function(error){
+                            //serviceApplication.LoadHide(false);  
+                        }
+                    ); 
+        } 
+        
+        $scope.GetRelatedLists = function(){
+            
+            servicePage.GetRelatedLists ('opportunity')
+                    .then(
+                        function(result){
+                        
+                            for(var x =0; x < result.length; x++)
+                            {
+                                result[x].type = 'related';
+                                result[x].columns = [[]];
+                            }
+                        
+                             $scope.RelatedList = result;
+                        },
+                        function(error){
+                            //serviceApplication.LoadHide(false);  
+                        }
+                    ); 
+        
+        
+        }
+        
+        
+        $scope.GetRelatedFieldList = function(relatedObjectName){
+            for(var x = 0; x< $scope.RelatedItems.length; x++){
+                if($scope.RelatedItems[x].relatedobject === relatedObjectName)
+                    return $scope.RelatedItems[x];
+            }
+            return null;
+        }
+        
+        $scope.GetRelatedFieldListItem = function(list, item){
+            for(var x = 0; x< list.length; x++){
+                if(list[x] === item)
+                    return list[x];
+            }
+            return null;
+        }
+    
+    $scope.findField = function(items){
+
+        for(var obj in items)
+        {
+            var item = items[obj];
+        
+            if(item.type == "item")
+            {
+            
+                if(item.apiname && $scope.SFfields.indexOf(item.apiname) == -1){
+                    var varname = item.objectname.toLowerCase() + '-' +  item.apiname.toLowerCase();        
+                    item.varname = varname;            
+                    $scope.SFfields.push({apiname:item.apiname.toLowerCase(), objectname:item.objectname.toLowerCase(), varname:  varname });
+                }                    
+            }
+            else if(item.type == "button" && item.Fields){
+                var fieldAr = item.Fields.split(',');    
+                
+                if(!$scope.ButtonFields)
+                    $scope.ButtonFields = [];
+                
+                for(var i = 0; i < fieldAr.length; i++)
+                {
+                    var field = fieldAr[i];
+
+                    if(field && $scope.ButtonFields.indexOf(field) == -1){                  
+                        $scope.ButtonFields.push(field); 
+                    }   
+                }
+                $scope.Buttons.push(item);
+            }
+            else if(item.type == "relateditem"){
+                
+                item.objectname = item.objectname.toLowerCase();
+                item.apiname= item.apiname.toLowerCase();
+                
+                if(item.objectname && !$scope.GetRelatedFieldList(item.objectname)){
+                    $scope.RelatedItems.push({relatedobject:item.objectname.toLowerCase(),  fields:[]});                
+                }
+                
+                var fields = $scope.GetRelatedFieldList(item.objectname).fields;
+                
+                //find the field within the object 
+                //var ind = $scope.RelatedItems.indexOf(item.objectname.toLowerCase());
+                // var fields = $scope.RelatedItems[item.objectname.toLowerCase()];
+                
+                if(item.apiname && !$scope.GetRelatedFieldListItem(fields,item.apiname)){
+                    //add the field to the list
+                    fields.push(item.apiname.toLowerCase());
+                }
+            }
+            else
+            {
+                //related object
+                if(item.type === 'related'){
+                    if(item.Name && !$scope.GetRelatedFieldList(item.Name.toLowerCase())){
+                        $scope.RelatedItems.push({relatedobject:item.Name.toLowerCase(),relatedfield:item.Field.toLowerCase(),  fields:[]});                
+                    }                
+                }
+            
+                if(item.items !== undefined){
+                    $scope.findField(item.items);
+                }
+                else if(item.columns !== undefined )//columns
+                {
+                    //loop through collumns
+                    for (var c in item.columns)
+                    {
+                        var cols = item.columns[c];
+                        
+                        if(cols)
+                        {
+                            $scope.findField(cols);
+                        }
+                        
+                    }
+                    
+                }
+            }
+        }    
+    }
+    
+    
+
+
+    $scope.models = {
+        selected: null,
+        templates: [
+            {type: "item", id: 2, apiname:"", label:"Field"},
+            {type: "relateditem", id: 2, apiname:"", label:"RelatedField"},
+            {type: "tab", id: 2, apiname:"", selected: 0, label:"tabs",col: [{label:"Tab 1"},{label:"Tab 2"},{label:"Tab 3"}], columns: [[], [],[]]},
+            {type: "label", id: 2, title:"SomeTitle", class:"title-md"},
+            {type: "container", id: 1, columns: [[]], label:"1"},
+            {type: "container2", id: 2, columns: [[], []], label:"2"},
+            {type: "container3", id: 3, columns: [[], [],[]], label:"3"},
+            {type: "related", id: 4, columns: [[]], label:"Related List"}
+        ],
+        
+        headerzone: {
+            "A":[]
+        },
+                
+        dropzones :[]              
+    };
+    
+  $scope.$watch('RelatedItems', function(model) {
+        $scope.relatedAsJson = angular.toJson($scope.RelatedItems, true);
+    }, true);
+
+    $scope.$watch('models.dropzones', function(model) {
+        $scope.modelAsJson = angular.toJson($scope.models, true);
+    }, true);
+
+}]);
+
+
+demoApp.directive('ngEnter', function () {
+    return function (scope, element, attrs) {
+        element.bind("keydown keypress", function (event) {
+            if(event.which === 13) {
+                scope.$apply(function (){
+                    scope.$eval(attrs.ngEnter);
+                });
+ 
+                event.preventDefault();
+            }
+        });
+    };
+});
+
+
+angular.module("demo").service('servicePage', ['$q', '$rootScope', function ($q, $rootScope) {
+       this.Save = function(data)
+        {
+            var deferred = $q.defer();
+        Visualforce.remoting.timeout = 120000;
+            PageLayoutConfigController.SaveConfig(data,function(result, event){
+                if(event.status){
+                    deferred.resolve(result);
+                }
+                else {
+                    deferred.reject(event);
+                }     
+            });
+            return deferred.promise;
+        }
+        
+        this.GetFields= function(data)
+        {
+            var deferred = $q.defer();
+        Visualforce.remoting.timeout = 120000;
+        Visualforce.remoting.escape= false;
+            PageLayoutConfigController.GetFields(data,function(result, event){
+                if(event.status){
+                    deferred.resolve(result);
+                }
+                else {
+                    deferred.reject(event);
+                }     
+            },{ buffer: false, escape: false, timeout: 30000} );
+            return deferred.promise;
+        }
+        
+        this.GetRelatedFields= function(data)
+        {
+            var deferred = $q.defer();
+        Visualforce.remoting.timeout = 120000;
+        Visualforce.remoting.escape= false;
+            PageLayoutConfigController.GetRelatedFields(data,function(result, event){
+                if(event.status){
+                    deferred.resolve(result);
+                }
+                else {
+                    deferred.reject(event);
+                }     
+            },{ buffer: false, escape: false, timeout: 30000} );
+            return deferred.promise;
+        }
+        
+        
+        
+        this.GetObjectFields= function(data)
+        {
+            var deferred = $q.defer();
+        Visualforce.remoting.timeout = 120000;
+        Visualforce.remoting.escape= false;
+            PageLayoutConfigController.GetObjectFields(data,function(result, event){
+                if(event.status){
+                    deferred.resolve(result);
+                }
+                else {
+                    deferred.reject(event);
+                }     
+            },{ buffer: false, escape: false, timeout: 30000} );
+            return deferred.promise;
+        }
+        
+        this.GetRelatedLists= function(data)
+        {
+            var deferred = $q.defer();
+        Visualforce.remoting.timeout = 120000;
+        Visualforce.remoting.escape= false;
+            PageLayoutConfigController.GetRelatedLists(data,function(result, event){
+                if(event.status){
+                    deferred.resolve(result);
+                }
+                else {
+                    deferred.reject(event);
+                }     
+            },{ buffer: false, escape: false, timeout: 30000} );
+            return deferred.promise;
+        }
+        
+        this.GetConfig= function(data)
+        {
+            var deferred = $q.defer();
+        Visualforce.remoting.timeout = 120000;
+        Visualforce.remoting.escape= false;
+            PageLayoutConfigController.GetConfig(data,function(result, event){
+                if(event.status){
+                    deferred.resolve(result);
+                }
+                else {
+                    deferred.reject(event);
+                }     
+            },{ buffer: false, escape: false, timeout: 30000} );
+            return deferred.promise;
+        }
+
+   }]);
+
+</script>
+</apex:component>

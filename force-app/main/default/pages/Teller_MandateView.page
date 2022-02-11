@@ -1,0 +1,94 @@
+<apex:page applyBodyTag="false" showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false">
+
+<div id="SignatoriesAndMandates" ng-show="stage == '20'">
+                            <p />
+                            <div id="header">Signatories</div>
+                            <table class="table table-striped" id="Signatories" style="margin-top:0px;" >
+                                <thead>
+                                <tr>
+                                    <th class="col-sm-4">
+                                        EBS Id
+                                    </th>
+                                    <th class="col-sm-4">
+                                        Primary Account Holder
+                                    </th>
+                                    <th class="col-sm-4">
+                                        Customer Name
+                                    </th>
+                                    <th class="col-sm-4">
+                                        Relationship to Primary Applicant
+                                    </th>
+                                    <th class="col-sm-4">
+                                        Relationship Type
+                                    </th>
+                                    <th class="col-sm-4">
+                                        Signatory Group
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                
+                                <tr class="itemRow" ng-repeat="item in response.signatories" ng-class-Even="'BranchItemOdd'" style="padding:5px;margin:0px;">
+                                    <td class="col-sm-4">
+                                        <a href="/{{item.ProspectCustomerId}}" target="_blank">{{item.CustomerEBSId}}</a>
+                                    </td>
+                                    <td class="col-sm-4">
+                                        {{item.PrimaryAccountHolder}}
+                                    </td>
+                                    <td class="col-sm-4">
+                                        {{item.CustomerName}}
+                                    </td>
+                                    <td class="col-sm-4">
+                                        {{item.RelationshipToPrimaryApplicant}}
+                                    </td>
+                                    <td class="col-sm-4">
+                                        {{item.RelationshipType}}
+                                    </td>
+                                    <td class="col-sm-4">
+                                        {{item.SignatoryGroup}}
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+    
+                            <div id="header">Mandates</div>
+                            <table class="table table-striped" id="Mandates" style="margin-top:30px;" >
+                                <thead>
+                                <tr>
+                                    <th class="col-sm-4" ng-click="sortBy='MandateLimit'; reverse=!reverse;">
+                                        Limit
+                                    </th>
+                                    <th class="col-sm-4">
+                                        Mandate Rule
+                                    </th>
+                                    <th class="col-sm-4">
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                <tr class="itemRow" ng-repeat="item in response.mandates | orderBy:sortBy:reverse" ng-class-Even="'BranchItemOdd'" style="padding:5px;margin:0px;">
+                                    <td class="col-sm-4">
+                                        {{item.MandateLimit | currency:item.CcySymbol}}
+                                    </td>
+                                    <td class="col-sm-4">
+                                        {{item.Grouping}}
+                                    </td>
+                                    <td class="col-sm-4">
+                                        <a class="goldButton" ng-click="GotoMandateEdit(item.MandateId)">EDIT</a>
+                                        <a id="DeleteMandateButtonId" class="goldButton" ng-click="DeleteMandate(item.MandateId)">DELETE</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div class="functionfooter" >
+                                <div class="row">
+                                    <div class="col-sm-offset-1 col-sm-10">
+                                        <a id="NewMandateButton" class="goldButton" ng-click="GotoMandateEdit()">NEW MANDATE</a>
+                                        <a id="UpdateSignatoryGroupsButton" class="goldButton" ng-click="GotoSignatoryGroupEdit()">UPDATE SIGNATORY GROUPS</a>
+                                    </div>
+                                </div>
+                            </div> 
+                        </div>
+	
+</apex:page>

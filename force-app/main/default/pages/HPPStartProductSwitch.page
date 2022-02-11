@@ -1,0 +1,74 @@
+<apex:page controller="HPPStartProductSwitchController" standardStylesheets="false" action="{!Setup}"   sidebar="false" showHeader="false" title="Switch Product">
+    <head>
+        <c:KendoResource ></c:KendoResource>
+    </head>
+    <body>
+        <apex:form >
+            <div id="formWrapper">
+                <!-- C00095--> 
+                
+                <div id="container" >
+                    <table width="100%">
+                        <tr>
+                            <td valign="top" id="sidebar">
+                                
+                            </td>
+                            <td valign="top" id="contenttd">
+                                <div id="content">
+                                    <h1>Switch Product</h1>
+                                
+                              
+                                
+                                    <apex:outputPanel id="mainPageBlock">
+                                    <apex:pageMessages ></apex:pageMessages>
+                                    
+                                    <div style="padding:20px;">
+                                   
+                                   <div>
+                                   <table class="detailList">
+                                       <tr>
+                                           <td class="labelCol">Current Product</td>
+                                           <td class="dataCol">{!CurrentProduct.name}</td>                                           
+                                       </tr>
+                                       <tr>
+                                           <td class="labelCol">Account With IBB</td>
+                                           <td class="dataCol">{!AccWithIBB.Name}</td>
+                                       </tr>
+                                       <tr>
+                                           <td class="labelCol">Balance</td>
+                                           <td class="dataCol">£{!AccWithIBB.Available_Balance__c * -1}</td>
+                                       </tr>
+                                       <tr>
+                                           <td class="labelCol">Property Value</td>
+                                           <td class="dataCol"><apex:inputText dir="" value="{!MarketValue}"/></td>
+                                       </tr>
+                                   </table>
+                                   </div>
+                                   
+                                   
+                                  
+                                   
+                     
+<apex:commandButton value="Switch Product" action="{!StartSwitch}"/>
+               <!-- rendered="{!AllowStart}" -->                    
+                                   
+                               </div>
+                                    </apex:outputPanel>
+                                </div>
+                                
+                               
+                                
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+           
+
+          
+        </apex:form>
+
+
+        </body>
+</apex:page>

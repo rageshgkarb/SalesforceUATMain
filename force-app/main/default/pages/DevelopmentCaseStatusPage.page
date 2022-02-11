@@ -1,0 +1,24 @@
+<apex:page standardController="Case">
+    
+    <apex:outputText style="font-size: 1.2rem;color: #B68D4B;margin: 40px 0px 20px;" 
+        value="Case is at Submission for supporting documentation to be attached and approval by a Business Head once approved request can be moved to “Evaluate” in the workflow for initial evaluation by development." rendered="{!Case.Request_Workflow_Stage__c == 'Submission'}"/>  
+        
+    <apex:outputText style="font-size: 1.2rem;color: #B68D4B;margin: 40px 0px 20px;" 
+        value="Case is at Evaluate for initial evaluation by development and t-shit sizing once sized request can be moved by development to “Evaluated” in the workflow." rendered="{!Case.Request_Workflow_Stage__c == 'Evaluate'}"/> 
+    
+    <apex:outputText style="font-size: 1.2rem;color: #B68D4B;margin: 40px 0px 20px;" 
+        value="Case is at Evaluated Business Area can request estimation at this stage by moving to “Estimate” or back to “Evaluate” in the workflow if further evaluation required." rendered="{!Case.Request_Workflow_Stage__c == 'Evaluated'}"/>      
+    
+    <apex:outputText style="font-size: 1.2rem;color: #B68D4B;margin: 40px 0px 20px;" 
+        value="Case is at Estimate for work to be estimated by development to understand the details and evaluate the development and test effort required. Estimation and technical design documentation will be produced and then request can be moved by development to “Estimated” in the workflow." rendered="{!Case.Request_Workflow_Stage__c == 'Estimate'}"/>      
+    
+    <apex:outputText style="font-size: 1.2rem;color: #B68D4B;margin: 40px 0px 20px;" 
+        value="Case is at Estimated Business Area can request that the work is put into schedule at this stage by moving to “Request”, or if changes are made to the requirements moved back to “Estimate”." rendered="{!Case.Request_Workflow_Stage__c == 'Estimated'}"/>      
+    
+    <apex:outputText style="font-size: 1.2rem;color: #B68D4B;margin: 40px 0px 20px;" 
+        value="Case is at Request for scheduling by development, work s prioritised by agreement with the Business, work requests and assigned a priority based on the Scoring ranking Categories assessment attached to the request and current commitments and capacity." rendered="{!Case.Request_Workflow_Stage__c == 'Request'}"/>      
+    
+    <apex:outputText style="font-size: 1.2rem;color: #B68D4B;margin: 40px 0px 20px;" 
+        value="Case is at Scheduled work has been prioritised and assigned to development, work is now tracked and reported in the development process." rendered="{!Case.Request_Workflow_Stage__c == 'Scheduled'}"/>      
+                 
+</apex:page>

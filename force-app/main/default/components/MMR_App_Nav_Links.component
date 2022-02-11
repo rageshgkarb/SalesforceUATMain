@@ -1,0 +1,18 @@
+<apex:component >
+<apex:attribute type="String" description="" name="Active" required="true"/>
+
+
+<apex:attribute type="String" description="" name="EventId" required="true"/>
+<div style="padding-bottom:10px;">
+<ul class="nav nav-pills nav-justified">
+
+  <li class="{!IF((Active=='0'),"active","") }"><a href="{!IF((Active!='0'),"/apex/MMR_App_Details?id="+ EventId,"#") }">Application Details</a></li>
+    <li class="{!IF((Active=='1'),"active","") }"><a href="{!IF((Active!='1'),"/apex/MMR_App_Applicant?id="+ EventId,"#") }">Additional Applicant Information</a></li>
+    <li class="{!IF((Active=='2'),"active","") }"><a href="{!IF((Active!='2'),"/apex/MMR_App_Additional?id="+ EventId,"#") }">Additional Information</a></li>
+    <li class="{!IF((Active=='3'),"active","") }"><a href="{!IF((Active!='3'),"/apex/MMR_App_Valuation?id="+ EventId,"#") }">Valuation Information</a></li>
+    <li class="{!IF((Active=='4'),"active","") }"><a href="{!IF((Active!='4'),"/apex/MMR_App_Payment?id="+ EventId,"#") }">Payment Details</a></li>
+    <li class="{!IF((Active=='5'),"active","") }"><a href="{!IF((Active!='5'),"/apex/MMR_App_Confirmation?id="+ EventId,"#") }">Application Confirmation</a></li>
+       
+</ul>
+</div>
+</apex:component>

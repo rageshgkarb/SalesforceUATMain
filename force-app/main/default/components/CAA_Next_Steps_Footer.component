@@ -1,0 +1,128 @@
+<apex:component >
+    <div id="next-steps">
+        <div class="SectionTitle">
+            If you need to contact us
+        </div>
+        <div>
+            <div class="row">
+                <div class="col-sm-4 border-right">
+                    <div class="row">
+                        <div class="col-xs-2">
+                    
+                        <span class="fa-stack fa-lg" style="color: rgb(179,153,93);font-size:18px;">
+                              <i class="fa fa-circle fa-stack-2x"></i>
+                              <i class="fa fa-phone fa-stack-1x" style="color:#fff;"></i>
+                        </span>
+                        </div>
+                        
+                        <div class="col-xs-10">
+                            <div>
+                                <p class="contact-title">
+                                    <strong>Call us</strong><br/>
+                                    0800 4080 786                        
+                               </p>
+                       
+                                <p>
+                                    <strong>Lines are open</strong><br/>
+                                    Monday to Friday: 9am - 7pm<br/>
+                                    Saturday: 9am - 1pm
+                                </p>
+                                
+                                <p>
+                                    <strong> Phoning from outside the UK?</strong><br/>
+                                    Call 0044 129 889 0137
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+                <div class="col-sm-4 border-right">
+                <div class="row">
+                        <div class="col-xs-2">
+                    
+                        <span class="fa-stack fa-lg" style="color: rgb(179,153,93);font-size:18px;">
+                              <i class="fa fa-circle fa-stack-2x"></i>
+                              <i class="fa fa-map-marker fa-stack-1x" style="color:#fff;"></i>
+                        </span>
+                        </div>
+                        
+                        <div class="col-xs-10">
+                            <div class="next-steps-contact">
+                                <p class="contact-title">
+                                    <strong>Visit us</strong><br/>
+                                    in branch
+                                </p>
+                                <p>
+                                    <strong>You can search for your local Al Rayan Bank or branch or agency online</strong>
+                                </p>
+                                <p>
+                                     <a href="http://www.alrayanbank.co.uk/useful-info-tools/about-us/branch-finder/" target="_blank">Find a branch</a>
+                                </p>
+                            </div>
+                        
+                        </div>
+                </div>
+                
+                
+                
+                
+                
+                
+                </div>
+                <div class="col-sm-4">
+                    <div class="row">
+                        <div class="col-xs-2">
+                    
+                        <span class="fa-stack fa-lg" style="color: rgb(179,153,93);font-size:18px;">
+                              <i class="fa fa-circle fa-stack-2x"></i>
+                              <i class="fa fa-envelope-o fa-stack-1x" style="color:#fff;"></i>
+                        </span>
+                        </div>
+                        
+                        <div class="col-xs-10">
+                            <div class="next-steps-contact">
+                        <p class="contact-title">
+                            <strong>Message us</strong><br/>
+                            online
+                        </p>
+                        <p>
+                            <strong>Simply leave a comment or question and we will reply as soon as we can</strong>
+                        </p>
+                        <p>
+                        
+                        <div >
+                        
+                            <span class="fa-stack fa-lg" style="color: rgb(179,153,93);">
+                              <i class="fa fa-circle fa-stack-2x"></i>
+                              <i class="fa fa-twitter fa-stack-1x" style="color:#fff;"></i>
+                            </span><a href="https://twitter.com/Al_RayanBank">Twitter</a>
+                            <br/>
+                            <span class="fa-stack fa-lg" style="color: rgb(179,153,93);">
+                              <i class="fa fa-circle fa-stack-2x"></i>
+                              <i class="fa fa-facebook fa-stack-1x" style="color:#fff;"></i>
+                            </span><a href="https://www.facebook.com/alrayanbank">Facebook</a>
+                        </div>                 
+                        </p>
+                    </div>
+                        </div>
+                    </div>
+                    
+                        
+                
+                
+                
+                
+                
+                
+                    
+                </div>
+            </div>
+            
+           
+            
+            
+        </div>
+    </div>
+</apex:component>

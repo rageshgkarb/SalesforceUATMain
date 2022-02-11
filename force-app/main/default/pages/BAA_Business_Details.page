@@ -1,0 +1,1161 @@
+<!--  C0307  -->
+
+<apex:page showHeader="false" sidebar="false" docType="html-5.0" controller="BAA_BusinessDetails_Controller">
+    <head>
+       
+        <c:BAA_Resource ></c:BAA_Resource>
+        <apex:includeScript value="{!URLFOR($Resource.ibbstyleexternal, 'knockout-min.js')}"/>
+     
+        <apex:include pageName="pca__Component"/>
+        
+        <style>
+            #customers-list .k-item.k-state-hover{
+                color:#fff;
+            }
+            
+            #customers-list ul li{
+                margin-left:0px;
+            }
+            
+            #customers-list{
+                border:2px solid;
+            }
+            
+            .popover{
+                max-width : inherit;
+            }
+        
+        </style>
+        <script>
+            //C0737 start
+            function onPrefClick(){            
+                if($(".HasNewsletter").attr('checked')=="checked" || $(".HasEmail").attr('checked')=="checked" || $(".HasMail").attr('checked')=="checked" || $(".HasSMS").attr('checked')=="checked" || $(".HasPhone").attr('checked')=="checked"){                
+                    $(".HasNone").prop('checked', false);
+                    document.getElementById("marketPrefShow").style.display = "none";            
+                }else{
+                    document.getElementById("marketPrefShow").style.display = "block";
+                }        
+            }        
+            function onNonPrefClick(){            
+                if($(".HasNone").attr('checked')=="checked"){                
+                    $(".HasNewsletter").prop('checked', false);                
+                    $(".HasEmail").prop('checked', false);                
+                    $(".HasMail").prop('checked', false);                
+                    $(".HasSMS").prop('checked', false);                
+                    $(".HasPhone").prop('checked', false);
+                    document.getElementById("marketPrefShow").style.display = "none";            
+                }else{
+                    if($(".HasNewsletter").attr('checked')=="checked" || $(".HasEmail").attr('checked')=="checked" || $(".HasMail").attr('checked')=="checked" || $(".HasSMS").attr('checked')=="checked" || $(".HasPhone").attr('checked')=="checked"){                
+                        document.getElementById("marketPrefShow").style.display = "none";            
+                    }else{
+                        document.getElementById("marketPrefShow").style.display = "block";
+                    }
+                }        
+            }
+            setTimeout(function(){
+                if('{!IsMarketPrefSelected}'=='No'){
+                    document.getElementById("marketPrefShow").style.display = "block";
+                }else{
+                    document.getElementById("marketPrefShow").style.display = "none";
+                }
+            },500);
+            //C0737 end
+        </script>
+        
+    </head>
+     
+    <body>
+    
+        <c:BAA_Header objOpp="{!BaseOpportunity}" title="Business Details"></c:BAA_Header>
+        <apex:message />
+        <div class="container">
+            
+            <div class="row">
+                <div class="col-md-4 col-lg-3">
+                    <apex:form >
+                    <c:BAA_Menu oppId="{!BaseOpportunity.Id}"  DirectorId="{!BaseOpportunity.ProductEventDirector__c}" />
+                    </apex:form>
+                </div>            
+                <div class="col-md-8 col-lg-9">
+            <apex:form >
+            
+            <div class="panel panel-primary">
+                <div class="panel-heading">Type of Organisation</div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Name of Entity</label>
+                            </div>
+                            <div class="col-sm-6">
+                               <apex:inputField styleClass="form-control" required="true" value="{!Acc.Name}" rendered="{!!acc.IsPersonAccount}"/>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Organisation Type</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <!-- <apex:inputField styleClass="form-control" required="true" value="{!Acc.Organisation_type__c}"/> -->
+                                <label>{!Acc.Organisation_type__c}</label>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label rel="popover" data-html="true" data-trigger="hover"  data-placement="top"  data-content="<div style='width:100%;'>
+                                <h3>SPV</h3><br/><br/>Special Purpose Vehicle.  Is an entity that has been set up specifically for the acquisition and financing of specific assets.  It is usually a subsidiary company with a separate legal status from a parent company so the assets are secure even if the parent goes bankrupt.
+                                
+                                </div>"
+                                
+                                >Is this Business an SPV? <span style="font-size:16px;color:#162f61;" class="glyphicon glyphicon-info-sign"></span> </label>
+                            </div>
+                            <div class="col-sm-6">
+                                <apex:inputField styleClass="form-control" required="true" value="{!Acc.Business_an_SPV__c}"/>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Does the SPV exist yet?</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <apex:inputField styleClass="form-control" required="true" value="{!Acc.Does_the_SPV_exist__c}"/>
+                            </div>
+                        </div>
+                        </div>
+                    </div>       
+                    <!-- -->
+                    <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>What is the purpose of this account?</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <apex:inputField styleClass="form-control" value="{!Opp.Purpose_of_Account__c}"/>
+                            </div>
+                        </div>    
+                    </div>    
+                </div>
+                <!-- -->
+                <div class="row">
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Organisation Domicile</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <apex:inputField styleClass="form-control" required="true" value="{!Acc.Organisation_Domicile__c}"/>
+                            </div>
+                        </div>
+                        </div>
+                </div>
+
+
+                    <!-- -->
+                    
+                    
+                    
+                    
+                    
+                    
+                </div>
+            </div><!-- panel close -->
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">Contact Details</div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Contact Name</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <apex:inputField styleClass="form-control" required="true" value="{!Acc.Contact_Name__c}" />
+                            </div>
+                        </div>
+                        </div>
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Position Held</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <apex:inputField styleClass="form-control" value="{!Acc.Position_Held__c}" />
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    <!-- -->
+                    <div class="row">
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Contact Telephone</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <apex:inputField styleClass="form-control" required="true" value="{!Acc.Contact_s_telephone_number__c}" />
+                            </div>
+                        </div>
+                        </div>     
+                        
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Do you require online banking?</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <apex:inputField id="requireOnlineBanking" styleClass="form-control" required="true" value="{!Acc.Apply_for_Online_Banking__c}" />
+                            </div>
+                        </div>
+                        </div> 
+                    </div>
+                    
+                    <!-- -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-sm-6">
+                                    <label>2nd Factor Email Address</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <apex:inputField styleClass="form-control" value="{!Acc.X2nd_Factor_Email_Address__c}"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-sm-6">
+                                    <label>2nd Factor Landline Number</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <apex:inputField styleClass="form-control" value="{!Acc.X2nd_Factor_Landline_Number__c}"/>
+                                </div>
+                            </div>                        
+                        </div>
+                    </div>
+                    <!-- -->
+                    <div class="row">
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>2nd Factor Mobile Number</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <apex:inputField styleClass="form-control" value="{!Acc.X2nd_Factor_Mobile_Number__c}" />
+                            </div>
+                        </div>
+                        </div> 
+                    </div>
+                    
+                    
+                    <!-- -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-sm-6">
+                                    <label>Business Tel No. Incl STD</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <apex:inputField styleClass="form-control" required="true" value="{!Acc.Home_Telephone_No__c}"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-sm-6">
+                                    <label>Business Email Address</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <apex:inputField styleClass="form-control" value="{!Acc.Business_email_address__c}"/>
+                                </div>
+                            </div>                        
+                        </div>
+                    </div>
+
+
+
+                    <!-- row -->
+                    <!--  C0307 -->
+                    <apex:outputPanel rendered="{!SubOrgTypeShowFields}" layout="none" >
+                        <div class="panel panel-info" style="margin-top:17px">
+                            <div class="panel-heading">Trading Address</div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Street</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <!--  C0307 
+                                            <apex:inputField styleClass="form-control" required="true" value="{!Acc.TradingAddressStreet__c}" id="empaddr1"/>
+                                              -->
+                                            
+                                            <apex:inputField styleClass="form-control" required="{!SubOrgTypeShowFields}" value="{!Acc.TradingAddressStreet__c}" id="empaddr1"/>
+                                            
+                                        </div>
+                                    </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>City</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <!--  C0307 
+                                            <apex:inputField styleClass="form-control" required="true" value="{!Acc.TradingAddressCity__c}" id="empaddr2"/>
+                                              -->
+                                            
+                                            <apex:inputField styleClass="form-control" required="{!SubOrgTypeShowFields}" value="{!Acc.TradingAddressCity__c}" id="empaddr2"/>
+                                            
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                                <!-- -->
+                                <div class="row">
+                                    <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Country</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <!--  C0307 
+                                            <apex:inputField styleClass="form-control" required="true" value="{!Acc.TradingAddressCountry__c}" id="empCountry"/>
+                                              -->
+                                            
+                                            <apex:inputField styleClass="form-control" required="{!SubOrgTypeShowFields}" value="{!Acc.TradingAddressCountry__c}" id="empCountry"/>
+                                            
+                                        </div>
+                                    </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Postcode</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                        <!--  C0307 
+                                            <apex:inputField styleClass="form-control" required="true" value="{!Acc.TradingPostCode__c}" id="empPCode"/>
+                                          -->
+                                            
+                                            <apex:inputField styleClass="form-control" required="{!SubOrgTypeShowFields}" value="{!Acc.TradingPostCode__c}" id="empPCode"/>
+                                            
+                                        </div>
+                                    </div>
+                                    </div>
+                                    </div>
+                                </div>                                                
+                                <!-- -->                   
+                                
+                                <div class="row">                                                
+                                    <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Is this Address the Registered Address?</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <!--  C0307
+                                            <apex:inputField id="isRegistered" styleClass="form-control" required="true" value="{!Acc.Is_trading_address_registered_address__c}"/>
+                                          -->
+                                            
+                                            <apex:inputField id="isRegistered" styleClass="form-control" required="{!SubOrgTypeShowFields}" value="{!Acc.Is_trading_address_registered_address__c}"/>
+                                            
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                                <div class="row">                                                
+                                    <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Is this Address the Correspondence Address?</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <!-- C0307
+                                            <apex:inputField id="isCorrespondence" styleClass="form-control" required="true" value="{!Acc.Is_trading_address_correspondenceaddress__c}"/>
+                                              -->
+                                            
+                                            <apex:inputField id="isCorrespondence" styleClass="form-control" required="{!SubOrgTypeShowFields}" value="{!Acc.Is_trading_address_correspondenceaddress__c}"/>
+                                            
+                                            </div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                    </apex:outputPanel>
+                    <!-- -->
+
+                    <!--  C0307 -->
+                    <apex:outputPanel rendered="{!SubOrgTypeShowFields}" layout="none" >
+                        <div class="panel panel-info" id="isRegisteredItem">
+                            <div class="panel-heading">Registered Address</div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Street</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputField styleClass="form-control" value="{!Acc.RegisteredAddressStreet__c}" id="emp2addr1"/>
+                                        </div>
+                                    </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>City</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputField styleClass="form-control" value="{!Acc.RegisteredAddressCity__c}" id="emp2addr2"/>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                                <!-- -->
+                                <div class="row">
+                                    <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Country</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputField styleClass="form-control" value="{!Acc.RegisteredAddressCountry__c}" id="emp2Country"/>
+                                        </div>
+                                    </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Postcode</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputField styleClass="form-control" value="{!Acc.RegisteredAddressPostCode__c}" id="emp2PCode"/>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div> 
+                            </div>
+                        </div>
+                    </apex:outputPanel>
+                    <!-- -->
+
+                    <apex:outputPanel rendered="{!NOT(SubOrgTypeShowFields)}" layout="none" >
+                        <div class="row">
+                            <div class="col-md-6">
+                                    <div class="form-group">
+                                        </div>
+                                        </div>
+                        </div>
+                    </apex:outputPanel>
+                    
+                    <div class="panel panel-info" id="isCorrespondenceItem">
+                    <div class="panel panel-heading">Correspondence Address</div>
+                    <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Street</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputField styleClass="form-control" value="{!Acc.CorrespondenceAddressStreet__c}" id="emp3addr1"/>
+                                    </div>
+                                </div>
+                                </div>
+                                <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>City</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputField styleClass="form-control" value="{!Acc.CorrespondenceAddressCity__c}" id="emp3addr2"/>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            <!-- -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Country</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputField styleClass="form-control" value="{!Acc.CorrespondenceAddressCountry__c}" id="emp3Country"/>
+                                    </div>
+                                </div>
+                                </div>
+                                <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Postcode</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputField styleClass="form-control" value="{!Acc.CorrespondenceAddressPostCode__c}" id="emp3PCode"/>
+                                    </div>
+                                </div>
+                                </div>
+                            </div> 
+                        </div>
+                    </div>
+                    <!-- -->
+                </div>
+            </div>
+            
+            
+            
+            <div class="panel panel-primary">
+                <div class="panel-heading">Organistation Details</div>
+                <div class="panel-body">
+                    
+                    
+                    <!-- row -->
+                    <div class="row">
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Nature of Business</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <apex:inputField styleClass="form-control" required="true" value="{!Acc.Nature_of_Business_NPAA__c}"/>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Please set out the main activities in which the company is involved</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <apex:inputField styleClass="form-control" required="true" value="{!Acc.Main_company_activities__c}"/>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    <!-- row -->
+                    <!-- row -->                    
+                    <div class="row">
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Registered Number</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <apex:inputField styleClass="form-control" value="{!Acc.Registered_number__c}"/>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Registration Date</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <apex:inputField styleClass="form-control" value="{!Acc.Registration_date__c}"/>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    <!-- C0056 start -->
+                    <div class="row">
+                        <!--  C0307 -->
+                        <apex:outputPanel rendered="{!OrgTypeShowFields}" layout="none" >
+                            <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-sm-6">
+                                    <label>VAT Number</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <apex:inputField styleClass="form-control" value="{!Acc.VAT_number__c}"/>
+                                </div>
+                            </div>
+                            </div>
+                        </apex:outputPanel>
+                        <!--  C0307 -->
+                        <apex:outputPanel rendered="{!OrgTypeShowFields}" layout="none" >
+                            <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-sm-6">
+                                    <label>When did the business begin operating?</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <!--  C0307 
+                                    <apex:inputField styleClass="form-control" required="true" value="{!Acc.Date_business_began_operating__c}"/>
+                                    -->
+                                    <apex:inputField styleClass="form-control" required="{!OrgTypeShowFields}" value="{!Acc.Date_business_began_operating__c}"/>
+                                </div>
+                            </div>
+                            </div>
+                        </apex:outputPanel>
+                    </div>
+                    <!-- C0056 end -->
+                    <!-- row -->
+                    <div class="row"> 
+                        <!--  C0307 -->
+                        <apex:outputPanel rendered="{!OrgTypeShowFields}" layout="none" >
+                            <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-sm-6">
+                                    <label></label>
+                                    
+                                    
+                                    <label  rel="popover" data-html="true" data-trigger="hover"  data-placement="top"   data-content="<div style='width:100%;'>
+                                    <h3>Turnover</h3>
+                                    <br/><br/>
+                                        New Company
+                                        <ul style='padding-left:0;'>
+                                            <li>Anticipated turnover for next 12 months required</li>                            
+                                        </ul>
+                                        Existing Company
+                                        <ul style='padding-left:0;'>
+                                            <li>Last 12 months turnover required</li>                            
+                                        </ul>
+                                    
+                                    </div>"
+                                    
+                                    >Turnover <span style="font-size:16px;color:#162f61;" class="glyphicon glyphicon-info-sign"></span></label>
+                                    
+                                </div>
+                                <div class="col-sm-6">
+                                    <!--  C0307 
+                                    <apex:inputField id="Turnover" styleClass="form-control" required="true" value="{!Acc.Company_anticipated_turnover__c}"/>
+                                    -->
+                                    <apex:inputField id="Turnover" styleClass="form-control" required="{!OrgTypeShowFields}" value="{!Acc.Company_anticipated_turnover__c}"/>
+                                </div>
+                            </div>
+                            </div>
+                        </apex:outputPanel>
+                        <!--  C0307 -->
+                        <apex:outputPanel rendered="{!OrgTypeShowFields}" layout="none" >
+                            <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-sm-6">
+                                    <label>% Turnover made from non-sharia compliant Goods/Services</label>
+                                </div>
+                                <div class="col-sm-6">
+                                <!--  C0307 
+                                    <apex:inputField styleClass="form-control" required="true" value="{!Acc.Turnover_made_from_non_compliant_Goods__c}"/>
+                                -->
+                                    <apex:inputField styleClass="form-control" required="{!OrgTypeShowFields}" value="{!Acc.Turnover_made_from_non_compliant_Goods__c}"/>
+                                </div>
+                            </div>
+                            </div>
+                        </apex:outputPanel>
+                    </div>
+                    <!-- row -->
+                    <div class="row">                        
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Will there be overseas credit and debit transactions</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <apex:inputField id="overseas" styleClass="form-control" value="{!Acc.Will_there_be_overseas_Credit_and_Debit__c}"/>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="col-md-6" id="overseasItem">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Details</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <apex:inputField styleClass="form-control" value="{!Acc.Overseas_Transaction__c}"/>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    
+
+                    <!-- row -->
+                    <div class="row">                        
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Is there any anticipated cash credits and debits</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <apex:inputField id="anticipatedCash" styleClass="form-control" value="{!Acc.Cash_Credit_and_Debits__c}"/>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="col-md-6" id="anticipatedCashItem">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Details</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <apex:inputField styleClass="form-control"  value="{!Acc.anticipated_cash__c }"/>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    
+
+                    <!-- row -->
+                    <div class="row">
+                        <!--  C0307 -->
+                        <apex:outputPanel rendered="{!OrgTypeShowFields}" layout="none" >
+                            <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-sm-6">
+                                    <label  rel="popover" data-html="true" data-trigger="hover"  data-placement="top"   data-content="<div style='width:100%;'>
+                                    <h3>Size of Business</h3>
+                                    <br/><br/>
+                                    A small company must meet two of the following criteria:<br/><br/>
+                                    <ul style='margin-left:-40px;'>
+                                        <li>Turnover: not more than £6.5 million</li>
+                                        <li>Balance sheet total: not more than £3.26 million</li>
+                                        <li>Total number of employees: not more than 50.</li>
+                                    </ul>
+                                    </div>"
+                                    
+                                    >Size of business <span style="font-size:16px;color:#162f61;" class="glyphicon glyphicon-info-sign"></span></label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <!--  C0307 
+                                    <apex:inputField styleClass="form-control" id="SizeOfBusiness" required="true" value="{!Acc.Size_of_business__c}"/>
+                                    <!--<apex:inputField styleClass="form-control" id="SizeOfBusiness" required="true" value="{!Acc.Business_or_Charity_Size__c}"/>-->
+                                    -->
+                                    <apex:inputField styleClass="form-control" id="SizeOfBusiness" required="{!OrgTypeShowFields}" value="{!Acc.Size_of_business__c}"/>
+                                </div>
+                            </div>
+                            </div>
+                        </apex:outputPanel>
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Number of employees</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <apex:inputField styleClass="form-control" id="NumEmployees" required="true" value="{!Acc.Number_of_employees__c}"/>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    <!-- row -->
+                    <div class="row">
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Has the business had any IVA's?</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <apex:inputField styleClass="form-control" required="true" value="{!Acc.Company_had_an_IVA__c}"/>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Has the business had any CCJ's?</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <apex:inputField styleClass="form-control" required="true" value="{!Acc.Company_had_a_CCJ__c}"/>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    <!-- row -->
+                    <div class="row">
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Existing business bank name</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <apex:inputField styleClass="form-control" required="true" value="{!Acc.Existing_Business_Bank_Name__c}"/>
+                            </div>
+                        </div>
+                        </div>                        
+                    </div>
+                    <!-- row -->
+                    <div class="row">
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Sort Code</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <apex:inputField styleClass="form-control" required="true" value="{!Acc.Existing_Business_Bank_Sort_Code__c}"/>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Account number</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <apex:inputField styleClass="form-control" required="true" value="{!Acc.Existing_Business_Bank_Account_Number__c}"/>
+                            </div>
+                        </div>
+                        </div>                         
+                    </div>
+
+
+
+
+   
+
+                    
+                    
+                    
+                    
+                    
+                    <!-- row -->
+                    <!-- row -->
+                </div>
+            </div>
+            
+            
+            
+            
+            
+             <div class="panel panel-primary">
+                    <!-- C0737 -->  <div class="panel-heading">Keeping you informed</div>
+                    <div class="panel-body">
+                        <!-- C0737 Start -->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>From time to time we’d also love to tell you about our Islamic financial services, products and any new offers that we think you’d be interested in based on the information we hold about you. If you would like to hear from us about these please tick the appropriate box(es) below so we know how you would prefer us to contact you.</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="marketing-pref">
+                                    <label>
+                                        <apex:inputcheckbox value="{!HasNewsletter}" styleClass="HasNewsletter" onclick="onPrefClick()" /> E-Newsletter
+                                    </label>
+                                    <label>
+                                        <apex:inputcheckbox value="{!HasEmail}" styleClass="HasEmail" onclick="onPrefClick()" /> Email
+                                    </label>
+                                    <label>
+                                        <apex:inputcheckbox value="{!HasMail}" styleClass="HasMail" onclick="onPrefClick()" /> Post
+                                    </label>
+                                    <label>
+                                        <apex:inputcheckbox value="{!HasSMS}" styleClass="HasSMS" onclick="onPrefClick()" />SMS
+                                    </label>
+                                    <label>
+                                        <apex:inputcheckbox value="{!HasPhone}" styleClass="HasPhone" onclick="onPrefClick()" />Phone
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-sm-6"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <p>If you would prefer not to hear from us with Al Rayan Bank marketing information and offers, please tick here:&nbsp;
+                                    <apex:inputcheckbox value="{!HasNone}" styleClass="HasNone" onclick="onNonPrefClick()" />
+                                </p>
+                                <p>You can change your preferences at any time, by writing to us at Al Rayan Bank, PO Box 12461, Birmingham, B16 6AQ or calling us on 0800 4086 407.</p>
+                                <p>In accordance with the General Data Protection Regulation, Al Rayan Bank PLC is registered as a Data Controller on the public register of Data Controllers as maintained by the Information Commissioner.</p>
+                                <p>If you would like more information about how we use your information please click <a href="https://www.alrayanbank.co.uk/privacy" target="_blank">here</a></p>
+
+                            </div>
+                        </div>
+                        <div class="row" style="padding: 0 15px;display:none;" id="marketPrefShow">
+                            <div class="panel-invalid" style="background-color: rgb(235,94,80);color: #fff;padding:20px;">
+                                Please select a marketing preference, we cannot proceed with your application without capturing this information.
+                            </div>
+                        </div>
+                        
+                        <!--<div class="row">
+                            <div class="col-xs-12">
+                            <a href="javascript:void(0)"
+                                        onclick="doMC();"><b>Data Protection Statement and
+                                                Marketing Consent</b> </a>
+                            </div>
+                        </div>
+                        
+                        
+                        
+                        
+                        
+                        <div class="row">
+                    <div class="col-sm-6">
+                        <label >Please indicate if you 'Do not' wish to be contacted by Al Rayan Bank by any of the following</label>
+                    </div>
+                    <div class="col-sm-6 inputlabel">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="checkbox">
+                                    <label>
+                                      <apex:inputCheckbox value="{!HasEmail}"/> Email
+                                    </label>
+                                  </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="checkbox">
+                                    <label>
+                                      <apex:inputCheckbox value="{!HasMail}"/> Mail
+                                    </label>
+                                </div>
+                            </div>
+                               
+                               
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="checkbox">
+                                    <label>
+                                      SMS<apex:inputCheckbox value="{!HasSMS}"/> 
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="checkbox">
+                                    <label>
+                                      <apex:inputCheckbox value="{!HasPhone}"/> Phone
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
+                    
+                <!-- C0737 End -->    
+                        
+                    </div>
+                </div>
+            <div class="row">
+                <div class="col-xs-12">
+                <apex:commandButton styleClass="btn-success" value="Save" action="{!Save}" rendered="{!!IsCompleted}"/>
+                    <apex:commandButton styleClass="btn-danger" value="Next" action="{!Complete}" rendered="{!!IsCompleted}"/>
+                </div>
+            </div>
+            </apex:form>
+            </div>
+            </div>
+        </div>
+    <script>
+$(document).ready(function () {
+    var ds = new kendo.data.DataSource({
+        transport: {
+            read: function (options) {
+                // make AJAX request to the remote service
+                var findText = $('#customers').val();
+                
+                Visualforce.remoting.Manager.invokeAction(
+                    "{!$RemoteAction.BAA_BusinessDetails_Controller.findAccount}", findText ,  function (result, event) {
+                    if (event.type == 'exception') {
+                        alert(event.message);
+                    } else {
+                    
+                       /* for(var k in result) {
+                            if(k != 'remove')
+                            {
+                                result[k].Address = result[k].Address.replace(':','<br/>');
+                            }
+                        }*/
+                    
+                        options.success(result);
+                    } // End else
+                });
+            }
+        },
+        serverFiltering: true,
+        schema: {
+            model: {
+                fields: {
+                    Name: { type: "string" },
+                    Id: { type: "string" },
+                    Address: { type: "string" },
+                    EBSId: { type: "string"}
+                }
+            }
+        }
+    });
+    
+    
+    
+
+                    var autocomplete = $("#customers").kendoAutoComplete({
+                        minLength: 1,
+                        dataTextField: "Name",
+                        template: '<div style="padding:5px;border-bottom:solid 1px gray;" ><div><h4>#: data.Name# - #: data.EBSId#</h4></div><div><div class="row"><div class="col-xs-6"> #: data.DOB#</div></div><div class="row"><div class="col-xs-12">#: data.Address#</div></div></div></div>',
+                        
+                        dataSource: ds,
+                        height:500,
+                    }).data("kendoAutoComplete");
+                });
+            </script>
+    
+    
+         
+    
+    
+    <script>
+        function EditAccount(sender)
+        {
+            window.scrollTo(0, 0);
+            $('#accModal').modal({
+                backdrop: 'static'
+            });
+        }
+        
+        function OverseasCredit()
+        {
+            var sel = $("[id$='overseas").val();
+            if(sel == 'Yes')
+            {        
+                $('#overseasItem').show();
+            }
+            else
+            {
+                $('#overseasItem').hide();
+            }            
+        }
+        
+        function AnticipatedCash()
+        {
+            var sel = $("[id$='anticipatedCash").val();
+            
+            if(sel == 'Yes')
+            {        
+                $('#anticipatedCashItem').show();
+            }
+            else
+            {
+                $('#anticipatedCashItem').hide();
+            }
+        }
+        
+        function RegisteredAddress()
+        {
+            var sel = $("[id$='isRegistered").val();
+            
+            if(sel == 'Yes')
+            {        
+                $('#isRegisteredItem').hide();
+            }
+            else
+            {
+                $('#isRegisteredItem').show();
+            }
+        }
+        
+        function CorrespondenceAddress()
+        {
+            var sel = $("[id$='isCorrespondence").val();
+            
+            if(sel == 'Yes')
+            {        
+                $('#isCorrespondenceItem').hide();
+            }
+            else
+            {
+                $('#isCorrespondenceItem').show();
+            }
+        }
+        
+        function CheckNumEmployees()
+        {
+            var numEmp = $("[id$='NumEmployees").val();
+            var size = $("[id$='SizeOfBusiness").val();
+         
+            var sizeInt = parseInt(numEmp );
+            if(sizeInt > 50)
+            {
+                $("[id$='SizeOfBusiness").val('Large');
+            }
+            else
+            {
+                $("[id$='SizeOfBusiness").val('Small');
+            }    
+        }
+            function CheckBusSize()
+        {
+            var turnOver = $("[id$='Turnover").val();
+            var size = $("[id$='SizeOfBusiness").val();
+         
+            var sizeInt = parseInt(turnOver );
+            if(sizeInt > 6500000)
+            {
+                $("[id$='SizeOfBusiness").val('Large');
+            }
+            else
+            {
+                $("[id$='SizeOfBusiness").val('Small');
+            }
+        }
+        
+        function doMC(){
+    
+    var winURL = "{!URLFOR($Resource.MarketingConsent)}";
+    //alert(winURL);
+    window.open(winURL,"_blank","height=500,width=600");
+}
+        
+        
+        $(function (){
+            $('#addAccount').click(function(){
+                EditAccount($(this));
+            });   
+            
+            $("[id$='NumEmployees").change(function(){
+                CheckNumEmployees();
+            });
+            $("[id$='SizeOfBusiness").change(function(){
+                CheckNumEmployees();
+            });
+            
+            $("[id$='anticipatedCash").change(function(){
+                AnticipatedCash();
+            });
+            
+            $("[id$='overseas").change(function(){
+                OverseasCredit();
+            });
+          
+            $("[id$='isRegistered").change(function(){
+                RegisteredAddress();
+            });
+            
+            $("[id$='isCorrespondence").change(function(){
+                CorrespondenceAddress();
+            });
+            
+    
+            
+            AnticipatedCash();
+            OverseasCredit();
+            RegisteredAddress();
+            CorrespondenceAddress();
+            CheckNumEmployees();
+        
+    
+            
+            $("[rel='popover']").popover();
+            
+            $('#addFindAccount').click(function(){
+                window.scrollTo(0, 0);
+                $('#accFindModal').modal({
+                    backdrop: 'static'
+                });
+            });     
+        });
+        
+        
+        
+        
+    </script>
+    
+    </body>
+</apex:page>

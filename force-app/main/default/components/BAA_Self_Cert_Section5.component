@@ -1,0 +1,68 @@
+<apex:component >
+    <div class="row">
+        <div class="panel panel-primary">
+            <div class="panel-body">
+                <div class="col-sm-12">
+                    <small>Tax legislations referred to in this form are regulations created to enable automatic exchange of information
+                        and include Foreign Account Tax Compliance Act, various agreements to improve international tax compliance
+                        entered into between the UK, the Crown Dependencies and the Overseas Territories, and OECD Common
+                        Reporting Standard for Automatic Exchange of Financial Account Information, as implemented in the
+                        relevant jurisdictions.</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-primary">
+            <div class="panel-body">
+                <div class="col-sm-12">
+                    <span>I understand that the information supplied by me is covered by the full provisions of the terms and conditions
+                        governing the Account Holder’s relationship with Al Rayan Bank PLC setting out how Al Rayan Bank
+                        PLC may use and share the information supplied by me. I acknowledge that the information contained
+                        in this form and information regarding the Account Holder and any reportable Account(s) may be provided
+                        to the tax authorities of the country in which this account(s) is/are maintained and exchanged with
+                        tax authorities of another country or countries in which the Account Holder may be tax resident pursuant
+                        to inter-governmental agreements to exchange financial account information. I certify that I am the
+                        Account Holder (or I am authorised to sign for the Account Holder) of all account(s) to which this
+                        application relates.
+                        <strong>I declare that all statements made in this declaration are, to the best of my knowledge and belief,
+                            correct and complete.</strong> I undertake to advise Al Rayan Bank PLC within 28 days of any
+                        change in circumstances which affects the tax residency status of the individual identified in Section
+                        1 of this form or causes the information contained to become incorrect or incomplete, and to provide
+                        Al Rayan Bank PLC with a suitably updated self-certification and declaration within 28 days of such
+                        change.
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">Entity Declaration</div>
+            <div class="panel-body">
+                <form name="formSection5" novalidate="novalidate">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label class="checkbox" style="margin-left: 28px;" ng-class=" Data.Applicant.Self_Cert_Acknowledged_c != true ? 'invalid-checkbox' : ''">
+                                <span style="margin-right: 30px;">
+                                    I declare that all statements made in this declaration, are to the best of my knowledge and belief, correct and complete
+                                </span>
+                                <input type="checkbox" required="true" ng-model="Data.Applicant.Self_Cert_Acknowledged_c" />
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Please indicate the capacity in which you are signing or accepting this form
+                                </label>
+                            </div>
+                            <div class="col-sm-6">
+                                <select class="form-control" ng-required="true" ng-model="Data.Applicant.Self_Cert_Capacity_c" ng-options="option for option in Data.SelfCertCapcity"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>        
+    </div>
+</apex:component>

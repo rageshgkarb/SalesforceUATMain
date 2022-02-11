@@ -1,0 +1,5 @@
+<apex:page standardController="Opportunity" extensions="RedirectCE" id="thePage" action="{!redirectEditPage}" showHeader="false" sidebar="false">
+
+  Opportunity Redirect page: {!ProfileName}
+  
+</apex:page>

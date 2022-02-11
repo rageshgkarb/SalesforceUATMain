@@ -1,0 +1,291 @@
+<apex:page controller="DocugenPViewDocsController" action="{!onLoad}"><!-- showHeader="false" sidebar="false" standardStylesheets="false">-->
+    <apex:composition template="Base_Template">
+         <apex:define name="body">
+             <style>
+                .bootstrap-container input[type="checkbox"]{
+                    display:inline-block;
+                    width:15px;
+                }
+                
+                .templateList{
+                    list-style: none;
+                }
+                
+                .templateList li{
+                    vertical-align: middle;
+                }
+                
+                .templateList .form-control{
+                    height: 13px;
+                }
+                
+                .modal-lg{
+                    width:80%;
+                    height:100%;
+                }
+                
+                .model-lg .modal-content{
+                    height:80% !important;
+                }
+                
+                .modal-lg iframe{
+                    width:100%;
+                    border:0;
+                    height:500px;
+                    overflow-y:scroll;
+                }
+                
+                .controls li{
+                    margin:0;
+                }
+                
+                .controls .glyphicon{
+                    font-family:FontAwesome !important;
+                }
+                
+                .controls .glyphicon-chevron-left:before {
+                    content: "\f104" !important;
+                }
+                
+                .controls .glyphicon-chevron-right:before {
+                    content: "\f105" !important;
+                }
+                
+                .doc-list .btn-group li{
+                    padding:0 !important;
+                }
+                
+                .doc-list .btn-group a{
+                    margin:0 !important;
+                }
+                
+                
+                .inp-calendar .dropdown-menu{
+                    padding:10px !important;
+                }
+            </style>
+         
+             <script type="text/javascript">
+                 docugenApp.controller('docugenViewDocsController', ['$scope','docugenViewDocsService','$uibModal','$http','$timeout',
+                     function($scope,docugenViewDocsService,$uibModal,$http,$timeout){
+                         $scope.FromDate = new Date();
+                         $scope.ToDate = new Date();
+                         
+                         $scope.dateOptions = {
+                            formatYear: 'yy',
+                            startingDay: 1
+                         };
+                         
+                         $scope.open = function(d) {
+                            console.log("hit");
+                            d.opened = true;
+                         };
+                         
+                         $scope.FromDt = {
+                            opened: false
+                         };
+                         
+                         $scope.ToDt = {
+                            opened: false
+                         };
+                         
+                     
+                         $scope.$watch('templatesJSON',function(){
+                            $scope.templates=JSON.parse($('<textarea />').html($scope.templatesJSON).text()); 
+                           console.log($scope.templates);
+                         });
+                         
+                         $scope.searchDocs=function(){
+                             var t=[];
+                         
+                            for(var i=0; i< $scope.templates.length;i++)
+                            {
+                                if($scope.templates[i].Selected)
+                                    t.push($scope.templates[i].Id);
+                            }
+                            
+                            console.log(t);
+                            $scope.FromDate=$scope.FromDate?$scope.FromDate:new Date(2000,0,0,0,0,0,0);
+                            $scope.ToDate=$scope.ToDate?$scope.ToDate:new Date();
+                            console.log($scope.ToDate);
+                            
+                            docugenViewDocsService.searchDocs(t,(new Date($scope.FromDate)).toUTCString(),(new Date($scope.ToDate)).toUTCString())
+                            .then(
+                                function(result){
+                                    //console.log(result);
+                                    $scope.adocs=result;
+                                },
+                                function(error){
+                                    //$scope.Updating = false;
+                                }
+                            );
+                         }
+                     }]
+                 );
+                 
+                 //Date.parse(d.JobDate,"yyyy-MM-dd HH:mm:ss")
+                 docugenApp.filter('CDate',function(){
+                     return function(dt){
+                         console.log(Date.parse(dt,"yyyy-MM-dd HH:mm:ss"));
+                         return Date.parse(dt,"yyyy-MM-dd HH:mm:ss");
+                     };
+                 });
+                 
+                 docugenApp.service('docugenViewDocsService', ['$q','$http',
+                     function ($q, $http) {
+                         this.searchDocs=function(templateIds,fromDate,toDate){
+                             var deferred = $q.defer();
+                             Visualforce.remoting.timeout = 120000;
+                             DocugenPViewDocsController.GetDocs(templateIds,fromDate,toDate,function(result, event){
+                                 if(event.status){
+                                     deferred.resolve(result);
+                                     
+                                 }
+                                 else {
+                                     deferred.reject(event);
+                                 }
+                             });
+                             return deferred.promise;
+                         };
+                     }]
+                 );
+             </script>
+             <div class="docugen col-sm-11" ng-controller="docugenViewDocsController" ng-init="templatesJSON='{!templates}';">
+             
+                 <h3>
+                        <div class="col-sm-6">
+                            View Documents
+                        </div>
+                        <div class="col-sm-6">
+                            <span class="pull-right" style="font-size:0.9em;">Docugen<sup>+</sup></span>
+                            <a class="pull-right btn btn-default" style="padding:4px 7px !important;font-size:0.5em;margin-right:10px;" href="/apex/EBSLetters">
+                                Generate Letters
+                            </a>
+                            <a class="pull-right btn btn-default" style="padding:4px 7px !important;font-size:0.5em;margin-right:10px;" href="{{docugenSettings.TemplatesURL}}">
+                                Templates
+                            </a>
+                            <a class="pull-right btn btn-default" style="padding:4px 7px !important;font-size:0.5em;margin-right:10px;" href="{{docugenSettings.FieldsURL}}">
+                                EBS Field Config
+                            </a>
+                        </div>
+                 </h3>
+                 <div style="clear:both">
+                    &nbsp;    
+                 </div>
+                 <div class="panel panel-brown" style="height:600px">
+                        <div class="panel-body">
+                            <div class="row">
+                                  <div class="col-sm-12">
+                                    <div class="form-group" style="height:500px;overflow-y:scroll;">
+                                        <label>&nbsp;</label>
+                                        <div>
+                                            <ul class="templateList list-group checked-list-box">
+                                               <li ng-click="template.Selected=template.Selected?false:true" class="list-group-item checkbox" ng-class="{'list-group-item-primary':template.Selected}" ng-repeat="template in templates | orderBy : Name">
+                                                      <label ng-click="stopPropagation($event)"><input name="chkTemplate"  type="checkbox" class="form-control" ng-model="template.Selected" style="block-inline" />{{template.EBS_Template__c}}</label>
+                                                      
+                                                      <div class="btn-group dd-options pull-right" uib-dropdown="uib-dropdown" auto-close="outside-click" is-open="status.isopen" ng-click="stopPropagation($event)" >
+                                                          <button id="single-button" type="button" class="btn btn-default btn-dropdown" uib-dropdown-toggle="uib-dropdown-toggle" ng-disabled="disabled">
+                                                              <span class="caret"></span>
+                                                          </button>
+                                                          <ul class="uib-dropdown-menu pull-right"  role="menu" aria-labelledby="single-button">
+                                                              <li role="menuitem">
+                                                                  <a href="/{{template.Id}}" target="_blank">View Template</a>
+                                                              </li>
+                                                          </ul>
+                                                      </div>
+                                                      
+                                                      <span class="badge pull-right"></span>                               
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div align="right" class="controls">
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <p class="input-group inp-calendar">
+                                                      <input type="date" class="form-control" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="FromDate" is-open="FromDt.opened" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" show-weeks="false" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+                                                      <span class="input-group-btn">
+                                                        <button type="button" class="btn btn-default" ng-click="open(FromDt)"><i class="fa fa-calendar" aria-hidden="true"></i></button>
+                                                      </span>
+                                                    </p>
+                                                </td>
+                                                <td width="10" style="text-align:center;line-height:30px;width:30px;"> to </td>
+                                                <td>
+                                                    <p class="input-group inp-calendar">
+                                                      <input type="date" class="form-control" uib-datepicker-popup="dd-MMMM-yyyy" ng-model="ToDate" is-open="ToDt.opened" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" show-weeks="false" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+                                                      <span class="input-group-btn">
+                                                        <button type="button" class="btn btn-default" ng-click="open(ToDt)"><i class="fa fa-calendar" aria-hidden="true"></i></button>
+                                                      </span>
+                                                    </p>
+                                                </td>
+                                                
+                                                
+                                                <td><button class="btn btn-default" ng-click="searchDocs()">Search</button></td>
+                                                
+                                            </tr>
+                                        </table>
+                                        
+                                        
+                                        
+                                    </div>
+                                  </div>
+                            </div>
+                        </div>
+                  </div>
+                  
+                   <h3>
+                        <div class="col-sm-6">
+                            Search Results
+                        </div>
+                        <div class="col-sm-6">
+                            
+                        </div>
+                 </h3>
+                  <div style="clear:both">
+                    &nbsp;    
+                 </div>
+                 
+                  <div class="card-holder top-border doc-list" style="margin-top:-10px;">
+                    <a ng-href="/servlet/servlet.FileDownload?file={{adocs[$index].AttachmentId}}" target="_blank" ng-repeat="d in adocs | filter:search | limitTo:48">
+                    <div class="card">
+                        <table>
+                            <tr>
+                                <td rowspan="2" width="20"> <i class="fa fa-file-word-o" ng-show="d.AttachmentName.toLowerCase().indexOf('pdf')<0" aria-hidden="true"></i>
+                                    <i class="fa fa-file-pdf-o" ng-show="d.AttachmentName.toLowerCase().indexOf('pdf')>=0" aria-hidden="true"></i>
+                                </td>
+                                <td>{{d.AttachmentName.substring(0,d.AttachmentName.length-12)}}</td>
+                                <td width="50">
+                                    <div class="btn-group" uib-dropdown="uib-dropdown" is-open="status.isopen">
+                                        <button id="single-button" type="button" class="btn btn-default btn-dropdown" uib-dropdown-toggle="uib-dropdown-toggle" ng-disabled="disabled">
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="uib-dropdown-menu pull-right"  role="menu" aria-labelledby="single-button">
+                                            <li role="menuitem">
+                                                <a target="_blank" href="/apex/DocugenP_Job?id={{d.JobId}}">View Job</a>
+                                            </li>
+                                            <!--<li role="menuitem">
+                                                <a ng-click="DeleteLetter(d)">Remove</a>
+                                            </li>-->
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><b>{{d.JobDate | CDate | date:'mediumDate'}}</b><br/>{{d.JobStatus}}</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    
+                                </td>
+                            </tr>
+                        </table>
+                       
+                    </div>
+                    </a>
+                </div>
+                  
+             </div>
+         </apex:define>
+    </apex:composition>
+</apex:page>

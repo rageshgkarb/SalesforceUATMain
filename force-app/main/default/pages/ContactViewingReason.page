@@ -1,0 +1,4 @@
+<!-- C1070: Page re-write -->
+<apex:page standardController="Contact" extensions="ContactViewingReason" id="thePage" action="{!autoRedirectPage}" applyBodyTag="false" standardStylesheets="false">   
+
+</apex:page>

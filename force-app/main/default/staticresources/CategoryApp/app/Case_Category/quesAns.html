@@ -1,0 +1,32 @@
+<div class="container">
+    <div class="subContainer" style="margin:auto;width:940px;min-width:940px;height:96%">
+        <div>
+            <div class="prevQuestion" ng-if="isPrevQuestion">{{prevQuestion}}</div>
+            <div class="searchInput" ng-if="!search">
+                <input type="text" placeholder="Search" ng-model="data.searchRecordText" ng-change="setFloatDiv(data.searchRecordText)">
+            </div>
+            <div class="searchInput" ng-if="search">
+                <input type="text" placeholder="Search" ng-model="data.searchText">
+            </div>
+        </div>
+        <!--     <div class="floatDiv" ng-if="searchFloat">-->
+        <ul ng-if="searchFloat">
+            <li ng-repeat="obj in recordObject | filter:data.searchRecordText" ng-click="callFetchRecordtype(obj)" class="classli">{{obj.name}}</li>
+        </ul>
+        <!--        </div>-->
+        <div class="question">{{question}}</div>
+        <div class="line" ng-if="!search"></div>
+        <!--
+<div class="searchBox" ng-if="search">
+    <input type="text" placeholder="Search" ng-model="data.searchText">
+</div>
+-->
+
+        <div class="answerBox" ng-show="!isCase" ng-style="findheight()">
+            <!--            -->
+            <div class="box bg-2" ng-repeat="item in tiles | filter:data.searchText" ng-animate=" 'animate' " ng-if="tiles.length ">
+                <button class="button button--aylen button--border-thin button--round-s answerTiles " ng-click="nextTask(item) " ng-if="item.name " ng-bind-html="item.name " ng-style="{left:bgLeft}">Next Song</button>
+            </div>
+        </div>
+    </div>
+</div>

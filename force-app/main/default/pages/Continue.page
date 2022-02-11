@@ -1,0 +1,154 @@
+<apex:page showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false" controller="CAA_ExternalContinue_Controller" action="{!Setup}">
+<apex:composition template="CAA_Template">
+<apex:define name="include">            
+            <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/controller/controller_continue.js')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/service/service_continue.js')}"/>
+        </apex:define>
+
+        <apex:define name="body">
+ <div ng-controller="controllerContinue" ng-init="Data.SessionId='{!Session}';ErrorMessage='{!Error}';Data.DOB = {Day:null,Month:null,Year:null}">
+
+<form name="myform" novalidate="novalidate">
+  <div class="row">
+      <div class="col-md-9">
+<div class="SectionHeader">
+    <div class="numberCircleReverse">1</div>
+    <div>Continue Application</div>
+</div>
+<div class="PanelContents">
+
+
+
+
+
+<div ng-show="ErrorMessage">
+
+    <div class="alert alert-danger" ng-show="ErrorMessage=='Activated'">
+        This link has already been activated
+    </div>
+    
+    <div class="alert alert-danger" ng-show="ErrorMessage=='Expired'">
+        This link has expired
+    </div>
+    
+    <div class="alert alert-danger" ng-show="ErrorMessage=='NoMatch'">
+        The details entered do not match
+    </div>
+    
+    <div class="alert alert-danger" ng-show="ErrorMessage=='Invalid'">
+        This is an invalid link
+    </div>
+    
+    <div class="alert alert-danger" ng-show="ErrorMessage=='Internal'">
+        This application can only be progressed by Al Rayan Bank. Please contact us on 0800 408 6407.
+    </div>
+</div>
+
+
+
+
+<div ng-show="!ErrorMessage"> <!-- Answer Questions -->
+<form name="myform" novalidate="novalidate">
+
+<div class="SectionContainer" style="margin-bottom:20px;">
+    <div>
+    <strong>Please complete the fields below to proceed</strong>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-6">
+        <label class="control-label">First name</label>
+        <input type="text" name="firstname" ng-required="true" class="form-control arbBox" ng-model="Data.FirstName"/>  
+         <c:CAA_InputError field="firstname"/>      
+    </div>
+    <div class="col-sm-6">
+        <label class="control-label">Last name</label>
+        <input type="text" name="lastname" ng-required="true" class="form-control arbBox" ng-model="Data.LastName"/>
+        <c:CAA_InputError field="lastname"/> 
+    </div>
+</div>
+<hr/>
+<c:CAA_Date title="Date of birth" model="Data" field="DOB" NumYears="-120" req="true"/>
+<hr/>
+
+<div class="row">
+    <div class="col-sm-12">
+        <label class="control-label">Postcode</label> 
+        <input type="text" name="postcode" ng-required="true" class="form-control arbBox" ng-model="Data.Postcode"/>
+        <c:CAA_InputError field="postcode"/> 
+    </div>
+</div>
+<hr/>
+
+<div class="row">
+    <div class="col-sm-12">
+        <label class="control-label">Mother's maiden name</label> 
+        <input type="text" name="mother" ng-required="true" class="form-control arbBox" ng-model="Data.MothersName"/>
+        <c:CAA_InputError field="mother"/>
+    </div>
+</div>
+
+
+
+<!--</div>-->
+<div style="padding-top:5px;text-align:center;">
+<button class="btn btnArb" ng-click="Submitted=true;CheckQuestions()">Continue</button>
+</div>
+</form>
+</div>
+
+
+
+        <div style="padding-top:40px;text-align:center;display:none;">
+             <div class="alert alert-danger" >
+                This link has already been activated
+            </div>
+            
+            <div class="alert alert-danger" >
+                This link has expired
+            </div>
+            
+            <div class="alert alert-danger" >
+                The details entered do not match
+            </div>
+            
+            <div class="alert alert-danger" >
+                This is an invalid link
+            </div>
+            
+            <div class="alert alert-danger" >
+                This application can only be progressed by Al Rayan Bank. Please contact us on 0800 408 6407.
+            </div>
+        </div>
+
+
+</div>
+
+
+</div>
+</div>
+
+</form>
+
+
+
+</div>
+
+
+
+
+
+</apex:define>
+
+
+
+
+
+        <apex:define name="Menu">
+        
+  </apex:define>
+</apex:composition>              
+        
+        
+</apex:page>

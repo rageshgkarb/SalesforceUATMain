@@ -1,0 +1,48 @@
+<!-- C0143 End of Year I.T Survey KD -->
+
+
+<apex:page standardController="IT_Survey__c" sidebar="false" showHeader="false">
+
+    <apex:form >
+        <apex:pageBlock >
+  
+          <h1>End of Year Al Rayan Bank I.T Survey</h1>
+          <div></div>       
+          Thank you for undertaking the end of year Al Rayan Bank I.T survey. If you have any questions or queries, please contact Matt on 0121 452 7309.
+         <div></div>
+          <div></div>
+          <apex:pageBlockSection >
+                <img src="https://{!$Label.Domain_URL}/servlet/servlet.ImageServer?id=015D00000035aYe&oid=00D20000000MKv1&lastMod=1418039257000">
+</img>
+          </apex:pageBlockSection> 
+          <apex:pageBlockSection >
+              <apex:inputField label="Have you raised a case with IT in the last 3 months?" value="{!IT_Survey__c.Have_you_raised_a_case_with_IT__c}"/>
+              <apex:inputField label="How do you usually raise a case with the IT Servicedesk?" value="{!IT_Survey__c.Raise_a_case__c}"/>
+              <apex:inputField label="On a scale of 1 to 10 where 10 is very satisfied and 1 is very dissatisfied, how satisfied are you with the time taken to respond to your IT case?" value="{!IT_Survey__c.Response_satisfaction__c}"/>
+              <apex:inputField label="Has the response time to your IT case improved in the last year?" value="{!IT_Survey__c.Response_improvement__c}"/>             
+              <apex:inputField label="On a scale of 1 to 10 where 10 is very satisfied and 1 is very dissatisfied, how satisfied are you with the time taken to resolve your IT case?" value="{!IT_Survey__c.Resolution_satisfaction__c}"/>
+              <apex:inputField label="Has the resolution time to your IT case improved in the last year?" value="{!IT_Survey__c.Resolution_improvement__c}"/>             
+              <apex:inputField label="On a scale of 1 to 10 where 10 is very satisfied and 1 is very dissatisfied, how satisfied are you with IT's understanding of what you do?" value="{!IT_Survey__c.Understand_business_needs__c}"/>
+              <apex:inputField label="Has the business understanding from IT improved in the last year?" value="{!IT_Survey__c.Business_understanding_improvement__c}"/> 
+           </apex:pageBlockSection>
+           <apex:pageBlockSection columns="1">
+           <apex:pageblockSectionItem >
+               <apex:outputLabel value="In your view, where should the IT budget be spent in 2016" for="Priority" />
+                    <apex:inputField value="{!IT_Survey__c.Key_priority_for_2014__c}" id="Priority"/> 
+           </apex:pageblockSectionItem>
+           <apex:pageblockSectionItem >
+               <apex:outputLabel value="Who in IT provides the best customer service and why?" for="Service" />
+                    <apex:inputField value="{!IT_Survey__c.Best_service__c}" id="Service"/> 
+           </apex:pageblockSectionItem>
+           <apex:pageblockSectionItem >
+               <apex:outputLabel value="If you have any general feedback or anything you would like to have followed up, please detail here. 
+If you would like a response, please provide your name." for="Comments" />
+                    <apex:inputField value="{!IT_Survey__c.Any_general_comments__c}" id="Comments"/> 
+           </apex:pageblockSectionItem>
+           </apex:pageBlockSection>              
+          <apex:pageBlockSection >
+              <apex:commandButton value="Save" action="{!save}"/>
+          </apex:pageBlockSection>  
+      </apex:pageBlock>
+    </apex:form>
+</apex:page>

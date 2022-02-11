@@ -1,0 +1,57 @@
+<apex:component >
+
+	<div ng-controller="controllerPreApprovedCase" ng-init="Initiate()" style="height: 100%;">
+
+        <div id="PreApprovedCasesList">
+            <table class="table table-striped" id="PreApprovedCases" style="margin-top:0px;" >
+                <thead>
+                    <tr>
+                        <th class="col-sm-4">
+                            Case Selection
+                        </th>
+                        <th class="col-sm-4">
+                            Case Number
+                        </th>
+                        <th class="col-sm-4">
+                            Amount Requested
+                        </th>
+                        <th class="col-sm-4">
+                            Date Requested
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="itemRow" ng-repeat="item in PreApprovedCases" ng-class-Even="'BranchItemOdd'" style="padding:5px;margin:0px;">
+                        <td class="col-sm-4">
+                            <input type="radio" name="selected" ng-click="updateSelection(item.CaseId, item.CaseNo)"/>
+                        </td>
+                        <td class="col-sm-4">
+                            {{item.CaseNo}}
+                        </td>
+                        <td class="col-sm-4">
+                            {{item.AmountRequired}}
+                        </td>
+                        <td class="col-sm-4">
+                            {{item.CreatedDateTime}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+		<div class="dialogButtons">
+			<div class="goldButton" ng-click="Close()">CLOSE</div>			
+		</div>
+
+		<div style="margin-top: 15px; margin-right: 25px; float:left;">		
+			<div class="toolbarButton" ng-click="SelectCase()" >
+				<div class="imgCircle">
+					<img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_check.png')}"></img>
+				</div>
+				<div class="textSmallestDarkGray caption">SELECT</div>
+			</div>
+		</div>
+
+	</div>
+
+</apex:component>

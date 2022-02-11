@@ -1,0 +1,93 @@
+<apex:page controller="KCIReportSelection" showHeader="false" sidebar="false" standardStylesheets="false" >
+<head>
+<apex:stylesheet value="{!$Resource.KRIReportStyles}"/>
+
+</head>
+
+<apex:outputPanel layout="none">	    
+  	<h2>Risk and KCI Report</h2>	
+</apex:outputPanel>
+	    
+<apex:outputPanel layout="none">
+  
+ <!--  <h2>{!DateRangeString} Report</h2>  -->
+  	<h3>
+  	<apex:outputText value="{0,date,dd/MM/yyyy}">
+		From: &nbsp; <apex:param value="{!theDateTimeNow}"/>
+	</apex:outputText>
+
+	<apex:outputText value="{0,date,dd/MM/yyyy}">
+		To: &nbsp; <apex:param value="{!theDateTimeNow}"/>
+	</apex:outputText>
+	</h3>
+</apex:outputPanel>
+ 
+<apex:outputPanel layout="none">
+		<apex:repeat value="{!reportRows}" var="controlRow">
+			<table  style="border-top: 1px solid black;border-left:1px solid black;;border-right:1px solid black; width:100%;">
+				<tr>
+					<th>Risk Title</th>
+					<th>Business Unit</th>
+					<th>Risk Category</th>
+				</tr>
+				
+				<tr>
+					<td>
+						{!controlRow.theControl.Name}
+					</td>
+					<td>
+						{!controlRow.theControl.grc__Business_Unit__r.name}
+					</td>
+					<td>
+						{!controlRow.theControl.grc__Category__c}
+					</td>
+				</tr>
+			</table>
+	
+			<table style="border-bottom: 1px solid black;border-left:1px solid black;;border-right:1px solid black; width:100%;">
+				<tr class="kri_header" style="{!if(controlRow.theKCIHives.size == 0,'display:none;','')}">
+					<th>KCI Name</th>
+					<th>Metrics</th>
+						<apex:repeat value="{!MonthsList}" var="month">
+							<th class="kri_rating" colspan="2">{!month}</th>
+						</apex:repeat>
+				</tr>
+				<tr class="kri_header" style="{!if(controlRow.theKCIHives.size == 0,'display:none;','')}">
+					<th colspan="2">&nbsp;</th>
+						<apex:repeat value="{!MonthsList}" var="month">
+							<th>Comment</th>
+							<th class="kri_rating">Rating</th>
+						</apex:repeat>
+				</tr>
+				
+				<apex:repeat value="{!controlRow.theKCIHives}" var="kci" rendered="{!controlRow.theKCIHives.size > 0}">
+					<tr class="kri_content" style="border-bottom: thin solid black;border-collapse:collapse;">
+						<td>{!kci.theKCI.name}</td>
+						<td>
+							<ul class="metric_container">
+							<apex:repeat value="{!kci.theKCI.Risk__KCI_Metrics__r}" var="metric">
+								<li>{!metric.Risk__Metric__r.Name}</li>
+							</apex:repeat>
+							</ul>
+							
+						</td>
+						<!-- <td>{!MonthsList}</td>
+						<td>{!kri.theReviews}</td> -->
+						 <apex:repeat value="{!MonthsList}" var="monthKey" rendered="{!controlRow.theKCIHives.size > 0}">
+							<td>
+								<apex:outputText value="{!kci.theReviews[monthKey].Risk__Review_Summary__c}" rendered="{!kci.theReviews[monthKey] != null}"/>
+							</td>
+							<td class="kri_rating" > 
+								<div style="background-color: {!if(kci.theReviews[monthKey].Risk__Score__c == 3,'Red',if(kci.theReviews[monthKey].Risk__Score__c == 2,'Yellow',if(kci.theReviews[monthKey].Risk__Score__c == 1,'green','grey')))}">&nbsp;</div>
+								<!-- <apex:outputText value="{!kri.theReviews[monthKey].Risk__KRI_Review_Rating__c}" escape="false" rendered="{!kri.theReviews[monthKey] != null}"/> -->
+							</td>
+						</apex:repeat> 
+					</tr>
+				</apex:repeat>
+				
+		</table>
+		<div style="clear:both;">&nbsp;</div>
+		<div style="clear:both;">&nbsp;</div>
+	</apex:repeat>	
+</apex:outputPanel>
+</apex:page>

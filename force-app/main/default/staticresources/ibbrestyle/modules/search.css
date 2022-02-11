@@ -1,0 +1,48 @@
+@charset "UTF-8";
+/* CSS Document */
+
+.searchReview { display:block; width:50%;}
+
+.SMresults .promoText span {
+	background-color: #ffe88f;
+	padding-top: 0pt;
+	padding-right: 0.3em;
+	padding-bottom: 0pt;
+	padding-left: 0.3em;
+	color: #000000;
+}
+
+#SMcontent .module { margin-bottom:1em; }
+
+
+#contents .SMresults .promoText .promoTitle { font-size:1.077em;}
+
+
+#contents .SMresults .promoText .docExtension { }
+
+#contents .SMresults .promoText .docExtension span {
+	background-color:transparent;
+	display:block;
+	float:left;
+	height: 16px;
+	width: 16px;
+}
+#contents .SMresults .promoText .docExtension span.pdf {
+	background-image: url(../../graphics/pdf-small.gif);
+	background-repeat: no-repeat;
+}
+
+#contents .SMresults .promoText .docExtension span.word {
+	background-image: url(../../graphics/word-small.gif);
+	background-repeat: no-repeat;
+}
+
+#contents .SMresults .promoText .docExtension span.ppt {
+	background-image: url(../../graphics/ppt-small.gif);
+	background-repeat: no-repeat;
+}
+
+#contents .SMresults .promoText .docExtension span.xls {
+	background-image: url(../../graphics/xls-small.gif);
+	background-repeat: no-repeat;
+}

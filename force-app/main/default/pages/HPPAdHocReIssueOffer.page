@@ -1,0 +1,58 @@
+<!-- C00170 new page -->
+
+<apex:page controller="HPPEventAdHocReIssueOfferController" sidebar="false" showHeader="false" title="Re-Issue Offer Letter" action="{!autoRun}">
+    <head>
+      <c:KendoResource ></c:KendoResource>
+    </head>
+    <body>
+        <apex:form id="reasonForm" >
+            <div id="formWrapper">
+              <c:HPPSummary objAcc="{!Accounts[0]}" objOpp="{!opp}" objExOpp="{!ExOpp}" Product="{!Prod}"></c:HPPSummary>
+              
+              <div id="container">
+                  <table width="100%">
+                      <tr>
+                          <td valign="top" id="Sidebar">
+                              <c:HPPBOMenu oppId="{!Opp.Id}" DirectorId="{!Opp.ProductEventDirector__c}"></c:HPPBOMenu>   
+                          </td>
+                           <td valign="top" id="contenttd" >
+                             <div id="content">
+                                <h1>
+                                    Ad-hoc Payment
+                                </h1>
+                                <apex:outputPanel id="mainPageBlock">
+                                    <div style="padding:10px;" >
+                                        <apex:pagemessages >
+                                        </apex:pagemessages>
+                                        <apex:pageBlock >
+                                            <apex:pageBlockSection >
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="Reason for Re-Issue" />
+                                                    <apex:inputText value="{!ExOpp.Reason_for_offer_reissue__c}" />
+                                                </apex:pageBlockSectionItem>
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="Re-Issue Comments" />
+                                                    <apex:inputText value="{!ExOpp.Comments_for_re_issue__c}" />
+                                                </apex:pageBlockSectionItem>
+                                            </apex:pageBlockSection>
+                                            <apex:pageBlockButtons location="bottom" >
+                                                <apex:pageblocksection >
+                                                    <apex:pageBlockSectionItem >
+                                                        <apex:commandButton value="Generate Offer Letter" action="{!GenerateOfferLetter}" rendered="{!isValid}" />
+                                                    </apex:pageBlockSectionItem>
+                                                    <apex:pageBlockSectionItem >
+                                                    </apex:pageBlockSectionItem>
+                                                </apex:pageblocksection>
+                                            </apex:pageBlockButtons>
+                                        </apex:pageBlock>
+                                    </div>
+                                </apex:outputPanel>
+                              </div>
+                          </td>
+                      </tr>
+                  </table>
+              </div>                              
+            </div> 
+        </apex:form>
+    </body>
+</apex:page>

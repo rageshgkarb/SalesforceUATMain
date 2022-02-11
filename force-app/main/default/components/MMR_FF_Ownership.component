@@ -1,0 +1,372 @@
+<!--  C0291 -->
+
+<apex:component controller="MMR_ComponentController" allowDML="true">
+    <apex:attribute description="Applicant no" name="ApplicantNo" type="String" required="true" assignTo="{!AppNo}"/>
+    <apex:attribute description="Acc" name="Acc" type="Account" required="true"/>
+    <apex:attribute description="App" name="App" type="Applicant__c" required="true"/>
+    <apex:attribute description="" name="FullWidth" type="boolean"/>
+    <apex:attribute description="" name="panelClass" type="String"/>
+    <apex:attribute description="" name="IsHelp" type="Boolean" required="true"/>
+    
+    <apex:attribute name="comkey" 
+    type="String" 
+    assignTo="{!Key}" 
+    description="The key given to this component so the page can easily get access to it" />
+
+  <apex:attribute name="pController" 
+      type="MMR_PageControllerBase" 
+      assignTo="{!pageController}" 
+      required="true" 
+      description="The controller for the page." />
+  <!--  CPDR01-->
+  <style>
+      
+      .panel-info>.panel-heading
+      {
+          background-color:#000;
+      }
+  </style>
+  <!--  CPDR01-->
+    
+    <div class="AppWidth col-md-6">
+    <div class="panel panel-primary applicantPanel">
+            <div class="panel-heading"><h2>Applicant {!appNo} - {!Acc.Name}</h2>  </div>           
+            
+  <div class="panel-body">
+        <div class="row">
+            <div class="form-group">
+                <div class="col-sm-6">
+                    <label for="" >Home circumstances</label>    
+                </div>
+                <div class="col-sm-6">
+                    <apex:inputField required="true" value="{!Acc.Home_Details__c}" styleClass="form-control homeCirc{!AppNo}" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group homeCir
+            
+            
+            
+            
+            {!AppNo}">
+                <div class="col-sm-6">
+                    <label for="" >Other home circumstances</label>    
+                </div>
+                <div class="col-sm-6">
+                    <apex:inputField value="{!Acc.Other_home_details__c}" styleClass="form-control " />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group monthlyRentalItem{!AppNo}">
+                <div class="col-sm-6">
+                    <label for="" >What is your current monthly rental payment</label>    
+                </div>
+                <div class="col-sm-6">
+                    <apex:inputField value="{!Acc.What_is_your_currt_monthly_rent_payment__c}" styleClass="form-control" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group monthlyRentalItem{!AppNo}">
+                <div class="col-sm-6">
+                    <label for="" >Name of landlord</label>    
+                </div>
+                <div class="col-sm-6">
+                    <apex:inputField value="{!Acc.Name_of_landlord__c}" styleClass="form-control" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group ownSellingItem{!AppNo}">
+                <div class="col-sm-6">
+                    <label for="" >Do you have a home finance on this property?</label>    
+                </div>
+                <div class="col-sm-6">
+                    <apex:inputField value="{!Acc.Do_you_have_an_existing_mortgage__c}" styleClass="form-control existingMortValue{!AppNo}" />
+                </div>
+            </div>
+        </div>
+        <div class="row ownSellingItem{!AppNo}">
+            <div class="form-group  existingMort{!AppNo}">
+                <div class="col-sm-6">
+                    <label for="" >Finance provider name </label>    
+                </div>
+                <div class="col-sm-6">
+                    <apex:inputField value="{!Acc.Lender_name__c}" styleClass="form-control" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group noexistingMortItem{!AppNo}">
+                <div class="col-sm-6">
+                    <label for="" >Have you previously had a mortgage?</label>    
+                </div>
+                <div class="col-sm-6">
+                    <apex:inputField value="{!Acc.Have_you_previously_had_a_mortgage__c}" styleClass="form-control prevMort{!AppNo}" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group prevMortItem{!AppNo}">
+                <div class="col-sm-6">
+                    <label for="" >When did you redeem your mortgage?</label>    
+                </div>
+                <div class="col-sm-6">
+                    <apex:inputField value="{!Acc.When_did_you_redeem_your_mortgage__c}" styleClass="form-control" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group existingMort{!AppNo}" style="display:none;">
+                <div class="col-sm-6">
+                    <label for="" >Home finance account number</label>    
+                </div>
+                <div class="col-sm-6">
+                    <apex:inputField value="{!Acc.Mortgage_account_number__c}" styleClass="form-control" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group existingMort{!AppNo}" style="display:none;">
+                <div class="col-sm-6">
+                    <label for="" >How many years have you been with this finance provider?</label>    
+                </div>
+                <div class="col-sm-6">
+                    <apex:inputField value="{!Acc.How_long_have_you_being_with_lender__c}" styleClass="form-control" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group existingMort{!AppNo}" style="display:none;">
+                <div class="col-sm-6">
+                    <label for="" >Purchase price</label>    
+                </div>
+                <div class="col-sm-6">
+                    <apex:inputField value="{!Acc.Purchase_price__c}" styleClass="form-control" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group existingMort{!AppNo}" style="display:none;">
+                <div class="col-sm-6">
+                    <label for="" >Amount financed</label>    
+                </div>
+                <div class="col-sm-6">
+                    <apex:inputField value="{!Acc.Amount_financed__c}" styleClass="form-control" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group existingMort{!AppNo}" style="display:none;">
+                <div class="col-sm-6">
+                    <label for="" >Current home finance balance</label>    
+                </div>
+                <div class="col-sm-6">
+                    <apex:inputField value="{!Acc.How_much_is_outstanding_on_mortgage__c}" styleClass="form-control" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group existingMort{!AppNo}" style="display:none;">
+                <div class="col-sm-6">
+                    <label for="" >Current monthly home finance payment</label>    
+                </div>
+                <div class="col-sm-6">
+                    <apex:inputField value="{!Acc.Current_monthly_mortgage_payment__c}" styleClass="form-control" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group existingMort{!AppNo}" style="display:none;">
+                <div class="col-sm-6">
+                    <label for="" >Will this property be sold before completion of this application?</label>    
+                </div>
+                <div class="col-sm-6">
+                    <apex:inputField value="{!Acc.Is_mortgage_paid_by_time_HPP_completed__c}" styleClass="form-control" />
+                </div>
+            </div>
+        </div>
+        <div class="row existingMort{!AppNo}" style="display:none;">
+            <div class="form-group ownSellingItem ">
+                <div class="col-sm-6">
+                    <label for="" >What is the selling price if this property is to be sold</label>    
+                </div>
+                <div class="col-sm-6">
+                    <apex:inputField value="{!Acc.Asset_SellingPrice__c}" styleClass="form-control" />
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        <div class="row">
+            <div class="panel panel-info">
+                <div class="panel-heading">Details of other properties owned</div>
+                <div class="panel-body">
+                    
+                    <div class="row">
+                    
+                    <apex:variable value="{!0}" var="rowNumProp"/>
+                
+                <ul class="list-group propList">
+      <apex:repeat value="{!Property}" var="d">
+      <li class="list-group-item propList">
+        <input class="propId" type="hidden" value="{!d.id}"></input>
+        <input class="propAcc" type="hidden" value="{!d.PersonAccount__c}"></input>
+      
+    <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >First line of address</label>    
+                </div>
+                <div class="col-sm-5">
+                    <span class="form-control propFirstLine">{!d.First_line_of_address__c}  </span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Date purchased</label>    
+                </div>
+                <div class="col-sm-5">
+                    <span class="form-control propDatePurchased">
+                    <apex:outputText value="{0, date, dd'/'MM'/'yyyy}">
+   <apex:param value="{!d.Date_purchased__c}"/>
+</apex:outputText></span>
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Existing mortgage or HPP Lender</label>    
+                </div>
+                <div class="col-sm-5">
+                    <span class="form-control propExistingLender">{!d.ExisitingMortgageHPPLender__c}</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Amount of monthly repayment</label>    
+                </div>
+                <div class="col-sm-5">
+                    <span class="form-control propMonthlyPayment">{!d.Amount_of_monthly_repayment__c}</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Do you let the property out</label>    
+                </div>
+                <div class="col-sm-5">
+                    <span class="form-control propLetProperty" >{!if(d.IsBTLProperty__c,'Yes','No')}</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Amount of monthly rent received</label>    
+                </div>
+                <div class="col-sm-5">
+                    <span class="form-control propRentIn">{!d.Amount_of_monthly_rent_received__c}</span>
+                </div>
+            </div>
+            
+            
+      <button class="btn btn-info propEdit" onclick="return false;"  >Edit
+      <span class="glyphicon glyphicon-edit"></span>
+      </button>
+           
+            
+            
+      <apex:commandLink styleClass="btn btn-danger pull-right" value="Remove" action="{!RemoveProperty}"  >
+      <span class="glyphicon glyphicon-remove-circle"></span>
+      
+      <apex:param name="rowDeleteProperty"
+                value="{!d.id}"
+                assignTo="{!rowDeleteProperty}"/> 
+               
+                
+                </apex:commandLink> <apex:actionStatus id="propRemoveStatus" startStyle="padding-left: 10px;text-decoration:none;"   startText="Removing property..."  stopText=""/>
+             
+      <apex:variable var="rowNumProp" value="{!rowNumProp+ 1}"/>
+      </li>
+      </apex:repeat>
+  </ul>
+                   
+                   </div>
+                   <!-- CPDR01 button type="button" class="addProp btn btn-success" onclick="ShowPropertyPopup({!AppNo});" >Add</button-->
+                   <button type="button" class="addProp btn btn-danger" onclick="ShowPropertyPopup({!AppNo});" >Add</button>
+                    
+                        
+                </div>
+            </div>
+        </div>
+        
+       
+        
+        
+        <div class="row">
+        <div class="panel panel-info">
+            <div class="panel-heading">Help To Buy Questions</div>
+        <div class="panel-body">
+        
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <label>
+                            1. Do you currently have any interest (ownership) in any other residential properties (including Buy to Let properties) anywhere in the world?
+                        </label>
+                    </div>
+                    <div class="col-sm-12">
+                        <apex:inputField styleClass="form-control help1{!AppNo}"  value="{!App.HTBQ1__c}" required="{!IsHelp}"/>        
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <label>
+                            2. If yes to question one, do you intend to dispose of your interest in this property or properties before completing this application?
+                        </label>
+                    </div>
+                    <div class="col-sm-12">
+                        <apex:inputField styleClass="form-control help2{!AppNo}" value="{!App.HTBQ2__c}"/>        
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-sm-12">
+            <div class="form-group">
+            <div class="col-sm-12">
+                <!--  C0291
+                <label>
+                    3. If you are refinancing, please confirm that the funds will not be used to purchase an interest in any other residential properties (including Buy to Let properties) anywhere in the world? (Yes)
+                </label>
+                -->
+                <label>
+                    3. If you are refinancing, will the funds be used to purchase an interest in any other properties (including Buy to Let properties) anywhere in the world?
+                </label>
+                <!--  C0291 end -->
+            </div>
+            <div class="col-sm-12">
+                <apex:inputField styleClass="form-control help3{!AppNo}" value="{!App.HTBQ3__c}" required="{!IsHelp}"/>        
+            </div>
+            </div>
+        </div>
+            
+        </div>
+        </div>
+        </div>
+        </div>
+        
+         </div>
+        
+        
+        
+    </div>
+    </div>
+</apex:component>

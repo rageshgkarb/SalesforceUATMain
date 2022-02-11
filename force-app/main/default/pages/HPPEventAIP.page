@@ -1,0 +1,209 @@
+<apex:page controller="HPPEventAIPController" sidebar="false" showHeader="false" title="Applicant Details" action="{!setUp}" >
+<head>
+
+</head>
+<body>
+<c:KendoResource ></c:KendoResource>
+<apex:form >
+
+
+<div id="formWrapper" >
+<div class="header" >
+<h1>{!Opp.Name} - {!Acc.Name} - AIP</h1>
+</div>
+
+
+
+
+
+
+
+<div id="container" >
+<table width="100%">
+<tr>
+<!-- left landed menu was here -->
+<td valign="top" id="contenttd">
+<div  id="topNav">
+
+<ul>
+<li class="active"><apex:commandLink action="{!ProductDetails}" >Product Details</apex:commandLink></li>
+<li><span>Applicants</span></li>
+<li class="k-header"><span>{!Accounts[0].name}</span></li>
+
+<apex:outputPanel rendered="{!Opp.Number_of_People_Applying__c> 1 && Prod!=null}">
+<li ><span>{!Accounts[1].name}</span></li>
+</apex:outputPanel>
+
+
+
+<apex:outputPanel rendered="{!Opp.Number_of_People_Applying__c> 2 && Prod!=null}">
+<li class="k-header"><span>{!Accounts[2].name}</span></li>
+
+</apex:outputPanel>
+<apex:outputPanel rendered="{!Opp.Number_of_People_Applying__c> 3}">
+<li class="k-header"><span>{!Accounts[3].name}</span></li>
+</apex:outputPanel>
+
+<li class="k-header"><span>AIP Confirmation</span></li>
+</ul>
+
+</div>
+<div class="contentDiv">
+<apex:pageBlock >
+<apex:pageBlockSection columns="1" >
+
+
+<apex:pageBlockSectionItem rendered="{!IsCompleted}" >
+<apex:outputLabel value="Number of Applicants" for="recent"/>
+<apex:outputLabel value="{!Opp.Number_of_People_Applying__c}" />
+</apex:pageBlockSectionItem>
+
+</apex:pageBlockSection>
+
+<apex:messages ></apex:messages>
+<table class="detailList" style="width: 50%">
+<tbody>
+
+<tr>
+<td class="labelCol">
+</td>
+<td>
+<apex:outputLink title="Where the HPP is over the phone, the Agent can limit what’s read out to the customer to informing them of the company information and highlighting sections 3, 4, 5 and 6 on the IDD, then confirms that the IDD will be posted out.  For face to face the agent hands the IDD to the customer confirming company information and re-iterating section 3." value="{!IDDLink}" rendered="true" target="_blank"><b>Initial Disclosure Document</b><br/></apex:outputLink>
+</td>
+
+</tr>
+
+<tr>
+    <td class="labelCol">Interested In</td><td class="dataCol"><apex:outputLabel id="InterestedIn" value="{!Opp.Interested_in__c}" /></td>
+</tr>
+
+<tr>
+    <td class="labelCol">IBB Product</td><td class="dataCol">
+    
+<apex:selectList required="true" value="{!Opp.IBB_Product__c}"   id="recent" size="1"  > 
+            <apex:selectOptions value="{!ProductItems}" />           
+</apex:selectList> 
+    
+  </td>
+</tr>
+<tr>
+    <td class="labelCol">Purchase Price/Market Value</td><td class="dataCol"><apex:inputField value="{!Opp.Purchase_price_market_value__c}" required="true"/></td>
+</tr>
+<tr>
+    <td class="labelCol">Term of Finance</td><td class="dataCol"><apex:inputField value="{!Opp.Term_of_Finance__c}" required="true"/></td>
+</tr>
+<tr>
+    <td class="labelCol">Finance Required</td><td class="dataCol"><apex:inputField value="{!Opp.Finance_Required__c}" required="true"/></td>
+</tr>
+
+<tr>
+    <td class="labelCol">Purpose of Finance</td><td class="dataCol"><apex:inputField value="{!Opp.Purpose_of_Finance__c}" required="true"/></td>
+</tr>
+
+<tr>
+    <td class="labelCol">Is the primary applicant a first time buyer?</td><td class="dataCol"><apex:inputField value="{!Opp.First_time_buyer__c}" required="true"/></td>
+</tr>
+
+</tbody>
+</table>
+
+
+<apex:pageBlockSection >
+<apex:pageBlockSectionItem rendered="{!IsPremier}">
+<apex:outputLabel value="HPP Premier rate" />
+<apex:inputField value="{!Opp.HPP_Premier_Rate__c}" rendered="{!IsPremier}" required="true"  />
+</apex:pageBlockSectionItem>
+</apex:pageBlockSection>
+
+
+
+<apex:pageBlockSection >
+<apex:pageBlockSectionItem rendered="{!IsBTL}">
+<apex:outputLabel value="Do you currently own a property?" />
+<apex:inputField value="{!Opp.Do_you_currently_own_a_property__c   }" rendered="{!IsBTL}"  />
+</apex:pageBlockSectionItem>
+
+<apex:pageBlockSectionItem rendered="{!IsBTL}">
+<apex:outputLabel value="How many Buy to Let properties do you own?" />
+<apex:inputField value="{!Opp.How_many_BTL_Properties_do_you_own__c }" rendered="{!IsBTL}"  />
+</apex:pageBlockSectionItem>
+
+<apex:pageBlockSectionItem rendered="{!IsBTL}">
+<apex:outputLabel value="If 'Buy to Let' refinancing have you owned property for more than 12 months?" />
+<apex:inputField value="{!Opp.If_BTL_financing_owned_property_12mths__c  }" rendered="{!IsBTL}"  />
+</apex:pageBlockSectionItem>
+
+<apex:pageBlockSectionItem rendered="{!IsBTL}">
+<apex:outputLabel value="What type of Buy to Let do you require?" />
+<apex:inputField value="{!Opp.What_type_of_Buy_to_Let_do_you_require__c  }" rendered="{!IsBTL}"  />
+</apex:pageBlockSectionItem>
+
+<apex:pageBlockSectionItem rendered="{!IsBTL}">
+<apex:outputLabel value="Estimated actual monthly rental income?" />
+<apex:inputField value="{!Opp.Estimated_actual_monthly_rental_income__c  }" rendered="{!IsBTL}"  />
+</apex:pageBlockSectionItem>
+
+
+
+<apex:repeat value="{!$ObjectType.Opportunity.FieldSets.AIP_Prod_Info}" var="ff" >
+  
+       <apex:outputField value="{!Opp[ff]}"    rendered="{!IsCompleted}" />
+</apex:repeat>
+
+
+</apex:pageBlockSection>
+
+
+
+
+
+
+
+
+
+
+
+<table width="100%">
+<tr>
+    <td>
+        <apex:commandButton value="Next" styleClass="ROButton redBtn" action="{!ProductEntered}" rendered="{!!IsCompleted}"/>
+    </td>
+
+<td align="right">
+
+</td>
+
+</tr>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+</apex:pageBlock>
+</div>
+
+</td></tr>
+</table>
+
+
+
+
+</div>
+</div>
+<apex:outputPanel rendered="{!IsCompleted}">
+<script>
+SetReadOnly();
+
+</script>
+</apex:outputPanel>
+  </apex:form>
+  </body>
+
+</apex:page>

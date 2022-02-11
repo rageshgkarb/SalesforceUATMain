@@ -1,0 +1,38 @@
+<apex:component >
+<apex:attribute name="Product" description="" type="IBB_Product__c"/>
+
+<div>
+</div>
+
+<div>
+Thank you for your application for an <strong>Al Rayan Bank {!Product.Name}</strong><br/><br/>
+We have reviewed your application and we must advise you that regretfully, in this instance, we are unable to offer the facility you have requested.<br/>
+<br/>Al Rayan Bank, like most financial organisations, assesses applications using information supplied by credit bureau.  Unfortunately, in this case we have been supplied with information by Equifax Ltd that means we are unable to accept your application at this moment. If you would like more information please either go to www.equifax.co.uk or write to:-<br/>
+</div>
+
+<br/>
+<div>
+Equifax plc
+</div>
+<div>
+Credit File Advice Centre
+</div>
+<div>
+Po Box 1140
+</div>
+<div>
+Bradford
+</div>
+<div>
+BD1 5US
+</div>
+<br/>
+<div>
+A fee of £2.00 will be payable to Equifax Plc if you wish to use either of these methods.
+</div>
+<div>
+If you require any further information about your account application please contact us on 0800 4080 786.
+</div>
+
+
+</apex:component>

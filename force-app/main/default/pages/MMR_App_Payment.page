@@ -1,0 +1,259 @@
+<apex:page showHeader="false" sidebar="false" controller="MMR_APP_Payment" docType="html-5.0" action="{!Setup}">
+<head>
+    <c:MMR_PageHeader ></c:MMR_PageHeader>   
+ 
+</head>
+<body>
+
+  
+  <c:MMR_Header title="Application - Payment Details" numapps="{!numapplying}" opp="{!bopp}"/>
+
+      <div class="container">
+              <c:MMR_App_Nav active="4" EventId="{!EventId}" rendered="{!!IsCompleted}"/>
+              <c:MMR_App_Nav_Links active="4" EventId="{!EventId}" rendered="{!IsCompleted}"/>
+    
+    
+
+    
+        <apex:form id="aForm" styleClass="form-horizontal">
+            
+            <apex:pageMessages ></apex:pageMessages>
+            
+            <ul class="nav nav-tabs">
+              <li class="active"><a href="#carddetails" data-toggle="tab">Card Details</a></li>
+              <li><a href="#otherpay" data-toggle="tab">Other Payment Details</a></li>
+              <li><a href="#directdebit" data-toggle="tab">Direct Debit Details</a></li>
+            </ul>
+            
+            <!-- Tab panes -->
+            <div class="tab-content">
+              <div class="tab-pane active" id="carddetails">
+                  
+              
+              
+              
+                  <div class="row">
+                  <div class="form-group">
+                      <div class="col-sm-2">
+                          <label>Card Type</label>
+                      </div>
+                      <div class="col-sm-4">
+                          <apex:inputField id="cardType" styleClass="form-control" value="{!card.Card_Type__c}" rendered="{!IF(card.Name=='', true, false)}" required="false" />
+                            <apex:outputField id="txtCardType" value="{!card.Card_Type__c}" rendered="{!not(IF(card.Name=='', true, false))}" />
+                      </div>
+                      <div class="col-sm-2">
+                          <label>Issue Number</label>
+                      </div>
+                      <div class="col-sm-4">
+                          <apex:inputField styleClass="form-control" id="issueNumber" value="{!card.Issue_Number__c}" rendered="{!IF(card.Name=='', true, false)}"/>
+                            <apex:outputField id="txtIssueNumber" value="{!card.Issue_Number__c}" rendered="{!not(IF(card.Name=='', true, false))}" />
+                      </div>
+                  </div>
+                  </div>
+                  <div class="row">
+                  <div class="form-group">
+                      <div class="col-sm-2">
+                          <label>Card Number</label>
+                      </div>
+                      <div class="col-sm-4">
+                          <apex:inputField styleClass="form-control" id="cardNumber"  value="{!card.Name}" rendered="{!IF(card.Name=='', true, false)}" required="false"/>
+                            <apex:outputField id="txtCardNumber" value="{!card.Name}" rendered="{!not(IF(card.Name=='', true, false))}" />
+                      </div>
+                      <div class="col-sm-2">
+                          <label>Security Code</label>
+                      </div>
+                      <div class="col-sm-4">
+                          <apex:inputField styleClass="form-control"  id="cardSecurityCode" value="{!card.Security_Code_Encrypted__c}" rendered="{!IF(card.Security_Code_Encrypted__c==null, true, false)}" required="false" />
+                          <apex:outputText rendered="{!not(IF(card.Security_Code_Encrypted__c==null, true, false))}">&nbsp;</apex:outputText>
+                      </div>
+                  </div>
+                  </div>
+                  
+                  
+                  <div class="row">
+                  <div class="form-group">
+                      <div class="col-sm-2">
+                          <label>Expiry (mm/yyyy)</label>
+                      </div>
+                      <div class="col-sm-4">
+                      <apex:outputPanel rendered="{!IF(card.Token__c==null, true, false)}" >
+                          <apex:inputField html-maxlength="2"  styleClass="form-control" id="cardExpiryMonth" value="{!card.Expiry_Month__c}" style="width:40px;display:inline-block;" />
+                        <apex:outputText value=" / " />
+                        <apex:inputField html-maxlength="4" styleClass="form-control" id="cardExpiryYear" value="{!card.Expiry_Year_Text__c}" style="width:60px;display:inline-block;" />
+                      </apex:outputPanel>
+                      
+                      <apex:outputPanel rendered="{!IF(card.Token__c!=null, true, false)}" >
+                          <apex:outputText rendered="{!not(IF(card.Name==null, true, false))}">{!cardExpiryDate}</apex:outputText>                            
+                      </apex:outputPanel>                    
+                      
+                       </div>                     
+                  </div>
+                  </div>
+                  
+                  <div class="row">
+                  <div class="form-group">
+                      <div class="col-sm-2">
+                          <label>Valid to(mm/yyyy)</label>
+                      </div>
+                      <div class="col-sm-4">
+                      <apex:outputPanel rendered="{!IF(card.Token__c==null, true, false)}" >
+                          <apex:inputField html-maxlength="2" styleClass="form-control" id="cardValidFromMonth" value="{!card.Valid_From_Month__c}" style="width:40px;display:inline-block;" />
+                        <apex:outputText value=" / " />
+                        <apex:inputField html-maxlength="4" styleClass="form-control" id="cardValidFromYear" value="{!card.Valid_From_Year_Text__c}" style="width:60px;display:inline-block;" />
+                      </apex:outputPanel>
+                                                
+                    <apex:outputText rendered="{!not(IF(card.Token__c==null, true, false))}">{!cardExpiryDate}</apex:outputText>
+                      
+                       </div>                     
+                  </div>
+                  </div>
+                  
+                  
+                  <div class="row">
+                      <apex:commandButton value="Add" styleClass="btn-danger" action="{!AddCard}" rendered="{!!IsCompleted}"/>
+                  </div>
+                  
+                  
+                  <apex:pageBlock >
+                  <apex:outputPanel rendered="{!HasCards}">
+                  
+                  <apex:pageBlockTable id="tblCard" value="{!Cards}" var="c"  >
+                <apex:column headerValue="Select">
+                    <apex:commandButton value="Delete" styleClass="btn-danger" action="{!DeleteCard}" rendered="{!!IsCompleted}" >
+                        <apex:param name="deleteCardId" value="{!c.card.id}" assignTo="{!deleteCardId}" />                    
+                    </apex:commandButton>
+                </apex:column>
+                <apex:column value="{!c.card.Name}"/>
+                <apex:column value="{!c.card.Card_Type__c}"/>
+                <apex:column headerValue="Expiry Date" value="{!c.card.Expiry_Date_Encrypted__c}" />
+            </apex:pageBlockTable>
+            
+                  
+                  </apex:outputPanel>
+                  </apex:pageBlock>
+              
+              
+              
+              
+              </div><!-- end tab 1 -->
+              
+              
+              
+              
+              <div class="tab-pane" id="otherpay">
+                  <div class="row">
+                      <div class="form-group">
+                          <div class="col-sm-2">
+                              <label>Other payment method</label>
+                          </div>
+                          <div class="col-sm-4">
+                              <apex:inputField styleClass="form-control" value="{!exOpp.Other_payment_method__c}"   />
+                          </div>                          
+                      </div>
+                  </div>
+                  
+                  <div class="row">
+                      <div class="form-group">
+                          <div class="col-sm-2">
+                              <label>Other payment account number</label>
+                          </div>
+                          <div class="col-sm-4">
+                              <apex:inputField styleClass="form-control" value="{!exOpp.Other_payment_account_no__c}"   />
+                          </div>                        
+                          <div class="col-sm-2">
+                              <label>Other payment sortcode</label>
+                          </div>
+                          <div class="col-sm-4">
+                              <apex:inputField styleClass="form-control" value="{!exOpp.Other_payment_sortcode__c }"   />
+                          </div>                         
+                      </div>
+                  </div>
+                  
+              
+              </div><!-- end tab 2 -->
+    
+                <div class="tab-pane" id="directdebit"><!-- start tab 3-->
+                
+                <div class="row">
+                    <apex:image url="{!$Resource.DirectDebitLogo}"/>
+                </div>
+                
+                <div class="row">
+                    <p>Instruction to your Bank or Building Society</p>                        
+                    <p>Please pay Al Rayan Bank PLC Direct Debits from the account detailed in this Instruction subject to the safeguards assured by the Direct Debit Guarantee. I understand that this Instruction may remain with Al Rayan Bank PLC and, if so, details will be passed electronically to my Bank/Building Society.</p>
+                    <p>Banks/Building Societies may not accept Direct Debit Instructions for some types of accounts. The setup of DD mandate can take up to 7 working days. </p>
+                </div>
+                
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            Name of Account
+                        </div>
+                        <div class="col-sm-4">
+                            <apex:inputField styleClass="form-control" value="{!Opp.Name_of_current_Bank_Building_Society__c}"  required="false"/>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            Sort code to debit
+                        </div>
+                        <div class="col-sm-2">
+                            <apex:inputField styleClass="form-control" value="{!Opp.Sort_Code__c}"  required="false"/>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            Account number to debit
+                        </div>
+                        <div class="col-sm-2">
+                            <apex:inputField styleClass="form-control" value="{!Opp.Account_Number__c}"  required="false"/>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            Preferred payment day
+                        </div>
+                        <div class="col-sm-2">
+                            <apex:inputField styleClass="form-control" value="{!ExOpp.DDPreferredPaymentDate__c }"  required="false"/>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                </div><!-- end tab 3-->
+            </div>
+            
+          
+              
+     <div class="row">
+             <apex:commandButton styleClass="btn-primary" value="Previous" action="{!Prev}" rendered="{!!IsCompleted}" />
+             <apex:commandButton styleClass="btn-success" value="Save" action="{!Save}" rendered="{!!IsCompleted}"/>
+             <apex:commandButton styleClass="btn-danger" value="Next" action="{!Next}" rendered="{!!IsCompleted}"/>
+             
+         </div>
+        
+         
+         
+         
+          
+         
+    
+     
+        </apex:form>        
+    </div>
+    
+    <c:MMR_PageFooter ></c:MMR_PageFooter>
+
+  
+</body>
+
+</apex:page>

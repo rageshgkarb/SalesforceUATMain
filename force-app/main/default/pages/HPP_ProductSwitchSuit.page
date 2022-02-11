@@ -1,0 +1,769 @@
+<apex:page showheader="false" sidebar="false" doctype="html-5.0" standardstylesheets="false" controller="HPP_ProductSwitch_Suit">
+    <apex:composition template="HPPProductSwitchTemplate">
+        <apex:define name="include">
+        <!--<link rel="stylesheet" type="text/css" href="//services.postcodeanywhere.co.uk/css/address-3.40.css" />
+        <script type="text/javascript" src="//services.postcodeanywhere.co.uk/js/address-3.40.js"></script>
+        <apex:includeScript value="//cdnjs.cloudflare.com/ajax/libs/datejs/1.0/date.min.js"/>-->
+        
+        
+        
+            <script>
+            
+                hppApp.controller('controllerSuit', ['$scope', '$location', '$timeout','serviceSuit','serviceApplication','$window',
+                                    function ($scope, $location, $timeout, serviceSuit,serviceApplication,$window)
+                {
+                
+                
+                $scope.ImportantItems = ['Very important','Important','Not important at all'];
+                $scope.YesNoOptions = ['Yes','No'];
+                
+                
+                    $scope.ToggleApplicantFullscreen = false; 
+                
+                    $scope.ShowCompleteButton = function()
+                    {
+                        return $scope.AttachmentIDFis;
+                    }
+                
+                   
+                    $scope.GetProductData = function()
+                    {
+                        if(!$scope.OppId) return;
+                    
+                        serviceSuit.GetProductData ($scope.OppId)
+                                .then(
+                                    function(result){                        
+                                        $scope.DProducts= result;                    
+                                    },
+                                    function(error){
+                                        
+                                    }             
+                                ); 
+                    }
+            
+                    $scope.GetProds = function()
+                    {
+                        if(!$scope.Data || !$scope.ProductType) return [];
+                        
+                        for(var i =0; i < $scope.DProducts.Data.Products.length; i++)
+                        {
+                            if($scope.DProducts.Data.Products[i].Name == $scope.ProductType) return $scope.DProducts.Data.Products[i].Items;
+                        }
+                        
+                        return [];
+                    }
+                    
+                    $scope.Complete = function()
+                    {
+                        $scope.Data.Product_recommendation_c = $scope.Product_recommendation_c.Id;
+                        
+                        
+                        serviceApplication.LoadShow('Processing...');
+                        serviceSuit.Complete($scope.Data,$scope.OppId,$scope.EventLogId)
+                        .then(
+                            function(result){
+                                if(result.Success)
+                                {
+                                    $scope.SuccessMessage = 'Completed';
+                              
+
+                                    if(result.URL)
+                                    {
+                                        $window.location.href = result.URL.FormatURL();
+                                    }
+                                    else
+                                    {
+                                        serviceApplication.LoadHide(false);
+                                    }
+                                }
+                                else
+                                {
+                                serviceApplication.LoadHide(false);
+                                $scope.ErrorMessage = result.Error;
+                                }
+                            },
+                            function(error){
+                                serviceApplication.LoadHide(false);
+                                $scope.ErrorMessage = error;
+                            }
+                           );
+                    }
+               
+
+                    $scope.GetData= function(){
+                        if(!$scope.OppId) return null;
+                        serviceApplication.LoadShow('Processing...');
+                        serviceSuit.GetData($scope.OppId)
+                        .then(
+                            function(result){
+                                if(result.Success)
+                                {
+                        $scope.SuccessMessage = 'Completed';
+                        $scope.Data = result.Data;
+
+                                    if(result.URL)
+                                    {
+                                        $window.location.href = result.URL.FormatURL();
+                                    }
+                                    else
+                                    {
+                        serviceApplication.LoadHide(false);
+                                    }
+                                }
+                                else
+                                {
+                        serviceApplication.LoadHide(false);
+                        $scope.ErrorMessage = result.Error;
+                                }
+                            },
+                            function(error){
+                    serviceApplication.LoadHide(false);
+                                $scope.ErrorMessage = error;
+                            }
+                           );
+                    }
+                    
+                    
+                    $scope.SelectProduct = function()
+                    {   
+                        $scope.ProductSelected = true;            
+                        $scope.GeneratingFIS = true;              
+                        
+                        serviceSuit.UpdateProduct($scope.OppId, $scope.Product_recommendation_c.Id)
+                                .then(
+                                    function(result){    
+                                        var i = 1;                
+                                        //$scope.Data = result.Data;    
+                                        //$scope.DProducts= result.Products;  
+                                        
+                                        $scope.CreateStubs($scope.OppId);                  
+                                    },
+                                    function(error){
+                                        $scope.GeneratingFIS = false;
+                                    }             
+                                ); 
+                    }
+                    
+                    $scope.CreateStubs= function()
+                    {   
+                        serviceSuit.CreateStubs($scope.OppId)
+                                .then(
+                                    function(result){    
+                                        var i = 1;                
+                                        //$scope.Data = result.Data;    
+                                        //$scope.DProducts= result.Products;  
+                                        $scope.RunRCE ();
+                                                   
+                                    },
+                                    function(error){
+                                        $scope.GeneratingFIS = false;
+                                    }             
+                                ); 
+                    }
+                    
+                    $scope.RunRCE = function()
+                    {   
+                        serviceSuit.RunRCE($scope.OppId)
+                                .then(
+                                    function(result){    
+                                        var i = 1;                
+                                        //$scope.Data = result.Data;    
+                                        //$scope.DProducts= result.Products;  
+                                        $scope.GenerateFIS();
+                                                   
+                                    },
+                                    function(error){
+                                        $scope.GeneratingFIS = false;
+                                    }             
+                                ); 
+                    }
+                    
+                    $scope.GenerateFIS = function()
+                    {   
+                        serviceSuit.GenerateFIS($scope.OppId, $scope.Product_recommendation_c.DocugenId)
+                                .then(
+                                    function(result){    
+                                    
+                                        if(result.Success)
+                                        {
+                                            $scope.AttachmentIDFis = result.AttachmentId;
+                                        }
+                                    
+                                    
+                                        var i = 1;                
+                                        //$scope.Data = result.Data;    
+                                        //$scope.DProducts= result.Products;  
+                                        $scope.GeneratingFIS = false;
+                                                   
+                                    },
+                                    function(error){
+                                        var g = 1;
+                                        $scope.GeneratingFIS = false;
+                                    }             
+                                ); 
+                    }
+
+
+                 }]);
+
+
+                hppApp.service('serviceSuit', ['$q', '$rootScope', function ($q, $rootScope) {
+                       this.GetData= function(id)
+                        {
+                            var deferred = $q.defer();
+                        Visualforce.remoting.timeout = 120000;
+                            HPP_ProductSwitch_Suit.GetData(id,function(result, event){
+                                if(event.status){
+                                    deferred.resolve(result);
+                                }
+                                else {
+                                    deferred.reject(event);
+                                }
+                            },{ buffer: false, escape: false, timeout: 120000});
+                            return deferred.promise;
+                        }
+                        
+                        this.GenerateFIS= function(id,docId)
+                        {
+                            var deferred = $q.defer();
+                            Visualforce.remoting.timeout = 120000;
+                            Visualforce.remoting.escape= false;
+                                HPP_ProductSwitch_Suit.GenerateFIS(id,docId,function(result, event){
+                                    if(event.status){
+                                        deferred.resolve(result);
+                                    }
+                                    else {
+                                        deferred.reject(event);
+                                    }     
+                                },{ buffer: false, escape: false, timeout: 30000} );
+                                return deferred.promise;
+                        }
+                        
+                        this.RunRCE = function(id)
+                        {
+                            var deferred = $q.defer();
+                                HPP_ProductSwitch_Suit.RunRCE(id,function(result, event){
+                                    if(event.status){
+                                        deferred.resolve(result);
+                                    }
+                                    else {
+                                        deferred.reject(event);
+                                    }     
+                                },{ buffer: false, escape: false, timeout: 30000} );
+                                return deferred.promise;
+                        }
+                        
+                        this.CreateStubs = function(id)
+                        {
+                            var deferred = $q.defer();
+                            HPP_ProductSwitch_Suit.CreateStubs(id,function(result, event){
+                                if(event.status){
+                                    deferred.resolve(result);
+                                }
+                                else {
+                                    deferred.reject(event);
+                                }     
+                            },{ buffer: false, escape: false, timeout: 30000} );
+                            return deferred.promise;
+                        }
+                        
+                        this.UpdateProduct = function(id,value)
+                        {
+                            var deferred = $q.defer();
+                                HPP_ProductSwitch_Suit.UpdateProduct(id,value,function(result, event){
+                                    if(event.status){
+                                        deferred.resolve(result);
+                                    }
+                                    else {
+                                        deferred.reject(event);
+                                    }     
+                                },{ buffer: false, escape: false, timeout: 30000} );
+                                return deferred.promise;
+                        }
+                        
+                        this.Complete= function(data,opp,event)
+                        {
+                            var deferred = $q.defer();
+                                HPP_ProductSwitch_Suit.Complete(data,opp,event,function(result, event){
+                                    if(event.status){
+                                        deferred.resolve(result);
+                                    }
+                                    else {
+                                        deferred.reject(event);
+                                    }     
+                                },{ buffer: false, escape: false, timeout: 30000} );
+                                return deferred.promise;
+                        }
+                        
+                        this.GetProductData= function(id)
+                        {
+                            var deferred = $q.defer();
+                            Visualforce.remoting.timeout = 120000;
+                            Visualforce.remoting.escape= false;
+                                HPP_ProductSwitch_Suit.GetProductData(id,function(result, event){
+                                    if(event.status){
+                                        deferred.resolve(result);
+                                    }
+                                    else {
+                                        deferred.reject(event);
+                                    }     
+                                },{ buffer: false, escape: false, timeout: 30000} );
+                                return deferred.promise;
+                        } 
+
+                   }]);
+
+
+            </script>
+            <style>
+            
+                
+            
+                ul#tab-headers li {
+                    display: inline;
+                    border: 1px solid #aaa;
+                    padding: 5px;
+                    padding-left:10px;
+                    padding-right:10px;
+                    background-color: #808080;
+                    color: #fff;
+                }
+                
+                ul#tab-headers li.active {
+                    background-color:rgb(179,153,93);                    
+                }
+                
+                ul#applicant-headers li {
+                    display: inline;
+                    border: 1px solid #aaa;
+                    padding: 5px;
+                    padding-left:10px;
+                    padding-right:10px;
+                    background-color: #808080;
+                    font-size:16px;
+                    color: #fff;
+                }
+                
+                ul#applicant-headers li.active{
+                    background-color:rgb(179,153,93);                 
+                }
+                
+                
+                #tab-headers2{
+                    padding-left:0px;
+                }
+                
+                
+                ul#tab-headers2 li {
+                   
+                    border: 1px solid #aaa;
+                    padding: 5px;
+                    background-color: #808080;
+                    color: #fff;
+                }
+                
+                #myScrollspy.affix{
+                    position:fixed;
+                    top:0px;
+                    z-index:999;
+                }
+                
+                
+                .budget-item-query{
+                    background-color: #f2dede;
+                }
+                
+                .budget-item-okk{
+                    background-color: #dff0d8;
+                }                
+                
+                .arbInputBox.form-control {
+                    background-color: rgb(243,243,243);
+                    padding-top: 8px;
+                    padding-bottom: 8px;
+                    padding-left: 12px;
+                    padding-right: 12px;
+                    height: inherit;
+                }
+                
+                .budgetItem{
+                    border: 1px solid #aaa;
+                }
+                
+                .panel{
+                    padding:0px;
+                }
+                
+                .panel-default>.panel-heading {                
+                     background-color: rgb(179,153,93);
+                     color: rgb(255,255,255);
+                     font-size: 18px;
+                }
+                
+                .panel-default>.panel-heading a:hover {
+                    color:#fff;
+                }
+                
+                
+                .SectionHeader {
+                    padding: 10px;
+                    background-color: rgb(179,153,93);
+                    color: rgb(255,255,255);
+                    font-size: 18px;
+                    margin-bottom: 3px;
+                }
+                
+                .function-item{
+                    float:left;
+                    padding-left:15px;
+                    padding-right:15px;
+                    padding-top: 5px;
+                    padding-bottom:5px;
+                    background-color: #808080;
+                    font-size:14px;
+                    color: #fff;
+                }
+                
+                .function-item.active{
+                    background-color: rgb(179,153,93);
+                }
+                
+                
+                .verticalScrollSection{
+                    margin-left: 7px;
+                    height: calc(100% - 38px);
+                    overflow-y: auto;
+                    overflow-x: hidden;                    
+                }
+                
+                
+                
+                #tab-headers2.affix{
+                position:fixed;
+                top:20px;
+                width:200px;    
+                }
+                
+                .SectionTitle {
+    color: rgb(179,153,93);
+    font-size: 20px;
+    font-weight: bold;
+    padding-bottom: 10px;
+}
+                
+            </style>
+        </apex:define>
+        <apex:define name="header">
+           <c:MMR_Header title="Product Suitability" numapps="1" opp="{!Opp}" />
+        </apex:define>
+        <apex:define name="menu">
+            <c:HPP_Angular_Menu oppid="{!opp.id}" directorid="{!DirectorID}">
+            </c:HPP_Angular_Menu>
+        </apex:define>
+        <apex:define name="body">
+            <div ng-controller="controllerSuit" style="height:100%;" ng-init="EventLogId='{!eventId}'; OppId='{!opp.id}';GetData();GetProductData();">
+                <div class="container" style="height:100%;">
+                   <div class="row" style="height:100%;">
+                    <div class="col-md-12" style="height:100%;">
+                        
+                        
+                        
+                        <div class="PanelContents" style="height:100%">  
+                                                     
+                            <div class="verticalScrollSection" style="height:100%;" ng-show="Data">
+                            
+                            
+                            <div style="background-color:#fff;padding:10px;padding-bottom:50px;">
+                                <div class="SectionTitle">Product suitability</div>
+                                                             
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label>How important is it for you to have the option to buy sharia compliant products?</label>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <textarea class="form-control" ng-model="Data.Sharia_compliant_products_c" rows="4"/>
+                                    </div>
+                                    <div class="col-md-3">                                    
+                                        <select class="form-control" ng-model="Data.Letter_sharia_compliant_c"
+                                            ng-options="o as o for o in ImportantItems" />
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label>How important is it for you to have stability in your payments in the early years?</label>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <textarea class="form-control" ng-model="Data.Stability_in_payments_c" rows="4"/>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select class="form-control" ng-model="Data.Letter_payment_stability_c"
+                                            ng-options="o as o for o in ImportantItems" />                                    
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label>How important is it for you to have no early payment charges?</label>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <textarea class="form-control" ng-model="Data.No_early_repayment_charges_c" rows="4"/>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select class="form-control" ng-model="Data.Letter_Early_Repayment_c"
+                                            ng-options="o as o for o in ImportantItems" />                                      
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label>How important is it for you to have the ability to make additional acquisition payments?</label>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <textarea class="form-control" ng-model="Data.Lump_sum_payments_c" rows="4"/>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select class="form-control" ng-model="Data.Letter_lump_sum_c"
+                                            ng-options="o as o for o in ImportantItems" />                                   
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label>How important is it for you to have your payments as low as possible at the outset?</label>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <textarea class="form-control" ng-model="Data.Payments_low_as_possible_c" rows="4"/>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select class="form-control" ng-model="Data.Letter_low_payments_c"
+                                            ng-options="o as o for o in ImportantItems" />                                       
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label>Are you expecting your income to significantly change in the near future?</label>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <textarea class="form-control" ng-model="Data.Income_change_c" rows="4"/>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select class="form-control" ng-model="Data.Letter_income_change_c"
+                                            ng-options="o as o for o in YesNoOptions " />                                     
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label>Would you cope if your plan payments increased significantly?</label>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <textarea class="form-control" ng-model="Data.Payments_increased_c" rows="4"/>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select class="form-control" ng-model="Data.Letter_payments_increased_c"
+                                            ng-options="o as o for o in YesNoOptions " />             
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label>Are you expecting your expenditure to significantly change in the foreseeable future?</label>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <textarea class="form-control" ng-model="Data.Expenditure_change_c" rows="4"/>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select class="form-control" ng-model="Data.Letter_expenditure_change_c"
+                                            ng-options="o as o for o in YesNoOptions " />                                      
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label>Are you planning to move within the foreseeable future?</label>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <textarea class="form-control" ng-model="Data.Moving_house_soon_c" rows="4"/>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select class="form-control" ng-model="Data.Letter_moving_house_c"
+                                            ng-options="o as o for o in YesNoOptions " />                                   
+                                    </div>
+                                </div>
+                                <hr/>
+                                
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <label>Suitable term of finance discussed with customer(s) including:</label>
+                                        <ul>
+                                            <li>customer(s) aims / views of suitable term</li>
+                                            <li>surplus disposable income available / amount willing to commit / affordability</li>
+                                            <li>any known / likely income or expenditure charges</li>
+                                            <li>overall cost comparison (eg. potential total cost saving of a shorter term)</li>
+                                            <li>retirement age (evidence required if term taken beyond normal retirement age)</li>
+                                            <li>any other factors identified from the fact find</li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <textarea class="form-control" ng-model="Data.Term_in_mind_c" rows="10"/>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="SectionTitle">
+                                    Recommendation
+                                </div>
+                                
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <label>1st priority</label>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <select class="form-control" ng-model="Data.X1st_priority_c"
+                                                    ng-options="option.Key as option.Value for option in Data.PriorityOptions" />                                           
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <label>2nd priority</label>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <select class="form-control" ng-model="Data.X2nd_priority_c"
+                                                    ng-options="option.Key as option.Value for option in Data.PriorityOptions" />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <label>3rd priority</label>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <select class="form-control" ng-model="Data.X3rd_priority_c"
+                                                    ng-options="option.Key as option.Value for option in Data.PriorityOptions" />                                            
+                                            </div>
+                                        </div>
+                                        
+                                        
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <label class="control-label">Finance required</label>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                £{{Data.Balance | number:2}}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <label class="control-label">Term</label>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                {{Data.Term}}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <label class="control-label">Reason for term</label>
+                                            </div>
+                                            <div class="col-sm-8">
+                                                <textarea class="form-control" ng-model="Data.Reason_for_term_c" rows="6"/>                                                
+                                            </div>
+                                        </div>
+                                        
+                                        <hr/>
+                                  
+                                        
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <label class="control-label">Product type recommendation</label>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <select class="form-control" ng-disabled="GeneratingFIS" ng-model="ProductType" ng-change="Data.Product_recommendation_c = null;AttachmentIDFis=null;" ng-options="o.Name as o.Name for o in DProducts.Data.Products"/>
+                                            </div>
+                                        </div>
+                                        
+                                   
+                                        
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <label class="control-label">Product recommendation</label>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <select ng-disabled="!ProductType || GeneratingFIS" class="form-control" ng-change="AttachmentIDFis=null;"
+                                                        ng-model="Product_recommendation_c" ng-options="o as o.Name for o in GetProds()"/>                                 
+                                            </div>
+                                        </div>
+                              
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <label class="control-label">Reason for recommendation</label>
+                                            </div>
+                                            <div class="col-sm-8">
+                                                <textarea class="form-control" ng-model="Data.Reason_c" rows="6"/>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="SectionTitle">
+                                            Documents
+                                        </div>
+                                        <div class="row" style="font-size:14px;">
+                                            <div class="col-sm-12">
+                                                <!--<label>Risk and Features</label>-->
+                                                <div ng-show="Product_recommendation_c">
+                                                    <a target="_blank" href="{{Data.Product_recommendation_c.RiskAndFeatures}}">
+<span>
+  <i class="fa fa-file-pdf-o fa-2x"></i>
+</span><label> Risk and Features</label>
+                                                    
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <!--<label>FIS</label>-->
+                                                <div ng-show="Product_recommendation_c">
+                                                
+                                                
+                                                    <div ng-show="GeneratingFIS">
+                                                        <i class="fa fa-spinner fa-spin fa-lg fa-fw"></i>
+                                                            <label >Generating FIS...</label>                                                          
+                                                    </div>    
+                                                        
+                                                    <div ng-show="!GeneratingFIS && !AttachmentIDFis">
+                                                        <button type="button" style="color:#fff;" class="btn btn-default" ng-click="SelectProduct()">Create FIS document</button>
+                                                    </div>
+                                                        
+                                                        
+                                                    <label ng-show="AttachmentIDFis">
+                                                    
+                                                    <a target="_blank" href="/servlet/servlet.FileDownload?file={{AttachmentIDFis}}">
+                                                    <span>
+  <i class="fa fa-file-word-o fa-2x"></i>
+</span>
+                                                    
+                                                    FIS</a>
+                                                    
+                                                    
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        
+                                    <div class="text-center" style="padding-top:40px;">   
+                                   <button class="btn btn-default" style="color:#fff;" ng-click="Complete()" ng-show="ShowCompleteButton()">Next</button>
+                                   </div>
+                            </div>
+                            
+                        </div>
+                        
+                    </div>
+              </div>
+                 
+                      </div>
+                      </div>
+            </div>
+        </apex:define>
+        <apex:define name="Menu">
+        </apex:define>
+    </apex:composition>
+</apex:page>

@@ -1,0 +1,174 @@
+<apex:page standardController="Account" extensions="AccountCommunicationExtension" action="{!onLoad}" showHeader="false" sidebar="false" standardStylesheets="false">
+<style>
+body{
+background-color:#f8f8f8;
+margin-top:20px;
+}
+</style>
+    <apex:composition template="Base_Template">
+        <apex:define name="body">
+    <script type="text/javascript">
+        docugenApp.controller('docugenController',['$scope','docugenLetterService',
+            function($scope,docugenLetterService){
+                $scope.$watch("docugenSettings", function(){   
+                     var docugenSettings=JSON.parse($('<textarea />').html($scope.docugenSettings).text());
+                     window.azureURL=docugenSettings.AzureURL;
+                     window.letterService=docugenSettings.EBSLetterService;
+                     window.orgName=docugenSettings.Org;
+                 });
+                
+                $scope.RegenerateLetter=function(d){
+                    console.log(d.Account__r.Id);
+                    console.log(d.Docugen_Job__r.Id);
+                    d.Refreshing=true;
+                    
+                    docugenLetterService.RegenerateDoc(d.Account__r.Id,d.Docugen_Job__r.Id)
+                    .then(
+                        function(result){
+                            console.log(result.data);
+                            rarr=result.data.split('~');
+                            
+                            d.Attachments.records[0].Name=rarr[1];
+                            d.LastModifiedDate= new Date();
+                            
+                            d.Refreshing=false;
+                        },                    
+                        function(error){
+    
+                        }
+                    );
+                };
+                
+                $scope.DeleteLetter=function(d){
+                    d.Refreshing=true;
+                    
+                    docugenLetterService.deleteAttachmentData(d.Id)
+                    .then(
+                        function(result){
+                            var indx=$scope.lstAttachmentData.indexOf(d);
+                            $scope.lstAttachmentData.splice(indx);
+                        },
+                        function(error){
+                            var indx=$scope.lstAttachmentData.indexOf(d);
+                            $scope.lstAttachmentData.splice(indx);
+                        }
+                    );
+                
+                };
+               
+               
+            }
+        ]);
+        
+        docugenApp.service('docugenLetterService', ['$q','$http', function ($q,$http) {
+        
+             this.RegenerateDoc=function(accountId,jobId){
+                 var deferred = $q.defer();
+                 //Visualforce.remoting.timeout = 120000;
+                 
+                 //alert(window.azureURL+'/RegenerateDoc?AccountId='+accountId+'&JobId='+jobId);
+                 
+                 $http({
+                    method: 'GET',
+                    url: window.azureURL+'/RegenerateDoc?AccountId='+accountId+'&JobId='+jobId+'&orgName='+window.orgName,
+                 }).then(function successCallback(response) {
+                    deferred.resolve(response);
+                 }, function errorCallback(response) {
+                    deferred.reject(response);
+                 });
+                    
+                 return deferred.promise;
+             };
+             
+             this.deleteAttachmentData=function(attachmentDataId){
+                 var deferred = $q.defer();
+
+                 $http({
+                    method: 'GET',
+                    url: window.letterService+'?action=deleteAttachmentData&id='+attachmentDataId,
+                 }).then(function successCallback(response) {
+                    deferred.resolve(response);
+                 }, function errorCallback(response) {
+                    deferred.reject(response);
+                 });
+                    
+                 return deferred.promise;
+             };
+             
+
+        }]);
+                                                   
+    </script>
+    <style>
+        .card-holder li{
+            padding:0 !important;
+            
+        
+        }
+        
+        .card-holder table{
+            width:auto;
+        }
+        
+        .card-holder li a{
+            width:90%;
+        }
+        
+        .dd-options{
+            position:absolute !important;
+            right:5px;
+            top:5px;
+        }
+        
+        .card-holder .btn-default{
+            background: transparent !important;
+        }
+        
+        
+        
+    </style>
+      <!--<td rowspan="2" width="50"> <i class="fa fa-file-word-o" ng-show="lstAttachmentData[$index].Attachments.records[0].Name.toLowerCase().indexOf('pdf')<0" aria-hidden="true"></i>
+            <i class="fa fa-file-pdf-o" ng-show="lstAttachmentData[$index].Attachments.records[0].Name.toLowerCase().indexOf('pdf')>=0" aria-hidden="true"></i>
+        </td>-->
+    <div class="card-holder" style="margin-top:-10px;" ng-controller="docugenController" ng-init="lstAttachmentData={!adocs};docugenSettings='{!docugenSettings}'">
+        <a ng-href="/servlet/servlet.FileDownload?file={{lstAttachmentData[$index].Attachments.records[0].Id}}" target="_blank" ng-repeat="d in lstAttachmentData | filter:search | limitTo:48">
+            <div class="card">
+                <div class="signal" ng-show="d.Refreshing"></div>
+                <table ng-class="{'card-hide':d.Refreshing}">
+                    <tr>
+                      
+                        <td>
+                            {{d.Attachments.records[0].Name.substring(0,d.Attachments.records[0].Name.length-12)}}
+                            <div class="btn-group dd-options" uib-dropdown="uib-dropdown" is-open="status.isopen">
+                                <button id="single-button" type="button" class="btn btn-default btn-dropdown" uib-dropdown-toggle="uib-dropdown-toggle" ng-disabled="disabled">
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="uib-dropdown-menu pull-right"  role="menu" aria-labelledby="single-button">
+                                    <li role="menuitem">
+                                        <a ng-click="RegenerateLetter(d)">Re-generate</a>
+                                    </li>
+                                    <!--<li role="menuitem">
+                                        <a ng-click="DeleteLetter(d)">Remove</a>
+                                    </li>-->
+                                </ul>
+                            </div>
+                        </td>
+                       
+                    </tr>
+                    <tr>
+                        <td class="top-border">{{d.LastModifiedDate | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            
+                        </td>
+                    </tr>
+                </table>
+                
+            </div>
+        </a>
+    </div>
+            
+        </apex:define>
+    </apex:composition>
+</apex:page>

@@ -1,0 +1,255 @@
+<apex:page standardController="case" extensions="SecureMessageComments" applyBodyTag="false" applyHtmlTag="false" standardStylesheets="false" sidebar="false" showHeader="false" >
+
+<apex:composition template="IFM_Template">
+        
+        <apex:define name="include">
+            <script>
+                hppApp.controller('secureMessageController', ['$scope', '$timeout','serviceApplication','$window','serviceSecureMessage',
+                     function($scope, $timeout,serviceApplication,$window,serviceSecureMessage) {
+                                
+                                
+                               $scope.UpdateTemplate = function()
+                               {
+                                   if(!$scope.TemplateSelected) return;
+                                   
+                                   $scope.Message = $scope.TemplateSelected.Message__c;
+                               }
+                               
+                               
+                               $scope.ShowMessageWarning = function()
+                               {
+                                   if(!$scope.Message) return false;
+                                   
+                                   return $scope.Message.indexOf('XXX') != -1;
+                               }
+                               
+                               
+                               $scope.ChangeComment = function(commentId,makePublic)
+                                {
+                                    if(!$scope.CaseId) return;
+                                    $scope.SavingPublic = true;
+                                    //serviceApplication.LoadShow('Processing...');
+                                    serviceSecureMessage.ChangeComment(commentId, makePublic, $scope.CaseId)
+                                    .then(
+                                        function(result){                                          
+                                        
+                                            if(result != null)
+                                            {
+                                                $scope.Case= result;
+                                            }
+                                            serviceApplication.LoadHide(true);
+                                            $scope.SavingPublic = false;
+                                        },
+                                        function(error){
+                                           serviceApplication.LoadHide(true);
+                                           $scope.SavingPublic = false;
+                                        }
+                                       );
+                                }
+                                
+                                $scope.GetComments= function()
+                                {
+                                    if(!$scope.CaseId) return;
+                                    serviceApplication.LoadShow('Processing...');
+                                    serviceSecureMessage.GetComments($scope.CaseId)
+                                    .then(
+                                        function(result){                                          
+                                        
+                                            if(result != null)
+                                            {
+                                                $scope.Case= result;
+                                            }
+                                            serviceApplication.LoadHide(true);
+                                        },
+                                        function(error){
+                                            alert(error.message);
+                                           serviceApplication.LoadHide(true);
+                                        }
+                                       );
+                                }
+                                
+                                
+                                $scope.AddComment= function()
+                                {
+                                    if(!$scope.CaseId) return;
+                                    serviceApplication.LoadShow('Processing...');
+                                    
+                                    if($scope.MakePublic == null) $scope.MakePublic = false;
+                                    
+                                    serviceSecureMessage.AddComments($scope.Message,$scope.CaseId,$scope.MakePublic)
+                                    .then(
+                                        function(result){
+                                          
+                                        
+                                            if(result != null)
+                                            {
+                                                $scope.Case= result;
+                                                $scope.Message = null;
+                                                $scope.MakePublic = null;                                                
+                                                $scope.TemplateSelected = null;
+                                                $scope.ShowAddComment = false;
+                                            }
+                                            serviceApplication.LoadHide(true);
+                                        },
+                                        function(error){
+                                           serviceApplication.LoadHide(true);
+                                        }
+                                       );
+                                }
+                                
+                                
+                                
+                     }
+                 ]);
+                 
+                 
+                 angular.module("hppApp").service('serviceSecureMessage', ['$q', '$rootScope', function ($q, $rootScope) {
+                        
+                        this.AddComments = function(message,id,makepublic)
+                        {
+                            var deferred = $q.defer();
+                            SecureMessageComments.AddComment(message,id,makepublic,function(result, event){
+                                if(event.status){
+                                    deferred.resolve(result);
+                                }
+                                else {
+                                    deferred.reject(event);
+                                }     
+                            },{ buffer: false, escape: false, timeout: 30000} );
+                            return deferred.promise;
+                        } 
+                        
+                        this.ChangeComment= function(commentId,makepublic,caseId)
+                        {
+                            var deferred = $q.defer();
+                            SecureMessageComments.ChangeCaseComment(commentId,makepublic,caseId,function(result, event){
+                                if(event.status){
+                                    deferred.resolve(result);
+                                }
+                                else {
+                                    deferred.reject(event);
+                                }     
+                            },{ buffer: false, escape: false, timeout: 30000} );
+                            return deferred.promise;
+                        }
+                        
+                        this.GetComments= function(id)
+                        {
+                            var deferred = $q.defer();
+                            SecureMessageComments.GetComments (id,function(result, event){
+                                if(event.status){
+                                    deferred.resolve(result);
+                                }
+                                else {
+                                    deferred.reject(event);
+                                }     
+                            },{ buffer: false, escape: false, timeout: 30000} );
+                            return deferred.promise;
+                        }   
+                  }]); 
+            </script>
+            
+            <style>
+                .customer-message{
+                    font-weight:bold;
+                }
+            </style>
+        </apex:define>
+        
+        
+        <apex:define name="body"> 
+            <div ng-controller="secureMessageController" ng-init="CaseId='{!objCase.id}'; GetComments();DataTemplates={!jsonTemplates}" style="height:100%;">
+            
+            
+                <button class="btn btn-default" ng-click="ShowAddComment= true" ng-hide="ShowAddComment">Add Comment </button>
+                
+                <div ng-show="ShowAddComment" style="padding-top:20px;">
+                    <div style="padding-bottom:20px;">
+                        <button class="btn btn-default" ng-click="ShowAddComment = false;">Cancel</button>
+                        <button class="btn btn-default" ng-disabled="Message == null || Message == '' || ShowMessageWarning()" ng-click="AddComment()">Save</button>
+                    </div>
+                    
+                    
+                    <div class="alert alert-warning text-center" ng-show="ShowMessageWarning()">
+                        This message contains placeholders which need to be amended before sending
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label>Template</label>
+                        </div>
+                        <div class="col-sm-9">                
+                        
+                            <select class="form-control" ng-options="option as option.Name for option in DataTemplates" ng-model="TemplateSelected" ng-change="UpdateTemplate()">
+                                
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label>Make comment public</label>
+                        </div>
+                        <div class="col-sm-9">                                        
+                            <input type="checkbox" ng-model="MakePublic" /> 
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label>Message</label>
+                        </div>
+                        <div class="col-sm-9">
+                            <textarea class="form-control" ng-model="Message" rows="10"/>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+            
+               <table class="table" style="font-size:12px;">
+                    <thead>
+                        <tr>
+                            <th>Action</th>
+                            <th>Public</th>
+                            <th>Message</th>
+                            <th width="150px">From</th>
+                            <th width="120px">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="comment in Case.Comments" class="message-comment" ng-class="{'customer-message' : comment.UserName == 'Customer'}" >
+                            <td>                       
+                                <div ng-show="comment.UserName != 'Customer'">
+                                    <a class="btn btn-default btn-sm" href="#" ng-disabled="$parent.SavingPublic" ng-show="comment.IsPublic" ng-click="comment.Saving=true; ChangeComment(comment.Id,false)">
+                                      <i class="fa fa-eye"></i> Public</a>
+                                      
+                                     <a class="btn btn-default btn-sm" href="#" ng-disabled="$parent.SavingPublic" ng-show="!comment.IsPublic" ng-click="comment.Saving=true;ChangeComment(comment.Id,true)">
+                                      <i class="fa fa-eye-slash"></i> Private</a> 
+                                      
+                                      <i ng-show="comment.Saving" class="fa fa-spinner fa-spin fa-fw"></i>
+                                </div>
+                            </td>
+                            <td><i ng-hide="comment.UserName == 'Customer'" class="fa" ng-class="{'fa-check':comment.IsPublic, 'fa-close':!comment.IsPublic}"></i>
+                            
+                            
+                            </td>
+                            <td style="white-space: pre-wrap;">{{comment.Body}}</td>
+                            <td>{{comment.UserName}}</td>
+                            <td>{{comment.CreatedDate }}</td>                                                    
+                        </tr>
+                    </tbody> 
+                </table> 
+            
+            
+             
+            
+                {{Comments}}
+            -
+            </div>
+        
+        </apex:define>
+        
+</apex:composition>        
+            
+</apex:page>

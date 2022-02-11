@@ -1,0 +1,215 @@
+<apex:page applybodytag="false" showheader="false" sidebar="false" doctype="html-5.0" standardstylesheets="false">
+ <head>
+        <title>Al Rayan Bank</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no" />
+        <!-- JQuery -->
+
+        <apex:includescript value="{!URLFOR($Resource.JQuery, 'jquery-1.11.3.min.js')}" />
+
+
+        <!-- Bootstrap -->
+        <apex:stylesheet value="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+        <apex:stylesheet value="https://maxcdn.bootstrapcdn.com/bootswatch/3.2.0/spacelab/bootstrap.min.css" />
+        <apex:stylesheet value="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+        <apex:includescript value="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js" />
+        <apex:stylesheet value="//bootswatch.com/spacelab/bootstrap.min.css" />
+
+        <apex:stylesheet value="https://islamic-bank.secure.force.com/resource/1462274308000/CAA_Includes/css/css.css" />
+        
+        <apex:includescript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.11/angular.min.js" />
+        <apex:includescript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.11/angular-animate.min.js" />
+        <apex:includescript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.11/angular-sanitize.js" />
+        <apex:includescript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular-messages.js" />
+
+
+       
+
+
+        
+        <!-- Kendo UI -->
+<!-- <apex:includeScript value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/js/kendo.all.min.js')}"/> -->
+<!-- <apex:includeScript value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/js/kendo.web.min.js')}"/> -->
+<apex:includeScript value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/js/kendo.engage_2015_1_429.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/js/cultures/kendo.culture.en-GB.min.js')}"/>
+        
+<apex:stylesheet value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/styles/kendo.common.min.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/styles/kendo.material.min.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/styles/kendo.dataviz.min.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/styles/kendo.dataviz.material.min.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/styles/kendo.material.mobile.min.css')}"/>
+
+
+        
+        
+        <apex:includeScript value="{!URLFOR($Resource.HPP_Includes, '/js/app/app-kendo.js')}"  />
+        <apex:includeScript value="{!URLFOR($Resource.HPP_Includes, '/js/controller/controller_core.js')}"  />
+        <apex:includeScript value="{!URLFOR($Resource.HPP_Includes, '/js/service/service_messagebroker.js')}"  />
+        <apex:includeScript value="{!URLFOR($Resource.HPP_Includes, '/js/service/service_parameters.js')}"  />
+        <apex:includeScript value="{!URLFOR($Resource.HPP_Includes, '/js/service/service_application.js')}"  />
+
+
+
+        <!-- Page specific css and js -->
+        <apex:insert name="include" />
+
+
+        <style>
+            .navbar-brand h2{
+                color:#ffffff;
+                margin:0px;
+            }
+            
+            html{
+                height:100%;                
+            }
+            
+            body{
+                height:100%;
+                margin-bottom:0px;
+                padding-top: 0px;
+                font-size: 12px;
+                background-color:#fff;
+                /*background-color:#ededed;*/
+            }
+            
+            .footer{
+                height:40px;
+                background-color: #D3D3D3;
+            }
+            
+            .form-control{
+                font-size: 12px;
+            }
+            
+            .form-control:focus{
+                border-color: rgb(179,153,93);
+                box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgb(179,153,93);
+            }
+            
+            .btn-default{
+                background-color: rgb(179,153,93);
+                color: rgb(255,255,255);
+                background-image: none;
+                border:none;
+                font-size:12px;
+            }
+            
+            .btn-default:hover{
+                background-color: #777;
+                background-image: none;
+                border:none;
+            }
+            
+            .SectionHeader {
+                padding: 10px;
+                background-color: rgb(179,153,93);
+                color: rgb(255,255,255);
+                font-size: 18px;
+                margin-bottom: 3px;
+            }
+            
+            .SectionTitle {
+                color: rgb(179,153,93);
+                font-size: 20px;
+                font-weight: bold;
+                padding-bottom: 10px;
+            }
+            
+            .verticalSection{
+                background-color:#fff;
+                padding:10px;
+            }
+            
+            .verticalScrollSection{
+                    margin-left: 7px;
+                    height: calc(100%); /*-38px */
+                    overflow-y: auto;
+                    overflow-x: hidden;                    
+                }
+                
+            .navbar{
+                min-height:30px;
+            }    
+                
+            .navbar-header
+            {
+                background-color:#000;
+            }   
+            
+            .navbar-default
+            {
+                border-bottom: 4px solid #b3995d;
+            }
+            
+            .navbar-brand{
+                height:30px;
+                padding:10px;
+            }
+            
+            .navbar-brand h2 {
+                font-size:16px;
+            }
+            
+            .panel-default>.panel-heading {
+                background-color: rgb(179,153,93);
+                color: rgb(255,255,255);
+                font-size: 18px;
+            }
+            
+            .panel-default>.panel-heading a:hover{
+                color:#fff;
+            }
+            
+            .k-picker-wrap.k-state-hover .k-input, .k-picker-wrap.k-state-focused .k-input{
+                background-color:#f9f9f9;
+            }
+            
+            .k-picker-wrap.k-state-hover > .k-select{
+                background-color:#f9f9f9;
+                color:#333;
+            }
+     
+            
+         
+
+        </style>        
+        <apex:stylesheet value="{!URLFOR($Resource.CAA_Includes, '/css/css.css')}"/>
+    
+    <apex:stylesheet value="{!URLFOR($Resource.CAA_Includes, '/css/wait.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.CAA_Includes, '/css/structure.css')}"/>
+    </head>
+
+    <body ng-app="hppApp"  ng-controller="controllerCore">
+       
+            <div class="container" style="width:100%;" >
+                <apex:insert name="header" />
+            </div>
+      
+
+
+
+        <div class="container" style="margin-left:15px;" ng-cloak="ng-cloak">
+
+           
+<apex:insert name="body" />
+            
+        </div>
+
+        <!-- Load Screen -->
+        <div class="regionLoad" ng-cloak="ng-cloak" ng-show="Load" style="box-sizing: content-box !important; -webkit-box-sizing: content-box !important;">
+            <div class="regionWaitBackground" style="box-sizing: content-box !important; -webkit-box-sizing: content-box !important;"></div>
+            <div class="regionWaitMessage text-center" style="box-sizing: content-box !important; -webkit-box-sizing: content-box !important;">
+                <div class="regionSpinner">
+                </div>
+                <div class="regionTitle">
+                    Please wait
+                </div>
+            </div>
+        </div>
+       
+    </body>
+
+   
+
+
+</apex:page>

@@ -1,0 +1,19 @@
+<div class="headerContainer">
+    <div class="headerBox">
+
+        <div class="backImg" ng-click="goHome()" ng-if="!search && !none">
+            <a href="" ng-if="!search && !none" class="backImg"><img src="assets/back.png" style="vertical-align:middle" /><span>CASE</span>
+            </a>
+        </div>
+        <div class="backImg" ng-click="goBack()" ng-if="search || none ">
+            <a href="" ng-if="search || none" class="backImg"><img src="assets/back.png" style="vertical-align:middle" /><span>BACK</span>
+            </a>
+        </div>
+
+        <div><img src="assets/Al_Rayan_Logo_100x172.gif" class="logo"></div>
+
+        <div>
+            <md-button class="viewBtn" ng-click="fetchCaseRecord()" ng-if="!search">CASE RECORD TYPES</md-button>
+        </div>
+    </div>
+</div>

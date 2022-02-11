@@ -1,0 +1,155 @@
+<apex:component >
+    <apex:attribute name="res" type="AffordabilityResults__c" description="" />
+    <apex:attribute name="gross" type="Decimal" description="" />
+    <apex:attribute name="net" type="Decimal" description="" />
+    <apex:attribute name="total" type="Decimal" description="" />
+    <!-- C0644 Styling changes -->
+    <table width="100%">
+        <tr>
+            <td valign="top" width="33%">
+                <table width="100%">
+                     <!--Case: 01938975; Customer overseas credit policy ;Start-->
+                    <apex:outputPanel rendered="{!res.Opportunity__r.Interested_in__c == 'Home Purchase Plan Premier'}"> 
+                    <tr>
+                        <td class="valtitle"> Rental income</td>
+                        <td><apex:outputText value="{0,number,£#,###,##0.00}"><apex:param value="{!res.AdditionalRentalIncome__c}" /></apex:outputText> </td>
+                        <td></td>
+                    </tr>
+                    </apex:outputpanel>
+                     <!--Case: 01938975; Customer overseas credit policy ;End-->
+                    <tr>
+                        <td class="valtitle"> Income Multiplier (5 plus 1)</td>
+                        <td><apex:outputtext value="{0,number,£#,###,###.00}"><apex:param value="{!res.IncomeMultiplier5_1__c}" /></apex:outputtext> </td>
+                        <td><a style="width:50px;" class="redBtn" target="_blank" href="/{!res.id}">{!res.IncomeMultiplierResult__c}</a></td>
+                    </tr>
+                    <tr>
+                        <td class="valtitle"> Income Multiplier (4.5)</td>
+                        <td><apex:outputtext value="{0,number,£#,###,###.00}"><apex:param value="{!res.IncomeMultiplier4_5Total__c}" /></apex:outputtext></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="valtitle"> Affordability</td>
+                        <td><apex:outputtext value="{0,number,0}%"><apex:param value="{!res.AffordabilityPercentage__c}" /></apex:outputtext></td>
+                        <td><a class="redBtn" style="width:50px;" target="_blank" href="/{!res.id}">{!res.AffordabilityResult__c}</a></td>
+                    </tr>
+                    <tr>
+                        <td class="valtitle"> FTI</td>
+                        <td><apex:outputtext value="{0,number,.00}"><apex:param value="{!res.FTI__c}" /></apex:outputtext></td>
+                    </tr>
+                    <apex:outputPanel rendered="{!res.Opportunity__r.Interested_in__c == 'Home Purchase Plan Premier'}">
+                    <tr style="background-color:#EEE;"> 
+                        <td class="valtitle">Rent Required</td>
+                        <td><apex:outputtext value="{0,number,£#,###,##0.00}"><apex:param value="{!res.StressedHPPRepayment__c}" /></apex:outputtext></td>    
+                    </tr>
+                    <tr style="background-color:#EEE;">
+                        <td class="valtitle">Surplus/Deficit</td>
+                        <apex:outputPanel rendered="{!res.StressedHPPRepayment__c > res.AdditionalRentalIncome__c}">
+                        <td><apex:outputtext value="{0,number,-£#,###,##0.00}"><apex:param value="{!res.Less_rental_shortfall_premier__c }" /></apex:outputtext></td>  
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!res.StressedHPPRepayment__c < res.AdditionalRentalIncome__c}">
+                        <td><apex:outputtext value="{0,number,£#,###,##0.00}"><apex:param value="{!res.Less_rental_shortfall_premier__c }" /></apex:outputtext></td>  
+                        </apex:outputPanel>
+                    </tr>
+                    <tr style="background-color:#EEE;">  
+                        <td class="valtitle">Coverage</td>
+                        <td><apex:outputtext value="{0,number,0}%"><apex:param value="{!res.CreditAffordabilityPercentage__c}" /></apex:outputtext></td>
+                    </tr>
+                    </apex:outputPanel>
+                    <tr>
+                         <!--Case: 01938975; Customer overseas credit policy ;Start-->
+                        <td class="valtitle"> Budget Planner</td>
+                        <td><apex:outputtext value="{0,number,£#,###,##0.00}"><apex:param value="{!res.BudgetPlannerSurplusOrDeficit__c}" /></apex:outputtext></td>
+                        <apex:outputPanel rendered="{!res.Opportunity__r.Interested_in__c == 'Home Purchase Plan Premier' && res.BudgetPlannerSurplusOrDeficit__c !=0}">
+                        <td><a style="width:50px;" class="redBtn" target="_blank" href="/{!res.id}">{!res.BudgetPlannerResult__c}</a></td>
+                        </apex:outputpanel>
+                        
+                        <apex:outputPanel rendered="{!res.Opportunity__r.Interested_in__c != 'Home Purchase Plan Premier'}">
+                        <td><a style="width:50px;" class="redBtn" target="_blank" href="/{!res.id}">{!res.BudgetPlannerResult__c}</a></td>
+                        </apex:outputPanel>
+                         <!--Case: 01938975; Customer overseas credit policy ;End-->
+                    </tr>
+                    <tr>
+                        <td class="valtitle"> Total Aggregation</td>
+                        <td><apex:outputtext value="{0,number,£#,###,###.00}"><apex:param value="{!total}" /></apex:outputtext></td>
+                    </tr>
+                     <!--Data Errors--Task code: C0770-->
+                    <apex:outputPanel rendered="{!res.Opportunity__r.Interested_in__c != 'Home Purchase Plan Premier'}">
+                    <tr>
+                        <td class="valtitle"> Actual Monthly Payment</td>
+                        <td><apex:outputtext value="{0,number,£#,###,##0.00}"><apex:param value="{!res.Actual_Monthly_Payment1__c}" /></apex:outputtext></td>
+                    </tr>
+                    <tr>
+                        <td class="valtitle"> Original Stressed Payment</td>
+                        <td><apex:outputtext value="{0,number,£#,###,##0.00}"><apex:param value="{!res.Original_Stressed_Payment1__c}" /></apex:outputtext></td>
+                    </tr>
+                    </apex:outputPanel>
+                    <!--Data Errors-->
+
+                </table>
+            </td>
+            <td valign="top" width="66%">
+                <table width="100%">
+                    <tr>
+                        <td></td>
+                        <td class="valtitle">Total Gross<br />Annual Income To Use</td>
+                        <td style="background-color:#EEE;">&nbsp;</td>
+                        <td class="valtitle">Net Monthly<br />Income</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="valtitle">App 1</td>
+                        <td class="numberVal"><apex:outputtext value="{0,number,£#,###,##0.00}"><apex:param value="{!res.GrossAnnualIncomeApplicant1__c}" /></apex:outputtext></td>
+                        <td class="valtitle" style="background-color:#EEE;">App 1</td>
+                        <td class="numberVal" style="background-color:#EEE;"><apex:outputtext value="{0,number,£#,###,##0.00}"><apex:param value="{!res.NetMonthlyIncomeApplicant1__c}" /></apex:outputtext></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="valtitle">App 2</td>
+                        <td class="numberVal"><apex:outputtext value="{0,number,£#,###,##0.00}"><apex:param value="{!res.GrossAnnualIncomeApplicant2__c}" /></apex:outputtext></td>
+                        <td class="valtitle" style="background-color:#EEE;">App 2</td>
+                        <td class="numberVal" style="background-color:#EEE;"><apex:outputtext value="{0,number,£#,###,##0.00}"><apex:param value="{!res.NetMonthlyIncomeApplicant2__c}" /></apex:outputtext></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="valtitle">App 3</td>
+                        <td class="numberVal"><apex:outputtext value="{0,number,£#,###,##0.00}"><apex:param value="{!res.GrossAnnualIncomeApplicant3__c}" /></apex:outputtext></td>
+                        <td class="valtitle" style="background-color:#EEE;">App 3</td>
+                        <td class="numberVal" style="background-color:#EEE;"><apex:outputtext value="{0,number,£#,###,##0.00}"><apex:param value="{!res.NetMonthlyIncomeApplicant3__c}" /></apex:outputtext></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="valtitle">App 4</td>
+                        <td class="numberVal"><apex:outputtext value="{0,number,£#,###,##0.00}"><apex:param value="{!res.GrossAnnualIncomeApplicant4__c}" /></apex:outputtext></td>
+                        <td class="valtitle" style="background-color:#EEE;">App 4</td>
+                        <td class="numberVal"><apex:outputtext value="{0,number,£#,###,##0.00}"><apex:param value="{!res.NetMonthlyIncomeApplicant4__c}" /></apex:outputtext></td>
+                        <!--  CPDR01 <td></td><td></td> -->
+                         <!--Case: 01938975; Customer overseas credit policy ;Start-->
+                        <apex:outputPanel rendered="{!res.Opportunity__r.Interested_in__c != 'Home Purchase Plan Premier'}"> 
+                        <td class="valtitle" style="background-color:#EEE;">Additional Rental  <br />Income</td>
+                        <td class="numberVal"><apex:outputtext value="{0,number,£#,###,##0.00}"><apex:param value="{!res.AdditionalRentalIncome__c}" /></apex:outputtext></td>
+                        </apex:outputPanel>
+                        <!--Case: 01938975; Customer overseas credit policy ;End--> 
+                        <!--  CPDR01 end -->
+                    </tr>
+                    <tr>
+                        <td class="valtitle">Sum</td>
+                        <td class="numberVal"><apex:outputtext value="{0,number,£#,###,##0.00}"><apex:param value="{!Gross}" /></apex:outputtext></td>
+                        <td class="valtitle" style="background-color:#EEE;">Sum</td>
+                        <td class="numberVal" style="background-color:#EEE;"><apex:outputtext value="{0,number,£#,###,##0.00}"><apex:param value="{!Net}" /></apex:outputtext></td>
+                        <td class="valtitle">Total Monthly <br />Expenditure</td>
+                        <td class="numberVal"><apex:outputtext value="{0,number,£#,###,##0.00}"><apex:param value="{!res.TotalCommitments__c}" /></apex:outputtext></td>
+                    </tr>
+
+
+
+                </table>
+            </td>
+
+        </tr>
+    </table>
+
+</apex:component>

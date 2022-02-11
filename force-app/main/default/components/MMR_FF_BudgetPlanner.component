@@ -1,0 +1,37 @@
+<apex:component controller="MMR_ComponentController" allowDML="true">
+    <apex:attribute description="Applicant no" name="ApplicantNo" type="String" required="true" assignTo="{!AppNo}"/>
+    <apex:attribute description="Acc" name="Acc" type="Account" required="true"/>
+    <apex:attribute description="" name="FullWidth" type="boolean"/>
+    <apex:attribute description="" name="panelClass" type="String"/>
+    
+    <apex:attribute name="comkey" 
+    type="String" 
+    assignTo="{!Key}" 
+    description="The key given to this component so the page can easily get access to it" />
+
+  <apex:attribute name="pController" 
+      type="MMR_PageControllerBase" 
+      assignTo="{!pageController}" 
+      required="true" 
+      description="The controller for the page." />
+    
+    
+    <div class="AppWidth col-md-6">
+    <div class="panel {!panelClass} applicantPanel">
+            <div class="panel-heading"><h2>Applicant {!appNo} - {!Acc.Name}</h2>  </div>           
+            
+  <div class="panel-body">
+        <div class="row">
+            <div class="form-group">
+                <div class="col-sm-6">
+                    <label for="" >Home circumstances</label>    
+                </div>
+                <div class="col-sm-6">
+                    <apex:inputField value="{!Acc.Home_Details__c}" styleClass="form-control" />
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+</apex:component>

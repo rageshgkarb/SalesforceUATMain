@@ -1,0 +1,675 @@
+<!-- C00108 Get some product switching information -->
+
+<apex:page controller="HPPOfferLetterController" sidebar="false" showHeader="false" title="Generate Offer Letter" action="{!Setup}">
+
+    <head>
+        <c:KendoResource ></c:KendoResource>
+    </head>
+
+    <body>
+        <apex:form >
+            <apex:pageMessages />
+            <div id="formWrapper">
+
+                <c:HPPSummary objAcc="{!Accounts[0]}" objOpp="{!opp}" objExOpp="{!ExOpp}" Product="{!Prod}" />
+                <div id="container">
+                    <table width="100%">
+                        <tr>
+                            <td valign="top" id="sidebar">
+                                <c:HPPBOMenu oppId="{!Opp.Id}" DirectorId="{!Opp.ProductEventDirector__c}" />
+                            </td>
+                            <td valign="top" id="contenttd">
+                                <div id="content">
+                                    <apex:pageBlock >
+                                        <apex:commandButton value="Save" action="{!save}" />
+                                        <apex:pageBlockSection title="Offer letter checklist">
+                                            <apex:inlineEditSupport >
+                                                <apex:outputPanel >
+                                                    <table width="100%">
+                                                        <apex:variable value="{!1}" var="indexNo" />
+                                                        <apex:repeat value="{!appli}" var="acc1">
+                                                            <tr><b><td class="checkListTd1">Applicant {!indexNo} Detail</td></b></tr>
+                                                            <apex:outputPanel rendered="{!IF(opp.Interested_in__c !='Buy To Let Limited Company Purchase Plan',true,false)}">
+                                                                <tr>
+                                                                    <td class="checkListTd">Title</td>
+                                                                    <td>
+                                                                        <apex:outputField value="{!acc1.Prospect_Customer__r.Salutation}"> </apex:outputField>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>First name</td>
+                                                                    <td class="checkListTd">
+                                                                        <apex:outputField value="{!acc1.Prospect_Customer__r.FirstName}"></apex:outputField>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Last name</td>
+                                                                    <td class="checkListTd">
+                                                                        <apex:outputField value="{!acc1.Prospect_Customer__r.LastName}"></apex:outputField>
+                                                                    </td>
+                                                                </tr>
+                                                            </apex:outputPanel>
+                                                            <apex:outputPanel rendered="{!indexNo > 1 && opp.Interested_in__c=='Buy To Let Limited Company Purchase Plan'}">
+                                                                <tr>
+                                                                    <td class="checkListTd">Title</td>
+                                                                    <td>
+                                                                        <apex:outputField value="{!acc1.Prospect_Customer__r.Salutation}"></apex:outputField>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>First name</td>
+                                                                    <td class="checkListTd">
+                                                                        <apex:outputField value="{!acc1.Prospect_Customer__r.FirstName}"></apex:outputField>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Last name</td>
+                                                                    <td class="checkListTd">
+                                                                        <apex:outputField value="{!acc1.Prospect_Customer__r.LastName}"></apex:outputField>
+                                                                    </td>
+                                                                </tr>
+                                                            </apex:outputPanel>
+                                                            <apex:outputPanel rendered="{!indexNo = 1 && opp.Interested_in__c=='Buy To Let Limited Company Purchase Plan'}">
+                                                                <tr>
+                                                                    <td>Organization Type</td>
+                                                                    <td class="checkListTd">
+                                                                        <apex:outputField value="{!acc1.Prospect_Customer__r.Organisation_type__c}"></apex:outputField>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Organization SubType</td>
+                                                                    <td class="checkListTd">
+                                                                        <apex:outputField value="{!acc1.Prospect_Customer__r.Organisation_sub_type__c}"></apex:outputField>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Organization Name</td>
+                                                                    <td class="checkListTd">
+                                                                        <apex:outputField value="{!acc1.Prospect_Customer__r.Name}"></apex:outputField>
+                                                                    </td>
+                                                                </tr>
+                                                            </apex:outputPanel>
+                                                            <apex:variable var="indexNo" value="{!indexNo + 1}" />
+                                                        </apex:repeat>
+                                                        <apex:outputPanel rendered="{!IF(opp.Interested_in__c !='Buy To Let Limited Company Purchase Plan',true,false)}">
+                                                            <tr>
+                                                                <th>Current Address</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <td> Current Address Post Code</td>
+                                                                <td class="box">
+                                                                    <apex:outputField value="{!appli[0].Prospect_Customer__r.BillingPostalCode}" />
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td> Current Address District</td>
+                                                                <td class="box">
+                                                                    <apex:outputField value="{!appli[0].Prospect_Customer__r.Customer_Address_District__c}" />
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Customer address</td>
+                                                                <td class="box">
+                                                                    <apex:outputField value="{!appli[0].Prospect_Customer__r.BillingStreet}" />
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Current Address Country</td>
+                                                                <td class="box">
+                                                                    <apex:outputField value="{!appli[0].Prospect_Customer__r.BillingCountry}" />
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Current Address City</td>
+                                                                <td class="box">
+                                                                    <apex:outputField value="{!appli[0].Prospect_Customer__r.BillingCity}" />
+                                                                </td>
+                                                            </tr>
+                                                        </apex:outputPanel>
+                                                        <apex:outputPanel rendered="{!IF(opp.Interested_in__c =='Buy To Let Limited Company Purchase Plan',true,false)}">
+                                                            <tr>
+                                                                <th>Current Address</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <td> Current Address Post Code</td>
+                                                                <td class="box">
+                                                                    <apex:outputField value="{!appli[0].Prospect_Customer__r.RegisteredAddressPostCode__c}" />
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Customer address</td>
+                                                                <td class="box">
+                                                                    <apex:outputField value="{!appli[0].Prospect_Customer__r.RegisteredAddressStreet__c}" />
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Current Address Country</td>
+                                                                <td class="box">
+                                                                    <apex:outputField value="{!appli[0].Prospect_Customer__r.RegisteredAddressCountry__c }" />
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Current Address City</td>
+                                                                <td class="box">
+                                                                    <apex:outputField value="{!appli[0].Prospect_Customer__r.RegisteredAddressCity__c}" />
+                                                                </td>
+                                                            </tr>
+                                                        </apex:outputPanel>
+                                                        <tr>
+                                                            <th>Security Address</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td> New property street</td>
+                                                            <td class="box">
+                                                                <apex:outputField value="{!Opp.New_property_street__c}" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>New property country</td>
+                                                            <td class="box">
+                                                                <apex:outputField value="{!Opp.New_property_country__c}" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>New property city</td>
+                                                            <td class="box">
+                                                                <apex:outputField value="{!Opp.New_property_city__c}" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>New property postcode</td>
+                                                            <td class="box">
+                                                                <apex:outputField value="{!Opp.New_property_postcode__c}" />
+                                                            </td>
+                                                        </tr>
+                                                        <!-- C0760 enhancement start-->
+                                                         <tr>
+                                                            <th>Solicitor Details</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Solicitor contact name</td>
+                                                            <td>
+                                                                <apex:outputField value="{!ExOpp.Solicitor_contact_name__c}" />
+                                                            </td>
+                                                        </tr>
+                                                         <tr>
+                                                            <td>Solicitor company name</td>
+                                                            <td>
+                                                                <apex:outputField value="{!ExOpp.Solicitor_company_name__c}" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Solicitor postcode</td>
+                                                            <td>
+                                                                <apex:outputField value="{!ExOpp.Solicitor_postcode__c}" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Solicitor street</td>
+                                                            <td>
+                                                                <apex:outputField value="{!ExOpp.Solicitor_street__c}" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Solicitor city</td>
+                                                            <td>
+                                                                <apex:outputField value="{!ExOpp.Solicitor_city__c}" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Solicitor country</td>
+                                                            <td>
+                                                                <apex:outputField value="{!ExOpp.Solicitor_country__c}" />
+                                                            </td>
+                                                        </tr>
+                                                      
+                                                        <tr>
+                                                            <td>Finance Amount</td>
+                                                            <td>
+                                                                <apex:outputField value="{!Opp.Finance_Required__c}" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Purchase Price
+                                                            </td>
+                                                            <td>
+                                                                <apex:outputField value="{!Opp.Purchase_price_market_value__c}" />
+                                                            </td>
+                                                        </tr>
+                                                        <!-- C0760 ; Offer letter enhancement ; start -->
+                                                        <tr>
+                                                            <td>Market Value of property </td>
+                                                            <td>
+                                                                <apex:outputField value="{!ValReport.Market_Value_Present_Condition__c}" />
+                                                            </td>
+                                                        </tr>
+                                                        <!-- C0760 ; Offer letter enhancement ; end -->
+                                                        <tr>
+                                                            <td>Panel/non panel solicitor</td>
+                                                            <td>
+                                                                <apex:outputField value="{!Opp.Panelled_Non_Panelled_Solicitor__c}" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <label>Administration Fee</label>
+                                                            </td>
+                                                            <td>
+                                                                <apex:outputpanel >
+                                                                    {!opp.Admin_Fee_Stated_correctly__c}
+                                                                </apex:outputpanel>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Building reinstatement value </td>
+                                                            <td>
+                                                                <apex:outputField value="{!ValReport.Building_reinstatement_value__c}" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Preferred payment day</td>
+                                                            <td>
+                                                                <apex:outputField value="{!ExOpp.DDPreferredPaymentDate__c}" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="checkListTd">Special Conditions</td>
+                                                            <td>
+                                                                <apex:outputPanel id="criteriaPanel">
+                                                                    <apex:variable value="{!0}" var="rowNumProp" />
+                                                                    <table class="list" width="100%">
+                                                                        <thead>
+                                                                            <tr class="headerRow">
+                                                                                <th class="headerRow">Select</th>
+                                                                                <th class="headerRow">Action</th>
+                                                                                <th class="headerRow">Ref</th>
+                                                                                <th class="headerRow">Condition</th>
+                                                                                <!--<th class="headerRow">Action</th>-->
+                                                                                <!-- C0760-Offer letter enhancement -->
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <apex:repeat value="{!Helper.CIList}" var="i">
+                                                                                <tr class="{!IF(i.id = CurrentItem.id, 'highLight', '')}">
+                                                                                     <td>
+                                                                                        <apex:inputCheckbox id="DelCheckbox" value="{!i.deleteLine}" selected="{!i.deleteLine}" />
+                                                                                        </td>
+                                                                                    <td>
+                                                                                        <apex:commandLink status="save-lead-status" oncomplete="SetUpDropdown();" action="{!EditCondition}" value="Edit" rerender="criteriaPanel">
+                                                                                            <!--immediate="true" -->
+                                                                                            <apex:param name="edCondition" value="{!rowNumProp}" assignTo="{!edCondition}" />
+                                                                                        </apex:commandLink>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <apex:outputLabel escape="false" value="{!i.Ref}" />
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <apex:outputLabel escape="false" value="{!i.Html}">
+                                                                                        </apex:outputLabel>
+                                                                                    </td>
+                                                                                    <!-- C0760 OfferLetter Enhancement ; start ; Commented out following code 
+                                                                                    <td>
+                                                                                        <apex:commandLink oncomplete="SetUpDropdown();" status="save-lead-status" action="{!deleteCondition}" value="Remove" rerender="criteriaPanel" immediate="true" rendered="{!!IsCompleted}">
+                                                                                            <apex:param name="delCondition" value="{!rowNumProp}" assignTo="{!delCondition}" />
+                                                                                        </apex:commandLink>
+                                                                                    </td>
+                                                                                    C0760 OfferLetter Enhancement ; end -->
+                                                                                </tr>
+                                                                                <apex:variable var="rowNumProp" value="{!rowNumProp+ 1}" />
+                                                                            </apex:repeat>
+                                                                        </tbody>
+                                                                    </table>
+                                                                    <apex:outputPanel rendered="{!CurrentItem != null}">
+                                                                        <div style="padding: 20px; border: solid 1px #ccc; margin-bottom: 20px;">
+                                                                            <h2>Edit Condition</h2>
+                                                                            <table width="100%">
+                                                                                <tr>
+                                                                                    <td colspan="2">
+                                                                                        <table width="100%">
+                                                                                            <tr>
+                                                                                                <th>Code</th>
+                                                                                                <th>Title</th>
+                                                                                            </tr>
+                                                                                            <apex:repeat value="{!CurrentItem.Values}" var="val">
+                                                                                                <tr>
+                                                                                                    <td>{!val.Code}</td>
+                                                                                                    <td>{!val.Title}</td>
+                                                                                                </tr>
+                                                                                                <tr>
+                                                                                                    <td colspan="2">
+                                                                                                        <apex:inputTextArea styleClass="editor" style="width:100%" value="{!val.Value}" />
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                            </apex:repeat>
+                                                                                        </table>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td colspan="2">Who can satisfy as complete?</td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td>UW</td>
+                                                                                    <td>REAT</td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        <apex:inputCheckbox disabled="true" value="{!CurrentItem.UW_Allowed}" />
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <apex:inputCheckbox value="{!CurrentItem.Reat_Allowed}" />
+                                                                                    </td>
+                                                                                </tr>
+
+                                                                                <tr>
+                                                                                    <td>Post completion condition?</td>
+                                                                                    <td>Chase within (months)</td>
+                                                                                </tr>
+
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        <apex:inputCheckbox value="{!CurrentItem.PostCompletion}" />
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <apex:selectList size="1" value="{!CurrentItem.Chasewithin}">
+                                                                                            <apex:selectOption itemLabel="-- None --" itemvalue=""></apex:selectOption>
+                                                                                            <apex:selectOption itemValue="1"></apex:selectOption>
+                                                                                            <apex:selectOption itemValue="2"></apex:selectOption>
+                                                                                            <apex:selectOption itemValue="3"></apex:selectOption>
+                                                                                            <apex:selectOption itemValue="4"></apex:selectOption>
+                                                                                            <apex:selectOption itemValue="5"></apex:selectOption>
+                                                                                            <apex:selectOption itemValue="6"></apex:selectOption>
+                                                                                            <apex:selectOption itemValue="7"></apex:selectOption>
+                                                                                            <apex:selectOption itemValue="8"></apex:selectOption>
+                                                                                            <apex:selectOption itemValue="9"></apex:selectOption>
+                                                                                            <apex:selectOption itemValue="10"></apex:selectOption>
+                                                                                            <apex:selectOption itemValue="11"></apex:selectOption>
+                                                                                            <apex:selectOption itemValue="12"></apex:selectOption>
+                                                                                        </apex:selectList>
+                                                                                    </td>
+                                                                                </tr>
+
+                                                                            </table>
+                                                                            <apex:commandButton oncomplete="SetUpDropdown();" reRender="criteriaPanel" status="save-lead-status" value="Save" action="{!Hide}" />
+                                                                            <apex:commandButton oncomplete="SetUpDropdown();" reRender="criteriaPanel" status="save-lead-status" value="Quick Save" action="{!Save2}" />
+                                                                            <apex:commandButton oncomplete="SetUpDropdown();" reRender="criteriaPanel" status="save-lead-status" value="Cancel" action="{!Cancel}" />
+
+                                                                        </div>
+                                                                    </apex:outputPanel>
+                                                                </apex:outputPanel>
+                                                            </td>
+                                                        </tr>
+                                                        <!-- C0760 ; start ; offer letter checklist enhancement -->
+                                                        <tr>
+                                                             <td></td>
+                                                             <td>
+                                                             <apex:commandButton status="save-lead-status" rendered="{!!IsCompleted}" reRender="criteriaPanel" value="Delete Condition" action="{!BulkDeleteCondition}"/><!--action="{!BulkDeleteCondition}"-->
+                                                             </td>
+                                                             </tr>
+                                                        
+                                                        <!-- C0760 ; End ; offer letter checklist enhancement -->
+                                                        <tr>
+                                                            <div class="col-sm-3">
+                                                                <td>
+                                                                    <label>Authorised Signatory</label>
+                                                                </td>
+                                                                <td>
+                                                                    <apex:outputpanel >
+                                                                        {!exOpp.OfferLetterSignatureName__c}
+                                                                    </apex:outputpanel>
+                                                                </td>
+
+                                                            </div>
+
+                                                        </tr>
+                                                    </table>
+                                                </apex:outputPanel>
+                                            </apex:inlineEditSupport>
+                                        </apex:pageBlockSection>
+                                    </apex:pageBlock>
+                                    <!-- C0760 END -->
+
+                                    <h1>Offer Letter</h1>
+
+                                    <apex:outputPanel id="mainPageBlock">
+                                        <div style="padding:20px;">
+                                            <!-- content -->
+
+                                            <div>
+
+                                                <apex:outputPanel rendered="{!!RCEFailed}">
+                                                    <script>
+                                                        function RceResult() {
+                                                            OfferLet();
+
+                                                            //HideDocumentLoad1();
+                                                            //ShowDocumentLoad();
+                                                            //fisletter();
+                                                        }
+
+                                                        function OfferLet() {
+                                                            HideDocumentLoad1();
+                                                            ShowDocumentLoad();
+                                                            offerletter();
+                                                        }
+                                                    </script>
+
+                                                </apex:outputPanel>
+                                                <apex:outputPanel rendered="{!RCEFailed}">
+                                                    <script>
+                                                        function RceResult() {
+                                                            HideDocumentLoad1();
+
+                                                            var errwindow = $("#errWindow");
+
+                                                            if (!errwindow.data("kendoWindow")) {
+                                                                errwindow.kendoWindow({
+                                                                    width: "400px",
+                                                                    title: "EBS Failed",
+                                                                    modal: true
+                                                                });
+                                                            }
+                                                            errwindow.data("kendoWindow").open();
+                                                            errwindow.data("kendoWindow").center();
+
+                                                        }
+                                                    </script>
+                                                </apex:outputPanel>
+                                                <!-- C0760 ; Start -->
+                                                <apex:outputPanel rendered="{!if(((acc.Salutation == null||acc.Salutation=='')||(acc.LastName== null||acc.LastName=='')||(acc.BillingPostalCode== null||acc.BillingPostalCode=='')
+                                  ||(acc.FirstName== null||acc.FirstName=='')||(acc.BillingStreet== null||acc.BillingStreet=='')||
+                                  (acc.BillingCountry== null||acc.BillingCountry=='')||(opp.New_property_street__c== null||opp.New_property_street__c=='')||(opp.New_property_country__c== null||opp.New_property_country__c=='')||
+                                  (opp.New_property_city__c== null||opp.New_property_city__c=='')||(opp.New_property_postcode__c== null||opp.New_property_postcode__c=='') || 
+                                  (opp.Finance_Required__c== null||opp.Finance_Required__c==0)&&
+                                  (opp.Interested_in__c !='Buy To Let Limited Company Purchase Plan')),false,true)}">
+
+                                                    <apex:commandButton value="Create Letter" action="{!CallRCE}" immediate="true" reRender="mainPageBlock" onclick="ShowDocumentLoad1()" oncomplete="RceResult();" />
+
+                                                </apex:outputPanel>
+                                               
+                                                <apex:outputPanel rendered="{!if(((acc.RegisteredAddressPostCode__c== null||acc.RegisteredAddressPostCode__c=='')
+                                  ||(acc.RegisteredAddressCity__c== null||acc.RegisteredAddressCity__c=='')||
+                                  (acc.RegisteredAddressCountry__c== null||acc.RegisteredAddressCountry__c=='')||(opp.New_property_street__c== null||opp.New_property_street__c=='')||(opp.New_property_country__c== null||opp.New_property_country__c=='')||
+                                  (opp.New_property_city__c== null||opp.New_property_city__c=='')||(opp.New_property_postcode__c== null||opp.New_property_postcode__c=='')
+                                  || (opp.Finance_Required__c== null||opp.Finance_Required__c==0) &&
+                                  (opp.Interested_in__c =='Buy To Let Limited Company Purchase Plan')),false,true)}">
+
+                                                    <apex:commandButton value="Create Letter" action="{!CallRCE}" immediate="true" reRender="mainPageBlock" onclick="ShowDocumentLoad1()" oncomplete="RceResult();" />
+
+                                                </apex:outputPanel>
+                                                 <!-- C0760 ;End -->
+                                                <apex:actionFunction oncomplete="HideDocumentLoad()" name="offerletter" action="{!CreateDoc}" rerender="mainPageBlock" />
+                                                <!--<apex:actionFunction oncomplete="OfferLet();" name="fisletter" action="{!CreateFisDoc}" rerender="mainPageBlock"/>-->
+
+                                            </div>
+                                            <div>
+                                                <apex:outputtext escape="false" value="{!DocLink}" rendered="{!DocLinkCreated }"></apex:outputtext>
+                                            </div>
+                                            <!--
+                                    <div>
+                                        <apex:outputtext escape="false" value="{!FisDocLink}" rendered="{!FisDocLink != null }"></apex:outputtext>
+                                    </div>
+                                    -->
+                                            <!-- CAT 00748212 start 
+                                    <div>
+                                    <apex:outputLink value="{!KeyFactsLink}" rendered="true" target="_blank"><b>Risk and Features Document</b></apex:outputLink><br/><br/>
+                                    </div>
+                                    CAT 00748212 end -->
+                                            <br/>
+                                            <br/>
+
+                                            <!--<apex:outputPanel rendered="{!DocLinkCreated && opp.Attachment_Offer_Letter__c!=null && FisDocLink != null }">-->
+                                            <apex:outputPanel rendered="{!DocLinkCreated && opp.Attachment_Offer_Letter__c!=null}">
+                                                <div>
+                                                    <table>
+                                                        <tr>
+                                                            <td>Date Offer Letter Sent</td>
+                                                            <td>
+                                                                <apex:inputField required="true" value="{!exopp.Offer_letter_sent__c}" />
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+
+                                                    <!--<apex:commandButton value="Complete Event" action="{!Complete}" rendered="{!DocLinkCreated && !IsCompleted && FisDocLink != null }"/>    -->
+                                                    <apex:commandButton value="Complete Event" action="{!Complete}" rendered="{!DocLinkCreated && !IsCompleted}" />
+                                                </div>
+                                            </apex:outputPanel>
+
+                                        </div>
+                                    </apex:outputPanel>
+                                </div>
+
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div id="fade"></div>
+            <div id="overlay">
+                Generating document...
+                <br/>
+                <br/> This may take a few seconds.
+
+                <div style="padding-top: 50px;">
+                    <!--  CPDR01 
+<img src="{!URLFOR($Resource.ibbstyle, 'images/269.gif')}"></img>
+    -->
+                    <img src="{!URLFOR($Resource.ibbstyleexternal, 'graphics/logos/circular-timer.gif')}"></img>
+                </div>
+
+            </div>
+
+            <div id="errWindow" style="display:none;">
+                <div style="text-align: center;padding:20px;">
+                    There was an issue calling EBS.
+                    <br/>
+                    <br/> Please contact IT Service Desk.
+
+                </div>
+
+            </div>
+
+            <div id="fade1"></div>
+            <div id="overlay1">
+                Calling EBS...
+                <br/>
+                <br/> This may take a few seconds.
+
+                <div style="padding-top: 50px;">
+                    <!--  CPDR01 
+<img src="{!URLFOR($Resource.ibbstyle, 'images/269.gif')}"></img>
+    -->
+                    <img src="{!URLFOR($Resource.ibbstyleexternal, 'graphics/logos/circular-timer.gif')}"></img>
+                </div>
+
+            </div>
+
+        </apex:form>
+        <style type="text/css">
+            #overlay,
+            #overlay1 {
+                display: none;
+                /* ensures it’s invisible until it’s called */
+                position: absolute;
+                /* makes the div go into a position that’s absolute to the browser viewing area */
+                left: 25%;
+                /* positions the div half way horizontally */
+                top: 25%;
+                /* positions the div half way vertically */
+                padding: 25px;
+                border: 2px solid black;
+                background-color: #ffffff;
+                width: 50%;
+                height: 50%;
+                z-index: 100;
+                /* makes the div the top layer, so it’ll lay on top of the other content */
+                text-align: center;
+                font-size: 18px;
+            }
+            
+            #fade,
+            #fade1 {
+                display: none;
+                /* ensures it’s invisible until it’s called */
+                position: absolute;
+                /* makes the div go into a position that’s absolute to the browser viewing area */
+                left: 0%;
+                /* makes the div span all the way across the viewing area */
+                top: 0%;
+                /* makes the div span all the way across the viewing area */
+                background-color: #ccc;
+                -moz-opacity: 0.7;
+                /* makes the div transparent, so you have a cool overlay effect */
+                opacity: .70;
+                filter: alpha(opacity=70);
+                width: 100%;
+                height: 100%;
+                z-index: 90;
+                /* makes the div the second most top layer, so it’ll lay on top of everything else EXCEPT for divs with a higher z-index (meaning the #overlay ruleset) */
+            }
+            /*C0760 START*/
+            
+            .highLight {
+                border: solid 2px red;
+            }
+            /*C0760 END*/
+        </style>
+
+        <script>
+            function ShowDocumentLoad() {
+                $('#overlay').show('slow');
+                $('#fade').show('slow');
+            }
+
+            function HideDocumentLoad() {
+                $('#overlay').hide('slow');
+                $('#fade').hide('slow');
+            }
+
+            function ShowDocumentLoad1() {
+                $('#overlay1').show('slow');
+                $('#fade1').show('slow');
+            }
+
+            function HideDocumentLoad1() {
+                $('#overlay1').hide('slow');
+                $('#fade1').hide('slow');
+            }
+            /*C0760 START*/
+            $(document).ready(function() {
+                SetUpDropdown();
+            });
+
+            function SetUpDropdown() {
+                $(".editor").kendoEditor({
+                    encoded: false,
+                    tools: [
+                        "bold", "italic", "underline"
+
+                    ]
+
+                });
+            }
+            /*C0760 END*/
+        </script>
+    </body>
+</apex:page>

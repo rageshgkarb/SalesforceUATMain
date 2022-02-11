@@ -1,0 +1,267 @@
+<apex:page showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false" controller="CAA_Core_Controller" action="{!EligibilitySetup}">
+
+
+<apex:composition template="CAA_Template">
+    <apex:define name="include">
+        <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/controller/controller_eligibility.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/service/service_eligibility.js')}"/>
+    </apex:define>
+
+
+        <apex:define name="body">
+        
+        <div ng-controller="controllerEligibility" ng-init="Data.AccountId='{!m_AccountId}';
+                                                            Data.FirstName='{!EligibilityAcc.FirstName}';
+                                                            Data.LastName='{!EligibilityAcc.LastName}';
+                                                            Data.Salutation='{!EligibilityAcc.Salutation}';
+                                                            Data.Email='{!EligibilityAcc.Email}';
+                                                            Data.PreferedContact='{!EligibilityAcc.PreferedContact}';
+                                                            Data.DOB.Day='{!EligibilityAcc.DOB.Day}';
+                                                            Data.DOB.Month='{!EligibilityAcc.DOB.Month}';
+                                                            Data.DOB.Year='{!EligibilityAcc.DOB.Year}';
+                                                            DDOB='{!EligibilityAccDate}';
+                                                            Data.Postcode='{!EligibilityAcc.Postcode}';
+                                                            Data.WebFormDataId='{!EligibilityAcc.WebFormDataId}';
+                                                            "> <!--ctl -->
+         
+        <div class="row">
+
+<div class="col-md-9">
+        
+
+<div class="SectionHeader" style="margin-bottom:18px;">
+    
+    <div>Liabilities Eligibility</div>
+</div>
+
+<div class=""/>
+
+<div class="PanelContents" ng-show="result && result.Success && result.Success == true">
+    <div class="alert alert-success">
+        Opportunity Created - <a href="/{{oppId}}">click to open</a>
+    </div>
+    
+</div>
+ 
+<div class="PanelContents" ng-show="result.Success == false">
+    <div class="alert alert-success">
+        Duplilcate Account Data Entered. 
+    </div>
+    
+</div>
+
+<div class="PanelContents" ng-hide="result && result.Success && result.Success == true">
+
+
+<div ng-hide="Data.AccountId">
+    <div>
+        <label class="control-label">Title</label>
+  </div>
+  <div>
+      <apex:repeat value="{!Titles}" var="t">
+          <label class="radio-inline"><input type="radio" ng-model="Data.Salutation" value="{!t.Key}"/>{!t.Value}</label>
+
+      </apex:repeat>
+  
+    </div>
+  <c:CAA_InputError field="optTitle"/>
+
+<hr/>
+<div class="row">
+  <div class="col-sm-4">
+      <label class="control-label">First names(s)</label>
+      <input class="form-control" ng-model="Data.FirstName" name="FirstName{{$index}}" id="FirstName{{$index}}" required="required"/>
+      <c:CAA_InputError field="FirstName"/>
+  </div>
+  <div class="col-sm-8">
+      <label class="control-label">Surname</label>
+      <input class="form-control" ng-model="Data.LastName" name="LastName{{$index}}" id="LastName{{$index}}" required="required"/>
+      <c:CAA_InputError field="LastName"/>
+  </div>
+</div>   
+   
+<c:CAA_Date title="Date of birth" model="Data" field="DOB" NumYears="-120" />
+
+    <div>
+        <label class="control-label">Postcode</label>
+    </div>   
+    <div class="row">
+        <div class="col-sm-4">
+            <input type="text" class="form-control" ng-model="Data.Postcode"/>
+        </div>
+    </div>
+    
+    <div>
+        <label class="control-label">Preferred contact number</label>
+    </div>   
+    <div class="row">
+        <div class="col-sm-4">
+            <input type="text" class="form-control" ng-model="Data.PreferedContact"/>
+        </div>
+    </div>
+    
+    <div>
+        <label class="control-label">Email address</label>
+    </div>   
+    <div class="row">
+        <div class="col-sm-8">
+            <input type="email" class="form-control" ng-model="Data.Email"/>
+        </div>
+    </div>
+</div>
+
+
+<div ng-show="Data.AccountId">
+  
+    
+  
+    <div class="row">
+         <div class="col-sm-2">
+            <div>
+                <label>Title</label>
+            </div>
+            <div>
+                {{Data.Salutation}}
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div>
+                <label>First Name</label>
+            </div>
+            <div>
+                {{Data.FirstName}}
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div>
+                <label>Last Name</label>
+            </div>
+            <div>
+                {{Data.LastName}}
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div>
+                <label>Date of Birth</label>
+            </div>
+            <div ng-show="Data.DOB">
+                {{DDOB}}
+            </div>
+        </div>
+        
+    </div>
+    <hr/>
+    
+    <div class="row">
+        <div class="col-sm-4">
+            <div>
+                <label>Postcode</label>
+            </div>
+            <div>
+                {{Data.Postcode}}
+            </div>
+        </div>
+        
+        <div class="col-sm-4">
+            <div>
+                <label>Preferred contact number</label>
+            </div>
+            <div>
+                {{Data.PreferedContact}}
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div>
+                <label>Email Address</label>
+            </div>
+            <div>
+                {{Data.Email}}
+            </div>
+        </div>
+    
+    </div>
+    <hr/>
+    
+
+</div>
+    
+    
+    
+    <div>
+        <label class="control-label">Primary campaign source</label>
+    </div>   
+    <div class="row">
+        <div class="col-sm-8">
+            
+        <select class="form-control" ng-model="Data.Campaign">
+        <apex:repeat value="{!Campaigns}" var="c">
+            <option value="{!c.id}">{!c.name}</option>
+        </apex:repeat>
+        
+        </select>
+        
+        <!--
+            <input type="test" class="form-control" ng-model="Data.Campaign"/>
+           <c:CAA_Lookup ></c:CAA_Lookup>
+        -->
+            <!--<select class="form-control" ng-model="Data.Campaign"/>-->
+        </div>
+    </div>
+    
+    <div>
+        <label class="control-label">Interested in</label>
+    </div>   
+    <div class="row">
+        <div class="col-sm-8">
+            <select class="form-control" ng-model="Data.InterestedIn">
+                <apex:repeat value="{!InterestedIn}" var="val">
+                    <option value="{!val.Key}">{!val.Value}</option>
+                </apex:repeat>
+            </select>
+        </div>
+    </div>
+    
+    <div>
+        <label class="control-label">Comments</label>
+    </div>   
+    <div class="row">
+        <div class="col-sm-8">
+            <textarea class="form-control" ng-model="Data.Comments"/>
+        </div>
+    </div>
+    
+    <div class="SectionBreak"/>
+          
+    <div class="SectionTitle">Google Tracking</div>
+   
+   
+    <div class="row">
+        <div class="col-sm-6">
+            <label class="control-label">Source</label>
+            <input type="text" class="form-control" ng-model="Data.Source"/>
+        </div>   
+        
+        <div class="col-sm-6">
+            <label class="control-label">Medium</label>
+            <input type="text" class="form-control" ng-model="Data.Medium" />
+        </div>          
+    </div>
+    
+    
+    <div>    
+        <button class="btn btnArb" ng-click="Save()">Complete</button>
+    </div>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="rightcol visible-md visible-lg" id="sidebar" >    
+</div>
+
+</div>
+</div> <!-- row -->
+</div> <!-- ctl -->
+
+</apex:define>
+</apex:composition>
+</apex:page>

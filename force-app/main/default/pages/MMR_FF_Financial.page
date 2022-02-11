@@ -1,0 +1,454 @@
+<apex:page showHeader="false" sidebar="false" controller="MMR_FF_Financial" action="{!Setup_Financial}">
+<head>
+    <c:MMR_PageHeader ></c:MMR_PageHeader>   
+</head>
+<body style="background-color:#ededed;">
+  <c:MMR_Header title="Financial Information" numapps="{!NumApplying }" opp="{!bopp}" hide="{!IsCredit}"/>
+
+      <div class="container">
+ <c:MMR_FF_Nav EventId="{!eventid}" active="5" activesection="B" rendered="{!!IsCredit && !IsCompleted}"/>
+ <c:MMR_FF_Nav_Links EventId="{!eventid}" active="5" activesection="B" rendered="{!!IsCredit && IsCompleted}"/>
+ 
+ <c:MMR_Credit_Nav EventId="{!eventid}" active="5" activesection="B" rendered="{!IsCredit}"/>
+    
+        <apex:form id="aForm" styleClass="form-horizontal">        
+        <div class="row">
+        <c:MMR_FF_Financial comKey="1" pController="{!this}" ApplicantNo="1" Acc="{!Accs[0]}" rendered="{!NumApplying >0}"/>
+                <c:MMR_FF_Financial comKey="2" pController="{!this}"  ApplicantNo="2" Acc="{!Accs[1]}" rendered="{!NumApplying >1}"/>
+                <div class="clearfix"/>
+                <c:MMR_FF_Financial comKey="3" pController="{!this}"  ApplicantNo="3" Acc="{!Accs[2]}" rendered="{!NumApplying >2}"/>
+                <c:MMR_FF_Financial comKey="4" pController="{!this}"  ApplicantNo="4" Acc="{!Accs[3]}" rendered="{!NumApplying >3}"/>
+                <div class="clearfix"/>
+        </div>    
+        
+        
+        
+        
+        <div class="panel panel-primary">
+                          <div class="panel-heading">
+                              Deposit Details
+                          </div>
+                          <div class="panel-body">
+                          <apex:outputPanel id="DepositList">
+                              <div class="col-sm-12">
+                                  <div class="row">
+                                  <div class="form-group">
+                                      <div class="col-sm-3 col-md-3">
+                                          <label>Deposit source</label>
+                                      </div>
+                                      <div class="col-sm-3 col-md-3">
+                                          <label>Deposit Value</label>
+                                      </div>  
+                                      <div class="col-sm-3 col-md-3">
+                                          <label>Details</label>
+                                      </div>
+                                      <div class="col-sm-3 col-md-3">
+                                          <label></label>
+                                      </div> 
+                                  </div>
+                                  </div>
+                                   <apex:variable value="{!0}" var="rowNum"/>
+                                  <apex:repeat value="{!DepositSource}" var="d">
+                                      <div class="row">
+                                          <div class="form-group">
+                                              <div class="col-sm-3 col-md-3">
+                                                  <apex:inputField styleClass="form-control" value="{!d.Deposit_Source__c}"   />
+                                              </div>
+                                              <div class="col-sm-3 col-md-2">
+                                                  <apex:inputField styleClass="form-control depValue" value="{!d.Deposit_Value__c}"   />
+                                              </div>
+                                              <div class="col-sm-3 col-md-5">
+                                                  <apex:inputField styleClass="form-control" value="{!d.Deposit_Details__c}"   />
+                                              </div>
+                                              <div class="col-sm-3 col-md-2">
+                                                  <apex:commandButton styleClass="btn-danger" value="Remove" action="{!RemoveDepositSource}"   reRender="DepositList" status="DepositListRemoveStatus">
+                                                    <apex:param name="nickName"
+                                                            value="{!rowNum}"
+                                                            assignTo="{!rowDeleteDepositSource}"/> 
+                                                    
+                                                    </apex:commandButton>
+                                                    <apex:actionStatus id="DepositListRemoveStatus" startStyle="padding-left: 10px;text-decoration:none;"   startText="Removing..."  stopText=""/>
+                                              </div>
+                                          </div>                                      
+                                      </div>     
+                                      <apex:variable var="rowNum" value="{!rowNum + 1}"/>                             
+                                  </apex:repeat>
+                                  
+                                  <div class="row">
+                                      <div class="col-sm-3 col-sm-offset-3">
+                                            <span id="depositValue"/>
+                                      </div>                                  
+                                  </div>
+                                  
+                                  <div class="row">
+                                      <apex:commandButton styleClass="btn-info" value="Add Deposit Type" action="{!AddDepositSource}" oncomplete="setUpOut()" reRender="DepositList" status="counterStatus1"/>
+                                      <apex:actionStatus id="counterStatus1"  startText=" (Adding...)"  stopText=""/>
+                                      <apex:commandButton styleClass="btn btn-success"  value="Save" action="{!Save}"/> 
+                                  </div>
+                                  
+                                  
+                              </div>
+                          </apex:outputPanel>
+                          </div>                      
+                      </div>   
+                      
+                      
+                      
+                      
+                      <div class="panel panel-primary">
+                          <div class="panel-heading">
+                              Refinance Details
+                          </div>
+                          <div class="panel-body">
+                              <apex:outputPanel id="RefinanceList">
+                              <div class="col-sm-12">
+                                  <div class="row">
+                                  <div class="form-group">
+                                      <div class="col-sm-3 col-md-3">
+                                          <label>Refinance source</label>
+                                      </div>
+                                      <div class="col-sm-3 col-md-3">
+                                          <label>Refinance Value</label>
+                                      </div>  
+                                      <div class="col-sm-3 col-md-3">
+                                          <label>Details</label>
+                                      </div>
+                                      <div class="col-sm-3 col-md-3">
+                                          <label>Action</label>
+                                      </div> 
+                                  </div>
+                                  </div>
+                                   <apex:variable value="{!0}" var="rowNum"/>
+                                  <apex:repeat value="{!RefinanceSource}" var="d">
+                                      <div class="row">
+                                          <div class="form-group">
+                                              <!-- C0782 Changes<div class="col-sm-3 col-md-3">
+                                                  <apex:inputField styleClass="form-control" value="{!d.Refinance_Type__c}"   />
+                                              </div>-->
+                                               <!--C0782 Reac changes start-->
+                                              <div class="col-sm-3 col-md-3">
+                                              <apex:selectlist styleclass="form-control" required="true" value="{!d.Refinance_Type__c}" id="Interest" size="1"> 
+                                                    <apex:selectOptions value="{!itemsFinance}"/>                          
+                                              </apex:selectlist>
+                                              </div>
+                                              <!--C0782 Reac changes end-->
+                                              <div class="col-sm-3 col-md-2">
+                                                  <apex:inputField styleClass="form-control refinanceValue" value="{!d.Refinance_Value__c}"/>
+                                              </div>
+                                              <div class="col-sm-3 col-md-5">
+                                                  <apex:inputField styleClass="form-control" value="{!d.Refinance_Details__c}"   />
+                                              </div>
+                                              <div class="col-sm-3 col-md-2">
+                                                  <apex:commandButton styleClass="btn-danger" value="Remove" action="{!RemoveRefinanceSource}"   reRender="RefinanceList" status="RefinanceListRemoveStatus">
+                                                    <apex:param name="nickName"
+                                                            value="{!rowNum}"
+                                                            assignTo="{!rowDeleteRefinanceSource}"/> 
+                                                    
+                                                    </apex:commandButton>
+                                                    <apex:actionStatus id="RefinanceListRemoveStatus" startStyle="padding-left: 10px;text-decoration:none;"   startText="Removing..."  stopText=""/>
+                                              </div>
+                                          </div>                                      
+                                      </div>     
+                                      <apex:variable var="rowNum" value="{!rowNum + 1}"/>                             
+                                  </apex:repeat>
+                                  
+                                  <div class="row">
+                                      <div class="col-sm-3 col-sm-offset-3">
+                                            <span id="refValue"/>
+                                      </div>                                  
+                                  </div>
+                                  
+                                  <div class="row">
+                                      <apex:commandButton styleClass="btn-info" value="Add Refinance Type" action="{!AddRefinanceSource}"  reRender="RefinanceList" status="counterStatus"/>
+                                      <apex:actionStatus id="counterStatus"  startText=" (Adding...)"  stopText=""/>
+                                      <apex:commandButton styleClass="btn btn-success"  value="Save" action="{!Save}"/> 
+                                  </div>                                  
+                                  
+                              </div>
+                              </apex:outputPanel>
+                          </div>                      
+                      </div>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+<div class="row">        
+<apex:commandButton styleClass="btn btn-primary"  value="Previous" action="{!Previous}" rendered="{!!IsCredit && !IsCompleted}"/> 
+<apex:commandButton styleClass="btn btn-success"  value="Save" action="{!Save}" rendered="{!!IsCompleted || IsCredit }"/> 
+<apex:commandButton styleClass="btn btn-danger"  value="Next" action="{!Next}" rendered="{!!IsCredit && !IsCompleted}"/>  
+</div>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+   <!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" data-backdrop="static">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"  aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Add Personal Debt</h4>
+      </div>
+      <div class="modal-body">
+       
+       <div class="row">
+       
+           
+           <apex:inputHidden id="accId" value="{!EditDebt.id}"/>
+       
+           <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Applicant</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:selectList id="debtAccount" size="1" styleClass="form-control" value="{!EditDebt.Owner_of_debt__c}">
+                    <apex:selectOptions value="{!selApplicant}" ></apex:selectOptions>
+                    </apex:selectList>
+                </div>
+            </div>
+       
+                <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Type of debt</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:inputField id="debtType" value="{!EditDebt.Type_of_debt__c}" styleClass="form-control" />
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Lender</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:inputField id="debtLender" value="{!EditDebt.Debt_Lender_Name__c}" styleClass="form-control" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Start date</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:inputText id="debtStartDate" value="{!EditDebt.Start_date__c}" styleClass="form-control" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Minimum monthly repayment</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:inputField id="debtMonthlyPay" value="{!EditDebt.Monthly_repayment__c}" styleClass="form-control" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Outstanding balance</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:inputField id="debtOutstanding" value="{!EditDebt.Outstanding_balance__c}" styleClass="form-control" />
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >When will this debt be paid off?</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:InputText id="debtPaidOff" value="{!EditDebt.PaidOffDebt__c}" styleClass="form-control" />
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Will this debt be paid off by this application?</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:inputField id="debtPaidOffThisApp" value="{!EditDebt.Will_this_debt_be_paid_off_by_this_app__c }" styleClass="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Secured on property</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:inputField id="debtSecured" value="{!EditDebt.Secured_on_property__c}" styleClass="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Cleared before HPP starts</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:inputField id="debtCleared" value="{!EditDebt.Cleared_before_HPP_starts__c}" styleClass="form-control" />
+                </div>
+            </div>
+       
+       
+       </div>
+       
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <apex:commandButton value="Save" action="{!SaveDebt}" styleclass="btn btn-success">  </apex:commandButton>
+        
+        
+ 
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ <script type="text/javascript">
+
+    function ShowDebtPopup(event,o)
+    {
+        $("[id$='debtAccount']").prop('disabled', false);
+        window.scrollTo(0, 0);
+        $('#myModal').modal({
+            backdrop: 'static'
+        });
+        $("[id$='accId']").val('');
+        $("[id$='debtAccount']").val('');
+        $("[id$='debtType']").val('');
+        $("[id$='debtLender']").val('');
+        $("[id$='debtStartDate']").val('');
+        $("[id$='debtMonthlyPay']").val('');
+        $("[id$='debtOutstanding']").val('');
+        $("[id$='debtPaidOff']").val('');
+        $("[id$='debtPaidOffThisApp']").val('');
+        $("[id$='debtSecured']").val('');
+        $("[id$='debtCleared']").val('');
+
+
+
+
+    }
+
+    function EditDebt(sender)
+    {
+        window.scrollTo(0, 0);
+        $('#myModal').modal({
+            backdrop: false
+        });
+
+        var id = sender.closest(".debtList");
+
+        $("[id$='accId']").val(id.find('.debtId').val());
+        $("[id$='debtAccount']").val(id.find('.debtAcc').val());
+        $("[id$='debtType']").val(id.find('.propType').text().trim());
+        $("[id$='debtLender']").val(id.find('.debtLender').text());
+        $("[id$='debtStartDate']").val(id.find('.debtStartDate').text());
+        $("[id$='debtMonthlyPay']").val(id.find('.debtMonthlyPay').text());
+        $("[id$='debtOutstanding']").val(id.find('.debtOutstanding').text());
+        $("[id$='debtPaidOff']").val(id.find('.debtLetProperty').text());
+
+        $("[id$='debtSecured']").val(id.find('.debtSecured').text());
+        $("[id$='debtCleared']").val(id.find('.debtCleared').text());
+
+        var checkValue = id.find('.debtPaidOffThisApp').text();
+        checkValue = (checkValue=='No' ? false : true);
+        $("[id$='debtPaidOffThisApp']").attr('checked',checkValue);
+        $("[id$='debtAccount']").prop('disabled', 'disabled');
+
+    }
+
+Number.prototype.formatMoney = function(c, d, t){
+var n = this, c = isNaN(c = Math.abs(c)) ? 2 : c, d = d == undefined ? "," : d, t = t == undefined ? "." : t, s = n < 0 ? "-" : "", i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "", j = (j = i.length) > 3 ? j % 3 : 0;
+   return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+ };
+
+
+
+    function GetFloatValue(value)
+{
+    if(value == null)
+        return 0;
+
+    value = value.replace(',','');
+    value = value.replace('£','');
+    value = value.replace('$','');
+
+    var retValue = parseFloat( value,10);
+
+    if(isNaN(retValue))
+    {
+        return 0;
+    }
+    return retValue;
+}
+
+function calcDeposit()
+{
+    var tot = 0;
+    $(".depValue").each(function(index) {
+         tot+=GetFloatValue($(this).val());
+     });
+    $("#depositValue").text('£' + tot.formatMoney(2, '.', ','));
+}
+
+function calcRef()
+{
+    var tot = 0;
+    $(".refinanceValue").each(function(index) {
+         tot+=GetFloatValue($(this).val());
+     });
+    $("#refValue").text('£' + tot.formatMoney(2, '.', ','));
+}
+
+
+
+    $(function (){
+
+        $("[id$='debtStartDate']").attr('placeholder','dd/mm/yyyy');
+        $("[id$='debtPaidOff']").attr('placeholder','dd/mm/yyyy');
+
+        $('.depValue').change(calcDeposit);
+        $('.refinanceValue').change(calcRef);
+        calcDeposit();
+        calcRef();
+
+        var errors = $(".modal-body").find(".errorMsg");
+        if(errors.size()>0)
+        {
+            $('#myModal').modal();
+        }
+
+
+        $('.debtEdit').click(function(){
+        EditDebt($(this));
+    });
+
+    });
+
+</script>
+ 
+     
+        </apex:form>        
+    </div>    
+    <c:MMR_PageFooter ></c:MMR_PageFooter>    
+</body>
+</apex:page>

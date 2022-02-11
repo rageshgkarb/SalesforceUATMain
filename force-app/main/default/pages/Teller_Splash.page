@@ -1,0 +1,36 @@
+<apex:page applyBodyTag="false" showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false">
+
+	
+<!-- 	<div style="height: calc(100% + 10px); overflow: hidden; white-space: nowrap; margin-top: -10px;">
+        <div style="float: left; background: white; width: calc(100% - 400px); height: 100%; min-width: 400px; position:relative;">
+        <div style="position:absolute; z-index:2; width:100%;">
+            <img class="arbLogoSmall" src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/logo_title.png')}"></img>
+
+            <div style="margin-left: 65px; font-size: 46px;font-family: simple;" class="sectionTitleSmallGray">
+                Engage: Tag Line
+            </div>
+
+            <div style=
+            "height: 1px; width: calc(100% - 30px); background: rgb(184, 148, 86); margin-left: 30px; margin-top: 10px;">
+            </div>
+			
+			<div class="textLargeGold" style="margin-top: 25px; margin-left: 50px;">
+				Asalaam Alaikum
+			</div>
+        </div>
+		<img class="splashImage" src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/splash.png')}"></img>
+			
+		</div>
+
+        <div style="float: right; width: 400px; background: #F2EDE9; height: 100%; position:relative;">
+			<div class="sectionTitle" style="margin-bottom: 0px !important; margin: 20px;">Chatter</div>
+ 			<div class="engageChatterFeed verticalScroller">				
+				 <chatter:feed entityId="{!$User.Id}"/>   
+			</div>
+        	<img class="arbLogoBig" src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/logo_big.png')}"></img>			
+		</div>
+    </div> -->
+	
+	<img ng-src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/splash.png')}" style="margin: 0; padding: 0; height: 100%; width: 100%"></img>
+	
+</apex:page>

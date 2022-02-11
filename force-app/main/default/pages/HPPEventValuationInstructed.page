@@ -1,0 +1,160 @@
+<apex:page controller="HPPEventValuationInstructedController" sidebar="false" showHeader="false" title="Valuation Instructed" action="{!autoRun}">
+    <head>
+        <c:KendoResource ></c:KendoResource>
+    </head>
+    <body>
+        <apex:form >  
+            <div id="formWrapper">
+                <!-- C00095-->
+                <c:HPPSummary objAcc="{!Accounts[0]}" objOpp="{!opp}" objExOpp="{!ExOpp}" Product="{!Prod}" />
+                <div id="container" >
+                    <table width="100%">
+                        <tr>
+                            <td valign="top" id="sidebar">
+                                <c:HPPBOMenu oppId="{!Opp.Id}"  DirectorId="{!Opp.ProductEventDirector__c}" />
+                            </td>
+                            <td valign="top" id="contenttd">
+                                <div id="content">
+                                    <h1>Valuation Instructed</h1>
+                                
+                                    <apex:outputPanel id="mainPageBlock">
+                                        <div style="padding:20px;">
+                                            <!-- content -->
+                                            
+                                            <apex:pagemessages ></apex:pagemessages>
+                                            
+                                            <apex:pageBlock >
+                                                <apex:pageBlockSection >
+                                                    <apex:outputField value="{!exOpp.Valuation_Table_Type__c }"/>
+                                                    <apex:pageBlockSectionItem >
+                                                        <apex:outputLabel value="Total Valuation Fee"/><!--HPP-AVM C0785 -->
+                                                        <apex:inputField value="{!exOpp.ValuationPrice__c}" />
+                                                    </apex:pageBlockSectionItem>
+                                                    <apex:outputField value="{!opp.Finance_Required__c}"/>
+                                                    <apex:outputField value="{!opp.Purchase_price_market_value__c}" />
+                                                    
+                                                </apex:pageBlockSection>
+                                            </apex:pageBlock>
+                                            
+                                                                                           
+                                            <apex:pageBlock >
+                                                <apex:pageBlockSection >
+                                                    <apex:pageBlockSectionItem >
+                                                        <apex:outputLabel value="Address 1" />
+                                                        <apex:outputField value="{!opp.New_property_street__c}" />
+                                                    </apex:pageBlockSectionItem>
+                                                    <apex:pageBlockSectionItem >
+                                                        <apex:outputLabel value="Access Name" /> 
+                                                         <!--C0782 REAC changes required="{!If(CONTAINS(Opp.Interested_in__c,'REAC') ,false,true)}" -->                                                                                       
+                                                        <apex:inputField required="{!If(CONTAINS(Opp.Interested_in__c,'REAC') ,false,true)}" value="{!exOpp.Estate_agent_contact_name__c}" />
+                                                    </apex:pageBlockSectionItem>
+                                                    
+                                                    <apex:pageBlockSectionItem >
+                                                        <apex:outputLabel value="Address 2" />
+                                                        <apex:outputField value="{!opp.New_property_city__c}" />
+                                                    </apex:pageBlockSectionItem>
+                                                    <apex:pageBlockSectionItem >
+                                                        <apex:outputLabel value="Access Telephone Number" />
+                                                        <!--C0782 REAC changes required="{!If(CONTAINS(Opp.Interested_in__c,'REAC') ,false,true)}" -->   
+                                                        <apex:inputField required="{!If(CONTAINS(Opp.Interested_in__c,'REAC') ,false,true)}" value="{!exOpp.Estate_agent_contact_telephone_number__c}" />
+                                                    </apex:pageBlockSectionItem>
+                                                    
+                                                    <apex:pageBlockSectionItem >
+                                                        <apex:outputLabel value="Address 3" />
+                                                        <apex:outputField value="{!opp.New_property_postcode__c}" />
+                                                    </apex:pageBlockSectionItem>
+                                                    <apex:outputField value="{!exOpp.Property_Type__c}" />
+                                                    
+                                                    
+                                                    <apex:outputField value="{!exOpp.Tenure__c}" />
+                                                    <apex:outputField value="{!exOpp.Property_details__c}" />
+                                                    
+                                                    <apex:pageBlockSectionItem >
+                                                        <apex:outputLabel value="Title" />
+                                                        <apex:outputField value="{!acc.Salutation}" />   
+                                                    </apex:pageBlockSectionItem>
+                                                    <apex:pageBlockSectionItem >
+                                                        <apex:outputLabel value="Current/Expected Rent (BTL Applications Only)" />
+                                                        <apex:inputField value="{!opp.Expected_monthly_rent_payment__c}" />
+                                                    </apex:pageBlockSectionItem>
+                                                    
+                                                    <apex:outputField value="{!acc.FirstName}" />
+                                                    <apex:pageBlockSectionItem >
+                                                        <apex:outputLabel value="Applicant 2 Title" />
+                                                        <apex:outputField value="{!secondApplicant.Salutation}" />
+                                                    </apex:pageBlockSectionItem>
+                                                    
+                                                    <apex:outputtext value="{!acc.LastName}" />
+                                                    <apex:pageBlockSectionItem >
+                                                        <apex:outputLabel value="Applicant 2 First Name" />
+                                                        <apex:outputField value="{!secondApplicant.FirstName}" />
+                                                    </apex:pageBlockSectionItem>
+                                                    
+                                                    <apex:pageBlockSectionItem >
+                                                        <apex:outputLabel value="Address 1" />
+                                                        <apex:outputField value="{!acc.BillingStreet}" />
+                                                    </apex:pageBlockSectionItem>
+                                                    <apex:pageBlockSectionItem >
+                                                        <apex:outputLabel value="Applicant 2 Last Name" />
+                                                        <apex:outputField value="{!secondApplicant.LastName}" />
+                                                    </apex:pageBlockSectionItem>
+                                                    
+                                                    <apex:pageBlockSectionItem >
+                                                        <apex:outputLabel value="Address 2" />
+                                                        <apex:outputField value="{!acc.BillingCity}" />
+                                                    </apex:pageBlockSectionItem>
+                                                    <apex:pageBlockSectionItem ></apex:pageBlockSectionItem>
+                                                    
+                                                    <apex:pageBlockSectionItem >
+                                                        <apex:outputLabel value="Address 3" />
+                                                        <apex:outputField value="{!acc.BillingPostalCode}" />
+                                                    </apex:pageBlockSectionItem>
+                                                    <apex:pageBlockSectionItem ></apex:pageBlockSectionItem>
+                                                    
+                                                    <apex:pageBlockSectionItem >
+                                                        <apex:outputLabel value="Telephone" />
+                                                        <apex:inputField value="{!acc.Home_Telephone_No__c}" />
+                                                    </apex:pageBlockSectionItem>
+                                                    <apex:pageBlockSectionItem ></apex:pageBlockSectionItem>
+                                                </apex:pageBlockSection>
+                                                
+                                                <apex:pageBlockButtons location="bottom" id="page_block_buttons">
+                                                    <!--apex:commandButton onclick="ShowDocumentLoad()" oncomplete="HideDocumentLoad()"
+                                                         reRender="mainPageBlock" value="Instruct Valuation" action="{!instructValuation}" rendered="{!NOT(successfulCallout) && !NOT(IsCompleted)}" /-->
+                                                     <apex:commandButton onclick="ShowDocumentLoad()" oncomplete="HideDocumentLoad()"
+                                                         reRender="mainPageBlock" value="Instruct Valuation" action="{!instructValuation}" rendered="{! (NOT(IsCompleted) || !NOT(successfulCallout)) && exopp.Manual_valuation_instructed__c =null  }" />
+                                                    <apex:commandButton value="Complete Event" action="{!complete}" rendered="{!successfulCallout && !IsCompleted}" />
+                                                    <apex:commandButton value="Manual Valuation Instruction" action="{!complete}" />                                                   
+                                                </apex:pageBlockButtons>
+                                            </apex:pageBlock>
+                                            
+                                            <div style="text-align: center;">
+                                                <apex:outputPanel id="take_payment_response" style="text-align: center; font-weight: bold;">
+                                                    <apex:outputText value="{!calloutResponse}" />
+                                                </apex:outputPanel>
+                                            </div>
+                                        </div>
+                                    </apex:outputPanel>
+                                </div>
+                                
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div id="fade"></div>
+                <div id="overlay">
+                    Instruct Valuation...
+                    <br/>
+                    <br/>
+                    This may take a few seconds.
+                <div style="padding-top: 50px;" >
+                    <!--  CPDR01 
+<img src="{!URLFOR($Resource.ibbstyle, 'images/269.gif')}"></img>
+    -->
+<img src="{!URLFOR($Resource.ibbstyleexternal, 'graphics/logos/circular-timer.gif')}"></img>
+                </div>
+            </div>    
+        </apex:form>
+    </body>
+</apex:page>

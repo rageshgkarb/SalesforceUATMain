@@ -1,0 +1,104 @@
+<apex:component >
+
+<div ng-controller="controllerCameraCapture" class="verticalScroller" ng-init="Initiate()" style="height: 100%; overflow-y: auto; overflow-x: hidden; margin-right: -7px;">
+	
+	<!-- Menu -->
+	<div class="cameraContainer" ng-show="!SelectedOption">
+		<ul class="accountFunctionRootsContainer textSmallWhite">
+			
+			<li class="accountFunctionRoot accountFunctionRootNormal" ng-click="SelectedOption = 'Camera'">
+				<div class="accountFunctionRootContent">
+					Camera
+				</div>
+				<img class="tileIconLocation" src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_camera.png')}"></img>
+			</li>
+
+			<li class="accountFunctionRoot accountFunctionRootNormal" ng-click="SelectedOption = 'DragDrop'">
+				<div class="accountFunctionRootContent">
+					Image File
+				</div>
+				<img class="tileIconLocation" src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_images.png')}"></img>
+			</li>
+			
+		</ul>
+	</div>
+
+	<!-- Camera -->
+	<div class="cameraContainer" ng-show="!Captured && SelectedOption == 'Camera'">
+		<video class="camera" id="videoContainer" muted="muted" autoplay="autoplay" poster="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/user.png')}" width="658" height="480"></video>
+	</div>
+
+	<!-- Drag Drop -->
+	<div class="cameraContainer dragdropContainer" id="dragdropContainer" ng-show="!Captured && SelectedOption == 'DragDrop'">		
+		<div style="text-align: center;">
+			<img src="/resource/1426752007000/Teller_Includes/Teller_Includes/media/btn_images.png" style="opacity: 0.2;height: 80px; margin-top: 180px;"></img>
+			<div class="pageSubTitleGray"> Drag &amp; drop image here</div>
+		</div>
+	</div>
+	
+	<!-- Crop container -->
+	<div ng-show="Captured && !Cropped" id="cameraContainer" class="cropcontainer cameraContainer">
+		<div class="overlay">
+			<div class="overlay-inner">
+			</div>
+		</div>
+		<img id="canvasImg"></img>
+	</div>
+
+	<!-- Final image -->
+	<div ng-show="Cropped" class="cropcontainer cameraContainer">
+		<img id="croppedImg" class="croppedImg"></img>
+	</div>
+	
+	<canvas ng-show="false" id="snapshotCanvas" width="640" height="480"></canvas>
+	
+	<div style="height: calc(100% - 540px);">
+		<!-- Left buttons -->
+		<div style="float: left; margin-top: 15px;" ng-show="SelectedOption">	
+			<div class="toolbarButton" ng-click="GoBack()" ng-show="Captured">
+				<div class="imgCircle">
+					<img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_back_arrow.png')}"></img>
+				</div>
+				<div class="textSmallestDarkGray caption">BACK</div>
+			</div>
+			
+			<div class="toolbarButton" ng-click="GoBack()" ng-show="!Captured && !Cropped">
+				<div class="imgCircle">
+					<img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/grid.png')}"></img>
+				</div>
+				<div class="textSmallestDarkGray caption">MENU</div>
+			</div>
+		</div>
+
+		<!-- Right buttons -->
+		<div style="float: right; margin-top: 15px; margin-right: 25px;" ng-show="SelectedOption">
+			<div ng-show="!Captured && SelectedOption == 'Camera'" class="toolbarButton" ng-click="Capture()">
+				<div class="imgCircle">
+					<img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_camera.png')}"></img>
+				</div>
+				<div class="textSmallestDarkGray caption">CAPTURE</div>
+			</div>
+
+			<div ng-show="!Captured && SelectedOption == 'Camera'" class="toolbarButton" ng-click="SwitchSource()">
+				<div class="imgCircle">
+					<img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_camera_switch.png')}"></img>
+				</div>
+				<div class="textSmallestDarkGray caption">SWITCH</div>
+			</div>
+
+			<div ng-show="Captured && !Cropped" class="toolbarButton js-crop" ng-click="Crop()">
+				<div class="imgCircle">
+					<img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_crop.png')}"></img>
+				</div>
+				<div class="textSmallestDarkGray caption">CROP</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="dialogButtons" style="position: initial; margin-bottom: 0px; clear:  both; float: right; margin-top:  10px;">
+		<div class="goldButton" ng-click="Close()">CANCEL</div>
+		<div class="goldButton" ng-show="Cropped" ng-click="Save()">SAVE</div>
+	</div>
+</div>
+
+</apex:component>

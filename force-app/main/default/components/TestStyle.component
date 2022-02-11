@@ -1,0 +1,419 @@
+<apex:component >
+<style>
+    /***************************** Required styles *****************************/
+
+/**
+ * For the correct positioning of the placeholder element, the dnd-list and
+ * it's children must have position: relative
+ */
+.nestedDemo ul[dnd-list],
+.nestedDemo ul[dnd-list] > li {
+    position: relative;
+}
+
+/***************************** Dropzone Styling *****************************/
+
+/**
+ * The dnd-list should always have a min-height,
+ * otherwise you can't drop to it once it's empty
+ */
+.nestedDemo .dropzone ul[dnd-list] {
+    min-height: 42px;
+    margin: 0px;
+    padding-left: 0px;
+}
+
+/**
+ * The dnd-lists's child elements currently MUST have
+ * position: relative. Otherwise we can not determine
+ * whether the mouse pointer is in the upper or lower
+ * half of the element we are dragging over. In other
+ * browsers we can use event.offsetY for this.
+ */
+.nestedDemo .dropzone li {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    display: block;
+    padding: 0px;
+}
+
+/**
+ * Reduce opacity of elements during the drag operation. This allows the user
+ * to see where he is dropping his element, even if the element is huge. The
+ * .dndDragging class is automatically set during the drag operation.
+ */
+.nestedDemo .dropzone .dndDragging {
+    opacity: 0.7;
+}
+
+/**
+ * The dndDraggingSource class will be applied to the source element of a drag
+ * operation. It makes sense to hide it to give the user the feeling that he's
+ * actually moving it. Note that the source element has also .dndDragging class.
+ */
+.nestedDemo .dropzone .dndDraggingSource {
+    display: none;
+}
+
+/**
+ * An element with .dndPlaceholder class will be added as child of the dnd-list
+ * while the user is dragging over it.
+ */
+.nestedDemo .dropzone .dndPlaceholder {
+    background-color: #ddd;
+    min-height: 12px;
+    display: block;
+    position: relative;
+}
+
+/***************************** Element Selection *****************************/
+
+.nestedDemo .dropzone .selected .item {
+    color: #3c763d;
+    background-color: #dff0d8;
+}
+
+.nestedDemo .dropzone .selected .box {
+    border-color: #d6e9c6;
+}
+
+.nestedDemo .dropzone .selected .box > h3 {
+    color: #3c763d;
+    background-color: #dff0d8;
+    background-image: linear-gradient(to bottom,#dff0d8 0,#d0e9c6 100%);
+    border-color: #d6e9c6;
+    padding:5px;
+}
+
+/***************************** Element type specific styles *****************************/
+
+.nestedDemo .dropzone .item {
+    padding: 10px 15px;
+}
+
+.nestedDemo .dropzone .container-element {
+    margin: 10px;
+}
+
+.nestedDemo .dropzone .container-element .column {
+    float: left;
+    width: 50%;
+}
+
+/***************************** Toolbox *****************************/
+
+.nestedDemo .toolbox ul {
+    list-style: none;
+    padding-left: 0px;
+    cursor: move;
+}
+
+.nestedDemo .toolbox button {
+    margin: 5px;
+    width: 123px;
+    opacity: 1.0;
+}
+
+.nestedDemo .toolbox .dndDragging {
+    opacity: 0.5;
+}
+
+.nestedDemo .toolbox .dndDraggingSource {
+    opacity: 1.0;
+}
+
+/***************************** Trashcan *****************************/
+
+.nestedDemo .trashcan ul {
+    list-style: none;
+    padding-left: 0px;
+}
+
+.nestedDemo .trashcan img {
+    width: 100%;
+    -webkit-filter: grayscale(100%);
+    -moz-filter: grayscale(100%);
+    filter: grayscale(100%);
+}
+
+.nestedDemo .trashcan .dndDragover img {
+    width: 100%;
+    -webkit-filter: none;
+    -moz-filter: none;
+    filter: none;
+}
+
+.nestedDemo .trashcan .dndPlaceholder {
+    display: none;
+}
+
+
+.box-blue > h3 {
+    padding: 5px;
+}
+
+.title-sm{
+    font-size : 10px;
+}
+
+.title-md{
+    font-size : 14px;
+}
+
+.title-lg{
+    font-size : 20px;
+}
+
+.gridcolumn{
+    border-right: 1px rgb(184, 184, 184) solid;
+    padding:3px;
+}
+
+html,body{
+    padding:0px;
+    margin: 0px;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    /* background: #6c6453; */
+    background: white;
+}
+
+.barContentLeft {
+    line-height: 35px;
+    float: left;
+    margin-left: 15px;
+}
+
+
+
+.regionContent {
+    padding-top: 10px;
+    padding-left: 50px;
+    display: block;
+    height: calc(100% - (76px));
+    /* width: calc(100% - (70px)); */
+    overflow-y: auto;
+    background: white;
+    /* padding-right: 15px; */
+}
+
+.pageTitleContainer {
+    height: 47px;
+    margin-left: 15px;
+    margin-top: 3px;
+}
+
+.pageStructure {
+    height: calc(100% - 55px);
+}
+
+.pageContentContainer {
+    height: 100%;
+}
+
+.pageContentLeft {
+    background-color: #F4F4F4;
+    /*min-width: 375px;*/
+    /*max-width: 375px;*/
+    /*height: calc(100% - 137px);*/
+    /*position: absolute;*/
+    min-height: calc(100%);
+}
+
+.pageContentRight {
+    /*position: absolute;*/
+    /*left: 520px;*/
+    height: calc(100%);
+    /*width: calc(100% - 530px);*/
+    /*overflow-y: auto;*/
+    /*height:calc(100% - 140px);*/
+    min-height: 400px;
+}
+
+.pageTitleGray {
+    color: #8E8E8E;
+    font-family: simple;
+    font-size: 24px;
+    margin-left: 7px;
+    vertical-align: middle;
+}
+
+.headerBar {
+    background-color: #b3995d;
+    width: 100%;
+    height: 40px;
+}
+
+
+.rightScroll{
+    overflow-y: auto;
+    overflow-x: hidden;
+    height:calc(100% - 100px);
+}
+
+.expanderContainer {
+    margin-top: 7px;
+    width: 100%;
+    height: calc(100% - 120px);
+    min-height: 300px;
+    border: 1px solid rgb(229, 229, 229);
+}
+
+.expanderHeader {
+    padding: 7px;
+    padding-left: 17px;
+    background: rgb(249, 249, 249);
+    border: 1px solid rgb(229, 229, 229);
+    cursor: pointer;
+}
+
+.expanderContent {
+    height: calc(100% - 115px);
+    background: rgb(252, 252, 252);
+    /*overflow-y: auto;
+    overflow-x: hidden;*/
+}
+
+.footerBar {
+    position: absolute;
+    height: 37px;
+    width: calc(100% - 50px);
+    bottom: 0;
+    background: #D3D3D3;
+}
+
+.barContentRight {
+    line-height: 35px;
+    float: right;
+}
+
+.footerLogo {
+    width: 100px;
+    vertical-align: middle;
+    margin-right:10px;
+    
+}
+
+.expanderHeaderSelected {
+    background: rgb(231, 231, 231);
+}
+
+.editItem{
+    border-bottom: 1px solid #E4E4E4;
+    margin-bottom:5px;
+    padding-bottom:5px;
+}
+
+
+.smallText{
+    font-size: 12px;    
+    font-family: simpleMedium;
+}
+
+.smallTextTitle{
+    font-size: 12px;
+    color: #8C733A;
+    font-family: simpleMedium;
+}
+
+.goldButton.sm{
+    font-size: 12px;
+    font-family: simpleMedium;
+}
+
+.editPanel{
+    background-color: #F4F4F4;
+    height: 80px;
+    margin-bottom:10px;
+}
+
+.layoutPanel{
+    font-size:12px;
+}
+
+.layoutPanel label{
+    margin-bottom:0px;
+}
+
+.nestedDemo .dropzone .item {
+    padding: 5px 5px;
+}
+
+
+.box > h3{
+       color: #333;
+    border-color: #ddd;
+    border-bottom: 1px solid transparent;
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
+    background-repeat: repeat-x;
+    display: block;
+    font-size: 12px;
+    padding: 10px 15px;
+    margin-top: 0;
+    margin-bottom: 0; 
+
+}
+
+
+
+.box-blue > h3 {
+    color: #fff;
+    background-color: rgb(184, 184, 184);
+    border-color: rgb(184, 184, 184);
+    background-image:none;
+
+}
+
+.box-blue {
+    border-color: rgb(184, 184, 184);
+}
+
+.box-yellow > h3 {
+    color: #fff;
+    background-color: rgb(190, 175, 139);
+    border-color: rgb(190, 175, 139);
+    background-image:none;
+/*    background-image: -webkit-linear-gradient(top,#fcf8e3 0,#faf2cc 100%);
+    background-image: linear-gradient(to bottom,#fcf8e3 0,#faf2cc 100%);
+    */
+}
+
+
+.nestedDemo .nav-tabs>li.active {
+    /*background-color: #b3995d;*/
+    color: #fff;
+}
+
+
+
+.nestedDemo .nav-tabs>li  {
+    background-color: rgb(184, 184, 184);
+    color:#ddd;
+}
+
+.nestedDemo .nav-tabs>li a {
+    background-color: rgb(184, 184, 184);
+    color:#fff;
+}
+
+.nestedDemo .nav-tabs>li.active a {
+    background-color: #b3995d;
+    color: #fff;
+}
+
+.nestedDemo .nav-tabs>li.active a:hover {
+    background-color: #b3995d;
+    color: #fff;
+}
+
+
+.editPanel{
+    padding:5px;
+}
+
+
+
+</style>
+</apex:component>

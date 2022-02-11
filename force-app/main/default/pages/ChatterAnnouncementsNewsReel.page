@@ -1,0 +1,118 @@
+<apex:page controller="ChatterAnnouncementsNewsReelController" showHeader="false" sidebar="false">
+	
+	<style type="text/css">	
+		body{
+			background-color: #E0F4FF;
+		} 
+		ul {
+		  list-style-type: none;
+		  margin: 0;
+		  padding: 0;
+		  height: 100px;
+		}
+		
+		li{
+			font-family: Helvetica, Verdana, sans-serif;
+			height: 99px;
+			width:96%;
+			border-bottom: 1px solid #a8a8a8;
+			/*margin: 2px 0px;*/
+		}
+
+		li h2{
+			font: 200 20px/1.5 Helvetica, Verdana, sans-serif;
+		  	color: #c40000;
+		}
+
+		li h3{
+			font-size: 12px;
+			font-weight: 200;
+		  	color: #a8a8a8;
+		}
+
+		li p {
+			font-size: 14px;
+			margin: 5px 0px;
+		}
+		 		 
+		li a {
+		  text-decoration: none;
+		  color: #a8a8a8;
+		  display: block;
+		  width: 200px;
+		  font-size: 10px;
+		 
+		  -webkit-transition: font-size 0.3s ease, background-color 0.3s ease;
+		  -moz-transition: font-size 0.3s ease, background-color 0.3s ease;
+		  -o-transition: font-size 0.3s ease, background-color 0.3s ease;
+		  -ms-transition: font-size 0.3s ease, background-color 0.3s ease;
+		  transition: font-size 0.3s ease, background-color 0.3s ease;
+		}
+		
+		.announceMessage{
+			height:55%;
+			overflow: hidden;
+		}	
+
+		.noMessages{
+			color: #a8a8a8;
+			font: 200 20px/1.5 Helvetica, Verdana, sans-serif;
+			margin: 5px 5px;
+		} 
+		/*li a:hover {
+		  font-size: 30px;
+		  background: #f6f6f6;
+		}*/
+	</style>
+
+
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+	<script type="text/javascript" src="{!$Resource.jQueryTotem}"></script>
+
+	<script type="text/javascript">
+
+		$(function(){
+			if('{!announcements.size}' > 1){
+				$('#vertical-ticker').totemticker({
+					row_height : '100px',
+					next : '#ticker-next',
+					previous : '#ticker-previous',
+					stop : '#stop',
+					start : '#start',
+					mousestop : true,
+					speed : {!scrollSpeed},
+					interval : {!scrollInterval},
+					max_items : 1
+				});
+			}
+		});
+	</script>
+
+	<!-- <div class="tickercontainer"> -->
+		<div class="wrapper">
+			<apex:outputPanel rendered="{!itemsToDisplay}">
+				<ul id="vertical-ticker" class="newsticker" style="width: 100%;">
+					<apex:repeat value="{!announcements}" var="msg" id="theAannouncements">
+				        <li>
+				        	<h2>{!msg.Parent.Name}</h2>&nbsp;
+				        	<h3>
+				        		<apex:outputText value="{0,date,dd/MM/yyyy hh:mm a}">
+							       <apex:param value="{!msg.FeedItem.CreatedDate}" />
+							   </apex:outputText>
+				        	</h3>
+				        	<div class="announceMessage">
+				        		<p><apex:outputText value="{!msg.FeedItem.Body}"/></p>
+				        	</div>
+				        	<a href="/{!msg.FeedItemId}" target="_top">Read More...</a>
+				        </li>
+				    </apex:repeat>
+			    </ul> 
+			</apex:outputPanel>
+			<apex:outputPanel styleClass="noMessages" rendered="{!NOT(itemsToDisplay)}">
+				<apex:outputText value="There are currently no notifications." />
+			</apex:outputPanel>
+
+	   </div>
+	<!-- </div> -->
+	
+</apex:page>

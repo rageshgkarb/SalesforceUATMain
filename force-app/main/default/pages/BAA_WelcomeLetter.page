@@ -1,0 +1,89 @@
+<!-- C00233 new page -->
+
+<apex:page showHeader="false" sidebar="false" docType="html-5.0" controller="BAA_WelcomeLetterController" applyBodyTag="">
+    <head>       
+        <c:BAA_Resource ></c:BAA_Resource>        
+    </head>
+    <c:BAA_PopupLoad />
+     <body>    
+        <c:BAA_Header objOpp="{!BaseOpportunity}" title="Welcome Letter"></c:BAA_Header>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-lg-3">
+                    <apex:form >
+                        <c:BAA_Menu oppId="{!BaseOpportunity.Id}"  DirectorId="{!BaseOpportunity.ProductEventDirector__c}" />
+                    </apex:form>
+                </div>            
+                <div class="col-md-8 col-lg-9">
+                    <apex:form id="aForm">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <apex:pagemessages ></apex:pagemessages>
+                            </div>
+                        </div>
+                        
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">Welcome Letter</div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div>
+                                            Welcome Letter Generation
+                                        </div>
+                                        <table class="table" width="50%">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="labelCol">•  Have the customers' images been set up? (Signatures and photos scanned)</td>
+                                                    <td class="dataCol"><apex:inputField required="true" value="{!thisOpp.Customer_Images_Set_Up__c}"/></td> 
+                                                </tr>
+                                                <tr>
+                                                    <td class="labelCol">•  Have the mandate and authority levels been set up?</td>
+                                                    <td class="dataCol"><apex:inputField required="true" value="{!thisOpp.Mandate_Set_Up__c}"/></td> 
+                                                </tr>
+                                                <apex:outputPanel layout="none" rendered="{!NOT(WelcomeLetterCreated)}">
+                                                    <tr>
+                                                   
+                                                        <td>
+                                                            
+                                                            <apex:commandButton value="Generate Welcome Letter" 
+                                                                            rerender="aForm" 
+                                                                            action="{!CreateDoc}" 
+                                                                            styleclass="btn-danger" 
+                                                                            onclick="ShowDocumentLoad('Generating Welcome Letter ','This may take a few seconds...');" 
+                                                                            oncomplete="HideDocumentLoad();" 
+                                                                            />
+                                                        </td>
+                                                    
+                                                    </tr>
+                                                </apex:outputPanel>
+                                                <apex:outputPanel layout="none" rendered="{!WelcomeLetterCreated}">
+                                                    <tr>
+                                                        <td>
+                                                            <b> >> </b><apex:outputtext escape="false" value="{!WelcomeLetterLink}"></apex:outputtext>
+                                                        </td>
+                                                        
+                                                    </tr>  
+                                                    <tr>
+                                                        <td>
+                                                            <apex:commandButton value="Complete" 
+                                                                            
+                                                                            action="{!Complete}" 
+                                                                            styleclass="btn-danger" 
+                                                                             
+                                                                            />
+                                                        </td>
+                                                    </tr>
+                                               </apex:outputPanel>
+                                            </tbody>
+                                        </table>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                     </apex:form>
+                </div>
+             </div>
+         </div>
+      </body>
+</apex:page>

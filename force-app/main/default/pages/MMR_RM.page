@@ -1,0 +1,149 @@
+<apex:page controller="MMR_RM_Controller" sidebar="false" showheader="false" title="" action="{!RM_Init}">
+   <style>
+       
+       
+       .case_table{
+          border: 1px solid black;
+          border-collapse: collapse;
+          width:100%;
+          text-align:center;
+        }
+        .case_table td,th{
+          border: 1px solid black;
+          border-collapse: collapse;          
+          text-align:center;
+        }
+   </style>
+    <head><!-- C0592  -->
+       
+        <c:KendoResource ignorekendodropdown="true"></c:KendoResource>
+        
+        <apex:stylesheet value="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+        <apex:stylesheet value="https://maxcdn.bootstrapcdn.com/bootswatch/3.2.0/spacelab/bootstrap.min.css" />
+        <apex:stylesheet value="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+        <apex:includescript value="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js" />
+
+
+
+        <apex:includescript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.11/angular.min.js" />
+        <apex:includescript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.11/angular-animate.min.js" />
+        <apex:includescript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.11/angular-sanitize.js" />
+        <apex:includescript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.11/angular-messages.js" />
+
+        <apex:stylesheet value="{!URLFOR($Resource.HPP_Includes, '/css/css.css')}" />
+        <apex:stylesheet value="{!URLFOR($Resource.HPP_Includes, '/css/wait.css')}" />
+        <apex:stylesheet value="{!URLFOR($Resource.HPP_Includes, '/css/structure.css')}" />
+        <apex:stylesheet value="{!URLFOR($Resource.HPP_Includes, '/css/modal.css')}" />
+
+        <apex:includescript value="{!URLFOR($Resource.HPP_Includes, '/js/app/app.js')}" />
+        <apex:includescript value="{!URLFOR($Resource.HPP_Includes, '/js/service/service_messagebroker.js')}" />
+        <apex:includescript value="{!URLFOR($Resource.HPP_Includes, '/js/service/service_parameters.js')}" />
+        <apex:includescript value="{!URLFOR($Resource.HPP_Includes, '/js/service/service_application.js')}" />
+
+        <apex:includescript value="{!URLFOR($Resource.HPP_Includes, '/js/controller/controller_core.js')}" />
+
+    </head>
+    <body ng-app="hppApp" ng-controller="controllerCore" ng-cloak="ng-cloak">
+        <c:MMR_RM_Scripts ></c:MMR_RM_Scripts>
+        
+            <div id="formWrapper">
+                <!-- C00095-->
+                <c:HPPSummary objacc="{!Accounts[0]}" objopp="{!opp}" objexopp="{!ExOpp}" product="{!Prod}" />
+                <div id="container" ng-controller="controllerRMDetails" ng-init="EventLogId='{!EventId}';SessionId='';isRMT=false;isABranch={!IsABranch};isEDD=false;canEDD=false;DisableControl={!IsCompleted};isVerified=false">
+                   
+                        <table width="100%">
+                            <tr>
+                                <td valign="top" id="sidebar">
+                                    <apex:form >
+                                        <c:HPPBOMenu oppid="{!Opp.Id}" directorid="{!Opp.ProductEventDirector__c}" />
+                                    </apex:form>
+                                </td>
+                                <td valign="top" id="contenttd">
+                                    <form name="myform" novalidate="novalidate">
+                                        <div id="content">
+                                            <!-- new content start -->
+                                            <span class="control-label" ng-show="Data && (!isRMT || isBranch)">Further Information</span>
+                                            <span class="control-label" ng-show="(isRMT && !isFCU) || isEDD">
+                                                Customer Application - Further Information<br />
+                                                In order for us to complete your application we just require a few more details
+                                            </span>
+                                            <div style="padding:10px;">
+
+                                                <c:MMR_RM_BranchOverride model="Accounts[0]" isabranch="{!IsABranch}" />
+                                                <div ng-show="!isVerified">
+                                                    <apex:outputpanel rendered="{!opp.ProductSubType__c!='LC'}"><!-- C0644 -->
+                                                        <c:MMR_RM_BasicInformation model="Accounts[0]" applicantno="0" rendered="{!opp.Number_of_People_Applying__c >0}" firstname="{!Accounts[0].firstname}" lastname="{!Accounts[0].lastname}" />
+                                                        <c:MMR_RM_BasicInformation model="Accounts[1]" applicantno="1" rendered="{!opp.Number_of_People_Applying__c >1}" firstname="{!Accounts[1].firstname}" lastname="{!Accounts[1].lastname}" />
+                                                        <div class="clearfix" />
+                                                        <c:MMR_RM_BasicInformation model="Accounts[2]" applicantno="2" rendered="{!opp.Number_of_People_Applying__c >2}" firstname="{!Accounts[2].firstname}" lastname="{!Accounts[2].lastname}" />
+                                                        <c:MMR_RM_BasicInformation model="Accounts[3]" applicantno="3" rendered="{!opp.Number_of_People_Applying__c >3}" firstname="{!Accounts[3].firstname}" lastname="{!Accounts[3].lastname}" />
+                                                        <div class="clearfix" />
+                                                    </apex:outputpanel>
+                                                    <apex:outputpanel rendered="{!opp.ProductSubType__c=='LC'}"><!-- C0644 -->
+                                                        <c:MMR_RM_BasicInformation model="Accounts[1]" applicantno="0" rendered="{!opp.Number_of_People_Applying__c >1}" firstname="{!Accounts[1].firstname}" lastname="{!Accounts[1].lastname}" />
+                                                        <c:MMR_RM_BasicInformation model="Accounts[2]" applicantno="1" rendered="{!opp.Number_of_People_Applying__c >2}" firstname="{!Accounts[2].firstname}" lastname="{!Accounts[2].lastname}" />
+                                                        <div class="clearfix" />
+                                                        <c:MMR_RM_BasicInformation model="Accounts[3]" applicantno="2" rendered="{!opp.Number_of_People_Applying__c >3}" firstname="{!Accounts[3].firstname}" lastname="{!Accounts[3].lastname}" />
+                                                        <c:MMR_RM_BasicInformation model="Accounts[4]" applicantno="3" rendered="{!opp.Number_of_People_Applying__c >4}" firstname="{!Accounts[4].firstname}" lastname="{!Accounts[4].lastname}" />
+                                                        <div class="clearfix" />
+
+                                                    </apex:outputpanel>
+                                                </div>
+
+                                                <div ng-show="Errors" class="alert alert-danger" style="margin-top:10px;">
+                                                    <ul>
+                                                        <li ng-repeat="error in Errors">{{error}}</li>
+                                                    </ul>
+                                                </div>
+
+                                                <div style="text-align:center;margin-top:20px;">
+                                                    <button type="button" class="k-button" ng-click="Submitted = true;Complete()" ng-hide="HideComplete()">Continue</button>
+                                                    &nbsp;
+                                                    <button class="k-button" ng-click="isEDD=true;canEDD=false;" ng-show="!isRMT && canEDD">
+                                                        <span>
+                                                            <strong>Adhoc EDD</strong>
+                                                        </span>
+                                                    </button>
+                                                </div>
+                                                <div class="alert alert-warning" ng-show="RMAlertText" style="margin-top:10px;">
+                                                    <span class="fa fa-thumbs-tack" aria-hidden="true"></span>
+                                                    {{RMAlertText}}<br/>
+                                                    <apex:form >
+                                                    <!--<b style="{!if(caseList.size >0,'','display:none')}">The following case needs to be closed by KYC Team to continue with the application &nbsp; <Apex:commandButton value="Send Remainder Email to KYC Team" reRender="none"/><br/></b>-->
+                                                    <br/>
+                                                    <table class="case_table" style="{!if(caseList.size >0,'','display:none')}">
+                                                        <tr>
+                                                            <th>Case Number</th>
+                                                            <th>Subject</th>
+                                                            <th>Referal Decision</th>
+                                                            <th>Owner</th>
+                                                            <th>Case Status</th>
+                                                        </tr>
+                                                        <apex:repeat value="{!caseList}" var="cs">
+                                                            <td><apex:outputLink value="/{!cs.Id}" target="_blank" >{!cs.caseNumber}</apex:outputLink> </td>
+                                                            <td>{!cs.subject}</td>
+                                                            <td>{!cs.Referral_Decision__c}</td>
+                                                            <td>{!cs.owner.name}</td>
+                                                            <td>{!cs.status}</td>
+                                                        </apex:repeat>
+                                                    </table>
+                                                    </apex:form>
+                                                </div>
+                                                <div class="alert alert-danger" ng-show="ErrorAlertText" style="margin-top:10px;">
+                                                    <span class="fa fa-thumbs-down" aria-hidden="true"></span>
+                                                    {{ErrorAlertText}}
+                                                </div>
+                                            </div>
+                                            <!-- new content end -->
+
+                                            <c:HPP_Loading ></c:HPP_Loading>
+                                        </div>
+                                    </form>
+                                </td>
+                            </tr>
+                        </table>
+                </div>
+            </div>
+            
+    </body>
+</apex:page>

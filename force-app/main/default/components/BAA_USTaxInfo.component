@@ -1,0 +1,101 @@
+<!--
+ - Created by lbrindle on 01/08/2020.
+ -->
+
+<apex:component id="BAA_USTaxInfo">
+
+        <apex:attribute name="model" type="string" required="true" description="" />
+        <apex:attribute name="form" type="string" required="true" description="" />
+        <apex:attribute name="identifier" type="string" required="false" description="" default="" />
+        <apex:attribute name="HasTinPropertyName" type="String" description="" required="true" />
+        <apex:attribute name="TinReasonCodePropertyName" type="String" description="" required="true" />
+        <apex:attribute name="TinReasonBPropertyName" type="String" description="" required="true" />
+        <apex:attribute name="TinPropertyName" type="String" description="" required="true" />
+
+
+        <div>
+            <div >
+                <div class="row" >
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Are you a US person?</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <span class="radio-group" ng-class="{!form}['USYes'].$invalid ? 'ng-invalid' : ''">
+                            <label class="radio-inline">
+                                <input ng-attr-name="USYes" type="radio" value="Yes" ng-required="true"
+                                       ng-model="{!model}.US_Person_Check_c"
+                                />Yes</label>
+                            <label class="radio-inline">
+                                <input ng-attr-name="USNo" type="radio" value="No" ng-required="true"
+                                       ng-model="{!model}.US_Person_Check_c"
+                                />No</label>
+                        </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div ng-if="{!model}.US_Person_Check_c == 'Yes'">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Do you have a TIN?</label>
+                            </div>
+                            <div class="col-sm-6">
+                            <span class="radio-group" ng-class="{!form}['USTinYes'].$invalid ? 'ng-invalid' : ''">
+                                <label class="radio-inline">
+                                    <input ng-attr-name="USTinYes" type="radio" value="Yes" ng-required="{!model}.US_Person_Check_c == 'Yes'"
+                                           ng-model="{!model}.{!HasTinPropertyName}" />Yes</label>
+                                <label class="radio-inline">
+                                    <input ng-attr-name="USTinNo" type="radio" value="No" ng-required="{!model}.US_Person_Check_c == 'Yes'"
+                                           ng-model="{!model}.{!HasTinPropertyName}" />No</label>
+                            </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6" ng-if="{!model}.{!HasTinPropertyName} === 'Yes'">
+                        <div class="form-group" >
+                            <div class="col-sm-6">
+                                <label>TIN</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" ng-attr-name="USTin" ng-required="{!model}.{!HasTinPropertyName} === 'Yes'"
+                                       ng-model="{!model}.{!TinPropertyName}" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12" ng-if="{!model}.{!HasTinPropertyName} === 'No'">
+                        <div class="form-group" >
+                            <div class="col-sm-3">
+                                <label>Please select a reason code</label>
+                            </div>
+                            <div class="col-sm-9 col-lg-6" style="padding-left: 7px;">
+                                <select class="form-control" ng-attr-name="USTinReasonCode" ng-required="{!model}.{!HasTinPropertyName} === 'No'"
+                                        ng-model="{!model}.{!TinReasonCodePropertyName}" ng-options="option for option in Data.TinReasonCodes"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" ng-if="{!model}.{!TinReasonCodePropertyName}.includes('Reason B') && {!model}.{!HasTinPropertyName} === 'No'">
+                    <div class="col-md-12">
+                        <div class="form-group" >
+                            <div class="col-sm-3">
+                                <label>If you have selected reason B, please give an explanation</label>
+                            </div>
+                            <div class="col-sm-9" style="padding-left: 7px;">
+                                <input type="text" class="form-control" name="USTinExplanation" ng-required="{!model}.{!TinReasonCodePropertyName}.includes('Reason B')"
+                                       ng-model="{!model}.{!TinReasonBPropertyName}" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr/>
+    </apex:component>

@@ -1,0 +1,47 @@
+<apex:page controller="HPPOriginalOfferDocumentSentToSolicitor" sidebar="false" showHeader="false" title="Original Offer Documents and Special Conditions sent to Solicitor">
+    <head>
+        <c:KendoResource ></c:KendoResource>
+    </head>
+    <body>
+        <apex:form >
+            <div id="formWrapper">                
+                <c:HPPSummary objAcc="{!Accounts[0]}" objOpp="{!opp}" objExOpp="{!ExOpp}" Product="{!Prod}" />
+                <div id="container" >
+                    <table width="100%">
+                        <tr>
+                            <td valign="top" id="sidebar">
+                                <c:HPPBOMenu oppId="{!Opp.Id}"  DirectorId="{!Opp.ProductEventDirector__c}" />
+                            </td>
+                            <td valign="top" id="contenttd">
+                                <div id="content">
+                                    <h1>Original Offer Documents and Special Conditions sent to Solicitor</h1>
+                                
+                                    <apex:outputPanel id="mainPageBlock">
+                                    <div style="padding:20px;">
+                                        <!-- content -->
+                                        
+                                        <apex:pageBlock >
+                                            <apex:pageBlockSection >
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="Documents sent to Solicitor" />
+                                                    <apex:inputField value="{!exOpp.Original_offer_sent_to_IBB_solicitors__c}" required="true" />
+                                                </apex:pageBlockSectionItem>
+                                            </apex:pageBlockSection>
+                                            
+                                            <apex:pageBlockButtons location="bottom">
+                                                <apex:commandButton value="Documents sent to Solicitor" action="{!complete}" rendered="{!!IsCompleted}" />
+                                            </apex:pageBlockButtons>
+                                        </apex:pageBlock> 
+                                    </div>
+                                    </apex:outputPanel>
+                                </div>
+                                
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+                        
+        </apex:form>
+    </body>
+</apex:page>

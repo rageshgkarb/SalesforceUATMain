@@ -1,0 +1,386 @@
+<apex:page applyBodyTag="false" showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false" controller="Teller_CustomerSummary_Controller">
+    
+    <div class="horizontalScrollContainer" ng-cloak="ng-cloak">     
+        <ul id="horizontalScrollList" class="horizontalScrollList horizontalScroller">          
+            <li class="scrollSection" ng-class="GetCustomerSummaryClass()">
+                
+                    <div style="margin-bottom: 10px;">
+                        <span class="anchorCustomerDetails" id="anchorCustomerDetails"></span>
+                        <label class="pageSubTitleGray" style="margin-left: 5px;">Details</label>
+                    </div>
+                    <div id="customerSummarySection" class="verticalScroller verticalScrollSection" style="overflow-x: hidden;">
+                        <div style="display: inline-block;">
+                            <!-- Alerts -->
+                            <div style="margin-left:10px; margin-bottom: 20px;" ng-show="Alerts.length > 0">
+                                <label class="sectionTitle">Alerts</label>
+                                <label class="sectionTitle">({{Alerts.length}})</label>
+                                <div class="sectionDetail">
+                                    <table>
+                                        <colgroup>
+                                        <col span="1" style="width: 40px;"></col>
+                                        <col span="1" style="width: 75px;"></col>
+                                        <col span="1" style="width: 200px;"></col>
+                                        </colgroup>
+                                        <tr ng-repeat="alert in Alerts">
+                                            <td>
+                                                <div style="line-height: 30px; margin-left:5px;">
+                                                    <img style="height: 22px;" ng-show="{{alert.Title == 'General'}}"
+                                                    ng-src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/info.png')}">
+                                                    </img>
+                                                    <img style="height: 22px;" ng-show="{{alert.Title == 'Security'}}"
+                                                    ng-src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/stop.png')}">
+                                                    </img>
+                                                    <img style="height: 22px;" ng-show="{{alert.Title == 'FCU'}}"
+                                                    ng-src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/stop.png')}">
+                                                    </img>
+                                                    <img style="height: 22px;" ng-show="{{alert.Title == 'Warning'}}"
+                                                    ng-src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/warning.png')}">
+                                                    </img>
+                                                </div>
+                                            </td>
+                                            <!-- C0740: Dormancy Reactivation for High Risk & PEP Customers - Start -->
+                                            <td class="textDarkGray"><i>{{alert.Title}}</i>  -  </td>
+                                            <!-- <td class="textDarkGray" ng-class="{textWarning:(CustomerDetails.Status__c=='Dormant' && (CustomerDetails.Pep__c == true || CustomerDetails.Customer_Risk_Rating__c == 'High')) }" ng-bind-html="alert.Data | noHTML | newlines"></td> -->
+                                            <td class="textDarkGray" ng-class="{textWarning:(alert.RealTimeAlertType == 'Security' || alert.RealTimeAlertType == 'FCU' || alert.RealTimeAlertType == 'Dormant High Risk / PEP' || alert.RealTimeAlertType == 'Risk Fields' || alert.RealTimeAlertType == 'Nature and Purpose' || alert.RealTimeAlertType == 'Source of Funds') }" ng-bind-html="alert.Data | noHTML | newlines"></td>
+                                            <!-- C0740: Dormancy Reactivation for High Risk & PEP Customers - End -->
+                                           Alert: {{alert}}
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- Personal Information -->
+                            <div style="margin-left:10px; margin-bottom: 20px;">
+                                <label class="sectionTitle">Personal Information</label>
+                                <div class="sectionDetail">
+                                    
+                                    <c:Teller_Material_Input type="text" labelText="Address:" modelProperty="CustomerDetailsDisplayAddress" width="550px" show="true" disabled="true" arbInputParseHtml="true"></c:Teller_Material_Input> 
+                                    <c:Teller_Material_Input type="text" labelText="Date of Birth:" modelProperty="CustomerDetails.Date_of_Birth__c" arbInputFilter="date" arbInputFilterArgs="dd/MM/yyyy" width="550px" show="true" disabled="true" ></c:Teller_Material_Input> 
+                                    <c:Teller_Material_Input type="text" labelText="Town of Birth:" modelProperty="CustomerDetails.Town_of_Birth__c" width="550px" show="true" disabled="true" arbInputParseHtml="true"></c:Teller_Material_Input>                                  
+                                    <c:Teller_Material_Input type="text" labelText="Country of Birth:" modelProperty="CustomerDetails.Country_of_Birth__c" width="550px" show="true" disabled="true" arbInputParseHtml="true"></c:Teller_Material_Input> 
+                                    <c:Teller_Material_Input type="text" labelText="Mother Maiden Name:" modelProperty="CustomerDetails.Mother_s_family_name_security_question__c" width="550px" show="true" disabled="true" arbInputParseHtml="true"></c:Teller_Material_Input> 
+                                    <c:Teller_Material_Input type="text" labelText="School Name:" modelProperty="CustomerDetails.School_name_security_question__c" width="550px" show="true" disabled="true" arbInputParseHtml="true"></c:Teller_Material_Input> 
+                                    
+                                    <!-- <table>
+                                        <colgroup>
+                                        <col span="1" style="width: 150px;"></col>
+                                        <col span="1"></col>
+                                        </colgroup>
+                                        <tr>
+                                            <td class="textDarkGray"><i>Address:</i></td>
+                                            <td class="textDarkGray">{{CustomerDetails.BillingStreet}},  {{CustomerDetails.Customer_Address_District__c}}, {{CustomerDetails.BillingCity}}, {{CustomerDetails.BillingPostalCode}}</td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td class="textDarkGray"><i>Date of Birth:</i></td>
+                                            <td class="textDarkGray">{{CustomerDetails.Date_of_Birth__c | date:'dd/MM/yyyy'}}</td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td class="textDarkGray"><i>Town of Birth:</i></td>
+                                            <td class="textDarkGray">{{CustomerDetails.Town_of_Birth__c}}</td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td class="textDarkGray"><i>Country of Birth:</i></td>
+                                            <td class="textDarkGray">{{CustomerDetails.Country_of_Birth__c}}</td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td class="textDarkGray"><i>Mother Maiden Name:</i></td>
+                                            <td class="textDarkGray">{{CustomerDetails.Mother_s_family_name_security_question__c}}</td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td class="textDarkGray"><i>School Name:</i></td>
+                                            <td class="textDarkGray">{{CustomerDetails.School_name_security_question__c}}</td>
+                                        </tr>
+                                    </table> -->
+                                </div>
+                            </div>
+                            
+                            <!-- IFM Data -->
+                            
+                            
+                            <div ng-init="GetCustomerUserInfo()">
+                            <div style="margin-left:10px; margin-bottom: 20px; position: relative; width: 600px;" ng-show="UserInfo.Data" >
+                            <div>
+                                <label class="sectionTitle">Online Banking</label>
+                                <apex:outputPanel rendered="{!CanEditOnlineBanking}">
+                                <div class="goldButton" ng-click="ShowOnlineBankingFunctions=true;" ng-show="!ShowOnlineBankingFunctions" style="height: 30px; width: 30px; position: initial !important;float:right; padding: 3px !important;margin-right:42px;">
+                                        <img class="GoldCircleIcon" src="/resource/Teller_Includes/Teller_Includes/media/btn_edit.png" style="height: 24px;"/>
+                                    </div>
+                                    <div class="goldButton" ng-click="ShowOnlineBankingFunctions=false;" ng-show="ShowOnlineBankingFunctions" style="height: 30px; width: 30px; position: initial !important; padding: 3px !important;margin-right:42px;float:right;">
+                                        <img class="GoldCircleIcon" src="/resource/Teller_Includes/Teller_Includes/media/btn_cancel.png" style="height: 24px;"/>
+                                    </div>
+                                    </apex:outputpanel>
+                                    
+                                </div>
+                               
+                                
+                                
+                             <div class="sectionDetail">
+                                 <div>
+                                     <div style="width:50%;display:inline-block;">
+                                          <c:Teller_Material_Input type="text" labelText="User Name:" modelProperty="UserInfo.Data.UserId" width="275px" show="true" disabled="true" arbInputParseHtml="true"></c:Teller_Material_Input> 
+                                     
+                                     </div>
+                                     <div style="width:50%;display:inline-block">
+                                     <c:Teller_Material_Input type="text" labelText="Status:" modelProperty="UserInfo.Data.Status" width="275px" show="true" disabled="true" arbInputParseHtml="true"></c:Teller_Material_Input> 
+                                    
+                                     </div>
+                                 </div>
+                                 
+                                 <!--{{ShowOnlineBankingFunctions}}-->
+                                 
+                                 
+                                 <div ng-show="ShowOnlineBankingFunctions">
+                                 
+                                 
+                                 
+                                 
+                                 <div ng-show="PendingOnlineBankingAction == true">
+                                     Sending action...
+                                 </div>
+                                 
+                                 <div ng-show="!PendingOnlineBankingAction">
+                                     <div class="goldButton" ng-click="OnlineBankingFunction('UserBar');"  style="height: 30px; width: 40px; position: initial !important; padding: 5px !important;" ng-show="UserInfo.Data.Status=='Active'">
+                                        Bar
+                                    </div>
+                                    <div class="goldButton" ng-click="OnlineBankingFunction('UserUnBar');"   style="height: 30px; width: 50px; position: initial !important; padding: 5px !important;"
+                                    ng-show="UserInfo.Data.Status=='Barred'">
+                                        Unbar
+                                    </div>
+                                    <div class="goldButton" ng-click="OnlineBankingFunction('UserUnBlock');"   style="height: 30px; width: 60px; position: initial !important; padding: 5px !important;" 
+                                    ng-show="UserInfo.Data.Status == 'Blocked'"
+                                    >
+                                        Unblock
+                                    </div>
+                                    
+                                    <div class="goldButton" ng-click="OnlineBankingFunction('ResetPassword');"  style="height: 30px; width: 110px; position: initial !important; padding: 5px !important;">
+                                        Reset Password
+                                    </div>
+                                    <div class="goldButton" ng-click="OnlineBankingFunction('ResetSecret');"  style="height: 30px; width: 110px; position: initial !important; padding: 5px !important;">
+                                        Reset Memorable
+                                    </div>
+                                 </div>
+                              </div>   
+                                
+                             </div>
+                             
+                                
+                                    
+                                
+                                
+                                <!--{{UserInfo}}-->
+                            </div>    
+                             
+                            </div>
+                           
+                       
+                             
+                               
+                            <!--Contact-->
+                            <div style="margin-left:10px; margin-bottom: 20px; position: relative; width: 600px;">
+                                <label class="sectionTitle">Contact</label>
+                                
+                                <div style="position:  absolute; right: 40px; top: 11px;">
+                                    <div class="goldButton" style="height: 30px; width: 30px; position: initial !important; padding: 3px !important;" ng-show="ContactEditable" ng-click="OnSaveContactDetails()">
+                                        <img class="GoldCircleIcon" src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_save.png')}" style="height: 24px;"></img>
+                                    </div>
+                                    <div class="goldButton" style="height: 30px; width: 30px; position: initial !important; padding: 3px !important;" ng-show="ContactEditable" ng-click="OnCancelContactDetailsEdit()">
+                                        <img class="GoldCircleIcon" src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_cancel.png')}" style="height: 24px;"></img>
+                                    </div>
+                                    <div class="goldButton" style="height: 30px; width: 30px; position: initial !important; padding: 3px !important;" ng-show="!ContactEditable" ng-click="OnEditContactDetails()">
+                                        <img class="GoldCircleIcon" src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_edit.png')}" style="height: 24px;"></img>
+                                    </div>
+                                </div>
+                                
+                                <div class="sectionDetail">
+                                    
+                                    <c:Teller_Material_Input type="text" labelText="Telephone:" modelProperty="CustomerDetails.Home_Telephone_No__c" width="550px" show="true" disabled="ContactEditable == false"></c:Teller_Material_Input> 
+                                    <c:Teller_Material_Input type="text" labelText="Alternate Telephone:" modelProperty="CustomerDetails.Phone" width="550px" show="true" disabled="ContactEditable == false"></c:Teller_Material_Input> 
+                                    <c:Teller_Material_Input type="text" labelText="Mobile:" modelProperty="CustomerDetails.PersonMobilePhone" width="550px" show="true" disabled="ContactEditable == false"></c:Teller_Material_Input> 
+                                    <c:Teller_Material_Input type="text" labelText="Email:" modelProperty="CustomerDetails.PersonEmail" width="550px" show="true" disabled="ContactEditable == false"></c:Teller_Material_Input> 
+                                                                        
+                                    <!-- <table>
+                                        <colgroup>
+                                        <col span="1" style="width: 150px;"></col>
+                                        <col span="1"></col>
+                                        </colgroup>
+                                        <tr>
+                                            <td class="textDarkGray"><i>Telephone:</i></td>
+                                            <td class="textDarkGray">{{CustomerDetails.Home_Telephone_No__c}}</td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td class="textDarkGray"><i>Alternate Telephone:</i></td>
+                                            <td class="textDarkGray">{{CustomerDetails.Phone}}</td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td class="textDarkGray"><i>Mobile:</i></td>
+                                            <td class="textDarkGray">{{CustomerDetails.PersonMobilePhone}}</td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td class="textDarkGray"><i>Email:</i></td>
+                                            <td class="textDarkGray">{{CustomerDetails.PersonEmail}}</td>
+                                        </tr>
+                                    </table> -->
+                                </div>
+                            </div>
+                            <!--Products-->
+                            <div style="margin-left:10px; margin-bottom: 20px;">
+                                <label class="sectionTitle">Products</label>
+                                <div class="sectionDetail">
+                                    <c:Teller_Material_Input type="text" labelText="Recommended Products:" modelProperty="CustomerDetails.Experian_Reference_Number__c" width="550px" show="true" disabled="true" arbInputParseHtml="true"></c:Teller_Material_Input>
+                                </div>
+                            </div>
+                            <!--Marketing--><!-- Pre - GDPR
+                            <div style="margin-left:10px; margin-bottom: 20px; position: relative; width: 600px;">
+                                <label class="sectionTitle">Marketing Preferences</label>
+                                <label class="sectionTitle">({{MarketingPrefs.Selected}})</label>
+                                <div style="position:  absolute; right: 40px; top: 11px;">
+                                    <div class="goldButton" style="height: 30px; width: 30px; position: initial !important; padding: 3px !important;" ng-click="OnSaveMarketingPrefs()">
+                                        <img class="GoldCircleIcon" src="/resource/1435752170000/Teller_Includes/Teller_Includes/media/btn_save.png" style="height: 24px;"></img>
+                                    </div>
+                                </div>
+                                <div class="sectionDetail" style="margin-top:15px;">
+                                    <table>
+                                        <colgroup>
+                                        <col span="1" style="width: 30%;"></col>
+                                        </colgroup>
+                                        <tr>
+                                            <td>
+                                                <div class="textDarkGray">Please indicate if you <B>DO NOT</B> wish to be contacted by Al Rayan Bank by any of the following:<br/>
+                                                IF THE CUSTOMER REQUIRES MARKETING BY ALL FORMS, PLEASE PRESS SAVE WITH NO BOXES TICKED</div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <div id="navlist">
+                                        <ul>
+                                            <li class="textDarkGray">Email : <input class="scaleUp" type="checkbox" ng-model="MarketingPrefs.HasEmail"></input></li>
+                                            <li class="textDarkGray">Mail : <input class="scaleUp" type="checkbox" ng-model="MarketingPrefs.HasMail"></input></li>
+                                            <li class="textDarkGray">Phone : <input  class="scaleUp" type="checkbox" ng-model="MarketingPrefs.HasPhone"></input></li>
+                                            <li class="textDarkGray">SMS : <input class="scaleUp" type="checkbox" ng-model="MarketingPrefs.HasSMS"></input></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>-->
+                            <!-- C0697 Start-->
+                            <div style="margin-left:10px; margin-bottom: 20px; position: relative; width: 600px;">
+                                <label class="sectionTitle">Marketing</label>
+                                 <div style="position:  absolute; right: 40px; top: 11px;">
+                                    <div class="goldButton" style="height: 30px; width: 30px; position: initial !important; padding: 3px !important;" ng-click="OnSaveMarketingPrefs()">
+                                        <img class="GoldCircleIcon" src="/resource/1435752170000/Teller_Includes/Teller_Includes/media/btn_save.png" style="height: 24px;"/>
+                                    </div>
+                                </div>
+                                <div class="sectionDetail" style="margin-top:15px;">    
+                                    <table>
+                                        <colgroup>
+                                            <col span="1" style="width: 30%;"/>
+                                        </colgroup>                     
+                                        <tr>
+                                            <td>
+                                                <div class="textDarkGray">Please tick the appropriate box(es) so we know how our customer would prefer us to contact them.</div>
+                                            </td>
+                                        </tr>   
+                                    </table>                            
+                                    <div id="navlist">
+                                        <ul name="MktPrefs">
+                                            <!-- C0737 start -->
+                                            <li class="textDarkGray"><input class="scaleUp" type="checkbox" title="Newsletter" id="HasNewsletter" ng-model="MarketingPrefs.HasNewsletter" ng-click="UnCheckConsentNone()" />&nbsp;E-Newsletter&nbsp;&nbsp;&nbsp; </li>
+                                            <li class="textDarkGray"><input class="scaleUp" type="checkbox" title="Email" id="HasEmail" ng-model="MarketingPrefs.HasEmail" ng-click="UnCheckConsentNone()" />&nbsp;Email&nbsp;&nbsp;&nbsp;</li>
+                                            <li class="textDarkGray"><input class="scaleUp" type="checkbox" title="Post" id="HasMail" ng-model="MarketingPrefs.HasMail" ng-click="UnCheckConsentNone()" />&nbsp;Post&nbsp;&nbsp;&nbsp;</li>
+                                            <li class="textDarkGray"><input class="scaleUp" type="checkbox" title="SMS" id="HasSMS" ng-model="MarketingPrefs.HasSMS" ng-click="UnCheckConsentNone()" />&nbsp;SMS&nbsp;&nbsp;&nbsp;</li>
+                                            <li class="textDarkGray"><input class="scaleUp" type="checkbox" title="Phone" id="HasPhone" ng-model="MarketingPrefs.HasPhone" ng-click="UnCheckConsentNone()" />&nbsp;Phone</li>
+                                            <!-- C0737 End -->
+                                        </ul>
+                                    </div>
+                                    <div id="navlist">
+                                        <ul>
+                                            <li>If the customer would prefer NOT to receive any marketing information, please tick here: <input class="scaleUp" type="checkbox" title="HasNone" id="HasNone" ng-click="checkNoContact()" ng-model="MarketingPrefs.HasNone"/></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <!-- C0737 start -->
+                                <div ng-if="IsMarketPrefSelected===false" style="margin-top:25px;"> 
+                                    <div style="background-color: rgb(235,94,80);color: #fff;padding: 20px;display: inline;"> 
+                                        Please select a marketing preference, we cannot proceed with your application without capturing this information. 
+                                    </div> 
+                                </div>
+                                <!-- C0737 End -->
+                            </div>
+                            <div style="margin-left:10px; margin-bottom: 20px; position: relative; width: 600px;">
+                                <label class="sectionTitle">Data Profile</label>
+                                <div class="sectionDetail" style="margin-top:15px;">    
+                                    <table>
+                                        <colgroup>
+                                            <col span="1" style="width: 30%;"/>
+                                        </colgroup>                     
+                                            <tr>
+                                            <td>
+                                                <div class="textDarkGray">If we have received a request from a customer NOT TO USE their data profile to help us identify other customers likely to be interested in our finance products, please tick the box below.</div>
+                                            </td>
+                                            </tr>   
+                                    </table>                            
+                                    <div id="navlist">
+                                        <ul>
+                                            <li><input type="checkbox" class="scaleUp" ng-model="MarketingPrefs.NoProfiling" id="NoProfiling" title="NoProfiling"/> <b><u>Do not</u></b> use this customers data profile.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- C0697 End-->
+                        </div>
+                    </div>
+                    
+                    <!-- Pop-up menu -->
+                    
+                    <div style="position: absolute; bottom:10px; right:20px;" ng-show="!ShowViewReason && Accounts != null && LoadComplete == true">
+                        
+                        <!-- menu items -->                     
+                        <div class="GrayCircleItems" ng-class="{'GrayCircleItemsOpen' : DetailsSubMenuOpen}" ng-show="DetailsSubMenuOpen" ng-click="PopoutAccountDetails()">
+                            <div class="GrayCircle GoldCircleButton" ng-class="{'GrayCirleOpen' : DetailsSubMenuOpen}" style="  box-shadow: 1px 1px 2px rgb(137, 137, 137); background:#00A1E0; margin-bottom: 15px; margin-left: 4px;" ng-show="DetailsSubMenuOpen" ng-init="crMouseOver = false" ng-mouseover="crMouseOver = true" ng-mouseleave="crMouseOver = false">                               
+                                <div class="textSmallerWhiteBold GrayCircleLabel" ng-class="{'GrayCircleLabelHover' : crMouseOver}">Customer Record</div>                               
+                                <img class="GoldCircleIcon" src="/resource/1430213855000/Teller_Includes/Teller_Includes/media/btn_salesforce.png" style="margin-top: 6px; margin-left: 7px; height: 28px;"></img>
+                            </div>
+                        </div>          
+                        <!-- MB: 2016/02/19 for DSX start-->
+                        <div class="GrayCircleItems" ng-class="{'GrayCircleItemsOpen' : DetailsSubMenuOpen}" ng-show="DetailsSubMenuOpen" ng-click="PopoutDSXDetails()">
+                            <div class="GrayCircle GoldCircleButton" ng-class="{'GrayCirleOpen' : DetailsSubMenuOpen}" style="  box-shadow: 1px 1px 2px rgb(137, 137, 137); background:#00A1E0; margin-bottom: 15px; margin-left: 50px;" ng-show="DetailsSubMenuOpen" ng-init="crMouseOver = false" ng-mouseover="crMouseOver = true" ng-mouseleave="crMouseOver = false">                              
+                                <div class="textSmallerWhiteBold GrayCircleLabel" ng-class="{'GrayCircleLabelHover' : crMouseOver}">DSX Record</div>                                
+                                <img src="/resource/1430213855000/Teller_Includes/Teller_Includes/media/dsxLogo.png" style="margin-top: 6px; margin-left: 7px; height: 28px;"></img>                                
+                            </div>
+                        </div>  
+                        <!-- MB: 2016/02/19 for DSX end-->
+                        <div class="GoldCircle GoldCircleButton" style="bottom:0; right:0; height: 50px; width: 50px;" ng-click="OpenCloseSubMenu()">
+                            <img class="GoldCircleIcon" ng-class="{'DetailsSubMenuOpen' : DetailsSubMenuOpen}" src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_menu_open_close.png')}" style="margin-top: 13px; margin-left: 13px; height: 24px;"></img>
+                        </div>                      
+                    </div>
+                    
+            </li>
+
+            <li ng-show="Accounts.active.length > 0 && !ShowViewReason" class="scrollSection accountScrollSection" ng-repeat="account in Accounts.active track by account.AccountNo" ng-cloak="ng-cloak">       
+                <c:Teller_Account_Template accountStatus="Active"></c:Teller_Account_Template>  
+            </li>
+            
+            <!-- <li ng-show="Accounts.blocked.length > 0 && !ShowViewReason" class="scrollSection accountScrollSection" ng-repeat="account in Accounts.blocked track by account.AccountNo" ng-cloak="ng-cloak">        
+                <c:Teller_Account_Template accountStatus="Blocked"></c:Teller_Account_Template> 
+            </li>
+            
+            <li ng-show="Accounts.inactive.length > 0 && !ShowViewReason" class="scrollSection accountScrollSection" ng-repeat="account in Accounts.inactive track by account.AccountNo" ng-cloak="ng-cloak">       
+                <c:Teller_Account_Template accountStatus="Inactive"></c:Teller_Account_Template>    
+            </li>
+            
+            <li ng-show="Accounts.closed.length > 0 && !ShowViewReason" class="scrollSection accountScrollSection" ng-repeat="account in Accounts.closed track by account.AccountNo" ng-cloak="ng-cloak">       
+                <c:Teller_Account_Template accountStatus="Closed"></c:Teller_Account_Template>  
+            </li> -->
+            
+            <!-- Spacer to ensure last item in list is displayed correctly -->
+            <li ng-show="!ShowViewReason" style="display: inline-table; width: 720px;"></li>
+
+            
+        </ul>       
+    </div>
+</apex:page>

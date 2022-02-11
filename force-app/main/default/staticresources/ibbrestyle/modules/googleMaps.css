@@ -1,0 +1,6 @@
+@charset "UTF-8";
+/* CSS Document */
+
+#contents .module.googleMap iframe { width:712px; height:350px; border:1px solid #CCCCCC; margin-bottom:1em; }
+#contents .module.googleMap small  { display:none; }
+#contents .module.googleMap .moduleTitle p { font-size: 1.5em; color: #666666; margin-bottom:.3em; padding-bottom:0; }

@@ -1,0 +1,124 @@
+<apex:page controller="KRIReportSelection" showHeader="false" sidebar="false" standardStylesheets="false" renderAs="pdf">
+<head>
+<apex:stylesheet value="{!$Resource.KRIReportStyles}"/>
+
+</head>
+
+<apex:outputPanel layout="none">	    
+  	<h2>Risk and KRI Report</h2>	
+</apex:outputPanel>
+	    
+<apex:outputPanel layout="none">
+  
+ <!--  <h2>{!DateRangeString} Report</h2>  -->
+  	<h3>
+  	<apex:outputText value="{0,date,dd/MM/yyyy}">
+		From: &nbsp; <apex:param value="{!theDateTimeNow}"/>
+	</apex:outputText>
+
+	<apex:outputText value="{0,date,dd/MM/yyyy}">
+		To: &nbsp; <apex:param value="{!theDateTimeNow}"/>
+	</apex:outputText>
+	</h3>
+</apex:outputPanel>
+ 
+<apex:outputPanel layout="none">
+		<apex:repeat value="{!reportRows}" var="riskRow">
+			<table  style="border-top: 1px solid black;border-left:1px solid black;;border-right:1px solid black; width:100%;">
+				<tr>
+					<apex:repeat value="{!filterOptions}" var="filter">
+						<th style="{!if(! filter.Selected,'display:none','')}">
+							{!filter.fieldName}
+						</th>
+					</apex:repeat>
+					<!-- <th>
+						Risk Title
+					</th>
+					<th>
+						Business Unit
+					</th>
+					<th>
+						Risk Category
+					</th>
+					<th>
+						Risk Subcategory
+					</th>
+					<th>
+						Inherent Rating
+					</th>
+					<th>
+						Residual Rating
+					</th> -->
+				</tr>
+				
+				<tr>
+					<apex:repeat value="{!filterOptions}" var="filter">
+						<td  style="{!if(filter.Selected && filter.fieldName == 'Risk Title','','display:none')}">
+							{!riskRow.theRisk.Name}
+						</td>
+						<td style="{!if(filter.Selected && filter.fieldName == 'Business Unit','','display:none')}">
+							{!riskRow.theRisk.grc__Business_Unit__r.name}
+						</td>
+						<td style="{!if(filter.Selected && filter.fieldName == 'Risk Category','','display:none')}">
+							{!riskRow.theRisk.grc__Category__c}
+						</td>
+						<td style="{!if(filter.Selected && filter.fieldName == 'Risk Subcategory','','display:none')}">
+							{!riskRow.theRisk.grc__Subcategory__c}
+						</td>
+						<td style="text-align:center;{!if(filter.Selected && filter.fieldName == 'Inherent Rating','','display:none')}">
+							<apex:outputText value="{!riskRow.theRisk.Risk__Inherent_Rating__c}" escape="false"/>
+						</td>
+						<td style="text-align:center;{!if(filter.Selected && filter.fieldName == 'Residual Rating','','display:none')}">
+							<apex:outputText value="{!riskRow.theRisk.Risk__Residual_Rating__c}" escape="false"/>
+						</td>
+					</apex:repeat>
+				</tr>
+			</table>
+			
+			<table style="border-bottom: 1px solid black;border-left:1px solid black;;border-right:1px solid black; width:100%;">
+				<tr class="kri_header" style="{!if(riskRow.theKRIHives.size == 0,'display:none;','')}">
+					<th>KRI Name</th>
+					<th>Metrics</th>
+						<apex:repeat value="{!MonthsList}" var="month">
+							<th class="kri_rating" colspan="2">{!month}</th>
+						</apex:repeat>
+				</tr>
+				<tr class="kri_header" style="{!if(riskRow.theKRIHives.size == 0,'display:none;','')}">
+					<th colspan="2">&nbsp;</th>
+						<apex:repeat value="{!MonthsList}" var="month">
+							<th>Comment</th>
+							<th class="kri_rating">Rating</th>
+						</apex:repeat>
+				</tr>
+				
+				<apex:repeat value="{!riskRow.theKRIHives}" var="kri" rendered="{!riskRow.theKRIHives.size > 0}">
+					<tr class="kri_content" style="border-bottom: thin solid black;border-collapse:collapse;">
+						<td>{!kri.theKRI.name}</td>
+						<td>
+							<ul class="metric_container">
+							<apex:repeat value="{!kri.theKRI.Risk__KRI_Metrics__r}" var="metric">
+								<li>{!metric.Risk__Metric__r.Name}</li>
+							</apex:repeat>
+							</ul>
+							
+						</td>
+						<!-- <td>{!MonthsList}</td>
+						<td>{!kri.theReviews}</td> -->
+						 <apex:repeat value="{!MonthsList}" var="monthKey" rendered="{!riskRow.theKRIHives.size > 0}">
+							<td>
+								<apex:outputText value="{!kri.theReviews[monthKey].Risk__Review_Summary__c}" rendered="{!kri.theReviews[monthKey] != null}"/>
+							</td>
+							<td class="kri_rating" > 
+								<div style="background-color: {!if(kri.theReviews[monthKey].Risk__Score__c == 3,'Red',if(kri.theReviews[monthKey].Risk__Score__c == 2,'Yellow',if(kri.theReviews[monthKey].Risk__Score__c == 1,'green','grey')))}">&nbsp;</div>
+								<!-- <apex:outputText value="{!kri.theReviews[monthKey].Risk__KRI_Review_Rating__c}" escape="false" rendered="{!kri.theReviews[monthKey] != null}"/> -->
+							</td>
+						</apex:repeat> 
+					</tr>
+				</apex:repeat>
+				
+		</table>
+		<div style="clear:both;">&nbsp;</div>
+		<div style="clear:both;">&nbsp;</div>
+	</apex:repeat>	
+</apex:outputPanel>
+</apex:page>

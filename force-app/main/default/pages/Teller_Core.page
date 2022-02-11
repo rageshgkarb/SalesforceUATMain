@@ -1,0 +1,183 @@
+<apex:page applyBodyTag="false" showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false" controller="Teller_Core_Controller">
+
+    <c:Teller_Core_Resource ></c:Teller_Core_Resource>
+    <c:Dynamsoft_Webtwain ></c:Dynamsoft_Webtwain>
+    <c:Teller_Core_Includes ></c:Teller_Core_Includes>
+
+    <body ng-app="tellerApp" ng-csp="" ng-controller="controllerCore" ng-init="Initialise()" breakpoint="{0:'xs', 767:'sm'}">
+        <!-- Header -->
+        <div class="headerBar">
+            <div id="TellerResourceLocation" style="display: none; position:absolute; z-index:-99999; visibility: collapse !important;">{!URLFOR($Resource.Teller_Includes)}</div>
+            <div id="TellerResourceDenomintationLocation" style="display: none; position:absolute; z-index:-99999; visibility: collapse !important;">{!URLFOR($Resource.Teller_Denominations)}</div>
+            <div id="TellerResourceCurrenciesLocation" style="display: none; position:absolute; z-index:-99999; visibility: collapse !important;">{!URLFOR($Resource.Teller_Currencies)}</div>
+           
+            <div class="barContentLeft visible-xs" style="height: 40px; width: 50px; background: rgb(140, 115, 58); margin-left: 0px;">
+                <div class="burger" ng-class="{'burger' : menuOpen == 'false', 'burger active' : menuOpen == 'true'}" ng-click="menuOpen == 'true' ? menuOpen = 'false' : menuOpen = 'true'" style="margin-top: 11px; cursor:pointer;">
+                    <div class="line"></div>
+                    <div class="line"></div>
+                    <div class="line"></div>
+                </div>
+            </div>
+            
+            <div class="barContentLeft">
+                <span class="textSmallerWhiteBold">Engage</span>
+                <span class="textSmallerWhite">: Teller Solution</span>
+            </div>
+            <div class="barContentRight">
+
+                <div class="headerBtn headerSearch" ng-class="GetSearchHeaderClass()">
+                    <span style="margin-left:10px;" class="headerSearchInput" ng-show="headerSearchOpen == true" ng-cloak="ng-cloak">
+                        <input ng-cloak="ng-cloak" kendo-auto-complete="kendo-auto-complete" arb-focus="headerSearchOpen" style="width: 300px; font-family: simple; font-size: 13px;" ng-model="headerSearchCriteria" k-options="CustomerSearchAutoCompleteOptions" id="headerSearchInput" arb-Enter="GotoCustomerSearch()"></input>
+                    </span>
+                    <div class="headerIconContainer" style="height: 40px !important; display: inline-block;" ng-click="GotoCustomerSearch()">
+                        <img class="headerIcon" src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/search.png')}" style="height: 25px; -webkit-filter: invert(1); filter: invert(1); margin-left: 8px;"></img>    
+                    </div>              
+                </div>
+
+                <div class="headerBtn headerUser hidden-xs">
+                    <span id="headerTellerName" class="textSmallerWhite">{!$User.FirstName} {!$User.LastName}</span>
+                    <img class="headerIcon" src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/user.png')}"></img>                    
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Menu -->
+        <nav ng-cloak="ng-cloak" ng-mouseenter="menuOpen = 'true'" ng-mouseleave="menuOpen = 'false'" ng-class="{'nav' : menuOpen == 'false', 'nav open' : menuOpen == 'true'}">
+            <div>
+                <div class="burger" ng-click="menuOpen == 'true' ? menuOpen = 'false' : menuOpen = 'true'" ng-class="{'burger' : menuOpen == 'false', 'burger active' : menuOpen == 'true'}">
+                    <div class="line"></div>
+                    <div class="line"></div>
+                    <div class="line"></div>
+                </div>
+            </div>
+
+            <div style="margin-top:10px;">
+                <div style="margin-left:12px;">
+                    <label class="textSmallWhiteBold">Menu</label>
+                </div>          
+                
+                <div class="menu" style="margin-top:30px;" ng-show="menuOpen == 'true'">
+                    <!-- User profile -->
+                    <div class="userProfile">   
+                          <img class="profile_bg" src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/profile_bg.png')}"></img>                      
+                         <img class="avatar"  src="{!userThumbPhoto}" onError="this.onerror=null; this.src='{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/profile_avatar.png')}';" alt="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/profile_avatar.png')}"></img>
+                         <div style="text-align:center;">
+                            <span class="textSmallerWhite">{!$User.FirstName} {!$User.LastName}</span>
+                        </div>
+                    </div>
+                    <!-- Menu Items -->
+                    <ul class="menuScroll">
+
+
+                        <li ng-repeat="route in Routes | orderBy: 'MenuDisplayOrder'">
+
+                            <div class="menuItem" ng-class="{'menuItemSelected': menuItemSelected == route.Id}">
+                                <a ng-click="menuItemClicked(route.Id, route.Page, route.TellerFunctions.length)">
+                                    <img class="menuItemIcon"></img>
+                                    <span class="textSmallWhite" style="display:table;">{{route.Name}}</span>
+                                </a>
+                                <ul class="subMenu" ng-if="route.TellerFunctions.length > 0" ng-show="menuItemSelected == route.Id">                                    
+                                    <li class="subMenuItem" ng-repeat="subRoute in route.TellerFunctions | orderBy: 'MenuDisplayOrder'" ng-click="subMenuItemClicked(subRoute.Id, subRoute.Page, subRoute.Id)" ng-class="{'subMenuItemSelected' : subMenuItemSelected == subRoute.Id}"> 
+                                        <a>
+                                            <span class="textSmallWhite">{{subRoute.Name}}</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Body content -->
+        <div class="regionContent" ng-class="{ 'blurContent': Load }" ui-view="viewContent">
+            
+            
+            
+            <div class="splash" style="height: calc(100% + 10px); overflow: hidden; white-space: nowrap; margin-top: -10px;" ng-cloak="ng-cloak">
+                <div class="splash-content" style="float: left; background: white; width: calc(100% - 400px); height: 100%; min-width: 100px; position:relative;">
+                <div style="position:absolute; z-index:2; width:100%;">
+                    <img class="arbLogoSmall" src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/logo_title.png')}"></img>
+
+                    <div style="margin-left: 115px; font-size: 40px;font-family: simpleLight; margin-top: -32px;" class="sectionTitleSmallGray engageTitle">
+                        Engage: Innovative Banking
+                    </div>
+                    
+                    <div style="height: 1px; width: calc(100% - 30px); background: rgb(184, 148, 86); margin-left: 30px; margin-top: 10px;">
+                    </div>
+                    
+                    <div class="textLargeGold engageSubTitle" style="margin-top: 25px; margin-left: 50px;">
+                        Asalaam Alaikum
+                    </div>
+                </div>
+                <img class="splashImage" src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/splash.png')}"></img>
+                    
+                </div>
+
+                <div class="hidden-xs" style="float: right; width: 400px; background: #F2EDE9; height: 100%; position:relative;">
+                    <div class="sectionTitle" style="margin-bottom: 0px !important; margin: 20px;">Chatter</div>
+                    <!-- <div class="engageChatterFeed verticalScroller">               
+                         <chatter:feed entityId="{!$User.Id}"/>
+                    </div> -->
+                    <img class="arbLogoBig" src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/logo_big.png')}"></img>            
+                </div>
+            </div>  
+            
+            
+            
+            
+        </div>
+
+        <!-- Modal Dialog -->
+        <div class="regionModal" ng-cloak="ng-cloak" ng-show="ModelShow" style="box-sizing: content-box !important; -webkit-box-sizing: content-box !important;">
+            <div class="regionModalBackground" style="box-sizing: content-box !important; -webkit-box-sizing: content-box !important;"></div>           
+            <div class="regionModalContent" ng-show="ModelShow" style="box-sizing: content-box !important; -webkit-box-sizing: content-box !important;">    
+                <div style="margin-left: 10px; height: 100%;">  
+                    <div>       
+                        <div class="regionModalTitle textLargeGold" style="box-sizing: content-box !important; -webkit-box-sizing: content-box !important; float: left;">{{ModalTitle}}</div>
+                        <img class="closeBtn" src="/resource/1425630497000/Teller_Includes/Teller_Includes/media/close.png" style="float: right; margin-right: 5px; -webkit-box-sizing: content-box !important; margin-top: -8px;" ng-click="ModelShow = false; ModalType = '';"></img>
+                    </div>
+                    <div class="regionModalBody" ui-view="viewModalContent">                        
+                        <div ng-if="ModalType == 'Camera'" style="height: calc(100% - 85px);">
+                            <c:Teller_CameraCaptureDialog ></c:Teller_CameraCaptureDialog>
+                        </div>
+                        <div ng-if="ModalType == 'Scanner'" style="height: calc(100% - 85px);">
+                            <c:Teller_ScannerCaptureDialog ></c:Teller_ScannerCaptureDialog>
+                        </div>
+                        <div ng-if="ModalType == 'Activity'" style="height: calc(100% - 85px);">
+                            <c:Teller_ActivityDetail ></c:Teller_ActivityDetail>
+                        </div>  
+                        <div ng-if="ModalType == 'PreApprovedCases'" style="height: calc(100% - 85px);">
+                            <c:Teller_PreApprovedCases ></c:Teller_PreApprovedCases>
+                        </div>
+                    </div>
+                </div>
+            </div>          
+        </div>
+
+        <!-- Load Screen -->
+        <div class="regionLoad" ng-cloak="ng-cloak" ng-show="Load" style="box-sizing: content-box !important; -webkit-box-sizing: content-box !important;">
+            <div class="regionWaitBackground" style="box-sizing: content-box !important; -webkit-box-sizing: content-box !important;"></div>
+            <div class="regionWaitMessage" style="box-sizing: content-box !important; -webkit-box-sizing: content-box !important;">
+                <div class="textLargeGold" style="box-sizing: content-box !important; -webkit-box-sizing: content-box !important;">Please wait ...</div>
+                <div style="margin-top: 10px; margin-bottom: 20px; box-sizing: content-box !important; -webkit-box-sizing: content-box !important;">
+                      <div class="waitline" style="box-sizing: content-box !important; -webkit-box-sizing: content-box !important;"></div>
+                      <div class="waitbreak waitdot1" style="box-sizing: content-box !important; -webkit-box-sizing: content-box !important;"></div>
+                      <div class="waitbreak waitdot2" style="box-sizing: content-box !important; -webkit-box-sizing: content-box !important;"></div>
+                      <div class="waitbreak waitdot3" style="box-sizing: content-box !important; -webkit-box-sizing: content-box !important;"></div>
+                 </div>
+                 <div class="textGold" style="box-sizing: content-box !important; -webkit-box-sizing: content-box !important;">{{LoadMessage}}</div>
+                 <img class="regionWaitImage" src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/fractal_corner.png')}" style="box-sizing: content-box !important; -webkit-box-sizing: content-box !important;"></img>
+            </div>
+        </div>
+
+        <!-- footer -->     
+        <div class="footerBar">
+            <div class="barContentRight">
+                <img class="footerLogo" src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/logo_title.png')}"></img>
+            </div>
+        </div>
+    </body>
+</apex:page>

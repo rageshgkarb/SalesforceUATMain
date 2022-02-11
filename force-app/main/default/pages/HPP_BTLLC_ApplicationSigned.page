@@ -1,0 +1,62 @@
+<apex:page controller="HPP_BTLLC_ApplicationSignedController" sidebar="false" showheader="false" title="Submit to decison engine" action="{!Setup}">
+    <head>
+        <c:KendoResource ></c:KendoResource>
+    </head>
+    <body>
+        <apex:form >
+            <div id="formWrapper">
+                <!-- C00095-->
+                <c:HPPSummary objacc="{!Accounts[0]}" objopp="{!opp}" objexopp="{!ExOpp}" product="{!Prod}" />
+                <div id="container">
+                    <table width="100%">
+                        <tr>
+                            <td valign="top" id="sidebar">
+                                <c:HPPBOMenu oppid="{!Opp.Id}" directorid="{!Opp.ProductEventDirector__c}" />
+                            </td>
+                            <td valign="top" id="contenttd">
+                                <div id="content">
+                                    <h1>Affordability and Credit Search</h1>
+                                    <apex:pagemessages ></apex:pagemessages>
+                                    <apex:outputpanel id="mainPageBlock">
+                                        <div style="padding:20px;">
+                                            <!-- content -->
+                                            <apex:outputpanel rendered="{!!IsCompleted && !DeResponse && !ShowDeButton }">
+                                                <apex:inputhidden value="{!Opp.Number_of_People_Applying__c }" />
+                                            </apex:outputpanel>
+                                            <div style="text-align:right;">
+                                                <apex:commandbutton value="Run Affordability" styleclass="redBtn" action="{!DoAffordibility}" rendered="{!!IsCompleted && !DeResponse && !ShowDeButton}" />
+                                                <apex:commandbutton value="Submit to decision engine" onclick="ShowDocumentLoad();" oncomplete="HideDocumentLoad();" styleclass="redBtn" action="{!SubmitToDe}" rerender="mainPageBlock" rendered="{!!IsCompleted && !DeResponse && ShowDeButton }" />
+                                            </div>
+                                            <apex:pagemessages ></apex:pagemessages>
+                                            <br /><br />
+                                            <div style="text-align:right;">
+                                                <apex:commandbutton value="Complete Event" styleclass="redBtn" action="{!Complete}" rendered="{!!IsCompleted && DeResponse}" />
+                                            </div>
+                                        </div>
+                                    </apex:outputpanel>
+                                </div>
+
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div id="fade"></div>
+            <div id="overlay">
+                Doing credit search...
+                <br />
+                <br />
+                This may take a few seconds.
+
+                <div style="padding-top: 50px;">
+                    <img src="{!URLFOR($Resource.ibbstyleexternal, 'graphics/logos/circular-timer.gif')}"></img>
+                </div>
+
+            </div>
+
+        </apex:form>
+
+
+    </body>
+</apex:page>

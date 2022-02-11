@@ -1,0 +1,43 @@
+<apex:component >
+<apex:attribute name="debt" description="This is the debt." type="Person_Debts__c"  required="true"/>
+
+<table class="detailList">
+<tbody>
+
+<tr>
+    <td class="labelCol">Type of debt  </td><td><apex:inputField value="{!debt.Type_of_debt__c}"   /></td>
+    <td colspan="2"/>
+</tr>
+
+<tr>
+    <td class="labelCol">Lender</td><td><apex:inputField value="{!debt.Debt_Lender_Name__c}" id="debtName"  /></td>
+    
+    <td class="labelCol">Start date</td><td><apex:inputField value="{!debt.Start_date__c}" id="debtStart"  /></td>
+</tr>
+<tr>
+    <td class="labelCol">Monthly repayment</td><td><apex:inputField styleClass="mPay" value="{!debt.Monthly_repayment__c}" id="debtMonthly"  /></td>
+    <td class="labelCol">Outstanding balance</td><td><apex:inputField styleClass="outBal" value="{!debt.Outstanding_balance__c}" id="debtBalance"  /></td>
+
+
+
+
+</tr>
+<tr>
+     <td class="labelCol">When will this debt be paid off?</td><td><apex:inputField value="{!debt.PaidOffDebt__c}" id="debtBalance1"  /></td>
+
+    <td class="labelCol">Will this debt be paid off by this application?</td><td><apex:inputField value="{!debt.Will_this_debt_be_paid_off_by_this_app__c }" id="debtWillPay"  /></td>
+    </tr>
+<tr>
+    <td class="labelCol">Secured on property </td><td><apex:inputField value="{!debt.Secured_on_property__c}" onclick=""  /></td>
+    <td class="labelCol">Cleared before HPP starts</td><td><apex:inputField value="{!debt.Cleared_before_HPP_starts__c}"   /></td>
+</tr>
+
+
+
+
+</tbody>
+</table>
+
+
+
+</apex:component>

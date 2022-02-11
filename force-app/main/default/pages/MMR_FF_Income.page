@@ -1,0 +1,362 @@
+<apex:page showHeader="false" sidebar="false" controller="MMR_FF_Income" action="{!Setup}">
+<head>
+
+
+    <c:MMR_PageHeader ></c:MMR_PageHeader>
+    <apex:include pageName="pca__Component"/>
+       <script>
+        pca_Settings.DisableFieldRearrange = true;
+</script>
+     
+</head>
+<body>
+  
+
+  
+  <c:MMR_Header title="Employment & Income" numapps="{!NumApplying }" opp="{!bopp}" hide="{!IsCredit}"/>
+
+      <div class="container">
+          <c:MMR_FF_Nav EventId="{!eventid}" active="4" activesection="B" rendered="{!!IsCredit && !IsCompleted}" />
+          <c:MMR_FF_Nav_Links EventId="{!eventid}" active="4" activesection="B" rendered="{!!IsCredit && IsCompleted}" />
+          
+          <c:MMR_Credit_Nav EventId="{!eventid}" active="4" activesection="B" rendered="{!IsCredit}"/>
+    
+        <apex:form id="aForm" styleClass="form-horizontal">
+        
+          <div class="row">
+          <!--Case: 01938975; Customer overseas credit policy ; pass the product set of opportunity;Start-->
+              <c:MMR_FF_Income appNo="1" title="Applicant 1" Applicant="{!Accs[0]}" typeOfOpportunity="{!bopp.Interested_in__c}" rendered="{!numApplying > 0}"/>              
+              <c:MMR_FF_Income2 appNo="2" Applicant="{!Accs[1]}" typeOfOpportunity="{!bopp.Interested_in__c}" rendered="{!numApplying > 1}"/>
+              <div class="clearfix"/>
+              <c:MMR_FF_Income3 appNo="3" Applicant="{!Accs[2]}" typeOfOpportunity="{!bopp.Interested_in__c}" rendered="{!numApplying > 2}"/>
+              <c:MMR_FF_Income4 appNo="4" Applicant="{!Accs[3]}" typeOfOpportunity="{!bopp.Interested_in__c}" rendered="{!numApplying > 3}"/>   
+          <!--Case: 01938975; Customer overseas credit policy ; pass the product set of opportunity;End-->                                           
+              <div class="clearfix"/>          
+          </div>
+          
+          <apex:pagemessages ></apex:pagemessages>
+        
+ 
+    <div class="row" >
+    
+ <apex:commandButton styleClass="btn btn-primary"  value="Previous" action="{!Prev}" rendered="{!!IsCredit && !IsCompleted}"/>
+  <!--CPDR01 apex:commandButton styleClass="btn btn-success"  value="Save" action="{!Save}" rendered="{!!IsCompleted || IsCredit }"/-->
+   <apex:commandButton styleClass="btn btn-danger"  value="Save" action="{!Save}" rendered="{!!IsCompleted || IsCredit }"/>
+   <apex:commandButton styleClass="btn btn-danger"  value="Next" action="{!Next}" rendered="{!!IsCredit && !IsCompleted}"/>
+     
+     </div>
+     
+     <span id="pca_status" style="display:none;" />
+
+    
+     
+        </apex:form>        
+    </div>
+    
+    <c:MMR_PageFooter ></c:MMR_PageFooter>
+
+
+<script>
+
+function updateEmploymentType1()
+{
+    var sel =  $(this);
+    var value = sel.val();
+    var id = sel.attr('id');    
+    var appNo = GetApplicantNo('employmentType1',id);
+    
+
+    //var value= $("select.employmentType").val();
+    FadeInput(value,'Other','employmentOther' + appNo);   
+    
+    if(value.indexOf('Self Employed') !== -1)
+    {
+        FadeInput('','','selfEmpItem1' + appNo);           
+    }
+    else
+    {
+        FadeInput('','No','selfEmpItem1' + appNo);
+    }
+    
+    if(value == 'Homemaker' || value=='Unemployed' || value == 'Retired' || value == 'Student')
+    {
+        FadeInput('','No','employmentHide1' + appNo);
+    }
+    else
+    {
+        FadeInput('','','employmentHide1' + appNo);
+    }
+    
+    
+    //LB - update to default nature of business to N/A if Homemaker or unemploayed
+    if(value == 'Homemaker' || value=='Unemployed' || value == 'Retired' || value == 'Student')
+    {
+        $("select[class*='employmentNatoB1"+appNo+"']").val('N/A');
+    }
+    
+    if(value == 'Retired')
+    {
+        $("select[class*='employmentNatoB1"+appNo+"']").val('Retired');
+    }
+    
+    var nature = $("select[class*='employmentNatoB1"+appNo+"']").val();
+    if((value != 'Student' && value != 'Retired' && value != 'Homemaker' && value !='Unemployed') && nature == 'N/A')
+    {
+        $("select[class*='employmentNatoB1"+appNo+"']").val(null);
+    }
+    
+    
+    
+    updateEmployementTypeShared(appNo);
+}
+
+function updateEmploymentType2()
+{
+    var sel =  $(this);
+    var value = sel.val();
+    var id = sel.attr('id');    
+    var appNo = GetApplicantNo('employmentType2',id);
+
+
+    if(value.indexOf('Self Employed') !== -1)
+    {
+        FadeInput('','','selfEmpItem2' + appNo);           
+    }
+    else
+    {
+        FadeInput('','No','selfEmpItem2' + appNo);
+    }
+
+    //var value= $("select.employmentType2" + appNo).val();
+    FadeInput(value,'Other','employmentOther2' + appNo);
+    updateEmployementTypeShared(appNo);
+}
+
+
+function updateEmployementTypeShared(appNo)
+{
+    var value= $("select.employmentType1" + appNo).val();
+    var value2= $("select.employmentType2" + appNo).val();
+    
+    var retired = value;
+    
+    if(value == 'Retired' || value2 == 'Retired')
+    {
+        retired = 'Retired';
+    }
+    FadeInput(retired ,'Retired','employmentRetired' + appNo);    
+    
+    
+    if(value.indexOf('Self Employed') !== -1 || value2.indexOf('Self Employed') !==-1)
+    {
+        FadeInputContains('Self employed','Self employed','selfEmployed' +appNo);
+    }    
+    else
+    {
+        FadeInputContains(' ','Self-employed','selfEmployed' + appNo);
+    }
+}
+
+function secondEmployment()
+{
+    var sel =  $(this);
+    var value = sel.val();
+    var id = sel.attr('id');    
+    var appNo = GetApplicantNo('secondEmployment',id);
+
+    var value = $("select.secondEmployment" + appNo).val();
+    FadeInput(value,'Yes','secondEmploymentItem' + appNo);
+}
+
+function updateOtherIncome()
+{
+    var sel =  $(this);
+    var value = sel.val();
+    var id = sel.attr('id');    
+    var appNo = GetApplicantNo('employmentHasOtherIncome',id);
+
+    //var value= $("select.employmentHasOtherIncome").val();
+    FadeInput(value,'Yes','employmentOtherIncome' + appNo);
+}
+
+function nonIncome1()
+{
+    var sel =  $(this);
+    var value = sel.val();
+    var id = sel.attr('id');    
+    var appNo = GetApplicantNo('nonIncomeSelect1',id);
+    FadeInput(value,'Yes','nonIncome1' + appNo);
+}
+
+function nonIncome2()
+{
+    var sel =  $(this);
+    var value = sel.val();
+    var id = sel.attr('id');    
+    var appNo = GetApplicantNo('nonIncomeSelect2',id);
+    FadeInput(value,'Yes','nonIncome2' + appNo);
+}
+
+function employmentNatoB1()
+{
+    var sel =  $(this);
+    var value = sel.val();
+    var id = sel.attr('id');    
+    var appNo = GetApplicantNo('employmentNatoB1',id);
+    
+    var employmentType = $("select[class*='employmentType1" + appNo + "']").val();
+    
+    
+    if(value == 'N/A' && value != 'Student' && employmentType != 'Homemaker' && employmentType !='Unemployed' && employmentType != 'Retired' )
+    {
+        var s = "select[class*='employmentNatoB1" + appNo + "']";
+        $(s).val(null);
+        
+        //$(s).children().removeAttr("selected");
+    }
+    
+}
+
+function employmentNatoB1Init()
+{
+    var sel =  $(this);
+    var value = sel.val();
+    var id = sel.attr('id');    
+    var appNo = GetApplicantNo('employmentNatoB1',id);
+
+    if(value)
+    {
+        var s = "select[class*='employmentNatoB1" + appNo + "']";
+        $(s).prepend("<option value=''>--None--</option>");
+    }
+}
+
+function checkReturnInNextFiveYear()
+{
+    var sel =  $(this);
+    var value = sel.val();
+    var id = sel.attr('id');    
+    var appNo = GetApplicantNo('ReturnInNextFiveYear',id);         
+    console.log('CustomerAssetValue: '+value );
+    FadeInput(value,'No','customerAsset'+ appNo);
+    var s = "select[class*='CustomerAssetValue" + appNo + "']";
+    var Assetvalue= $(s).val();
+    console.log('Assetvalue : '+Assetvalue);
+    if(value == 'Yes' && Assetvalue != null){
+        console.log('Entering if loop');
+        $(s).val('');    
+    }
+    CheckPremierPicklistvalue(value,appNo);
+}
+
+
+
+function checkCustomerExpat()
+{
+    var sel =  $(this);
+    var value = sel.val();
+    var id = sel.attr('id');    
+    var appNo = GetApplicantNo('customerExpat',id);         
+    console.log('customerExpat: '+value ); 
+    FadeInput(value,'Yes','ReturnBack'+ appNo);
+    FadeInput(value,'Yes','customerAsset'+ appNo);
+    FadeInput(value,'Yes','creditPolicyCustomerProfile'+ appNo);
+}
+
+function checkCustomerProfileType(){
+    var sel =  $(this);
+    var value = sel.val();
+    var id = sel.attr('id');    
+    var appNo = GetApplicantNo('CustomerAssetValue',id); 
+    console.log('customer Asset Value: '+value);
+    CheckPremierPicklistvalue(value,appNo);
+    
+}
+
+function CheckPremierPicklistvalue(value,appNo){
+    var s = "select[class*='CustomerType" + appNo + "']";
+    var exists = false;
+    var optionLength = $(".CustomerType" + appNo + " option").length;
+    console.log('optionLength '+optionLength );
+    $(".CustomerType" + appNo + " option").each(function(){
+        if(this.value == 'Premier'){
+            exists = true;
+        }else{
+            exists = false;
+        }
+    }); 
+    if(exists == true && value == 'Yes'){
+        $(s).find("option[value='Premier']").remove();
+        exists== false;    
+    }else{
+        if(exists == false  && (value == 'No' || value =='')){
+            $(s).append("<option value='Premier'>Premier</option>");  
+            exists== true;    
+        }
+    }
+    
+    if(value == 'The Customer does not have assets of more than 500k' && exists == true){
+        $(s).find("option[value='Premier']").remove();
+        exists== false; 
+    }else{
+        if(value =='The Customer has assets more than 500k'){
+            $(".CustomerType" + appNo + " option").remove();
+            $(s).append("<option value='Premier'>Premier</option>");
+            exists== true; 
+        }
+    }
+    
+    if(optionLength == 1 && (value == 'Yes'|| value == 'The Customer does not have assets of more than 500k')){
+        $(s).append("<option value='Type A'>Type A</option>");
+        $(s).append("<option value='Type B'>Type B</option>");
+        $(s).append("<option value='Type C'>Type C</option>");
+    }else{
+        if(optionLength == 1 && value == 'No'){
+            $(s).append("<option value='Type A'>Type A</option>");
+            $(s).append("<option value='Type B'>Type B</option>");
+            $(s).append("<option value='Type C'>Type C</option>");
+            if(value != 'The Customer has assets more then 500k'){
+                $(s).append("<option value='Premier'>Premier</option>");
+            }
+        }
+    }
+      
+}
+
+
+$(function() {
+    $("select[class*='employmentType1']").each(updateEmploymentType1);
+    $("select[class*='employmentType1']").change(updateEmploymentType1);
+    $("select[class*='employmentType2']").each(updateEmploymentType2);
+    $("select[class*='employmentType2']").change(updateEmploymentType2);
+    
+    $("select[class*='secondEmployment']").each(secondEmployment);
+    $("select[class*='secondEmployment']").change(secondEmployment);
+    
+    $("select[class*='employmentHasOtherIncome']").each(updateOtherIncome);
+    $("select[class*='employmentHasOtherIncome']").change(updateOtherIncome);
+    
+    $("select[class*='nonIncomeSelect1']").each(nonIncome1);
+    $("select[class*='nonIncomeSelect1']").change(nonIncome1);
+    
+    $("select[class*='nonIncomeSelect2']").each(nonIncome2);
+    $("select[class*='nonIncomeSelect2']").change(nonIncome2);    
+    
+    $("select[class*='employmentNatoB1']").each(employmentNatoB1);
+    $("select[class*='employmentNatoB1']").change(employmentNatoB1);
+   
+    $("select[class*='employmentNatoB1']").each(employmentNatoB1Init);
+    
+     $("select[class*='customerExpat']").each(checkCustomerExpat);
+    $("select[class*='customerExpat']").change(checkCustomerExpat);
+    
+    $("select[class*='ReturnInNextFiveYear']").each(checkReturnInNextFiveYear);
+    $("select[class*='ReturnInNextFiveYear']").change(checkReturnInNextFiveYear);
+    
+    $("select[class*='CustomerAssetValue']").each(checkCustomerProfileType);
+    $("select[class*='CustomerAssetValue']").change(checkCustomerProfileType);
+});
+
+</script>
+</body>
+</apex:page>

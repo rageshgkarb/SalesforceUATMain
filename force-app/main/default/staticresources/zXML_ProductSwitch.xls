@@ -1,0 +1,10 @@
+Name,Data_Type__c,Field_API_Name__c,Field_Label__c,Message_Order__c,XML_Message__c
+AcctNo,String,NULL,AcctNo,1,
+ProductSwitchTo,String,NULL,ProductSwitchTo,2,
+EBSUserID,String,NULL,EBSUserID,4,
+Spare1,String,NULL,Spare1,5,
+Spare2,String,NULL,Spare2,6,
+Spare3,String,NULL,Spare3,7,
+Spare4,String,NULL,Spare4,8,
+Spare5,String,NULL,Spare5,9,
+ProductSwitchStartDate,String,NULL,ProductSwitchStartDate,3,

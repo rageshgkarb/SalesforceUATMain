@@ -1,0 +1,38 @@
+<apex:component >
+
+<ul>
+    <li>
+        <strong>When you apply for an account with us, we carry out checks with Fraud Prevention Agencies (FPAs) and Credit Reference Agencies (CRAs).</strong>
+        These checks include verifying your identity to prevent and detect crime and money laundering. 
+    </li>
+    <li>
+        <strong>If you give us false or inaccurate information and / or we suspect identify fraud, </strong>
+        we’ll record this on your account and may pass this information to FPAs and other organisations, including law enforcement.
+    </li>
+    <li>
+        <strong>Your data will be used in line with the terms of the General Data Protection Regulation. </strong>
+        Your information may be held and processed outside of the European Union. 
+    </li>
+    <li>
+        <strong>You can contact the CRAs currently operating in the UK;</strong>
+        the information they hold may not be the same so it is worth contacting them all. They will charge you a small statutory fee.
+    </li>
+        <ul><!-- C0697 -->
+            <li>
+                <strong>CallCredit, </strong>
+                Consumer Services Team, PO Box 491, Leeds, LS3 1WZ or call 0330 024 7579 or visit <a href="http://www.callcreditstatreport.co.uk" Target="_blank">www.callcreditstatreport.co.uk</a>
+            </li>
+            <li>
+                <strong>Equifax Ltd, </strong>
+                Customer Service Centre, PO Box 10036, Leicester LE3 4FS or log on to <a href="http://www.equifax.co.uk" Target="_blank">www.equifax.co.uk</a>
+            </li>
+            <li>
+                <strong>Experian Ltd, </strong> Customer Support Centre, PO Box 9000, Nottingham, NG80 7WF or email consumer.helpservice@experian.com
+            </li>
+        </ul>
+    <li>
+        <strong>For more information on how your information may be used, </strong>
+        please refer to the ‘Privacy and Data’ section of the Consumer Banking Terms and Conditions or call us on 0800 4086 407.
+    </li>
+</ul>
+</apex:component>

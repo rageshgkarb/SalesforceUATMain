@@ -1,0 +1,16 @@
+<apex:component >
+<apex:attribute name="Acc" type="Account" description="Account object" />
+
+<div class="row">
+    <div class="form-group">
+        <div class="col-sm-6">
+            <label>Organisation Type</label>
+        </div>
+        <div class="col-sm-6">
+            <apex:inputField value="{!Acc.Organisation_type__c}"/>
+        </div>
+    </div>
+
+</div>
+
+</apex:component>

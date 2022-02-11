@@ -1,0 +1,170 @@
+<apex:page showHeader="false" sidebar="false" controller="MMR_FF_BudgetPlanner" action="{!Setup}">
+<head>
+    <c:MMR_PageHeader ></c:MMR_PageHeader>   
+</head>
+<body>
+  <c:MMR_Header title="Budget Planner" numapps="{!NumApplying }" opp="{!bopp}" hide="{!IsCredit}"/>
+
+      <div class="container">
+    <c:MMR_FF_Nav EventId="{!eventid}" active="7" activesection="B" rendered="{!!IsCredit && !IsCompleted}"/>
+    <c:MMR_FF_Nav_Links EventId="{!eventid}" active="7" activesection="B" rendered="{!!IsCredit && IsCompleted}"/>
+    
+    <c:MMR_Credit_Nav EventId="{!eventid}" active="7" activesection="B" rendered="{!IsCredit}"/>
+    
+        <apex:form id="aForm" styleClass="form-horizontal">
+        
+        <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h2>Budget Planner</h2>
+        </div>
+        <div class="panel-body">
+        <div class="col-sm-12">
+       <div class="row">
+           <div class="form-group">
+               <div class="col-sm-2 col-sm-offset-5">
+               <label>
+                   Budgetary Purposes
+               </label>
+               </div>
+               <div class="col-sm-5">
+                   <apex:outputpanel rendered="{!!EventComplete}">
+                    <apex:inputField value="{!ExOpp.Budget_Figures__c}" styleClass="form-control" onchange="updateJoint();"/>
+                    <apex:actionFunction action="{!Save}" name="updateJoint"/>
+                   </apex:outputpanel>
+                   <apex:outputpanel rendered="{!EventComplete}" >
+                    <apex:outputtext value="{!ExOpp.Budget_Figures__c}" styleclass="form-control" />
+                   </apex:outputpanel>
+               </div>
+              
+           </div>       
+       </div>
+       <apex:outputpanel rendered="{!is_BP_V1}">
+       <div class="row">
+           <div class="form-group">
+               <div class="col-sm-2 col-sm-offset-5">
+               <label>
+                   No. of Cars
+               </label>
+               </div>
+               <div class="col-sm-1">
+                   <apex:inputText value="{!NoCars}" styleClass="form-control" onchange="updateJoint();"/>
+               </div>              
+           </div>       
+       </div>
+        </apex:outputpanel>
+       
+        
+            
+      
+             
+              <apex:variable id="alt1" value="{!0}" var="i"/>
+                  <apex:repeat value="{!AllItems}" var="bp">
+                  
+                   <div class="row"> <!-- style="{! IF((mod(i,2)) == 0, 'background-color:#CCCCCC;padding-top:5px;padding-bottom:5px', 'background-color:#EEEEEE;padding-top:5px;padding-bottom:5px')}">-->
+                  
+                  <div class="col-sm-4">
+                  <label>
+                      <apex:outputtext value="{!bp.BudgetPlannerConfig__r.name}" rendered="{!bp.BudgetPlannerConfig__r.name!='HPP'}"/>
+                      <apex:outputtext value="Residential property stressed repayment" rendered="{!bp.BudgetPlannerConfig__r.name=='HPP'}" />                
+                      </label>
+                  </div>
+                  
+                 
+                      <div class="col-sm-2">
+                      <div class="pull-right">
+                      <apex:inputField required="true" styleClass="form-control budgetItem" value="{!bp.Applicant_Total__c}" rendered="{!bp.budgetPlannerConfig__r.Personal_Debt__c == null && !bp.budgetPlannerConfig__r.Use_ONS_Only__c}"/>
+                      <apex:inputfield html-disabled="true" styleclass="form-control budgetItem" value="{!bp.Applicant_Total__c}" rendered="{!bp.budgetPlannerConfig__r.Personal_Debt__c != null || bp.budgetPlannerConfig__r.Use_ONS_Only__c}" />
+                      </div>
+                  </div>
+                  
+                  <div class="col-sm-1">
+                      &#163;{!Values[i]}
+                  </div>
+                  
+                  <div class="col-sm-5">
+                      <apex:inputTextarea rows="3" styleClass="form-control" value="{!bp.BDM_Comments__c}"/>
+                  </div>
+                  
+                  <apex:variable var="i" value="{!i+1}"/>
+                  </div>
+                  </apex:repeat>
+    
+                <div class="row">
+                    <div class="col-sm-4 budgetrow2">
+                    <label>
+                        Total
+                    </label>
+                    </div>
+                    
+                    <div class="col-sm-1 budgetrow2">
+                        <span id="total"></span>
+                    </div>                
+                </div>
+              
+        </div>
+        </div>
+        </div>
+        
+        
+<div class="row">       
+    <apex:commandButton styleClass="btn btn-primary"  value="Previous" action="{!Prev}" rendered="{!!IsCredit && !IsCompleted}"/>     
+    <apex:commandButton styleClass="btn btn-success"  value="Save" action="{!Save}" rendered="{!!IsCompleted || IsCredit }"/>     
+    <apex:commandButton styleClass="btn btn-danger"  value="Complete" action="{!Complete}" rendered="{!!IsCredit && !IsCompleted}"/> 
+</div>
+ 
+ 
+        </apex:form>        
+    </div>    
+    <c:MMR_PageFooter ></c:MMR_PageFooter>   
+    
+    <script>
+        $(function(){
+            $('.budgetItem').change(function(){
+                var total =0;
+
+                $('.budgetItem').each(function(){
+                    var v = $(this).val();
+
+                    /* CPDR hack */
+                    v = v.replace(",", "");
+                    /* CPDR hack end */
+
+
+                    var nan = isNaN(v);
+
+                    if(!nan  && v!='')
+                    {
+                        total += parseFloat(v);
+                    }
+                });
+
+                $('#total').text(total.toFixed(2));
+            });
+
+
+
+             var totall =0;
+            $('.budgetItem').each(function(){
+                    var v = $(this).val();
+
+                    /* CPDR hack */
+                    v = v.replace(",", "");
+                    /* CPDR hack end */
+
+                    var nan = isNaN(v);
+
+                    if(!nan  && v!='')
+                    {
+                        totall += parseFloat(v);
+                    }
+                });
+
+                $('#total').text(totall.toFixed(2));
+
+        });
+
+    </script>
+    
+     
+</body>
+</apex:page>

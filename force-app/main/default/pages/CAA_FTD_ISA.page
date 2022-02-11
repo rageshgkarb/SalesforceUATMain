@@ -1,0 +1,176 @@
+<apex:page showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false" controller="CAA_Product_Detail_Controller">
+
+
+<apex:composition template="CAA_Template">
+<apex:define name="include">
+            <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/controller/controller_ftd_isa.js')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/service/service_ftd_isa.js')}"/>
+        </apex:define>
+        <apex:define name="body">
+<div ng-controller="controllerFTDISA" ng-init="EventLogId='{!EventLogId}'">
+
+<div class="row">
+<div class="col-md-9">
+
+
+<div class="SectionHeader">
+    <div class="numberCircleReverse">1</div>
+    <div>Product Details</div>
+</div>
+<div class="PanelContents">
+
+
+<div>
+<div>
+    <label>Where would you like your profit paid to</label>    
+</div>
+<div class="radio">
+    <label><input type="radio" name="optWhatToDoWithProfit" ng-model="Product.WhatToDoWithProfit" value="invest"/>Reinvest in FTD</label>
+</div>
+<div class="radio">
+    <label><input type="radio" name="optWhatToDoWithProfit" ng-model="Product.WhatToDoWithProfit" value="quarterly"/>Paid quarterly</label>
+</div>
+
+
+<hr/>
+
+<!-- MATURITY-->
+<div ng-show="Product.WhatToDoWithProfit == 'invest' || Product.WhatToDoWithProfit =='quarterly' || Product.OptionsOnMaturity == 'retained'">
+    <div>
+        <label>Maturity paid to</label><span class="borderCircle pull-right" data-toggle="popover" data-placement="auto right" data-trigger="click" data-content="The account that you wish your maturity paid to?">?</span>
+    </div>
+    <div class="radio">
+        <label><input type="radio" name="optMaturityTransferTo" ng-model="Product.MaturityTransferToType" value="existing"/>Existing Al Rayan Bank Account</label>
+    </div>
+    <div class="radio">
+        <label><input type="radio" name="optMaturityTransferTo" ng-model="Product.MaturityTransferToType" value="existingIsa"/>Existing Al Rayan Bank ISA</label>
+    </div>
+    <div class="radio">
+        <label><input type="radio" name="optMaturityTransferTo" ng-model="Product.MaturityTransferToType" value="external"/>External Bank Account</label>
+    </div>
+    
+    <div class="row" ng-show="Product.MaturityTransferToType == 'external'">
+        <!--C0787-Changes to External account name start-->
+        <div class="col-sm-4">
+            <label>Name(s) on account</label>
+            <input type="text" inputmode="text" class="form-control arbBox" ng-model="Product.MaturityTransferToExternalAccountName" maxlength="35" my-maxlength="35"/>        
+        </div>
+         <!--Changes to External account name end-->
+        <div class="col-sm-4">
+            <label>Account Number</label>
+            <input type="text" inputmode="numeric" pattern="[0-9]*" class="form-control arbBox" ng-model="Product.MaturityTransferToExternalAccount" maxlength="8" my-maxlength="8"/>        
+        </div>
+        <div class="col-sm-4">
+            <label>Sort code</label>
+            <input type="text" inputmode="numeric" pattern="[0-9]*" class="form-control arbBox" ng-model="Product.MaturityTransferToExternalSortCode" maxlength="6" my-maxlength="6"/>        
+        </div>
+        <div class="col-sm-4">
+            <!--<span class="borderCircle pull-right">?</span>-->
+        </div>
+    </div>
+     <!--C0787-Changes to External account name start-->
+     <div class="alert alert-danger" ng-show="ErrorMessage">    
+         {{ErrorMessage}}
+    </div>
+     <!--C0787-Changes to External account name end-->
+    <div class="row" ng-show="Product.MaturityTransferToType == 'existing'">
+    <div class="col-sm-4">
+        <label>Existing account</label>
+        <input type="text" inputmode="numeric" pattern="[0-9]*" class="form-control arbBox" ng-model="Product.MaturityTransferToInternalAccount" maxlength="8" my-maxlength="8"/>        
+    </div>
+    <div class="col-sm-8">
+        <!--<span class="borderCircle pull-right">?</span>-->
+    </div>   
+</div>
+<hr/>    
+</div>
+<!-- END MATURITY-->
+
+<!-- PROFIT -->
+<div ng-show="Product.WhatToDoWithProfit =='quarterly' || Product.OptionsOnMaturity == 'external'">
+    <div>
+        <label>Profit paid to</label><span class="borderCircle pull-right" data-toggle="popover" data-placement="auto right" data-trigger="click" data-content="The account that you wish your profit paid to?">?</span>
+    </div>
+    <div class="radio">
+        <label><input type="radio" name="optProfitTransferTo" ng-model="Product.ProfitTransferToType" value="existing"/>Existing Al Rayan Bank Account</label>
+    </div>
+    
+    <div class="radio">
+        <label><input type="radio" name="optProfitTransferTo" ng-model="Product.ProfitTransferToType" value="external"/>External Bank Account</label>
+        
+    </div>
+    
+    <div class="row" ng-show="Product.ProfitTransferToType == 'external'">
+        <!--C0787-Changes to External account name start-->
+        <div class="col-sm-4">
+            <label>Name(s) on account</label>
+            <input type="text" inputmode="text" class="form-control arbBox" ng-model="Product.ProfitTransferToExternalAccountName" maxlength="35" my-maxlength="35"/>        
+        </div>
+        <!-- Changes to External account name end-->
+        <div class="col-sm-4">
+            <label>Account number</label>
+            <input type="text" inputmode="numeric" pattern="[0-9]*" class="form-control arbBox" ng-model="Product.ProfitTransferToExternalAccount" maxlength="8" my-maxlength="8"/>  
+              
+        </div>
+        <div class="col-sm-4">
+            <label>Sort code</label>
+            <input type="text" inputmode="numeric" pattern="[0-9]*" class="form-control arbBox" ng-model="Product.ProfitTransferToExternalSortCode" maxlength="6" my-maxlength="6"/>  
+     
+        </div>
+        <div class="col-sm-4">
+            <!--<span class="borderCircle pull-right">?</span>-->
+        </div>
+    </div>
+     <!--C0787-Changes to External account name start-->
+     <div class="alert alert-danger" ng-show="ErrorMessage">    
+         {{ErrorMessage}}
+    </div>
+     <!--C0787-Changes to External account name end-->
+    <div class="row" ng-show="Product.ProfitTransferToType == 'existing'">
+    <div class="col-sm-4">
+        <label>Existing account</label>
+        <input type="text" inputmode="numeric" pattern="[0-9]*" class="form-control arbBox" ng-model="Product.ProfitTransferToInternalAccount" maxlength="8" my-maxlength="8"/>        
+    </div>
+    <div class="col-sm-8">
+        <!--<span class="borderCircle pull-right">?</span>-->
+    </div>
+   
+</div>
+<hr/>
+</div>
+<!-- END PROFIT -->
+
+
+
+
+
+</div>
+
+
+
+<button class="btn btnArb" ng-click="Complete()" ng-show="ShowCompleteButton()">Next</button>
+
+
+</div>
+</div>
+
+
+<div class="col-md-3">
+                    <c:CAA_Progress rendered="{!IsGuest}" Stage="1"></c:CAA_Progress>
+                </div>
+
+</div>
+</div>
+</apex:define>
+
+
+
+
+
+        <apex:define name="Menu">
+        
+  </apex:define>
+</apex:composition>              
+        
+        
+</apex:page>

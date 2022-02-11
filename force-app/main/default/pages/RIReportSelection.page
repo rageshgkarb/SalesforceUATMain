@@ -1,0 +1,24 @@
+<apex:page controller="RIReportSelection">
+
+<apex:form id="form">
+
+	<apex:sectionHeader title="RI Report Setup" subtitle="Option Selection">
+	</apex:sectionHeader>
+	
+	<apex:pageBlock title="Select Date Range">
+		 <apex:selectList value="{!dateRanges}" style="width: 100px;">
+            <apex:selectOptions value="{!dateRange}"/>
+        </apex:selectList><p/>
+	</apex:pageBlock>
+	
+	<apex:pageBlock title="Select Columns">
+		<apex:repeat value="{!filterOptions}" var="opt">
+			<apex:inputCheckbox label="{!opt.fieldName}" value="{!opt.selected}"/>{!opt.fieldName} <br />
+		</apex:repeat>
+		<br /><br />
+		<apex:commandButton action="{!buildReport}" value="Build Report" />
+	</apex:pageBlock>
+
+</apex:form>	
+
+</apex:page>

@@ -1,0 +1,499 @@
+<apex:page applyBodyTag="false" showHeader="false" sidebar="false"  docType="html-5.0"  standardStylesheets="false" controller="Web_Core_Controller">
+<head>
+    <title>Al Rayan Bank</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no"/>
+    
+    <!-- JQuery -->
+    <!--<apex:includeScript value="https://code.jquery.com/jquery-1.11.3.min.js"/>-->
+
+<apex:includeScript value="{!URLFOR($Resource.JQuery, 'jquery-1.11.3.min.js')}"  />
+
+
+    <!--
+   <style>
+       .form-control.ng-valid{
+           border-color:green;
+       }
+   </style>
+   -->
+    
+    <!-- Bootstrap -->
+    <!--
+    <apex:stylesheet value="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <apex:stylesheet value="https://maxcdn.bootstrapcdn.com/bootswatch/3.2.0/spacelab/bootstrap.min.css"/>
+    <apex:stylesheet value="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"/>
+    <apex:includeScript value="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"/>
+    -->
+    
+    <apex:stylesheet value="{!URLFOR($Resource.Bootstrap_3_2_0, '/css/bootstrap.min.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.Bootstrap_3_2_0, '/css/bootstrap_spacelab.min.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.FontAwesome_4_5_0, '/css/font-awesome.min.css')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Bootstrap_3_2_0, '/js/bootstrap.min.js')}"  />
+    
+    <link href="//fonts.googleapis.com/css?family=Amethysta" rel="stylesheet" type="text/css"/>
+    <link href="//fast.fonts.net/cssapi/127ef530-1eee-4efb-8ebe-815719f876a3.css" rel="stylesheet" type="text/css" />
+
+    <!-- Angular Resources -->
+    <!--
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular.min.js"/>
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular-animate.min.js"/>
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular-sanitize.js"/>
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-messages.js"/>
+    -->
+    <!--
+    <apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.11/angular.min.js"/>
+<apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.11/angular-animate.min.js"/>
+<apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.11/angular-sanitize.js"/>
+<apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular-messages.js"/>
+-->
+
+<apex:includeScript value="{!URLFOR($Resource.Angular_1_3_11, 'angular.min.js')}"  />
+<apex:includeScript value="{!URLFOR($Resource.Angular_1_3_11, 'angular-animate.min.js')}"  />
+<apex:includeScript value="{!URLFOR($Resource.Angular_1_3_11, 'angular-sanitize.js')}"  />
+<apex:includeScript value="{!URLFOR($Resource.Angular_1_3_11, 'angular-messages.js')}"  />
+
+
+
+    <!-- Angular custom -->
+    <!--<apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/app/app.js')}"/>-->    
+   <apex:outputPanel layout="none" rendered="{!PageUsesKendo}">
+       <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/app/app_kendo.js')}"  />
+   </apex:outputPanel>
+   
+   <apex:outputPanel layout="none" rendered="{!!PageUsesKendo}">
+       <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/app/app.js')}"  />
+   </apex:outputPanel>
+    
+    
+    
+    <!-- Custom CSS -->
+    <apex:stylesheet value="{!URLFOR($Resource.CAA_Includes, '/css/css.css')}"/>
+    
+    <apex:stylesheet value="{!URLFOR($Resource.CAA_Includes, '/css/wait.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.CAA_Includes, '/css/structure.css')}"/>
+
+
+<c:CAA_CSS ></c:CAA_CSS>
+
+    <!-- Page specific css and js -->
+    <apex:insert name="include" />
+
+    
+    <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/controller/controller_date_control.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/service/service_application.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/service/service_messagebroker.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/controller/controller_core.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/service/service_parameters.js')}"/>
+
+<style>
+.contentWide{
+    background-color: #fff;
+    position: relative;
+    width: 100%;
+    padding:30px 30px;
+}
+
+.contentWide h1{
+    letter-spacing: -0.04em;
+    margin: 0;
+    color: #927041;
+    font-family:'Optima LT W01 Medium';
+}
+
+.content-page #contour fieldset.contourFieldSet .contourField input[type="text"], .content-page #contour fieldset.contourFieldSet .contourField input[type="tel"], .content-page #contour fieldset.contourFieldSet .contourField input[type="email"], .content-page #contour fieldset.contourFieldSet .contourField select, .content-page #contour fieldset.contourFieldSet .contourField textarea{
+    margin: 0.5em 0 0;
+    background: #f3f3f3;
+    border: 1px solid #ededed;
+    padding: 5px;
+}
+
+div.contourField > label{
+    display: block !important;
+    width: 100%;
+    float: left;
+    clear: left;
+    background: transparent !important;
+    margin-bottom:-5px;
+    margin-top:10px;
+}
+
+#contour .checkboxlist input, #contour .radiobuttonlist input, #contour .checkbox input, .contour .checkboxlist input, .contour .radiobuttonlist input, .contour .checkbox input{
+    width: auto !important;
+    height: auto !important;
+    border: none !important;
+    display: inline !important;
+}
+
+.checkboxlist div span label{
+    font-weight:normal;
+}
+
+.content-page .contourFieldSet label.fieldLabel{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    margin-bottom:5px;
+}
+
+
+.content-page .contourFieldSet legend{
+    font-size:13px !important;
+    font-weight:bold;
+}
+
+
+
+h1, h2, h3, h4, h5, header, .button, input[type="text"], .buttons, .footer-additional-info, footer .col-1 strong, footer .col-2 strong, footer .col-3 strong, footer .col-4 strong, .sharia-finance h2, .tools-support, .hubBanner, #tabs > ul li, .column-2 .product-widgets strong, a
+{
+    font-family:'Optima LT W01 Medium';   
+}
+
+.content-page #contour fieldset.contourFieldSet select{
+    width:300px;
+}
+
+#contour input.text, #contour textarea, .contour input.text, .contour textarea{
+    width:300px;
+}
+
+.error{
+    border:1px solid #ffcccc !important;
+}
+
+#contour input[type="submit"], .contour input[type="submit"]{
+    color: #fefefe;
+    height: 40px!important;
+    /*line-height: 40px!important;*/
+    text-align: center;
+    text-decoration: none;
+    padding: 11px 12px;
+    background: #b3995d;
+    border-radius: 1px;
+    font-size: 13px;
+    font-family: 'Optima LT W01 Medium';
+    font-weight: 400;
+    border: none;
+    vertical-align:middle;
+}
+
+#contour input[type="submit"]:hover,
+.contour input[type="submit"]:hover {
+    color: #ffffff !important;
+    background: #333333;
+    -moz-transition: background-color 0.2s;
+    -o-transition: background-color 0.2s;
+    -webkit-transition: background-color 0.2s;
+    transition: background-color 0.2s;
+    cursor: pointer;
+}
+
+</style>
+
+</head>
+
+
+    
+<body ng-app="caaApp" class="brightGreyBack" ng-controller="controllerCore">
+
+<div class="navbar navbar-default navbar-fixed-top arbHeader">
+
+<div class="container" >
+<apex:outputPanel rendered="{!Not(ShowInternalHeader)}">
+<div class="navbar-header" style="min-height:90px;">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <!--<a class="navbar-brand" href="#">Brand</a>-->
+      
+
+      <img style="padding-right:80px;" class="navbar-brand hidden-xs" itemprop="logo" src="//www.alrayanbank.co.uk/sites/default/files/media/file-uploads/2021-04/logo.png" alt="Al Rayan Bank"/>
+      
+      <img   class="navbar-brand visible-xs" style="position: absolute;left: 50%;display: block;margin-left: -70px !important;  /* 50% of your logo width */"  itemprop="logo" src="//www.alrayanbank.co.uk/sites/default/files/media/file-uploads/2021-04/logo.png" alt="Al Rayan Bank"/>
+      
+      
+    <div class="tagline hidden-xs" style="padding-top:53px;min-width:450px;">Banking you can <strong>believe</strong> in</div>
+    
+    
+    
+</div>
+
+
+
+
+
+
+
+
+
+<div class="navbar-collapse collapse">
+
+      <div class="navbar-right">
+      
+      <div id="headerLinks">
+       <div style="padding:5px;background-color: rgb(30,30,30);color:#fff;padding-left:20px;min-width:250px;">
+             <a href="http://www.alrayanbank.co.uk/useful-info-tools/about-us/contact-us/"><span style="padding-right:10px;"><i class="fa fa-phone"></i></span>Contact us</a>
+        </div>
+        <div style="padding:5px;background-color: rgb(179,153,93);color:#fff;padding-left:20px;min-width:250px;">
+            <a href="https://online.alrayanbank.co.uk/online/aspscripts/Logon.asp"><span style="padding-right:10px;"><i class="fa fa-lock"></i></span>Online banking</a>
+        </div>
+        </div>
+      
+      
+      
+      
+      
+      
+        <!--<p class="navbar-text">I'm navbar-fixed-top</p>-->
+      </div>
+    </div>
+    
+  
+       </apex:outputPanel>
+       
+       
+       <apex:outputPanel rendered="{!ShowInternalHeader}">
+        <c:CAA_Header Opp="{!Opp}"/>
+    </apex:outputPanel>
+    
+   </div>
+    
+    
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    
+    <div class="container" style="min-height:600px;padding-top:50px;" ng-cloak="ng-cloak">  
+    
+    <apex:outputPanel rendered="{!ShowImage} && false" layout="none">
+    
+     <div class="{{ImageClass()}}" style="height:350px;padding-top:74px">
+    <div style="background-color:#fff;width:280px; height:150px;padding-top:25px;padding-bottom:17px;padding-left:20px;">
+        <div class="bannertitle hidden-xs" style="height:101px;background-repeat: no-repeat;">
+        
+        </div>
+        </div>
+    </div>
+    
+    
+    
+    <div class="row" id="header-photo" style="background-color:#fff;margin-left:0px;margin-right:0px;margin-bottom:20px">
+        <div class="col-md-9 col-sm-12">
+        
+        <div style="background-color:#fff;padding-top:20px;padding-bottom:20px;">
+            <div class="SectionHeader">
+                You can complete this application within about <strong>15 minutes</strong>
+            </div>
+            <div class="SectionContainer">
+                <div>
+                    <strong>This form has 4 sections:</strong>
+                </div>
+                <div class="row" >
+                    <div class="col-sm-3">
+                        <div class="arrow_box">
+                            <span>
+                            <span class="numberCircle-sm">1</span>
+                            <span>Account details</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="arrow_box">
+                            <div class="numberCircle-sm">2</div>
+                        <div>
+                            Personal details
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="arrow_box">
+                        <div class="numberCircle-sm">3</div>
+                            Declaration
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="arrow_box">
+                        <div class="numberCircle-sm">4</div>
+                            Next steps
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        
+        
+            <div class="SectionContainer">
+                <div>
+                    <strong>You will need:</strong>
+                </div>
+                <div>
+                    Move in dates for each applicant's home address <span class="darkGreyColor">(covering the past three years)</span>
+                </div>
+                <div>
+                    If you are opening an ISA you’ll need your National Insurance number <span class="darkGreyColor"></span>
+                </div>
+            
+            </div>
+        
+        
+        </div>
+        
+        
+        
+        </div>
+        <div class="col-md-3 col-sm-12 progressCol">
+        
+            <div class="LoginContainer">
+                <div>
+                    <p><strong>Existing Al Rayan Bank customers</strong> 
+                    should apply through online banking</p>
+                </div>
+                <div>
+                    <a style="color:#fff;" href="https://online.alrayanbank.co.uk/online/aspscripts/Logon.asp" class="btn loginbutton">Login</a>
+                </div>
+            </div>
+        
+        </div>
+        </div>
+    </apex:outputPanel>
+    
+ 
+    
+    
+    <apex:insert name="body" /> 
+    
+    
+  
+    </div>  
+    
+    
+    <!-- Load Screen -->
+        <div class="regionLoad" ng-cloak="ng-cloak" ng-show="Load" style="box-sizing: content-box !important; -webkit-box-sizing: content-box !important;">
+            <div class="regionWaitBackground" style="box-sizing: content-box !important; -webkit-box-sizing: content-box !important;"></div>
+            <div class="regionWaitMessage text-center" style="box-sizing: content-box !important; -webkit-box-sizing: content-box !important;">
+                <div class="regionSpinner">
+                    
+                </div>
+                <div class="regionTitle">
+                    Please wait
+                </div>
+                                
+            </div>
+        </div>
+  
+  <footer class="footer">
+      <div class="container">
+         <!--C0697-->
+         <c:Standard_Footer_Copyright_Links />
+      </div>
+    </footer>
+    </body>   
+    
+    
+    <style>
+       .affix-top,.affix{
+    position: static;
+}
+
+@media (min-width: 979px) {
+  #sidebar.affix-top {
+    position: static;
+    /*margin-top:30px;*/
+    width:262px;
+  }
+  
+  #sidebar.affix {
+    position: fixed;
+    /*top:20px;*/
+    width:262px;
+  }
+}
+
+    
+    </style>
+    
+    
+    <script>
+        $('#sidebar').affix({
+      offset: {
+        top: 0
+      }
+});
+
+var $body   = $(document.body);
+var navHeight = $('.navbar').outerHeight(true) ;
+
+$body.scrollspy({
+    target: '#rightCol',
+    offset: navHeight
+});
+        
+    </script>
+      <script>
+$(function () {
+  $('[data-toggle="popover"]').popover();
+  Visualforce.remoting.timeout = 120000; // Set timeout at page level
+  Visualforce.remoting.escape= false;
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+
+<script>
+    /* C0697 Removed for future use
+  
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-1918108-1', 'auto', {'allowLinker': true});
+  ga('require', 'linker');
+  ga('linker:autoLink', ['alrayanbank.co.uk'] );
+  ga('create', 'UA-1918108-16', 'auto', {'name': 'newTracker'});  // New tracker.
+  ga('require', 'displayfeatures');
+  ga('require', 'linkid', 'linkid.js');
+  ga('send', 'pageview');
+  ga('newTracker.send', 'pageview'); // Send page view for new tracker.
+  
+    */
+  
+</script>
+</apex:page>

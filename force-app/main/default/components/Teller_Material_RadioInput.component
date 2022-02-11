@@ -1,0 +1,18 @@
+<apex:component >
+	<apex:attribute name="labelText" description="Label Text" type="String" required="true"/>	
+	<apex:attribute name="modelProperty" description="Property to bind to on the Model" type="String" required="true"/>	
+	<apex:attribute name="radioGroup" description="Radio group" type="String" required="false"/>	
+	<apex:attribute name="radioValue" description="Radio value" type="String" required="false"/>
+	<apex:attribute name="radioChecked" description="Radio checked" type="String" required="false"/>
+	<apex:attribute name="init" description="initialise logic" type="String" required="false"/>
+	
+	<div style="cursor: pointer;">
+		<label class="md_radio">
+			<span ng-class="{'md_radio_circle' : {!modelProperty} == '{!radioValue}' }" style="border-radius: 100px; -moz-border-radius: 100px; -webkit-border-radius: 100px;"></span>
+			<input class="md_radio_input" type="radio" name="{!radioGroup}" ng-model="{!modelProperty}" value="{!radioValue}" ng-init="{!init}"></input>
+			<div class="md_radio_off_radio"></div>
+			<div class="md_radio_on_radio"></div>
+			{!labelText}
+		</label>	
+	</div>
+</apex:component>

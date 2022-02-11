@@ -1,0 +1,54 @@
+@charset "UTF-8";
+/* CSS Document */
+
+#introPromos { 
+	clear:both; 
+	width:714px; 
+	margin-bottom:1em;
+}
+
+
+#introPromos .column { 
+	display:block; 
+	width:347px; 
+	float:left;
+}
+
+
+#introPromos .column .promo { margin-bottom:.5em;}
+
+#introPromos .column.Two { margin-left:20px; }
+
+
+
+#introPromos .column .promoTitle {}
+#contents #introPromos .promoText .promoTitle { font-size:1.077em;}
+
+
+
+#contents .module.formBlock {
+	margin-bottom:1em;
+}
+
+#contents .module.formBlock fieldset {
+	border:1px solid #CCCCCC;
+	padding-top: 0.8em;
+	padding-right: 0pt;
+	padding-left: 1em;
+}
+ 
+ 
+#contents .module.formBlock fieldset legend {
+	border:1px solid #CCCCCC;
+	padding-top: 0.3em;
+	padding-right: 0.5em;
+	padding-bottom: 0.5em;
+	padding-left: 0.5em;
+	margin-top: 1em;
+	margin-right: 1em;
+	margin-bottom: 0pt;
+	margin-left: 0pt;
+	white-space: normal;
+}
+
+#contents .module.formBlock select { width:250px; }

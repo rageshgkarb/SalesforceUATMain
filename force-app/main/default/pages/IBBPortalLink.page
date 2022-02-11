@@ -1,0 +1,19 @@
+<!-- C0105 -->
+
+<apex:page sidebar="false" showHeader="false">
+
+ <apex:form >
+        <apex:pageBlock >
+        
+          <h1>IBB Portal</h1>
+          <div></div>     
+           
+          To open IBB portal please click the link below:
+         
+          <div></div>
+         
+              <apex:outputLink value="http://appsrv03:83/Login.aspx">Open IBB Portal</apex:outputLink>
+            </apex:pageBlock>    
+       
+ </apex:form>
+</apex:page>

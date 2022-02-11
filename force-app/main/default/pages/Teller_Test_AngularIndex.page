@@ -1,0 +1,6 @@
+<apex:page applyBodyTag="false" showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false">
+<!-- Begin Default Content REMOVE THIS -->
+<img ng-src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/splash.png')}" 
+style="margin: 0; padding: 0; height: 100%; width: 100%"></img>
+
+</apex:page>

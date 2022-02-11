@@ -1,0 +1,548 @@
+<apex:page showHeader="false" sidebar="false" controller="MMR_Suitability" docType="html-5.0" action="{!Setup}">
+<head>
+    <c:MMR_PageHeader ></c:MMR_PageHeader>
+</head>
+<style type="text/css">
+        .borderCircle{
+        border-radius: 50%;
+        behavior: url(PIE.htc); /* remove if you don't care about IE8 */
+        float: left;
+        width: 25px;
+        height: 25px;
+        padding-top: -2px;
+        margin-right:7px;    
+        color: rgb(179,153,93);
+        text-align: center;
+        font-weight: bold;
+        border: 2px solid rgb(179,153,93);
+        font-size: 18px ;
+    
+    }
+    
+    .borderCircleBtn{
+        border-radius: 50%;
+        behavior: url(PIE.htc); /* remove if you don't care about IE8 */
+        float: left;
+        width: 20px;
+        height: 20px;
+        padding-top: -2px;
+        margin-right:7px;    
+        color: #fff;
+        text-align: center;
+        font-weight: bold;
+        border: 2px solid #fff;
+        font-size: 14px ;
+    
+    }
+</style>
+<body>
+
+  
+  <c:MMR_Header title="Product Suitability" numapps="{!numapplying}" opp="{!bopp}"/>
+
+      <div class="container">
+              
+    
+        <apex:form id="aForm" styleClass="form-horizontal">
+        <div class="panel panel-primary">
+        <div class="panel-heading">
+         <!--REAC-III Enhancement start-->
+            <!--<h2>Product Suitability</h2>-->
+            <h2>{!IF (!CONTAINS(Opp.Interested_in__c, 'REAC'),'Product Suitability', 'Product Suitability - Questions irrelevant for REAC products')}</h2>
+       <!--REAC-III Enhancement end-->
+
+        </div>
+        <div class="panel-body">
+        <div class="col-sm-12">
+        <div class="row">
+            <div class="form-group">
+            <div class="col-sm-4">
+                <label>
+                    How important is it for you to have the option to buy sharia compliant products?
+                </label>
+            </div>
+            
+            <div class="col-sm-6">
+                <!-- CR01032383 -->
+                <!--apex:inputfield styleClass="form-control" value="{!Opp.Sharia_compliant_products__c}"/-->
+               
+                <apex:inputfield styleclass="form-control" value="{!Opp.Sharia_compliant_products2__c}" />
+            </div>
+            <div class="col-sm-2">
+            <!--REAC-III Enhancement start-->
+             <!--   <apex:inputfield required="true" styleClass="form-control" value="{!Opp.Letter_sharia_compliant__c}"/>-->
+             <div class="requiredInput">
+                 <apex:selectlist styleclass="form-control" required="true" value="{!Opp.Letter_sharia_compliant__c}" id="Lsc" size="1"> 
+                     <apex:selectOptions value="{!Suitableevent}"/> 
+                 </apex:selectlist>
+                </div>  
+             <!--REAC-III Enhancement end-->     
+            </div>
+            </div>
+        </div>    
+        
+                
+        
+        
+        
+        <div class="row">
+            <div class="form-group">
+            <div class="col-sm-4">
+                <label>
+                    How important is it for you to have stability in your payments in the early years?
+                </label>
+            </div>
+            <div class="col-sm-6">
+                <apex:inputfield styleClass="form-control" value="{!Opp.Stability_in_payments__c}"/>
+            </div>
+            <div class="col-sm-2">
+               <!--REAC-III Enhancement start-->  
+               <!-- <apex:inputfield required="true"  styleClass="form-control" value="{!Opp.Letter_payment_stability__c}"/>-->
+               <div class="requiredInput">
+                 <apex:selectlist styleclass="form-control" required="true" value="{!Opp.Letter_payment_stability__c}" id="Lps" size="1"> 
+                     <apex:selectOptions value="{!Suitableevent}"/> 
+                 </apex:selectlist>
+                </div>  
+               <!--REAC-III Enhancement end-->  
+            </div>
+            </div>
+        </div> 
+        
+        
+        
+        <div class="row">
+            <div class="form-group">
+            <div class="col-sm-4">
+                <label>
+                    How important is it for you to have no early payment charges?
+                </label>
+            </div>
+            <div class="col-sm-6">
+                <apex:inputfield styleClass="form-control" value="{!Opp.No_early_repayment_charges__c}"/>
+            </div>
+            <div class="col-sm-2">
+              <!--REAC-III Enhancement start-->  
+                 <!--<apex:inputfield required="true"  styleClass="form-control" value="{!Opp.Letter_Early_Repayment__c}"/>-->
+                  <div class="requiredInput">
+                 <apex:selectlist styleclass="form-control" required="true" value="{!Opp.Letter_Early_Repayment__c}" id="Lep" size="1"> 
+                     <apex:selectOptions value="{!Suitableevent}"/> 
+                 </apex:selectlist>
+                </div>  
+              <!--REAC-III Enhancement end-->  
+            </div>
+            </div>
+        </div> 
+        
+        
+        <div class="row">
+            <div class="form-group">
+            <div class="col-sm-4">
+                <label>
+                    How important is it for you to have the ability to make additional acquistion payments?
+                </label>
+            </div>
+            <div class="col-sm-6">
+                <apex:inputfield styleClass="form-control" value="{!Opp.Lump_sum_payments__c}"/>
+            </div>
+            <div class="col-sm-2">
+            <!--REAC-III Enhancement start-->  
+               <!-- <apex:inputfield required="true"  styleClass="form-control" value="{!Opp.Letter_lump_sum__c}"/>-->
+               <div class="requiredInput">
+                 <apex:selectlist styleclass="form-control" required="true" value="{!Opp.Letter_lump_sum__c}" id="Lls" size="1"> 
+                     <apex:selectOptions value="{!Suitableevent}"/> 
+                 </apex:selectlist>
+                </div>  
+                <!--REAC-III Enhancement end-->  
+            </div>
+            </div>
+        </div> 
+        
+         <div class="row">
+            <div class="form-group">
+            <div class="col-sm-4">
+                <label>
+                    How important is it for you to have your payments as low as possible at the outset?
+                </label>
+            </div>
+            <div class="col-sm-6">
+                <apex:inputfield styleClass="form-control" value="{!Opp.Payments_low_as_possible__c}"/>
+            </div>
+            <div class="col-sm-2">
+             <!--REAC-III Enhancement start--> 
+               <!-- <apex:inputfield required="true"  styleClass="form-control" value="{!Opp.Letter_low_payments__c}"/>-->
+               <div class="requiredInput">
+                 <apex:selectlist styleclass="form-control" required="true" value="{!Opp.Letter_low_payments__c}" id="Llp" size="1"> 
+                     <apex:selectOptions value="{!Suitableevent}"/> 
+                 </apex:selectlist>
+                </div>
+              <!--REAC-III Enhancement end-->    
+            </div>
+            </div>
+        </div>  
+        
+        <div class="row">
+            <div class="form-group">
+            <div class="col-sm-4">
+                <label>
+                    Are you expecting your income to significantly change in the near future?
+                </label>
+            </div>
+            <div class="col-sm-6">
+                <apex:inputfield styleClass="form-control" value="{!Opp.Income_change__c}"/>
+            </div>
+            <div class="col-sm-2">
+            <!--REAC-III Enhancement start--> 
+              <!--  <apex:inputfield required="true"  styleClass="form-control" value="{!Opp.Letter_income_change__c}"/>-->
+              <div class="requiredInput">
+                 <apex:selectlist styleclass="form-control" required="true" value="{!Opp.Letter_income_change__c}" id="Llc1" size="1"> 
+                     <apex:selectOptions value="{!SuitableYN}"/> 
+                 </apex:selectlist>
+                </div>
+            <!--REAC-III Enhancement end-->     
+            </div>
+            </div>
+        </div>  
+        
+           
+        <div class="row">
+            <div class="form-group">
+            <div class="col-sm-4">
+                <label>
+                    Would you cope if your plan payments increased significantly?
+                </label>
+            </div>
+            <div class="col-sm-6">
+                <apex:inputfield styleClass="form-control" value="{!Opp.Payments_increased__c}"/>
+            </div>
+            <div class="col-sm-2">
+            <!--REAC-III Enhancement start--> 
+               <!-- <apex:inputfield required="true"  styleClass="form-control" value="{!Opp.Letter_payments_increased__c}"/>-->
+               <div class="requiredInput">
+                 <apex:selectlist styleclass="form-control" required="true" value="{!Opp.Letter_payments_increased__c}" id="Lpi1" size="1"> 
+                     <apex:selectOptions value="{!SuitableYN}"/> 
+                 </apex:selectlist>
+                </div>
+             <!--REAC-III Enhancement end-->    
+            </div>
+            </div>
+        </div>
+   
+        
+       
+        
+             
+        <div class="row">
+            <div class="form-group">
+            <div class="col-sm-4">
+                <label>
+                    Are you expecting your expenditure to significantly change in the foreseeable future?
+                </label>
+            </div>
+            <div class="col-sm-6">
+                <apex:inputfield styleClass="form-control" value="{!Opp.Expenditure_change__c}"/>
+            </div>
+            <div class="col-sm-2">
+            <!--REAC-III Enhancement end--> 
+               <!-- <apex:inputfield required="true"  styleClass="form-control" value="{!Opp.Letter_expenditure_change__c}"/>-->
+               <div class="requiredInput">
+                 <apex:selectlist styleclass="form-control" required="true" value="{!Opp.Letter_expenditure_change__c}" id="Lec1" size="1"> 
+                     <apex:selectOptions value="{!SuitableYN}"/> 
+                 </apex:selectlist>
+                </div>
+            <!--REAC-III Enhancement end-->     
+            </div>
+            </div>
+        </div>
+        
+
+         
+        <div class="row">
+            <div class="form-group">
+            <div class="col-sm-4">
+                <label>
+                    Are you planning to move within the foreseeable future?
+                </label>
+            </div>
+            <div class="col-sm-6">
+                <apex:inputfield styleClass="form-control" value="{!Opp.Moving_house_soon__c}"/>
+            </div>
+            <div class="col-sm-2">
+              <!--REAC-III Enhancement start-->  
+                <!--<apex:inputfield required="true"  styleClass="form-control" value="{!Opp.Letter_moving_house__c}"/>-->
+                <div class="requiredInput">
+                 <apex:selectlist styleclass="form-control" required="true" value="{!Opp.Letter_moving_house__c}" id="Lmh1" size="1"> 
+                     <apex:selectOptions value="{!SuitableYN}"/> 
+                 </apex:selectlist>
+                </div>
+              <!--REAC-III Enhancement end-->    
+            </div>
+            </div>
+        </div>
+        
+
+        <div class="row" style="visibility:hidden;" id="displayLowCostQuestion">
+            <div class="form-group">
+            <div class="col-sm-4" >
+                <label>
+                    How important is it for you to pay low upfront costs?
+                </label>
+            </div>
+            <div class="col-sm-6">
+                <apex:inputfield styleClass="form-control" value="{!Opp.Low_Up_Front_Costs__c}"/>
+            </div>
+            <div class="col-sm-2">
+             <apex:inputfield styleClass="form-control" value="{!Opp.Letter_Low_Up_Front_Costs__c}"/>
+                   
+            </div>
+            </div>
+        </div>
+
+
+
+        <div class="row">
+            <div class="form-group">
+            <div class="col-sm-5">
+                <label>
+                    Suitable term of finance discussed with customer(s) including:
+<ul style="padding-left:0;">
+<li>customer(s) aims / views of suitable term</li>
+<li>surplus disposable income available / amount willing to commit / affordability </li>
+<li>any known / likely income or expenditure changes</li>
+<li>overall cost comparison (eg. potential total cost saving of a shorter term)</li>
+<li>retirement age (evidence required if term taken beyond normal retirement age)</li>
+<li>any other factors identified from the fact find</li>
+</ul>
+                </label>
+            </div>
+            <div class="col-sm-7">
+                <apex:inputTextArea rows="10" styleClass="form-control"  value="{!Opp.Term_in_mind__c}"/>
+            </div>
+            
+            </div>
+        </div>
+        
+        </div>
+        </div>
+        </div>
+         
+               <div class="panel panel-primary">
+                  <div class="panel-heading">Recommendation</div>
+                  <div class="panel-body">
+                    <div class="col-xs-12">
+                    <div class="row">
+            <div class="form-group">
+            <div class="col-sm-4">
+                <label>
+                    1st priority
+                </label>
+            </div>
+            <div class="col-sm-4 col-lg-3">
+             <!-- REAC-111 Enhancement start-->
+                <!--<apex:inputfield required="true"  styleClass="form-control" value="{!Opp.X1st_priority__c}"/>-->
+                 <div class="requiredInput">
+                  <apex:selectlist styleclass="form-control" required="true" value="{!Opp.X1st_priority__c}" id="prior1" size="1"> 
+                  <apex:selectOptions value="{!Priority}"/> 
+                  </apex:selectlist>
+               </div> 
+            <!-- REAC-111 Enhancement end-->     
+            </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="form-group">
+            <div class="col-sm-4">
+                <label>
+                    2nd priority
+                </label>
+            </div>
+            <div class="col-sm-4 col-lg-3">
+             <!-- REAC-111 Enhancement start-->
+                <!--<apex:inputfield required="true"  styleClass="form-control" value="{!Opp.X2nd_priority__c}"/>-->
+                 <div class="requiredInput">
+                 <apex:selectlist styleclass="form-control" required="true" value="{!Opp.X2nd_priority__c}" id="prior2" size="1"> 
+                 <apex:selectOptions value="{!Priority}"/> 
+                 </apex:selectlist>
+                 </div>
+             <!-- REAC-111 Enhancement end-->     
+            </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="form-group">
+            <div class="col-sm-4">
+                <label>
+                    3rd priority
+                </label>
+            </div>
+            <div class="col-sm-4 col-lg-3">
+             <!-- REAC-111 Enhancement start-->
+                <!--<apex:inputfield required="true"  styleClass="form-control" value="{!Opp.X3rd_priority__c}"/>-->
+                <div class="requiredInput">
+                <apex:selectlist styleclass="form-control" required="true" value="{!Opp.X3rd_priority__c}" id="prior3" size="1"> 
+                 <apex:selectOptions value="{!Priority}"/> 
+                 </apex:selectlist>
+                </div> 
+              <!-- REAC-111 Enhancement start-->   
+            </div>
+            </div>
+        </div>
+
+        <div class="row" title="{!$ObjectType.Opportunity.fields.Consent_Obtained__c.InlineHelpText}">
+            <div class="form-group">
+            <div class="col-sm-4">
+                <label>
+                    Consent Obtained
+                </label>
+                <span class="borderCircle pull-right" data-toggle="popover" data-placement="tooltip" data-trigger="click" data-html="true" data-content="{!$ObjectType.Opportunity.fields.Consent_Obtained__c.InlineHelpText}">?</span>
+            </div>
+            <div class="col-sm-4 col-lg-3">
+                <apex:inputfield required="true"  styleClass="form-control" value="{!Opp.Consent_Obtained__c}"/>
+            </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="form-group">
+            <div class="col-sm-4">
+                <label>
+                    Product recommendation
+                </label>
+            </div>
+            <div class="col-sm-4 col-lg-3">
+                <apex:selectList id="prodSelect" required="true" size="1" styleClass="form-control" value="{!Opp.Product_recommendation__c}">
+                    <apex:selectOptions value="{!ProductItems}"  />
+                    
+                    
+                </apex:selectList>
+            
+            
+                <!--<apex:inputfield styleClass="form-control" value="{!Opp.Product_recommendation__c}"/>-->
+            </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="form-group">
+            <div class="col-sm-4">
+                <label>
+                    Reason for recommendation
+                </label>
+            </div>
+            <div class="col-sm-4 col-lg-3">
+                <apex:inputfield required="true"  styleClass="form-control" value="{!Opp.Reason__c}"/>
+            </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="form-group">
+            <div class="col-sm-4">
+                <label>
+                    Finance required
+                </label>
+            </div>
+            <div class="col-sm-3 col-lg-2">
+                <apex:inputfield required="true"  styleClass="form-control" value="{!Opp.Finance_Required__c}"/>
+            </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="form-group">
+            <div class="col-sm-4">
+                <label>
+                    Term
+                </label>
+            </div>
+            <div class="col-sm-3 col-lg-2">
+                <apex:inputfield required="true"  styleClass="form-control" value="{!Opp.Term_of_Finance__c}"/>
+            </div>
+            </div>
+        </div>
+        <!--C0782 START
+        <div class="row">
+            <div class="form-group">
+            <div class="col-sm-4">
+                <label>
+                    Reason for term
+                </label>
+            </div>
+            <div class="col-sm-5 col-lg-5">
+                <apex:inputfield required="true"  styleClass="form-control" value="{!Opp.Reason_for_term__c}"/>
+            </div>
+            </div>
+        </div>
+        reac end-->            
+         <!--C0782 REAC changes started-->     
+   <div class="row">
+            <div class="form-group">
+            <div class="col-sm-4">
+                <label>
+                    Reason for term 
+                </label>
+            </div>
+            <div class="col-sm-4 col-lg-3">
+             <div class="requiredInput">
+            
+                <apex:selectlist required="true" styleclass="form-control" id="Interest" value="{!Opp.Reason_for_term__c}"  size="1"> <!-- REAC changes ; removed style="font-size:1.5em;" -->
+                                <apex:selectOptions value="{!items}"/> 
+                                <apex:actionSupport event="onchange" reRender="panelID" /><!-- REAC Chnages; added to rerender panelID on each picklist select -->
+                </apex:selectlist>
+            </div>
+            </div>
+            </div>
+        </div>
+        <!-- REAC Changes; following panel should be displayed if user selects 'aligned to your pre-existing term' picklist value-->
+        <apex:outputPanel id="panelID">
+        <apex:outputpanel rendered="{!Opp.Reason_for_term__c == 'aligned to your pre-existing term'}">
+         <div class="row">
+            <div class="form-group">
+            <div class="col-sm-4">
+                <label>
+                    Reason for aligned to your pre-existing term
+                </label>
+            </div>
+            <div class="col-sm-3 col-lg-2">
+                <apex:inputfield styleClass="form-control" value="{!Opp.Reason_aligned_to_your_pre_existing_term__c}"/>
+            </div>
+            </div>
+        </div> 
+        </apex:outputPanel>
+        </apex:outputPanel>
+              <!--CO782 REAC changes end-->                
+                    
+                  </div>
+                </div>
+  </div>
+    
+ <apex:commandButton styleClass="btn btn-success" value="Save" action="{!Save}" rendered="{!!IsCompleted}"/>
+ 
+<div class="row">
+  <apex:commandButton styleClass="btn btn-success"  value="Accept Recommendation" action="{!Accept}" rendered="{!!IsCompleted}"/>
+  <apex:commandButton styleClass="btn btn-danger"  value="Decline Recommendation" action="{!Decline}" rendered="{!!IsCompleted}"/>
+  <apex:pageMessages />
+</div>
+     
+     
+     
+        </apex:form>        
+    </div>
+    
+    <c:MMR_PageFooter ></c:MMR_PageFooter>
+
+<span id="pca_status" style="display:none;" />
+<script type="text/javascript">
+    //pca_Load();
+
+    window.onload = function() {
+        if({!displayLowCostQuestion} == true){
+          document.getElementById('displayLowCostQuestion').style.visibility = 'visible';
+    }
+  }
+</script>
+    
+</body>
+
+</apex:page>

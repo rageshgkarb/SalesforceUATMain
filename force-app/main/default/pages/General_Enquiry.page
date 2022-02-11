@@ -1,0 +1,328 @@
+<apex:page controller="General_Enquiry_Controller" action="{!onLoad}" showHeader="false" sidebar="false" standardStylesheets="false">
+<apex:composition template="Web_Template">
+<apex:define name="body">
+<div class="content content-page">
+<div class="col-md-9">
+<section class="contentWide">
+        <div class="content-split">
+            <div class="column-1 contentP">
+              <div class="enquiry-form">
+                <h1>General enquiries</h1>
+                  <h4>Al Rayan Bank is the UK&#39;s largest and oldest Sharia compliant retail bank and offers a range of ethical savings and property finance products, which don't involve interest. If you have a general enquiry about any of our products and services, or about the principles of Sharia compliant finance, please complete this form.</h4>
+                    <p>Please do not share your account information through this form.&nbsp; If you are an existing customer and have a question about your account, please call us on <span class="rTapNumber80141" style="visibility: visible;">0800 408 6407</span> or contact us through online banking secure messaging facility.</p>
+                     <!--C0668-->
+                                <div>
+                                    <label>Are you an existing Al Rayan Bank customer?</label>
+                                </div>
+                                <div>
+                                    <label class="radio-inline"><input type="radio" name="optIsExistingCustomer" ng-model="IsExistingCustomer" value="Yes" />Yes</label>
+                                    <label class="radio-inline"><input type="radio" name="optIsExistingCustomer" ng-model="IsExistingCustomer" value="No" />No</label>
+                                </div>
+                                <div ng-show="IsExistingCustomer == 'Yes'">
+                                    <hr/>
+                                          <div Style="font-style:italic"> Did you know you can contact us using your <a href="https://online.alrayanbank.co.uk/online/aspscripts/Logon.asp"><strong>online banking secure messaging facility.</strong></a></div>
+                                </div>
+                    <!--end C0668-->
+                      
+   <script type="text/javascript">
+       var contourDateFormat = "m/d/yy";
+    </script> 
+    <script type="text/javascript">
+        function QueryStringToJSON(pairs) {
+
+            pairs=pairs.split('&');
+
+            var result = {};
+            pairs.forEach(function(pair) {
+                pair = pair.split('=');
+                result[pair[0]] = decodeURIComponent(pair[1] || '');
+            });
+
+            return JSON.parse(JSON.stringify(result));
+        }
+
+        //C0668
+        $(document).ready(function() {
+            jQuery('[id$=divHFBTL]').hide();
+            jQuery('[id$=divSavingsCA]').hide();
+            jQuery('input:radio[name$=Product]').change(function(){
+                var radio_value= $(this).val();
+                if(radio_value =='Home finance / Buy To Let'){
+                    jQuery('[id$=divHFBTL]').show();
+                    jQuery('[id$=divSavingsCA]').hide();
+                }else if(radio_value =='Savings'){
+                    jQuery('[id$=divHFBTL]').hide();
+                    jQuery('[id$=divSavingsCA]').show();
+                }else if(radio_value =='Current Account'){
+                    jQuery('[id$=divHFBTL]').hide();
+                    jQuery('[id$=divSavingsCA]').show();
+                }else{
+                    jQuery('[id$=divHFBTL]').hide();
+                    jQuery('[id$=divSavingsCA]').hide();
+                }
+            });
+        });
+        //end C0668
+
+        $(document).ready(function(){
+            $('#enquiry-form').submit(function(form){
+                $(".field-validation-valid").html("");
+                $("#enquiry-form .required").removeClass("error");
+
+                var isValid=1;
+
+                $("#enquiry-form .required").each(function(){
+                    if($.trim($(this).val())==''){
+                        $(this).addClass("error");
+                        $("[data-valmsg-for="+$(this).attr("id")+"]").html($(this).attr("data-val-required"));
+                        isValid=0;
+                    }
+                });
+
+                var productList=[];
+                $("[name=Product]").each(function(){
+                    if($(this).prop("checked"))
+                        productList.push($(this).val());
+                });
+
+                var noContactList=[];
+                $("[name=NoContact]").each(function(){
+                    if($(this).prop("checked"))
+                        noContactList.push($(this).val());
+                });
+
+                $("#enq-product-list").val(productList.join(","));
+                $("#enq-no-contact-list").val(noContactList.join(","));
+
+                if(isValid){
+                    var data=JSON.stringify(QueryStringToJSON($('#enquiry-form').serialize()));
+                    General_Enquiry_Controller.SaveEnquiry(data,function(result, event) {
+                      if(event.type == 'exception') {
+
+                          console.log(event.message);
+                      } else {
+                         var  msg = result;
+                          $('.enquiry-form').hide();
+                          $('.thank-you').show();
+
+                          $("body").scrollTop(0);
+                          console.log(msg);
+                          $("#case-ref").html(msg);
+                      }
+                    });
+
+                }
+            });
+
+        });
+    </script>
+    
+    <link rel="stylesheet" type="text/css" href="/umbraco/plugins/umbracocontour/css/jquery-ui-1.8.18.custom.css" />
+    <link rel="stylesheet" type="text/css" href="/umbraco/plugins/umbracocontour/css/defaultform.css" />
+    <div id="contour" class="generalenquiries">
+ 
+    <div ng-show="IsExistingCustomer == 'No'"> <hr/><!--C0668-->
+
+
+<form action="" onsubmit="return false;" enctype="multipart/form-data" method="post" id="enquiry-form" novalidate="novalidate">
+    <input name="__RequestVerificationToken" type="hidden" value="7jAw5bhmjVNhtld3h8RNC/xIhfOY9Ail/PC7S/SmbVyHity77HYWL89BEVSb+jpbgygdHVRfA8RBFuAFuUbn3gPYKsV20iuk49J55guUg1VrJLccTda+Xt6S4pug6V7CCxcLNwFKxTKxVfeMY5fhCX0wqd197yn/blnTDd4UPPuJ2dJm9Rkze4s6dlJbhspC" /><input data-val="true" data-val-required="The FormId field is required." id="FormId" name="FormId" type="hidden" value="309f1292-0ce7-4587-ba9a-14134aea2934" />            <input type="hidden" name="FormStep" id="FormStep" value="1" />
+            <input type="hidden" name="RecordId" id="RecordId" value="" />
+            <input type="hidden" name="PreviousClicked" id="PreviousClicked" value="" />
+            
+        <!--C0668--><div> <Label>What is your enquiry related to?</Label>
+                        <span class="borderCircle pull-right" data-toggle="popover" data-placement="auto right" data-trigger="click" data-content="Can’t see what you’re looking for? Remember, we don’t offer certain products and services such as personal finance, credit cards or student loans.">?</span>
+                    </div>  
+                    <br/>    
+        
+                    <div class="contourField ifyouwouldliketofindoutmoreaboutanyofourshariacompliantproductsandservicespleaseticktherelevantboxesoppositeandwewillcontactyoushortly checkboxlist alternating">
+                        <div>
+
+                     <span Class="radio-inline" id="Products">
+                                <input type="radio" name="Product" id="enq-product-1" value="Home finance / Buy To Let" />
+                                    <label for="enq-product-1">Home finance / Buy To Let</label>
+                                <br/>
+                                <input type="radio" name="Product" id="enq-product-2" value="Savings" />
+                                    <label for="enq-products-2">Savings</label>
+                                <br/>
+                                <input type="radio" name="Product" id="enq-product-3" value="Current Account" />
+                                    <label for="enq-products-3">Current Account</label>
+                                <br/>
+                                <input type="radio" name="Product" id="enq-product-4" value="Sharia compliant finance" />
+                                    <label for="enq-products-4">Sharia compliant finance</label>
+                                <br/>
+                                <input type="radio" name="Product" id="enq-product-5" value="Other" />
+                                    <label for="enq-products-5">Other</label>
+
+                                <input type="hidden" name="ProductList" id="enq-product-list" />
+                        </span>
+
+                        <span class="field-validation-valid" data-valmsg-for="enq-products" data-valmsg-replace="true"></span></div>
+                   </div>
+                                <div Id="divHFBTL">
+                                    <hr/>
+                                          <div Style="font-style:italic"> If you are looking to apply for Home finance or Buy To Let, you can fill out an <a href="https://islamic-bank.secure.force.com/ProxyLogonPage/ExternalEligibility?prodName=null"><strong>online application</strong></a> right now which is the quickest and easiest way to apply.</div>
+                                          <hr/>
+                                </div>
+                  
+                                <div Id="divSavingsCA">
+                                    <hr/>
+                                         <div Style="font-style:italic"> If you are looking to apply for current or savings account, you can fill out an <a href="https://islamic-bank.secure.force.com/CAA_product_screen"><strong>online application</strong></a> right now which is the quickest and easiest way to apply.</div>
+                                        <hr/>
+                                </div>
+                                
+         <!--end C0668-->                  
+        
+        <div class="contourPage">
+                <h4 class="contourPageName"></h4>
+                    <fieldset class="contourFieldSet">
+                            <div class="contourField title radiobuttonlist mandatory">
+
+                                 <div class="contourField pleaseusethisboxtoregisteryourenquiry textarea">
+                                    <label for="enq-message" class="fieldLabel">Please state your enquiry</label> <!--C0668-->
+                                    <div><textarea name="Message" id="enq-message" rows="10" cols="20" style="width:100%"></textarea>
+                                    <span class="field-validation-valid" data-valmsg-for="enq-message" data-valmsg-replace="true"></span></div>
+                                 </div>
+
+                <label for="enq-title" class="fieldLabel">Title</label>                                
+                <div>
+                        <input Name="Title" id="enq-title" Type="radio" value="Mr"/>
+                                <label for="enq-title" Style="font-weight:normal">Mr</label>&nbsp;&nbsp;
+                        <input Name="Title" id="enq-title" Type="radio" value="Mrs"/>
+                                <label for="enq-title" Style="font-weight:normal">Mrs</label>&nbsp;&nbsp;
+                        <input Name="Title" id="enq-title" Type="radio" value="Ms"/>
+                                <label for="enq-title" Style="font-weight:normal">Ms</label>&nbsp;&nbsp;
+                        <input Name="Title" id="enq-title" Type="radio" value="Dr"/>
+                                <label for="enq-title" Style="font-weight:normal">Dr</label>&nbsp;&nbsp;
+                        <input Name="Title" id="enq-title" Type="radio" value="Other"/>
+                                <label for="enq-title" Style="font-weight:normal">Other</label>
+
+                        <span class="field-validation-valid" data-valmsg-for="enq-title" data-valmsg-replace="true"></span></div>
+                                                    </div>
+                                                    <div class="contourField firstname textfield mandatory alternating">
+                        <label for="enq-first-name" class="fieldLabel">First name<span class="contourIndicator">*</span></label>                                
+                                                   <div><input type="text" name="FirstName" id="enq-first-name" class="text required" value="" maxlength="500" data-val="true" data-val-required="First name is mandatory" />
+
+                        <span class="field-validation-valid" data-valmsg-for="enq-first-name" data-valmsg-replace="true"></span></div>
+                                                    </div>
+                                                    <div class="contourField surname textfield mandatory">
+                        <label for="enq-surname" class="fieldLabel">Last name<span class="contourIndicator">*</span></label>                                
+                                                    <div><input type="text" name="Surname" id="enq-surname" class="text required" value="" maxlength="500" data-val="true" data-val-required="Last name is mandatory" />
+
+                        <span class="field-validation-valid" data-valmsg-for="enq-surname" data-valmsg-replace="true"></span></div>
+                                                    </div>
+                                                    <div class="contourField preferredtelephonenumber phonefield mandatory alternating">
+                        <label for="enq-telephone-number" class="fieldLabel">Phone number<span class="contourIndicator">*</span></label>                                
+                                                    <div><input type="tel" style="width:300px;" name="TelephoneNumber" id="enq-telephone-number" class="required" value="" data-val="true" data-val-required="Phone number is mandatory" />
+
+                        <span class="field-validation-valid" data-valmsg-for="enq-telephone-number" data-valmsg-replace="true"></span></div>
+                                                    </div>
+                                                    <div class="contourField preferredemailaddress emailfield mandatory">
+                        <label for="enq-email" class="fieldLabel">Email address<span class="contourIndicator">*</span></label>                                
+                                                    <div><input type="email" style="width:300px;" name="Email" id="enq-email" class="required" value="" data-val="true" data-val-required="Email address is mandatory" />
+
+                        <span class="field-validation-valid" data-valmsg-for="enq-email" data-valmsg-replace="true"></span></div>
+                                                    </div>
+                        <br/>
+                                                   
+                                            </fieldset>
+
+            <!--C0668-->
+                            <div class="SectionTitle">Data protection and marketing consent</div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                         <!--C0737 start-->
+                                        <!--<p>In accordance with the Data Protection Act 1998, Al Rayan Bank PLC is registered as a Data Controller on the public register of Data Controllers as maintained by the Information Commissioner. Any information which you provide to us will be added to our database and used to administer your account, for statistical analysis, for debt collection and fraud prevention.</p>-->
+                                        <p>Any information which you provide to us will be added to our database and used to administer your account, for statistical analysis, for debt collection and fraud prevention.<br/>We may provide your data to third parties who are involved in the delivery of our products and services, however, we will not provide your information to third parties for marketing purposes. If you would like to see a copy of the details we hold on you, please contact us.</p>
+                                        <!--<p>We may also use the data you have provided to send you information we feel may be of interest to you. Such information may include details of special offers, our products and services, and general updates.</p>-->
+                                        <!--C0737 end-->
+                                    </div>
+                                </div>
+            <!--end C0668-->
+
+                        <!--C0737 Srart--><fieldset class="contourFieldSet" style="display:none;"><!--C0737 End-->
+                        <div class="contourField pleaseindicateifyoudonotwishtobecontactedby checkboxlist">
+                        <!--C0737 Start-->
+                               <!--<label for="" class="fieldLabel">Please indicate if you DO NOT wish to be contacted by:</label>-->
+                               <div class="SectionTitle">Keeping you informed</div>
+                               <div class="row">
+                                    <div class="col-md-12">
+                                        <p>
+                                            From time to time we’d also love to tell you about our Islamic financial services, products and any new offers that we think you’d be interested in based on the information we hold about you. If you would like to hear from us about these please tick the appropriate box(es) below so we know how you would prefer us to contact you.
+                                        </p>
+                                    </div>
+                                </div> 
+                                <!--C0737 end-->                                
+                                                        <div><span class="checkboxlist" id="3bd545b1-898f-4fd1-af27-83816cbf8ede">
+                                <input type="checkbox" name="NoContact" id="enq-no-contact-1" value="Phone" />
+                                <label for="enq-no-contact-1">Phone</label>&nbsp;
+                                
+                                <input type="checkbox" name="NoContact" id="enq-no-contact-2" value="Email" />
+                                <label for="enq-no-contact-2">Email</label>&nbsp;
+                                
+                                <input type="checkbox" name="NoContact" id="enq-no-contact-3" value="SMS" />
+                                <label for="enq-no-contact-3">SMS</label>&nbsp;
+                                
+                                <input type="checkbox" name="NoContact" id="enq-no-contact-4" value="Any method" />
+                                <label for="enq-no-contact-4">Any method</label>&nbsp;
+                                
+                                <input type="hidden" name="NoContactList" id="enq-no-contact-list" />
+                        </span>
+                        <!--C0737 Start-->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>
+                                    You can change your preferences at any time, by writing to us at <b>Al Rayan Bank, PO Box 12461, Birmingham, B16 6AQ</b>. If you would like more information about how we use your information please visit our website at <b>alrayanbank.co.uk/privacy</b>.
+                                </p>
+                            </div>
+                        </div>
+                        <!--C0737 End-->
+                        <span class="field-validation-valid" data-valmsg-for="enq-no-contact" data-valmsg-replace="true"></span></div>
+                        </div>
+                        </fieldset>
+            </div>
+
+            <div class="contourNavigation">
+                    <input type="submit" value="Submit" class="pull-right" />
+            </div>
+            <div style="clear:both;">&nbsp;</div>                   
+</form>    
+
+</div> <!--C0668-->
+
+</div>
+        <!--C0668-->
+        <hr/>
+        <p Style="font-size:small">Al Rayan Bank PLC is authorised by the Prudential Regulation Authority and regulated by the Financial Conduct Authority and the Prudential Regulation Authority. Our firm reference number is 229148. Al Rayan Bank PLC is incorporated and registered in England and Wales. Registration No. 4483430. Registered office: 44 Hans Crescent, Knightsbridge, London, SW1X 0LZ.</p>
+        <!--C0668-->
+</div>
+
+<div class="thank-you" id="thank-you" style="display:none;">
+    <h1>Thank you</h1>
+    <h4>Thanks for completing the enquiry form. Your reference is <span id="case-ref"></span>.</h4>
+    <p>A representive of Al Rayan Bank will contact you to discuss your enquiry, usually this will be within 2 working days.</p>
+</div>
+
+            </div>
+</div>
+
+</section>
+
+</div><!-- col-md-9 -->
+<div class="col-md-3 col-sm-12 progressCol" style="padding:0px;">
+        
+    <div class="LoginContainer" ng-hide="Data.AccountId">
+        <div>
+            <p><strong>Existing Al Rayan Bank customers</strong> 
+            should contact us through the secure messaging service in Online Banking.</p>
+        </div>
+        <div>
+            <a class="btn loginbutton" href="https://online.alrayanbank.co.uk/online/aspscripts/Logon.asp" style="color:#fff;">Login</a>
+        </div>
+    </div>
+
+</div>
+
+</div>
+</apex:define>
+</apex:composition>
+</apex:page>

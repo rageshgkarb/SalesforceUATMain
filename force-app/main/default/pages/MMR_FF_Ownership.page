@@ -1,0 +1,400 @@
+<!--  C0291  -->
+
+
+<apex:page showHeader="false" sidebar="false" controller="MMR_FF_PersonalDetails" action="{!Setup_Ownership}">
+<head>
+    <c:MMR_PageHeader ></c:MMR_PageHeader>
+    <apex:include pageName="pca__Component"/>
+    <script>
+        pca_Settings.DisableFieldRearrange = true;
+</script>    
+</head>
+<body style="background-color:#ededed;">
+  
+  <style> .q1show{display:none;}.q2show{display:none;}  .hideLabel{display:none;} </style>
+  
+  <c:MMR_Header title="Current Ownership" numapps="{!NumApplying }" opp="{!bopp}" hide="{!IsCredit}"/>
+
+      <div class="container">
+          <c:MMR_FF_Nav EventId="{!eventid}" active="3" activesection="B" rendered="{!!IsCredit && !IsCompleted}"/>
+          <c:MMR_FF_Nav_Links EventId="{!eventid}" active="3" activesection="B" rendered="{!!IsCredit && IsCompleted}"/>
+          
+          <c:MMR_Credit_Nav EventId="{!eventid}" active="3" activesection="B" rendered="{!IsCredit}"/>
+    
+        <apex:form id="aForm" styleClass="form-horizontal">
+        
+        <div class="alert alert-danger pageAlert" style="display:none;" >
+            Due to the information you have supplied regarding your interest in other residential properties, we are unable to proceed with your application. 
+            The Help to Buy guidelines state that the Help to Buy guarantee is only available to customers who do not or will not have interest in any other residential properties 
+            (including Buy to Let properties) anywhere in the world. Please speak to an advisor about applying for our other Home Purchase Plan products.
+        
+        </div>
+        
+        <div class="row">
+        <c:MMR_FF_Ownership comKey="1" pController="{!this}" ApplicantNo="1" Acc="{!Accs[0]}" App="{!Applicants[0]}" IsHelp="{!IsHelpToBuyInterested}" rendered="{!NumApplying >0}"/>
+                <c:MMR_FF_Ownership comKey="1" pController="{!this}"  ApplicantNo="2" Acc="{!Accs[1]}" App="{!Applicants[1]}" IsHelp="{!IsHelpToBuyInterested}" rendered="{!NumApplying >1}"/>
+                <div class="clearfix"/>
+                <c:MMR_FF_Ownership comKey="1" pController="{!this}"  ApplicantNo="3" Acc="{!Accs[2]}" App="{!Applicants[2]}" IsHelp="{!IsHelpToBuyInterested}" rendered="{!NumApplying >2}"/>
+                <c:MMR_FF_Ownership comKey="1" pController="{!this}"  ApplicantNo="4" Acc="{!Accs[3]}" App="{!Applicants[3]}" IsHelp="{!IsHelpToBuyInterested}" rendered="{!NumApplying >3}"/>
+                <div class="clearfix"/>
+        </div>      
+        
+ <div class="alert alert-danger pageAlert" style="display:none;">
+            Due to the information you have supplied regarding your interest in other residential properties, we are unable to proceed with your application. 
+            The Help to Buy guidelines state that the Help to Buy guarantee is only available to customers who do not or will not have interest in any other residential properties 
+            (including Buy to Let properties) anywhere in the world. Please speak to an advisor about applying for our other Home Purchase Plan products.
+        
+        </div>
+    <div class="row">
+    
+<apex:commandButton styleClass="btn btn-primary"  value="Previous" action="{!GoAddresses}" rendered="{!!IsCredit && !IsCompleted}"/>
+<!--CPDR01 apex:commandButton styleClass="btn btn-success"  value="Save" action="{!Save}" rendered="{!!IsCompleted || IsCredit }"/-->
+<apex:commandButton styleClass="btn btn-danger"  value="Save" action="{!Save}" rendered="{!!IsCompleted || IsCredit }"/>
+<apex:commandButton styleClass="btn btn-danger"  value="Next" action="{!GoIncome}" id="nextBtn" rendered="{!!IsCredit && !IsCompleted}"/>
+     
+     </div>
+
+     
+     
+         <!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" data-backdrop="static">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Add Other Properties Owned</h4>
+      </div>
+      <div class="modal-body">
+       
+       <div class="row">
+       
+           
+           <apex:inputHidden id="accId" value="{!EditProperty.id}"/>
+       
+           <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Applicant</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:selectList id="propAccount" size="1" styleClass="form-control" value="{!EditProperty.PersonAccount__c}">
+                    <apex:selectOptions value="{!selApplicant}" ></apex:selectOptions>
+                    </apex:selectList>
+                </div>
+            </div>
+       
+                <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >First line of address</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:inputField id="propFirstLine" value="{!EditProperty.First_line_of_address__c}" styleClass="form-control" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Date purchased</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:inputText id="propDatePurchased" value="{!EditProperty.Date_purchased__c}" styleClass="form-control" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Existing mortgage or HPP Lender</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:inputField id="propExistingLender" value="{!EditProperty.ExisitingMortgageHPPLender__c}" styleClass="form-control" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Amount of monthly repayment</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:inputField id="propMonthlyPayment" value="{!EditProperty.Amount_of_monthly_repayment__c}" styleClass="form-control" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Do you let the property out</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:inputField id="propLetProperty" value="{!EditProperty.IsBTLProperty__c}" styleClass="form-control" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Amount of monthly rent received</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:inputField id="propRentIn" value="{!EditProperty.Amount_of_monthly_rent_received__c}" styleClass="form-control" />
+                </div>
+            </div>
+       </div>       
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+		<!--button type="button" class="btn btn-default" data-dismiss="modal">Close</button-->
+        <!--CPDR01 apex:commandButton value="Save" action="{!SaveProperty}" styleclass="btn btn-success">  </apex:commandButton-->
+		<apex:commandButton value="Save" action="{!SaveProperty}" styleclass="btn btn-danger">  </apex:commandButton>
+        
+        
+ 
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+     
+     
+        </apex:form>        
+    </div>
+    
+    <c:MMR_PageFooter ></c:MMR_PageFooter>
+
+<span id="pca_status" style="display:none;" />
+<script type="text/javascript">
+    var numApps = {!NumApplying};
+
+    function ShowPropertyPopup(event,o)
+    {
+        window.scrollTo(0, 0);
+        $('#myModal').modal({
+            backdrop: 'static'
+        });
+        //$("[id$='propId']").val('');
+        $("[id$='accId']").val('');
+        $("[id$='propAccount']").val('');        
+        $("[id$='propFirstLine']").val('');
+        $("[id$='propExistingLender']").val('');
+        $("[id$='propDatePurchased']").val('');
+        $("[id$='propMonthlyPayment']").val('');
+        $("[id$='propLetProperty']").attr('checked',false);
+        $("[id$='propRentIn']").val(''); 
+        
+    }
+    
+    function EditProperty(sender)
+    {
+        window.scrollTo(0, 0);
+        $('#myModal').modal({
+            backdrop: 'static'
+        });
+        
+        var id = sender.closest(".propList");  
+        
+        $("[id$='accId']").val(id.find('.propId').val());
+        $("[id$='propAccount']").val(id.find('.propAcc').val());        
+        $("[id$='propFirstLine']").val(id.find('.propFirstLine').text());
+        $("[id$='propExistingLender']").val(id.find('.propExistingLender').text());
+        $("[id$='propDatePurchased']").val(id.find('.propDatePurchased').text());
+        $("[id$='propMonthlyPayment']").val(id.find('.propMonthlyPayment').text());
+        var checkValue = Boolean(id.find('.propLetProperty').text());          
+        $("[id$='propLetProperty']").attr('checked',checkValue );
+        $("[id$='propRentIn']").val(id.find('.propRentIn').text());        
+    }
+    
+    
+    $(function (){
+        $("[id$='propDatePurchased']").attr('placeholder','dd/mm/yyyy');
+        var errors = $(".modal-body").find(".errorMsg");
+        if(errors.size()>0)
+        {
+            $('#myModal').modal();
+        }   
+        
+        
+        $('.propEdit').click(function(){
+        EditProperty($(this));
+    });
+        
+    });
+    
+    
+    
+    
+    function HomeCirc()
+{
+    var sel =  $(this); // $("select.homeCirc1");
+    var value = sel.val();
+    var id = sel.attr('id');    
+    appNo = GetApplicantNo('homeCirc',id);
+    var prev = $('select.existingMortValue' + appNo);
+    
+    
+        
+    if(value == 'Council Tenant')
+    {
+        FadeInput('','','monthlyRentalItem' + appNo);
+        FadeInput('','No','ownSellingItem'+ appNo);
+        FadeInput('','No','homeCirOther'+ appNo);
+        $("select.ownSelling" + appNo).val('No');  
+        prev.val('');    
+    }
+    else if(value == 'Joint Owner')
+    {
+        FadeInput('','No','monthlyRentalItem'+ appNo);
+        FadeInput('','','ownSellingItem'+ appNo);
+        FadeInput('','No','homeCirOther'+ appNo);
+        $("select.ownSelling" + appNo).val('Yes');
+    }
+    else if(value == 'Owner Occupier')
+    {
+        FadeInput('','No','monthlyRentalItem'+ appNo);
+        FadeInput('','','ownSellingItem'+ appNo);
+        FadeInput('','No','homeCirOther'+ appNo);
+    }
+    else if(value == 'Other')
+    {
+        FadeInput('','No','monthlyRentalItem'+ appNo);
+        FadeInput('','No','ownSellingItem'+ appNo);
+        FadeInput('Yes','Yes','homeCirOther'+ appNo);
+        prev.val(''); 
+    }        
+    else if(value == '')
+    {
+        FadeInput('','No','monthlyRentalItem'+ appNo);
+        FadeInput('','No','ownSellingItem'+ appNo);
+        FadeInput('','No','homeCirOther'+ appNo);
+        prev.val(''); 
+    }
+    else
+    {
+        FadeInput('','','monthlyRentalItem'+ appNo);
+        FadeInput('','No','ownSellingItem'+ appNo);
+        prev.val(''); 
+    }
+    
+   
+   existingMort(prev);
+}
+
+function existingMort(obj)
+{
+    var sel;
+
+    //if(typeof obj== 'undefined')
+    if(obj == '0' || obj == '1' || obj == '2' || obj=='3')
+    {
+        sel =  $(this);
+    }
+    else
+    {
+        if(obj.type == 'change')
+        {
+            sel = $(this);
+        }
+        else
+        {
+            sel = obj;
+        }        
+    }
+
+
+    var value = sel.val();
+    var id = sel.attr('id');    
+    var appNo = GetApplicantNo('existingMortValue',id);
+
+    //var value = $("select.existingMortValue").val();
+    FadeInput(value,'Yes','existingMort' + appNo );    
+    FadeInput(value,'No','noexistingMortItem' + appNo);
+    
+    if(value == 'Yes')
+    {
+        FadeInput('','No','prevMortItem' + appNo);
+    }
+    else
+    {
+        prevMort(appNo);
+    }
+}
+
+	
+	
+function helpCheck(appNo)
+{
+
+    var inValid = false;
+    
+    for(i=1; i<=numApps;i++)
+    {
+        var help2= $("select[class*='help2"+i+"']").val();
+        var help3= $("select[class*='help3"+i+"']").val();
+    
+        // C0291 if(help2 == 'No' || help3 == 'No')
+		if(help2 == 'No' || help3 == 'Yes')
+        {
+            inValid = true;
+        }
+    
+    }
+    
+    if(inValid)
+    {
+        $(".pageAlert").show();
+        $("[id$='nextBtn']").attr('disabled','disabled');
+        
+    }
+    else
+    {
+        $(".pageAlert").hide();
+        $("[id$='nextBtn']").removeAttr('disabled');
+    }
+    
+
+
+
+    
+}
+
+
+function prevMort(appNo)
+{
+    if(typeof appNo == 'undefined')
+    {
+        var sel =  $(this);
+        var id = sel.attr('id');    
+        appNo = GetApplicantNo('prevMort',id);
+    }
+    var value;
+    if (typeof appNo === 'string') {
+       value = $("select.prevMort" + appNo).val();
+    }
+    else
+    {
+        value = $(this).val();
+        appNo = GetApplicantNo('prevMort',$(this).attr('id'));
+    }
+
+    FadeInput(value,'Yes','prevMortItem' + appNo);
+}
+
+
+
+
+
+$(function(){
+    $("select[class*='homeCirc']").each(HomeCirc);
+    $("select[class*='homeCirc']").change(HomeCirc); 
+    $("select[class*='existingMortValue']").each(existingMort);
+    $("select[class*='existingMortValue']").change(existingMort); 
+    $("select[class*='prevMort']").each(prevMort);
+    $("select[class*='prevMort']").change(prevMort); 
+
+    $("select[class*='help2']").change(helpCheck);
+    $("select[class*='help3']").change(helpCheck);
+    
+});
+
+ 
+    
+
+</script>
+    
+</body>
+
+</apex:page>

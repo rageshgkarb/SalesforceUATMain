@@ -1,0 +1,22 @@
+<apex:component >
+<apex:attribute name="genericobject" description="This is the debt." type="GenericObject__c"  required="true"/>
+
+<table class="detailList">
+<tbody>
+<tr>
+    <td class="labelCol">Date of default </td><td><apex:inputField value="{!genericobject.Default_date__c}"   /></td>
+    <td class="labelCol">Amount of default</td><td><apex:inputField value="{!genericobject.Default_amount__c}"  /></td>
+</tr>
+
+<tr>
+<td class="labelCol">Date default repaid</td><td><apex:inputField value="{!genericobject.Default_date_repaid__c}"  /></td>
+    <td class="labelCol">Reason for default</td><td><apex:inputField value="{!genericobject.Default_reason__c}"   /></td>
+    
+</tr>
+
+</tbody>
+</table>
+
+
+
+</apex:component>

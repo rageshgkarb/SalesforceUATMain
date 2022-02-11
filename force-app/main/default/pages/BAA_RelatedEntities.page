@@ -1,0 +1,1064 @@
+<!--
+ - Created by lbrindle on 02/06/2020.
+ -->
+
+<apex:page id="BAA_RelatedEntities" showHeader="false" sidebar="false" docType="html-5.0" controller="BAA_RelatedEntities_Controller" action="{!Setup}">
+        <head>
+            <c:BAA_Resource ></c:BAA_Resource>
+            <apex:include pageName="pca__Component"/>
+        </head>
+        <body>
+        <c:BAA_Header objOpp="{!BaseOpportunity}" title="Applicants"></c:BAA_Header>
+        <div class="container">
+
+
+            <div class="row">
+                <div class="col-md-4 col-lg-3">
+                    <apex:form >
+                        <c:BAA_Menu oppId="{!BaseOpportunity.Id}"  DirectorId="{!BaseOpportunity.ProductEventDirector__c}" />
+                    </apex:form>
+                </div>
+                <div class="col-md-8 col-lg-9">
+
+                    <apex:form >
+
+                        <apex:outputPanel rendered="{!!IsCompleted}">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">Search</div>
+                                <div class="panel-body">
+
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <apex:inputText value="{!searchText}" styleClass="form-control"/>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <apex:commandButton styleClass="btn-danger" value="Search" action="{!searchForEntity}"/>
+                                        </div>
+                                        <div class="col-sm-6 text-right" >
+                                            <apex:commandButton styleClass="btn-danger" value="Add new company association" action="{!AddNewCompany}"/>
+                                            <apex:commandButton styleClass="btn-danger" value="Add new individual association" action="{!AddNewIndividual}"/>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+
+                        </apex:outputPanel>
+
+                                    <apex:outputPanel rendered="{!ShowUBOPopup}">
+                                        <script>
+                                            $(function () {
+
+                                                EditUBO(null);
+                                            });
+
+                                        </script>
+                                    </apex:outputPanel>
+
+                        <apex:outputPanel rendered="{!ShowSearchPopup}">
+                            <script>
+                                $(function () {
+
+                                    ShowResults(null);
+                                });
+
+                            </script>
+                        </apex:outputPanel>
+                        <div>
+
+                            <apex:inputHidden id="hiddenRelationship" value="{!EditUBORelationshipId}"/>
+                            <apex:inputHidden id="hiddenAddEntityId" value="{!AddEntityId}"/>
+                            <apex:inputHidden id="hiddenDeleteRelationshipId" value="{!RemoveUBORelationshipId}"/>
+
+
+
+                            <apex:actionFunction name="addRelationship" action="{!AddRelationship}"/>
+                            <apex:actionFunction name="editRelationship" action="{!EditUBORelationship}"/>
+                            <apex:actionFunction name="deleteRelationship" action="{!DeleteUBORelationship}"/>
+
+
+                            <apex:variable value="0" var="num"/>
+
+
+                            <div >
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">Related Entities</div>
+                                    <div class="panel-body">
+
+                                        <apex:repeat var="ent" value="{!relatedEntities}" >
+
+
+
+
+                                            <div style="border-bottom:1px solid #5A5A5A;padding-bottom:10px;margin-bottom: 10px">
+                                                <apex:outputPanel rendered="{!IF(ent.Related_Customer_Entity__r.RecordType.DeveloperName == 'Person',true,false)}">
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <h3>Individual  {!ent.Related_Customer_Entity__r.EBS_Id__c}</h3>
+                                                        </div>
+                                                        <div class="col-sm-6 text-right">
+                                                            <apex:outputPanel layout="none" rendered="{!!IsCompleted}">
+                                                                <input class="relationshipId" type="hidden" value="{!ent.id}"/>
+                                                                <span class="relationshipEdit btn btn-primary">Edit</span>
+                                                                <span class="relationshipDelete btn btn-danger">Delete</span>
+                                                            </apex:outputPanel>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row" style="padding-top: 10px">
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-6">
+                                                                        <label>Full Name</label>
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        {!ent.Related_Customer_Entity__r.Name__c}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-6">
+                                                                        <label>Date of Birth</label>
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        <apex:outputText value="{0, date, dd/MM/yyyy}">
+                                                                            <apex:param value="{!ent.Related_Customer_Entity__r.Date_of_Birth__c}" />
+                                                                        </apex:outputText>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-6">
+                                                                        <label>Addresss</label>
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        {!ent.Related_Customer_Entity__r.Address_Street__c}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-6">
+                                                                        <label>Post Code</label>
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        {!ent.Related_Customer_Entity__r.Post_Code__c}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-6">
+
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        {!ent.Related_Customer_Entity__r.Address_City__c}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-6">
+                                                                        <label>Country of Residence</label>
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                    {!ent.Related_Customer_Entity__r.Country_of_Residence__c}
+                                                                        - {!otherCountryFieldNames[VALUE(num)]}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-6">
+
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        {!ent.Related_Customer_Entity__r.Address_State__c}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-6">
+                                                                        <label>Nationality</label>
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                    {!ent.Related_Customer_Entity__r.Nationality__c}
+                                                                       - {!nationalityNames[VALUE(num)]}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="row" style="margin-top: 20px;">
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-6">
+                                                                        <label>Realtionship Type</label>
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        {!ent.Relationship_Type__c}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-6">
+                                                                        <label>Percentage Ownership</label>
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        {!ent.Percent_Ownership__c}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-6">
+                                                                        <label>Position Held</label>
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        {!ent.Position_Held__c}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </apex:outputPanel>
+
+                                                <apex:outputPanel rendered="{!IF(ent.Related_Customer_Entity__r.RecordType.DeveloperName == 'Person',false,true)}">
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <h3>Company</h3>
+                                                        </div>
+                                                        <div class="col-sm-6 text-right">
+                                                            <apex:outputPanel layout="none" rendered="{!!IsCompleted}">
+                                                                <input class="relationshipId" type="hidden" value="{!ent.id}"/>
+                                                                <span class="relationshipEdit btn btn-primary">Edit</span>
+                                                                <span class="relationshipDelete btn btn-danger">Delete</span>
+                                                            </apex:outputPanel>
+                                                        </div>
+                                                    </div>
+
+
+
+                                                    <div class="row" style="padding-top: 10px">
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-6">
+                                                                        <label>Full Name</label>
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        {!ent.Related_Customer_Entity__r.Name__c}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-6">
+                                                                        <label>Date of Incorporation</label>
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        <apex:outputText value="{0, date, dd/MM/yyyy}">
+                                                                            <apex:param value="{!ent.Related_Customer_Entity__r.Date_of_incorporation__c}" />
+                                                                        </apex:outputText>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-6">
+                                                                        <label>Addresss</label>
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        {!ent.Related_Customer_Entity__r.Address_Street__c}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-6">
+                                                                        <label>Post Code</label>
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        {!ent.Related_Customer_Entity__r.Post_Code__c}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="row">
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-6">
+
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        {!ent.Related_Customer_Entity__r.Address_City__c}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-6">
+                                                                        <label>Country of Incorporation</label>
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        {!ent.Related_Customer_Entity__r.Country_Of_Incorporation__c}
+                                                                        - {!otherCountryFieldNames[VALUE(num)]}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-6">
+
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        {!ent.Related_Customer_Entity__r.Address_State__c}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+
+                                                                
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-6">
+                                                                        <label>Company Reg Number</label>
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        {!ent.Related_Customer_Entity__r.Company_Registration_Number__c}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="row" style="margin-top: 20px;">
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-6">
+                                                                        <label>Realtionship Type</label>
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        {!ent.Relationship_Type__c}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-6">
+                                                                        <label>Percentage Ownership</label>
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        {!ent.Percent_Ownership__c}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <!--
+                                                    <div class="row">
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-6">
+                                                                        <label>Position Held</label>
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        {!ent.Position_Held__c}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    -->
+
+                                                </apex:outputPanel>
+
+                                            </div>
+                                            <apex:variable var="num" value="{!VALUE(num) + 1}"/>
+                                        </apex:repeat>
+
+
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+
+
+
+                        </div>
+
+
+                        <!-- START PERSON RELATIONSHIP MODAL-->
+                        <div class="modal fade" id="relationshipPersonModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title" id="myModalLabel">Contact Detail</h4>
+                                    </div>
+                                    <div class="modal-body ">
+
+                                        <div class="row">
+
+
+                                            <apex:inputHidden id="currentRelationshipId" value="{!EditRelationship.id}"/>
+
+                                            <apex:outputPanel rendered="{!IF(currentEntityType == 'Person',true,false)}" layout="none">
+
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <div class="col-sm-5 col-sm-offset-1">
+                                                                <label for="">First Name</label>
+                                                            </div>
+                                                            <div class="col-sm-5">
+                                                                <apex:inputField value="{!EditRelationship.Related_Customer_Entity__r.First_Name__c}" styleClass="form-control" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <div class="col-sm-5 col-sm-offset-1">
+                                                                <label for="">Middle Name</label>
+                                                            </div>
+                                                            <div class="col-sm-5">
+                                                                <apex:inputField value="{!EditRelationship.Related_Customer_Entity__r.Middle_Name__c}" styleClass="form-control" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <div class="col-sm-5 col-sm-offset-1">
+                                                                    <label for="">Last Name</label>
+                                                                </div>
+                                                                <div class="col-sm-5">
+                                                                    <apex:inputField value="{!EditRelationship.Related_Customer_Entity__r.Last_name__c}" styleClass="form-control" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <div class="col-sm-5 col-sm-offset-1">
+                                                                <label for="">Date of Birth</label>
+                                                            </div>
+                                                            <div class="col-sm-5">
+                                                                <apex:inputField value="{!EditRelationship.Related_Customer_Entity__r.Date_of_Birth__c}" styleClass="form-control" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <div class="col-sm-5 col-sm-offset-1">
+                                                                <label for="">Street</label>
+                                                            </div>
+                                                            <div class="col-sm-5">
+                                                                <apex:inputField id="addrPrevStreet" value="{!EditRelationship.Related_Customer_Entity__r.Address_Street__c}" styleClass="form-control" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <div class="col-sm-5 col-sm-offset-1">
+                                                                <label for="">Post Code</label>
+                                                            </div>
+                                                            <div class="col-sm-5">
+                                                                <apex:inputField id="addrPrevPostCode" value="{!EditRelationship.Related_Customer_Entity__r.Post_Code__c}" styleClass="form-control" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <div class="col-sm-5 col-sm-offset-1">
+                                                                <label for="">City</label>
+                                                            </div>
+                                                            <div class="col-sm-5">
+                                                                <apex:inputField id="addrPrevCity" value="{!EditRelationship.Related_Customer_Entity__r.Address_City__c}" styleClass="form-control" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <div class="col-sm-5 col-sm-offset-1">
+                                                                <label for="">Country of Residence</label>
+                                                            </div>
+                                                            <div class="col-sm-5">
+                                                                <apex:selectList id="picklistIncorporation1" value="{!EditRelationship.Related_Customer_Entity__r.Country_of_Residence__c}" size="1" styleClass="form-control">
+                                                                    <apex:selectOptions value="{!countryOptions}"/>
+                                                                </apex:selectList>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <div class="col-sm-5 col-sm-offset-1">
+                                                                <label for="">County</label>
+                                                            </div>
+                                                            <div class="col-sm-5">
+                                                                <apex:inputField value="{!EditRelationship.Related_Customer_Entity__r.Address_State__c}" styleClass="form-control" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                       
+                                                    </div>
+
+                                                </div>
+
+
+
+
+                                                <div class="row" style="margin-top: 20px;">
+
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <div class="col-sm-5 col-sm-offset-1">
+                                                                <label for="">Relationship Type</label>
+                                                            </div>
+                                                            <div class="col-sm-5">
+                                                                <apex:selectList id="picklist21" value="{!EditRelationship.Relationship_Type__c}" size="1" styleClass="form-control">
+                                                                    <apex:selectOptions value="{!RelationShipTypes}"/>
+                                                                </apex:selectList>
+
+                                                                <!--<apex:inputField value="{!EditRelationship.Relationship_Type__c}"/>-->
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-sm-6">
+
+                                                        <div class="form-group">
+                                                            <div class="col-sm-5 col-sm-offset-1">
+                                                                <label for="">Percentage Ownership</label>
+                                                            </div>
+                                                            <div class="col-sm-5">
+                                                                <apex:inputField value="{!EditRelationship.Percent_Ownership__c}" styleClass="form-control"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+
+                                                        <div class="form-group">
+                                                            <div class="col-sm-5 col-sm-offset-1">
+                                                                <label for="">Position Held</label>
+                                                            </div>
+                                                            <div class="col-sm-5">
+                                                                <apex:selectList id="picklist213" value="{!EditRelationship.Position_Held__c}" size="1" styleClass="form-control">
+                                                                    <apex:selectOptions value="{!positionHeldOptions}"/>
+                                                                </apex:selectList>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+
+                                            </apex:outputPanel>
+
+
+
+                                            <apex:outputPanel rendered="{!IF(currentEntityType == 'Person',false,true)}" layout="none">
+
+
+
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <div class="col-sm-5 col-sm-offset-1">
+                                                                <label for="">Full Name</label>
+                                                            </div>
+                                                            <div class="col-sm-5">
+                                                                <apex:inputField value="{!EditRelationship.Related_Customer_Entity__r.Business_Name__c}" styleClass="form-control" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <div class="col-sm-5 col-sm-offset-1">
+                                                                <label for="">Date of incorporation</label>
+                                                            </div>
+                                                            <div class="col-sm-5">
+                                                                <apex:inputField value="{!EditRelationship.Related_Customer_Entity__r.Date_of_incorporation__c}" styleClass="form-control" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <div class="col-sm-5 col-sm-offset-1">
+                                                                <label for="">Street</label>
+                                                            </div>
+                                                            <div class="col-sm-5">
+                                                                <apex:inputField id="addrStreet" value="{!EditRelationship.Related_Customer_Entity__r.Address_Street__c}" styleClass="form-control" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <div class="col-sm-5 col-sm-offset-1">
+                                                                <label for="">Post Code</label>
+                                                            </div>
+                                                            <div class="col-sm-5">
+                                                                <apex:inputField id="addrPostCode" value="{!EditRelationship.Related_Customer_Entity__r.Post_Code__c}" styleClass="form-control" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <div class="col-sm-5 col-sm-offset-1">
+                                                                <label for="">City</label>
+                                                            </div>
+                                                            <div class="col-sm-5">
+                                                                <apex:inputField id="addrCity" value="{!EditRelationship.Related_Customer_Entity__r.Address_City__c}" styleClass="form-control" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <div class="col-sm-5 col-sm-offset-1">
+                                                                <label for="">Country of Incorporation</label>
+                                                            </div>
+                                                            <div class="col-sm-5">
+                                                                <apex:selectList id="picklistIncorporation" value="{!EditRelationship.Related_Customer_Entity__r.Country_Of_Incorporation__c}" size="1" styleClass="form-control">
+                                                                    <apex:selectOptions value="{!countryOptions}"/>
+                                                                </apex:selectList>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <div class="col-sm-5 col-sm-offset-1">
+                                                                <label for="">County</label>
+                                                            </div>
+                                                            <div class="col-sm-5">
+                                                                <apex:inputField value="{!EditRelationship.Related_Customer_Entity__r.Address_State__c}" styleClass="form-control" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <div class="col-sm-5 col-sm-offset-1">
+                                                                <label for="">Nationality</label>
+                                                            </div>
+                                                            <div class="col-sm-5">
+                                                                <apex:selectList id="picklist1" value="{!EditRelationship.Related_Customer_Entity__r.Nationality__c}" size="1" styleClass="form-control">
+                                                                    <apex:selectOptions value="{!countryOptions}"/>
+                                                                </apex:selectList>
+                                                                <!--<apex:inputField value="{!EditRelationship.Related_Customer_Entity__r.Company_Registration_Number__c}" styleClass="form-control"/>-->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <div class="col-sm-5 col-sm-offset-1">
+                                                                <label for="">Company Reg Number</label>
+                                                            </div>
+                                                            <div class="col-sm-5">
+                                                                <apex:inputField value="{!EditRelationship.Related_Customer_Entity__r.Company_Registration_Number__c}" styleClass="form-control" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+
+                                                <div class="row" style="margin-top: 20px;">
+
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group"> 
+                                                                <div class="col-sm-5 col-sm-offset-1">
+                                                                    <label for="">Relationship Type</label>
+                                                                </div>
+                                                                <div class="col-sm-5">
+                                                                    <apex:selectList id="picklist2" value="{!EditRelationship.Relationship_Type__c}" size="1" styleClass="form-control">
+                                                                        <apex:selectOptions value="{!RelationShipTypes}"/>
+                                                                    </apex:selectList>
+
+                                                                    <!--<apex:inputField value="{!EditRelationship.Relationship_Type__c}"/>-->
+                                                                </div>
+                                                            </div>
+
+                                                    </div>
+                                                </div>
+
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+
+                                                            <div class="form-group">
+                                                                <div class="col-sm-5 col-sm-offset-1">
+                                                                    <label for="">Percentage Ownership</label>
+                                                                </div>
+                                                                <div class="col-sm-5">
+                                                                    <apex:inputField value="{!EditRelationship.Percent_Ownership__c}" styleClass="form-control"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                            </apex:outputPanel>
+
+
+
+
+
+
+
+
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        <apex:commandButton value="Save" action="{!SaveAccount}" styleclass="btn btn-success">  </apex:commandButton>
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--END PERSON RELATIONSHIP MODAL-->
+
+
+
+                        <div class="modal fade" id="relationshipSearchModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title" id="myModalLabel">Search Results</h4>
+                                    </div>
+                                    <div class="modal-body ">
+
+
+                                        <label>Associations</label>
+                                        <div class="row">
+
+
+
+                                            <table class="table">
+                                                <th>Name</th>
+                                                <th>Type</th>
+                                                <th>EBS Id</th>
+                                                <th>Address</th>
+                                                <th>Date</th>
+                                                <th>#</th>
+
+                                            <apex:repeat value="{!searchResults}" var="sr">
+                                                <tr>
+                                                    <td>
+                                                        {!sr.Name__c}
+                                                    </td>
+                                                    <td>
+                                                        {!sr.RecordType.Name}
+                                                    </td>
+
+                                                    <td>
+                                                        {!sr.EBS_Id__c}
+                                                    </td>
+                                                    <td>
+                                                        {!sr.Address_Street__c}, {!sr.Address_City__c}, {!sr.Post_Code__c}
+                                                    </td>
+                                                    <td>
+                                                        <apex:outputPanel rendered="{!IF(sr.RecordType.DeveloperName == 'Person',true,false)}">
+                                                            <apex:outputText value="{0, date, dd/MM/yyyy}">
+                                                                <apex:param value="{!sr.Date_of_Birth__c}" />
+                                                            </apex:outputText>
+                                                        </apex:outputPanel>
+                                                        <apex:outputPanel rendered="{!IF(sr.RecordType.DeveloperName == 'Person',false,true)}">
+                                                            <apex:outputText value="{0, date, dd/MM/yyyy}">
+                                                                <apex:param value="{!sr.Date_of_incorporation__c}" />
+                                                            </apex:outputText>
+                                                        </apex:outputPanel>
+                                                    </td>
+                                                    <td>
+                                                        <input class="entityId" type="hidden" value="{!sr.id}"/>
+                                                        <span class="relationshipAdd btn btn-primary">Add</span>
+                                                    </td>
+
+                                                </tr>
+                                            </apex:repeat>
+                                            </table>
+
+                                        </div>
+
+
+                                        <label>Existing Accounts</label>
+                                        <div class="row">
+
+
+
+                                            <table class="table">
+                                                <th>Name</th>
+                                                <th>Type</th>
+                                                <th>EBS Id</th>
+                                                <th>Address</th>
+                                                <th>Date</th>
+                                                <th>#</th>
+
+                                                <apex:repeat value="{!searchResultsAccount}" var="sr">
+                                                    <tr>
+                                                        <td>
+                                                            {!sr.Name}
+                                                        </td>
+                                                        <td>
+                                                            {!sr.RecordType.Name}
+                                                        </td>
+
+                                                        <td>
+                                                            {!sr.EBS_ID__c}
+                                                        </td>
+                                                        <td>
+                                                            {!sr.BillingStreet}, {!sr.BillingCity}, {!sr.BillingPostalCode}
+                                                        </td>
+                                                        <td>
+                                                            <apex:outputPanel rendered="{!IF(sr.RecordType.DeveloperName == 'Person',true,false)}">
+                                                                <apex:outputText value="{0, date, dd/MM/yyyy}">
+                                                                    <apex:param value="{!sr.Date_of_Birth__c}" />
+                                                                </apex:outputText>
+                                                            </apex:outputPanel>
+
+                                                        </td>
+                                                        <td>
+                                                            <input class="entityAccountId" type="hidden" value="{!sr.id}"/>
+                                                            <span class="relationshipAccountAdd btn btn-primary">Add</span>
+                                                        </td>
+
+                                                    </tr>
+                                                </apex:repeat>
+                                            </table>
+
+                                        </div>
+
+
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <!--<apex:commandButton styleClass="btn-success" value="Save" action="{!Save}" rendered="{!!IsCompleted}"/>-->
+                                <apex:commandButton styleClass="btn-danger" value="Next" action="{!Complete}" rendered="{!!IsCompleted}"/>
+                            </div>
+                        </div>
+
+
+                    </apex:form>
+                </div>
+            </div>
+        </div>
+
+
+
+        <script>
+
+
+            function EditUBO(sender)
+            {
+                window.scrollTo(0, 0);
+                $('#relationshipPersonModal').modal(
+                    {
+                        backdrop: 'static'
+                    });
+            }
+
+            function ShowResults(sender)
+            {
+                window.scrollTo(0, 0);
+                $('#relationshipSearchModal').modal(
+                    {
+                        backdrop: 'static'
+                    });
+            }
+
+
+
+            $(function ()
+            {
+
+
+                $('.relationshipEdit').click(function()
+                {
+                    var rel = $(this).parent().find('.relationshipId').val();
+
+                    $("[id$='hiddenRelationship']").val(rel);
+
+                    editRelationship();
+
+
+                });
+
+                $('.relationshipAdd').click(function()
+                {
+                    var rel = $(this).parent().find('.entityId').val();
+
+                    $("[id$='hiddenAddEntityId']").val(rel);
+
+                    addRelationship();
+
+
+                });
+
+
+                $('.relationshipDelete').click(function()
+                {
+                    var rel = $(this).parent().find('.relationshipId').val();
+
+                    $("[id$='hiddenDeleteRelationshipId']").val(rel);
+
+                    deleteRelationship();
+
+
+                });
+
+
+                $('.relationshipAccountAdd').click(function()
+                {
+                    var rel = $(this).parent().find('.entityAccountId').val();
+
+                    $("[id$='hiddenAddEntityId']").val(rel);
+
+                    addRelationship();
+
+
+                })
+
+
+
+
+            });
+
+
+
+
+        </script>
+        </body>
+    </apex:page>

@@ -1,0 +1,747 @@
+@charset "UTF-8";
+/* CSS Document IBB mortgage calulator by nick@neamus.net */
+
+.calculator p {
+	padding-bottom: 1.5em;
+	line-height: 1.3em;
+	font-size:1em;
+}
+
+
+.calculator #formPage p {padding-bottom:0;}
+
+
+
+
+
+
+#formPage span.alt { color:#999999; }
+
+
+
+#formPage table.formTable { border-collapse:collapse; width:100%; }
+	#formPage table.formTable caption { 
+		display:block; 
+		visibility:visible; 
+		color:#000000; 
+		text-align:left; 
+		font-weight:bold;
+		font-size:1.33em;
+		margin-bottom:.3em;
+	}
+	
+	
+	
+	
+				
+					#formPage .module.uploads { font-size:1em; }
+					#formPage .module.uploads p {  font-weight:bold; }
+					#formPage .module.uploads p span { }
+					#formPage .module.uploads p span.file a { 
+						clear:both; 
+						display:block;
+						background-repeat: no-repeat;
+						background-position: left top;
+						padding-left: 25px;
+						margin-top:.5em;
+						font-weight:normal;
+						color: #112059;
+						line-height:16px;
+					}
+					
+					#formPage .module.uploads p span.file.pdf a { background-image: url(../../graphics/default/filetypes/pdf-small.gif);}
+					#formPage .module.uploads p span.file.doc a { background-image: url(../../graphics/default/filetypes/word-small.gif);}
+					#formPage .module.uploads p span.file.jpg a { background-image: url(../../graphics/default/filetypes/jpg-small.gif);}
+					
+					
+	
+					
+	
+	
+	
+/* form page progress trail */
+#formPage .formProgressNumbers { margin:0 0 1em 0; font-weight:normal; padding:0 0 0 0;}
+#formPage .formProgressNumbers ul { list-style:none; display:block; margin:0 0 0 0; padding:0 0 0 0; }
+#formPage .formProgressNumbers ul li { list-style:none; display:block; float:left; margin:0 0 0 0; }
+#formPage .formProgressNumbers ul li { padding-left:47px;}
+#formPage .formProgressNumbers ul li.first { padding-left:0; }
+#formPage .formProgressNumbers ul li.pageActive {
+	background-image: url(../../graphics/default/progressNumberArrow.gif);
+	background-repeat: no-repeat;
+	background-position: 12px center;
+}
+
+#formPage .formProgressNumbers ul li a { display:block; text-decoration:none; font-weight:normal; line-height:20px; font-size:12px; }
+#formPage .formProgressNumbers ul li.pageActive a { cursor:pointer; color:#FFFFFF; }
+#formPage .formProgressNumbers ul li.pageUnactive a { cursor:default; color:#FFFFFF; }
+
+.fieldGroupTitle p { color:#666666; }
+
+
+#formPage .formProgressNumbers ul li.pageActive span {
+	background-image: url(../../graphics/default/bulletActiveRight.gif);
+	background-repeat: no-repeat;
+	background-position: right center;
+	padding:5px 7px 6px 0px;
+}
+#formPage .formProgressNumbers ul li.pageActive span strong {
+	background-image: url(../../graphics/default/bulletActiveLeft.gif);
+	background-repeat: no-repeat;
+	background-position: left center;
+	padding:5px 0px 6px 7px;
+}
+#formPage .formProgressNumbers ul li.pageUnactive span {
+	background-image: url(../../graphics/default/bulletUnactiveRight.gif);
+	background-repeat: no-repeat;
+	background-position: right center;
+	padding:5px 7px 6px 0px;
+}
+#formPage .formProgressNumbers ul li.pageUnactive span strong {
+	background-image: url(../../graphics/default/bulletUnactiveLeft.gif);
+	background-repeat: no-repeat;
+	background-position: left center;
+	padding:5px 0px 6px 7px;
+}
+/**/
+
+
+/*#formPage textarea, 
+#formPage input, 
+#formPage select, 
+#formPage textarea, 
+#formPage input,
+#formPage textarea { cursor:text; }*/
+#formPage select,
+#formPage .FormButton { cursor:pointer; }
+
+#formPage textarea.formFieldMultiLine:hover, 
+#formPage textarea.formFieldMultiLine:focus, 
+#formPage input.formField:hover, 
+#formPage input.formField:focus,
+#formPage select.formField:hover, 
+#formPage select.formField:focus,
+#formPage textarea.formField:hover, 
+#formPage textarea.formField:focus,
+#formPage input.formField.error:hover,
+#formPage input.formField.error:focus,
+#formPage select.formField.error:hover, 
+#formPage select.formField.error:focus,
+#formPage textarea.formField.error:hover, 
+#formPage textarea.formField.error:focus  {
+	background-color: #cff6fb;
+}
+
+#formPage textarea.formFieldMultiLine, 
+#formPage input.formField, 
+#formPage textarea.formField, 
+#formPage select.formField {
+	/* over ride any browser specific form input render and use parent font */
+	font-family:inherit;
+}
+
+
+
+
+
+
+
+#formPage textarea.formFieldMultiLine, 
+#formPage input.formField, 
+#formPage textarea.formField { 
+	
+}
+#formPage select.formField { 
+
+}
+
+
+/* fieldsets in formsmaster */
+#formPage fieldset { border:thin solid #CCCCCC; padding:.8em 0 1em 1em; }
+#formPage fieldset label { font-weight:normal; }
+	#formPage .fieldGroup fieldset legend { 
+	 	font-weight:bold; 
+		border:1px solid #666666; 
+		padding:.3em .5em .5em; 
+		margin:1em 1em 0 0;
+		white-space:normal;
+	}
+	
+/* date fields DD MM YYYY */
+#formPage .field.date { margin-bottom:2em; clear:both; }
+
+
+
+
+/*#formPage .field.date .fieldMembers { margin-top:1em;}
+#formPage .field.date .dateFields p { margin-top:-1em; }
+#formPage .field.date .dateFields .fieldHelp p { margin-top:0; }*/
+
+
+
+
+	#formPage .field.date .dateFields { padding-bottom:1em;}
+	#formPage .field.date .dateFields p { display:block; float:left; }
+	#formPage .field.date .dateFields label { width:auto; display:inline; float:none; }
+
+
+
+
+	
+
+
+/* layout of form elements - thake care with the widths! */
+/* client styles here */
+
+#formPage .topText { margin-bottom:1em;}
+#formPage .fieldGroupTitle { 
+	font-weight:bold; 
+	font-size:1.2em; 
+	padding-bottom:.2em;
+	margin-bottom: 0.3em;
+	clear: left;
+	/*font-size: .96em;*/
+	margin-top: 0pt;
+	color:#666666;
+}
+#formPage .fieldGroup { 
+	border-top:1px solid #CCCCCC; 
+	margin: 0 0 1em 0; 
+	padding:.8em 0 .8em 0;
+}
+#formPage .fieldMembers { font-size:1em; }
+
+
+/* UPDATE get radio buttons in a fieldset to wrap on one line */
+#formPage fieldset .fieldMembers p { display:block; float:left; margin-right:1em; }
+#formPage fieldset .fieldMembers .fieldHelp p,
+#formPage fieldset .fieldMembers .fieldNote p  { clear:both; float:none; margin-right:0; }
+/**/
+
+
+/*#formPage fieldset .fieldMembers p label { font-size:1em; }*/
+.fieldMembers { }
+/* dimensions of leabl and field widths */
+#formPage .fieldMembers .label { 
+	width:150px;
+	margin-right:10px;
+}
+	/*override for protox payment provider */
+	.protox#formPage .fieldMembers .label { 
+		width:175px;
+		margin-right:10px;
+	}
+	/* see #formPage .fieldMembers .fieldItems */
+
+#formPage .fieldMembers .fieldGroup { 
+	/*width:500px;*/
+}
+/* standard field widths with matching filed note width */
+#formPage .fieldMembers input.formField,
+/*#formPage .fieldMembers select.formField,*/
+#formPage .fieldMembers textarea.formField { 
+	width:58%;
+}
+
+
+/* extra classes for fieldsets with checkboxes and radions with long labels */
+#formPage  .fieldMembers.longLabels p { margin-bottom:1em; clear:both; float:left; width:90%; }
+#formPage  .fieldMembers .set { float:left; width:49.5%; display:block; }
+#formPage  .fieldMembers .set p { margin-bottom:1em; clear:both; float:left; width:auto;}
+
+
+            
+            
+            
+    
+
+
+
+#formPage .red {color:#FF0000;}
+
+
+#formPage span.asterix,
+#formPage .fieldMembers span.asterix,
+#formPage .fieldMembers span.required { color:#FF0000; }
+#formPage .fieldNote .message { 
+	padding:5px 5px 8px 5px;
+	border:1px solid #FFD324;
+	background-color:#FFF6BE;
+	width:65%;
+	color:#817134;
+}
+#formPage .fieldMembers .fieldCorrect { 
+	background-image: url(../../graphics/default/tick.gif);	
+}
+#formPage .fieldMembers .fieldError {
+	background-image: url(../../graphics/default/cross.gif);
+}
+#formPage .fieldHelpButton {
+	background-image: url(../../graphics/default/fieldHelp.gif);
+}
+/* this part is important to get icons and fields lining up - take care with the top padding */
+#formPage textarea.formFieldMultiLine, 
+#formPage input.formField, 
+#formPage textarea.formField, 
+#formPage select.formField {
+	font-size:1em;
+	padding:2px 2px 2px 2px;
+}
+#formPage .fieldMembers .label p { padding-top:2px; }
+#formPage .field.populated .formInput { color:#0000CC; font-weight:bold; padding-top:2px; }
+#formPage .field p span.prefix { display:block; float:left; margin-right:5px;}
+#formPage .field.populated .formInput p { font-weight:normal; color:#333333; display:block; float:left; }
+#formPage .field.populated.notes .formInput p { font-weight:normal; color:#333333; }
+#contents #formPage .field.populated .formInput p { font-weight:bold; color:green; }
+/* validation styles */
+#formPage .validation {
+	clear:both;
+	border:1px solid #FF0000;
+	margin: 0 0 1em 0;
+	padding:1em;
+	width:auto;
+	background-color: #F5E5E5;
+	font-size:.85em;
+}
+
+#formPage .fieldGroup.login .validation {
+	width:auto;
+}
+
+
+/* safari hack */
+body:first-of-type #formPage .validation {
+	padding:1em 0 1em 1em;
+	margin-top:2em;
+}
+
+#formPage .validation p { color: #FF0000; }
+
+
+
+/* code to help CSS designers - uncomment this to make life easier */
+/*#formPage .field { 
+	background-color:orange;
+}
+#formPage .fieldMembers .label { 
+	background-color:blue;
+}
+
+#formPage .fieldMembers .fieldItems { 
+	background-color:pink;
+}
+#formPage .fieldMembers .fieldItems .formInput { background-color:#000000;}
+
+*/
+/**/
+
+/* filed row padding and margins */
+#formPage .field { 
+	padding:.3em 0 .3em 0; 
+	margin-bottom:1em;
+}
+#formPage .fieldMembers {  }
+
+/* labels */
+#formPage .fieldMembers .label { 
+	display:block; 
+	float:left; 
+	padding:0 0 0 0;
+}
+#formPage .fieldMembers .label span.small { font-size:80%; font-weight:normal;}
+#formPage .fieldMembers .label,
+#formPage .fieldMembers .label label { font-weight:bold; }
+/**/
+
+
+
+
+/* override the global field widths so system filed widths can be set in admin */
+#formPage .fieldMembers input.formField.autoWidth,
+#formPage .fieldMembers select.formField.autoWidth,
+#formPage .fieldMembers textarea.formField.autoWidth { 
+	width:auto;
+}
+
+
+/* 2 fields in one field area */
+#formPage .field.fieldsRow2 .formInput span.pair { display:block; float:left; width:29.5%;}
+	/* and to override it */
+	#formPage .field.fieldsRow2.autoWidth .formInput span.pair { display:block; float:left; width:auto; margin-right:1em; margin-bottom:.5em;}
+#formPage .field.fieldsRow2 .formInput label {  width:auto; float:none; font-weight:normal; color:#666666;}
+
+
+
+
+
+#formPage .fieldMembers .fieldItems { 
+	display:block; 
+	float:left; 
+	padding:0 0 0 0;
+	width:450px;
+}
+	/* overirde for protox payment provider */
+	.protox#formPage .fieldMembers .fieldItems { 
+		display:block; 
+		float:left; 
+		padding:0 0 0 0;
+		width:300px;
+	}
+
+/* override default width for login module */
+#formPage .fieldGroup.login .fieldMembers .fieldItems { width:58%;}
+#formPage .fieldGroup.login .fieldMembers .fieldItems input.formField { width:83%; }
+
+
+
+
+
+
+#formPage .fieldMembers .fieldItems .formInput { clear:both; display:block; width:480px; vertical-align:top; margin-bottom:.3em; }
+#formPage .fieldMembers input.formField,
+#formPage .fieldMembers select.formField,
+#formPage .fieldMembers textarea.formField  { 
+	border: 1px solid #000000; 
+	color:#0000CC; 
+	font-weight:bold; 
+	margin:0 0 0 0;
+	float:left;
+}
+
+.trainingNumber table { float:left; }
+.trainingNumber table td { padding:0 1em 0 0; }
+tr.labels td { padding:1em 1em 0 0;}
+tr.labels td p { display:block; text-align:center; }
+
+
+
+/* JQuery sliding panel style */
+#formPage .fieldMembers .fieldItems .fieldHelp {
+	display:block; 
+	float:left;
+	height: 16px;
+	width: 16px;
+	margin-left:10px;
+}
+#formPage .fieldHelpButton {
+	display:block;
+	width:16px;
+	height:16px;
+	background-repeat: no-repeat;
+	background-position: center center;
+	margin-top:.3em;
+}
+.fieldNote { margin-bottom:.5em;}
+/* hide the print frindly question mark */
+	#formPage .fieldHelpButton span { display:none; }
+/* errors and correct idicators */
+/* field colours */
+#formPage input.formField.correct,
+#formPage select.formField.correct,
+#formPage textarea.formField.correct { border:1px inset #66cc66;  color:#0000CC;}
+#formPage input.formField.error,
+#formPage select.formField.error,
+#formPage textarea.formField.error { border:1px inset #CC0033;  color:#0000CC; background-color:#F5E5E5;}
+
+#formPage .fieldMembers .fieldCorrect { 
+	display:block;
+	width:16px;
+	height:16px;
+	background-repeat: no-repeat;
+	background-position: center center;
+	float:left;
+	margin:0 0 0 5px;
+}
+/* error message  block under the field */
+#formPage .fieldMembers .errorBlock { clear:both; }
+
+#formPage fieldset .fieldMembers .errorBlock { margin-top:.5em;}
+#formPage .fieldMembers .fieldError {
+	display:block;
+	width:16px;
+	height:16px;
+	background-repeat: no-repeat;
+	background-position: center center;
+	float:left;
+	margin:0 5px 0 0;
+}
+#formPage .fieldMembers .fieldValidate {
+	float:left;
+	display:block;
+}
+/* login error message line height control */
+#formPage .fieldGroup.login .fieldMembers .fieldValidate { font-size:1.3em; padding-top:5px; }
+/**/
+
+
+/* photo preview module */
+#formPage .filePreview { display:block; margin-bottom:1em;  }
+#formPage .filePreview .img {
+	padding:0 0 0 0;
+	display:block;
+	margin-bottom:5px;
+}
+#formPage .filePreview p  { font-size:1em;}
+#formPage .filePreview .item p { margin-bottom:1em;}
+#formPage .filePreview .item a {
+	background-repeat: no-repeat;
+	background-position: left top;
+	padding-left: 20px;
+	line-height:16px;
+	display:block;
+}
+#formPage .filePreview .item a.pdf {
+	background-image: url(../../graphics/default/filetypes/pdf-small.gif);
+}
+#formPage .filePreview .item a.word {
+	background-image: url(../../graphics/default/filetypes/word-small.gif);
+}
+#formPage .filePreview .item a.jpg {
+	background-image: url(../../graphics/default/filetypes/jpg-small.gif);
+}
+#formPage .filePreview .FormButton {
+	margin-top:1em;
+}
+
+
+
+/* formsmater buttons - override all browser default button classes */
+#formPage .buttonGroup { padding-bottom:2em;}
+#formPage .buttonGroup .leftButtons { display:block; float:left; width:20%; }
+#formPage .buttonGroup .lightButtons { display:block; float:left; width:75%; }
+
+
+input.buttonLarge,
+input.buttonLargeRight,
+input.buttonHelp { 
+	font-size:1.337em; 
+	padding:.1em .3em .1em .3em;
+	font-family:Arial, Helvetica, sans-serif;
+	font-weight:bold;
+	margin-left:.3em;
+	text-align:center;
+}
+input.button {
+	text-align:center;
+	
+}
+input.buttonLargeRight { float:right;}
+input.buttonHelp { margin-bottom:1em;}
+
+
+
+input.FormButton {
+	width:0 !important;
+	overflow:visible;
+	padding:1px 4px;
+	border:1px solid #000000;
+	color:#333333;
+	font-weight:bold;
+	font-family:arial, helvetica, sans-serif;
+	margin-right:1em;
+	background-image: url(../../graphics/default/buttonBg.gif);
+	background-repeat: repeat-x;
+	background-position: left top;
+}
+input.FormButton.large.save {
+	background-image: url(../../graphics/default/buttonBgSave.gif);
+	background-repeat: repeat-x;
+	background-position: right top;
+	padding-right:28px;
+}
+
+
+input.FormButton[class] {
+	width:auto !important;
+}
+input.FormButton.large { font-size:1.337em; padding:.1em .3em .1em .3em; }
+input.FormButton.right { float:right; margin-left:1em; margin-right:0;}
+
+#formPage fieldset input,
+#formPage .buttonGroup input,
+#formPage .filePreview input.FormButton  {cursor: pointer;}
+
+/* login form */
+			#formPage .fieldGroup.login { 
+				border:1px solid #CCCCCC; 
+				margin-left:15px; 
+				margin-bottom:1em; 
+				padding:1em 1em 2em 1em;
+			}
+			#formPage .fieldGroup.login .label,
+			#formPage .fieldGroup.login input.textBig,
+			#formPage .fieldGroup.login select.textBig {
+				font-weight: bold;
+				font-size: 120%;
+			}
+			#formPage .fieldGroup.login .label { padding:5px 5px 0 0; }
+			#formPage .fieldGroup.login input.textBig,
+			#formPage .fieldGroup.login select.textBig { padding:5px; }
+			
+			#formPage .fieldGroup.login .fieldCorrect {
+				display:block;
+				width:24px;
+				height:24px;
+				background-image: url(../../graphics/default/tick-large.gif);
+				background-repeat: no-repeat;
+				background-position: center center;
+				margin-top:.3em;
+				margin-left:5px;
+			}
+			#formPage .fieldGroup.login .fieldError {
+				display:block;
+				width:24px;
+				height:24px;
+				background-image: url(../../graphics/default/cross-large.gif);
+				background-repeat: no-repeat;
+				background-position: center center;
+				margin-top:.3em;
+				margin-left:5px;
+			}
+			#formPage .fieldGroup.login .buttonGroup,
+			#formPage .fieldGroup.login .forgottenLink{  margin-left:165px; }
+			#formPage .fieldGroup.login .buttonGroup { padding-top:15px; }
+
+
+/* protox shopping basket table */
+/* page tables and wysiwyg table styles */
+#formPage table.pageTable {
+	border-top:1px solid #E2E0DE;	
+	border-left:1px solid #E2E0DE;border-right:1px solid #E2E0DE;
+	width:99%;
+	margin-left:1px;
+	border-collapse:collapse;
+	border-spacing:none;
+	margin-bottom:1em;
+	clear:both;
+}
+#formPage table.pageTable td,
+#formPage table.pageTable th {
+	padding:.3em;
+	vertical-align: text-top;
+	border-top:1px solid #E2E0DE;
+	
+}
+#formPage table.pageTable th { font-weight:bold; vertical-align: top; }
+#formPage table.pageTable tbody { font-weight:normal; }
+#formPage table.pageTable tfoot { font-weight:bold; }
+#formPage table.pageTable tfoot td { border-top:1px solid #333333; border-bottom:1px solid #E2E0DE;}
+#formPage table.pageTable thead th { background-color:#E2E0DE;}
+
+
+#formPage table.pageTable th p,
+#formPage table.pageTable td p  { margin:0 0 .25em .25em; padding:0px; vertical-align: text-top; line-height:normal;  }
+#formPage table.pageTable img { margin:0px 5px -22px 5px; }
+
+
+#formPage table.pageTable th p,
+#formPage table.pageTable td p/*,
+#formPage table.formTable td p*/ { vertical-align: text-top; line-height:normal; padding-top:.3em; padding-bottom:.3em; margin-right:.3em; font-size:.85em  }
+
+#formPage table.pageTable tr.roweven td { background-color:#f2f2f2; }
+#formPage table.pageTable tbody tr:hover,
+#formPage table.pageTable tbody tr.roweven:hover td { background-color:#EFF6FF;}
+
+
+#formPage .pageTable caption { margin:0px; font-weight:bold; text-align:left; padding-bottom:.5em; color: #666666;font-size: 115%;
+
+}
+
+
+#formPage .pageTable caption span.small,
+#formPage .plainTable caption span.small { font-size:.6em;}
+
+#formPage table.pageTable {
+	width:99%;
+	margin-left:1px;
+	border-collapse:collapse;
+	border-spacing:none;
+	margin-bottom:1em;
+	clear:both;
+}
+#formPage table.formTable td,
+#formPage table.formTable th {
+	padding:.3em;
+	vertical-align: text-top;	
+}
+#formPage table.plainTable td { vertical-align:top; }
+#formPage table.plainTable th p,
+#formPage table.plainTable td p  { margin:0 0 .25em .25em; padding:0px; vertical-align: text-top; line-height:normal; font-size:.85em; }
+#formPage table.buttonTable td p { margin:0 1em .25em .25em; padding:0px; vertical-align: text-top; line-height:normal; font-size:.85em;}
+#formPage table.buttonTable { width:99%;}
+#formPage table.plainTable td,
+#formPage table.buttonTable td { padding:1em 0;}
+#formPage table.plainTable img { margin:0 1em; }
+
+
+#formPage table.cardTable { margin-top:1em;}
+#formPage table.cardTable caption { margin-bottom:1em; text-align:left; font-size:1.2em; }
+#formPage .intro.card p { font-size:1em;}
+
+#copyright img { margin-left:.5em; }
+
+
+body.popUp { font-family:Verdana, Arial, Helvetica, sans-serif; margin:0 0 0 0; padding:0 0 0 0; }
+.popPage { margin:0 1em 1em 1em;}
+.popPage #formPage p,
+.popPage #formPage li { font-size: 0.85em; } 
+.closeIt { float:right; margin:1em 0 1em 1em ;}
+.closeIt span { background-color:#E5E2EC; padding:.5em; }
+.closeIt a { color: #990000; }
+.popPage #formPage h1 {
+font-size: 1.2em;
+}
+.popUp .branding { background-color:#a2bbdc; width:100%;  }
+.popUp .branding img { float:right; margin:0 1em;}
+
+.popPage #formPage h2,
+.popPage #formPage h3,
+.popPage #formPage h4,
+.popPage #formPage h5 {
+font-size: 1em;
+}
+
+
+/* .NET ajax calendar fix */
+/*#ctl00_pageContent_date { position:relative;}*/
+
+/*.formInput.test { position:relative; z-index:1;}
+.formInput select { position:inherit; z-index:2; display:inline-block; } 
+.ajax__calendar_container { 
+	z-index : 1000 ;
+	position: relative;
+ 
+    visibility: visible;
+	display: block;
+	background-color:#FF6633;
+}
+
+.ajax__calendar iframe
+{
+    left: 0px !important;
+    top: 0px !important;
+}
+select.formField.autoWidth {  z-index:1;}*/
+
+.ajax__calendar_container {
+    position: absolute;
+	background-color:#ffffff;
+	border:1px solid #000000;
+}
+.ajax__calendar {
+    position: absolute;
+    left: 0px !important;
+    top: 0px !important;
+}
+.ajax__calendar iframe {
+    left: 0px !important;
+    top: 0px !important;
+	background-color:#00FFFF;
+	display:inline-block;
+	z-index:1000;
+}
+
+
+
+.ajax__calendar_days { z-index:500;}
+.ajax__calendar_days thead td { padding:0 0 0 0; }
+.ajax__calendar_dayname { display:block; width:20px; height:17px; background-color:#8CBCF2; }

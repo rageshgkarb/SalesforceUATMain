@@ -1,0 +1,71 @@
+<apex:component >
+    <apex:attribute name="EventLogId" description="" type="String"/>
+    <apex:attribute name="SessionId" description="" type="String"/>
+    <apex:attribute name="IsGuest" description="" type="Boolean"/>
+    <apex:attribute name="Stage" description="" type="String"/>
+    <apex:attribute name="ShowFSCSDoc" description="" type="Boolean"/>
+    
+    <apex:attribute name="ShowR85Documents" description="" type="Boolean"/>
+    
+    
+    <div ng-controller="controllerDocuments" ng-init="EventLogId='{!EventLogId}';SessionId='{!SessionId}';Stage='{!Stage}'; GetDocumentData();">
+      <div class="SectionTitle">
+          Downloads                         
+      </div>
+        <div class="row">
+    
+          
+              <div class="col-sm-6" style="font-size:18px;">
+                  <div ng-repeat="doc in Data.Docs" >
+                  
+                  <a ng-show="doc.Complete" href="{{doc.URL}}" target="_blank">{{doc.Name}}</a>
+                 
+                  <!--
+                  <apex:outputPanel rendered="{!Not(IsGuest)}" layout="none">
+                      <a ng-show="doc.Complete" href="/servlet/servlet.FileDownload?file={{doc.AttachmentId}}" target="_blank">{{doc.Name}}</a>
+                  </apex:outputPanel>
+                  
+                  <apex:outputPanel rendered="{!IsGuest}" layout="none">
+                      <a ng-show="doc.Complete" href="servlet/servlet.FileDownload?file={{doc.AttachmentId}}" target="_blank">{{doc.Name}}</a>
+                  </apex:outputPanel>
+                  -->
+                  
+                  <span ng-show="!doc.Complete && doc.Generating"><i class="fa fa-spinner fa-pulse"></i>  Generating {{doc.Name}}</span>
+                  </div>
+                 
+                  <apex:outputPanel rendered="{!ShowFSCSDoc}" layout="none">
+                      <apex:outputLink value="{!$Resource.FSCScheme}" 
+                            target="_blank">Important information about the FSCS</apex:outputLink>
+                                </apex:outputPanel>
+              </div>
+              <div class="col-sm-6">
+              <!--
+               <apex:outputPanel rendered="{!ShowR85Documents}" layout="none">
+               
+                   <ul>
+                       <li>
+                           <apex:outputLink value="{!$Resource.R85}" id="theLinkR85"
+                            target="_blank">Information for customers who do not pay basic rate tax</apex:outputLink>
+                       </li>
+                       <li>
+                           <apex:outputLink value="{!$Resource.R105}" id="theLinkR105"
+                            target="_blank">Information for overseas UK residents</apex:outputLink>
+                       </li>
+                       <li>
+                           <apex:outputLink value="{!$Resource.R85_Helpsheet}"
+                            id="theLinkR85_Helpsheet" target="_blank">Our R85 helpsheet</apex:outputLink>
+                       </li>
+                   
+                   </ul>
+               
+                   
+                  
+               </apex:outputPanel>
+                -->
+                  
+              </div>
+          </div>
+      </div>
+
+    <div class="SectionBreak"/>
+</apex:component>

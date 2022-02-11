@@ -1,0 +1,22 @@
+<apex:component >
+
+    
+    <ul>
+        <li>
+            <strong>When you apply for an account with us, we carry out checks with Fraud Prevention Agencies (FPAs). </strong>
+            These checks include verifying your identity to prevent and detect crime and money laundering. 
+        </li>
+        <li>
+            <strong>If you give us false or inaccurate information and / or we suspect identify fraud, </strong>
+            we’ll record this on your account and may pass this information to FPAs and other organisations, including law enforcement.
+        </li>
+        <li>
+            <strong>Your data will be used in line with the terms of the General Data Protection Regulation. </strong>
+            Your information may be held and processed outside of the European Union. 
+        </li>
+        <li>
+            <strong>For more information on how your information may be used, </strong>
+            please refer to the ‘Privacy and Data’ section of the Consumer Banking Terms and Conditions or call us on 0800 4086 407.
+        </li>
+    </ul>
+</apex:component>

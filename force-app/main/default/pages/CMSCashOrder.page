@@ -1,0 +1,102 @@
+<apex:page standardController="Cash_Order__c" extensions="CMSCashOrderController" id="thePage" >
+	
+	<Script>
+		function setFocusOnLoad() {}
+	</Script>
+	
+	<apex:form id="theForm">
+
+		<apex:pageBlock title="Cash Order Record Type" rendered="{!pageNum == 1}" >
+			<apex:pageBlockButtons location="bottom">
+				<apex:commandButton value="Cancel" action="{!cancel}" onclick="return confirm('Please confirm you wish to cancel out of this screen?');" immediate="true" />
+				<apex:commandButton value="Select" action="{!goToDetailPage}" rerender="theForm" />
+			</apex:pageBlockButtons>
+			<apex:pageBlockSection columns="1">
+				<apex:pageBlockSectionItem >
+					<apex:outputlabel for="recordTypeSelect" value="Record Type" />
+					<apex:selectList id="recordTypeSelect" value="{!recordTypeId}" size="1" multiselect="false">
+			            <apex:selectOptions value="{!recordTypeOptions}"/>
+			        </apex:selectList>
+		        </apex:pageBlockSectionItem>
+			</apex:pageBlockSection>
+		</apex:pageBlock>
+		<!-- END PAGE 1 -->
+		
+		<apex:sectionHeader title="{!cashRecType.Name}" rendered="{!pageNum == 2}" />
+		<apex:sectionHeader title="{!cashRecType.Name} Confirmation" rendered="{!pageNum == 3}" />
+		
+		<apex:pageBlock title="Order" rendered="{!pageNum == 2 || pageNum == 3}">
+			<apex:pageBlockSection columns="2">
+				<apex:outputPanel layout="block" rendered="{!(pageNum == 2 && cashRecType.Name == 'Standard Cash Order') || pageNum == 3}">
+					<p>
+						The requested delivery date is &nbsp; <apex:inputField value="{!cashOrder.Delivery_Date__c}" rendered="{!cashRecType.Name == 'Standard Cash Order' || (cashRecType.Name == 'Emergency Cash Order' && pageNum == 3)}"/>
+					</p>
+				</apex:outputPanel>
+				
+				<apex:pageBlockSectionItem rendered="{!cashRecType.Name == 'Emergency Cash Order' && pageNum == 2}">
+					<p>Please Select the Delivery Date for your Emergency Cash Order:</p>
+				</apex:pageBlockSectionItem>
+				<apex:pageBlockSectionItem rendered="{!cashRecType.Name == 'Emergency Cash Order' && pageNum == 2}">	
+					<apex:inputField value="{!cashOrder.Delivery_Date__c}" />
+				</apex:pageBlockSectionItem>
+				
+			</apex:pageBlockSection>
+		</apex:pageBlock>
+		
+		<apex:pageBlock rendered="{!pageNum == 2 || pageNum == 3}">
+			<apex:pageBlockButtons location="bottom" rendered="{!pageNum == 2}">
+				<apex:commandButton value="Cancel" action="{!cancel}" onclick="return confirm('Please confirm you wish to cancel out of this screen?');" immediate="true" />
+				<apex:commandButton value="Next" action="{!next}" rerender="theForm" />
+			</apex:pageBlockButtons>
+			<apex:pageBlockButtons location="bottom" rendered="{!pageNum == 3}">
+				<apex:commandButton value="Cancel" action="{!cancel}" onclick="return confirm('Please confirm you wish to cancel out of this screen?');" immediate="true" />
+				<apex:commandButton value="Amend" action="{!Amend}" rerender="theForm" />
+				<apex:commandButton value="Confirm Order" action="{!save}" />
+			</apex:pageBlockButtons>
+			<apex:pageBlockSection columns="1">
+				<apex:pageBlockTable value="{!currencySettingsOrdered}" var="setting" >
+				
+					<apex:column >
+						<apex:facet name="header">Denomination</apex:facet>
+						<apex:outputText value="{!currencySettings[setting].Denomination__c}" />
+					</apex:column>
+					<apex:column >
+						<apex:facet name="header">Minimum</apex:facet>
+						<apex:outputText value="{!FLOOR(currencySettings[setting].Minimum_Value__c)}" />
+					</apex:column>
+					<apex:column >
+						<apex:facet name="header">Amount</apex:facet>
+						<apex:inputField value="{!cashOrder[currencySettings[setting].Cash_Order_API_Field_Label__c]}" rendered="{!pageNum == 2}">
+							<apex:actionSupport event="onchange" action="{!calculateCashTotal}" rerender="cashTotal"/>
+						</apex:inputField>
+						<apex:outputField value="{!cashOrder[currencySettings[setting].Cash_Order_API_Field_Label__c]}" rendered="{!pageNum == 3}" />
+					</apex:column>
+					
+				</apex:pageBlockTable>
+				
+				<apex:outputText label="Total Cash Amount" id="cashTotal" value="£{!cashTotal}" />
+				<apex:pageBlockSectionItem />
+				<apex:outputField value="{!cashOrder.Delivery_Charge__c}" rendered="{!pageNum == 3}" />
+				
+				<apex:pageMessage summary="Order is not in multiples of £25,000 please considered changing order amount." severity="info" strength="3" rendered="{!pageNum == 3 && showDiliveryChargeMsg == true}" />
+		        
+		        <apex:pagemessages />
+				
+			</apex:pageBlockSection>
+			
+			<apex:pageBlockSection Title="Sell Off Amount" columns="2">
+				<apex:inputField value="{!cashOrder.Sell_Off_Amount__c}" rendered="{!pageNum == 2}" />
+				<apex:inputField value="{!cashOrder.Comment__c}" rendered="{!pageNum == 2}" />
+				<apex:inputField value="{!cashOrder.Num_Coin_Bags__c}" rendered="{!pageNum == 2}" />	
+				
+				<apex:outputField value="{!cashOrder.Sell_Off_Amount__c}" rendered="{!pageNum == 3}" />
+				<apex:outputField value="{!cashOrder.Comment__c}" rendered="{!pageNum == 3}" />
+				<apex:outputField value="{!cashOrder.Num_Coin_Bags__c}" rendered="{!pageNum == 3}" />	
+								
+			</apex:pageBlockSection>
+		</apex:pageBlock>
+		<!-- END PAGE 2/3 -->
+	
+	</apex:form>
+	
+</apex:page>

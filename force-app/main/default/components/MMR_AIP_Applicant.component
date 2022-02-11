@@ -1,0 +1,99 @@
+<apex:component >
+    <apex:attribute name="applicantno" type="String" description="TODO: Describe me"/>
+<apex:attribute description="Applicant no" name="appNo" type="String" required="true"/>
+<apex:attribute description="Acc" name="Acc" type="Account" required="true"/>
+   
+
+<div class="col-md-6">   
+    <div class="panel applicantPanel">
+        <div class="panel-heading">
+            <h2>Applicant {!appNo} - {!Acc.Name}</h2>  
+        </div>
+        
+        <div class="panel-body">   
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="form-group">    
+                        <div class="col-sm-6">
+                            <label for="" >First Name</label>    
+                        </div>
+                        <div class="col-sm-6">
+                            <apex:inputField value="{!Acc.FirstName}" styleClass="form-control" required="true" />
+                        </div>
+                    </div>        
+                </div>
+                <div class="row">
+                    <div class="form-group">    
+                        <div class="col-sm-6">
+                            <label for="" >Last Name</label>    
+                        </div>
+                        <div class="col-sm-6">
+                            <apex:inputField value="{!Acc.LastName}" styleClass="form-control" required="true" />
+                        </div>
+                    </div>        
+                </div>
+                <div class="row">
+                    <div class="form-group">    
+                        <div class="col-sm-6">
+                            <label for="" >Gross Annual Income</label>    
+                        </div>
+                        <div class="col-sm-6">
+                            <apex:inputField value="{!Acc.Gross_Annual_Income__c}" styleClass="form-control" required="true" />
+                        </div>
+                    </div>        
+                </div>
+                <div class="row">
+                    <div class="form-group">    
+                        <div class="col-sm-6">
+                            <label for="" >Net Monthly Income</label>    
+                        </div>
+                        <div class="col-sm-6">
+                            <apex:inputField value="{!Acc.Net_Monthly_Income__c}" styleClass="form-control" required="true" />
+                        </div>
+                    </div>        
+                </div>
+                
+                <div class="row">
+                    <div class="form-group">    
+                        <div class="col-sm-6">
+                            <label for="" >Marital Status</label>    
+                        </div>
+                        <div class="col-sm-6">
+                            <apex:inputField value="{!Acc.Marital_Status__c}" styleClass="form-control" required="true" />
+                        </div>
+                    </div>        
+                </div>
+                
+                <div class="row">
+                    <div class="form-group">    
+                        <div class="col-sm-6">
+                            <label for="" >No. of dependents</label>    
+                        </div>
+                        <div class="col-sm-6">
+                            <apex:inputField value="{!Acc.No_of_depenents__c}" styleClass="form-control" required="true" />
+                        </div>
+                    </div>        
+                </div>
+                
+                <div class="row">
+                    <div class="form-group">    
+                        <div class="col-sm-6">
+                            <label for="" >No. of Cars</label>    
+                        </div>
+                        <div class="col-sm-6">
+                            <apex:inputField value="{!Acc.Number_of_cars__c}" styleClass="form-control" required="true" />
+                        </div>
+                    </div>        
+                </div>
+                
+                
+                
+                
+                
+                
+            </div>
+        
+        </div>
+    </div>
+</div>    
+</apex:component>

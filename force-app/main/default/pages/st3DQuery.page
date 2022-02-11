@@ -1,0 +1,9 @@
+<apex:page showHeader="false" sidebar="false">
+    <c:Liability_Header /> 
+    
+    <apex:include pageName="st3DQuery2"/>
+    
+    
+    <c:Liability_Footer rendered="true" />
+    
+</apex:page>

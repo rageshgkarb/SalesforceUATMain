@@ -1,0 +1,8 @@
+<apex:component >
+    <div id="ibbMotto">
+       Banking you can <font style="color: rgb(179,153,93);">believe</font> in
+
+    </div>
+    <div class="headerLogo" style="height: 100px;"></div>
+    <div style="clear: both;"></div>
+</apex:component>

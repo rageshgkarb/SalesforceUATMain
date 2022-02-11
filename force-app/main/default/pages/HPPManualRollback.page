@@ -1,0 +1,129 @@
+<apex:page controller="HPPManualRollbackController"   sidebar="false" showHeader="false" title="Generate Offer Letter" action="{!Setup}">
+    <head>
+        <c:KendoResource ></c:KendoResource>
+    </head>
+    <body>
+        <apex:form >
+            <div id="formWrapper">
+                <!-- C00095--> 
+                <c:HPPSummary objAcc="{!Accounts[0]}" objOpp="{!opp}" objExOpp="{!ExOpp}" Product="{!Prod}" />
+                <div id="container" >
+                    <table width="100%">
+                        <tr>
+                            <td valign="top" id="sidebar">
+                                <c:HPPBOMenu oppId="{!Opp.Id}"  DirectorId="{!Opp.ProductEventDirector__c}" />
+                            </td>
+                            <td valign="top" id="contenttd">
+                                <div id="content">
+                                    <h1>Manual Rewind</h1>
+                                
+                                    <apex:outputPanel id="mainPageBlock">
+                                    <div style="padding:20px;">
+                                    <!-- content -->
+                                    <div>
+                                    <table>
+                                    <tr>
+                                        <td>Rewind To Event:</td>
+                                        <td><apex:selectList size="1" style="width:300px;" value="{!SelectedEvent}" >
+                                        <apex:selectOptions value="{!EventsOpen}"> </apex:selectOptions>
+                                        </apex:selectList>
+                                        
+                                        <apex:actionFunction name="reasonChange" action="{!EventSelected}"/>
+                                        </td>
+                                        <td><apex:commandLink value="Select" styleClass="redBtn" action="{!EventSelected}"/></td>
+                                    </tr>
+                                    
+                                    </table>
+                                    </div>
+                                     <table>
+                                            <tr>
+                                                <td>Rewind Reason</td>
+                                                <td><apex:inputField value="{!Rewind.Rewind_Reason__c}" required="true" onchange="reasonChange();" /> 
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Rewind Comments</td>
+                                                <td><apex:inputField value="{!Rewind.Rewind_Comments__c}" required="true" />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    
+                                    <apex:outputPanel rendered="{!Show}">
+                                        <table>
+                                        <tr>
+                                            <th>Event</th>
+                                            <th>Rewind?</th>
+                                        </tr>
+                                        
+                                        <apex:repeat value="{!EventRollbackTo}" var="er">
+                                        <tr>
+                                            <td>{!er.Name}</td>
+                                            <td>
+                                            
+                                            <apex:inputCheckbox value="{!er.IsRollback}" rendered="{!!er.Forced}"/>
+                                            <apex:outputLabel value="Yes" rendered="{!er.Forced}"/>
+                                            
+                                            
+                                            </td>
+                                        </tr>
+                                        </apex:repeat>
+                                        
+                                        
+                                        </table>
+                                        
+                                        
+                                       
+                                        
+                                        <apex:commandLink value="Rewind" styleClass="redBtn" action="{!RollbackOpp}"/>
+                                         
+                                        
+                                         
+                                       
+                                    </apex:outputPanel>
+                                     
+                                     <!-- C00094 -->
+                                     <div>
+                                         </div>
+                                         <div>
+                                         </div>
+                                     <apex:outputPanel rendered="{!Show}">
+                                     <table>
+                                    <div>
+                                         
+                                         <apex:repeat var="foo" value="{!AnyErrors}" >
+                                          
+                                       <tr>
+                                       <td>
+                                      
+                                            <h1><apex:outputText value="Validation Error : "></apex:outputText> </h1>
+                                            </td>
+                                            <td>
+                                            <h1><apex:outputText value="{!foo}">
+                                            </apex:outputText></h1>
+                                            </td>
+                                            </tr>
+                                        
+                                        </apex:repeat>
+                                       
+                                        </div>
+                                    </table>
+                                    </apex:outputPanel>
+                                    <!-- C00094 end -->
+                                </div>
+                                    </apex:outputPanel>
+                                </div>
+                                
+                               
+                                
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+          
+        </apex:form>
+
+
+
+        </body>
+</apex:page>

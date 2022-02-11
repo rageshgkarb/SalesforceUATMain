@@ -1,0 +1,95 @@
+<apex:component controller="CAA_Date_Controller" layout="none">
+<apex:attribute name="Model" type="String" description=""/>
+<apex:attribute name="Field" type="String" description=""/>
+<apex:attribute name="Title" type="String" description=""/>
+<apex:attribute name="NumYears" type="Integer" description="" assignTo="{!Years}"/>
+<apex:attribute name="req" type="String" description=""/>
+<apex:attribute name="ShowHelp" type="Boolean" description=""/>
+<apex:attribute name="Helptext" type="String" description=""/>
+
+
+
+<div ng-controller="DateController" ng-init="init({!Model},'{!Field}','{!req}',{!Years})">
+<div class="row">
+    <div class="col-xs-8">
+        <label>{!Title} </label>
+    </div>
+    <div class="col-xs-4">
+    <apex:outputPanel layout="none" rendered="{!ShowHelp}"> 
+                        <span class="borderCircle pull-right" data-toggle="popover" data-placement="auto right" data-trigger="click" data-content="{!HelpText}">?</span>        
+                  </apex:outputPanel>
+                  <apex:outputPanel layout="none" rendered="{!Not(ShowHelp)}"> 
+                        <label>&nbsp;</label>    
+                  </apex:outputPanel>
+    </div>
+</div>
+
+
+    <div class="row" >
+              <div class="col-xs-4"  ng-class="{ 'has-error': required && !day && ($parent.Submitted || myform['{!model}{!field}_day' + $parent.$index].$touched) }">
+                  
+                  <select class="form-control arbBox hidden-xs" ng-model="day" ng-options="option.key as option.value  for option in days" ng-required="required" name="{!model}{!field}_day{{$parent.$index}}">                    
+                  </select>
+                  <select class="form-control arbBox visible-xs" ng-model="day" ng-options="option.key as option.value  for option in daysSM" ng-required="required" name="{!model}{!field}_day1{{$parent.$index}}">                    
+                  </select>
+                  <div class="input-validation hidden-xs" ng-messages="myform['{!model}{!field}_day' + $parent.$index].$error" ng-show="myform['{!model}{!field}_day' + $parent.$index].$touched || Submitted">
+                        <p class="alert alert-danger" ng-message="required">This field is required</p>               
+                    </div>
+                    <div class="input-validation visible-xs" ng-messages="myform['{!model}{!field}_day1' + $parent.$index].$error" ng-show="myform['{!model}{!field}_day1' + $parent.$index].$touched || Submitted">
+                        <p class="alert alert-danger" ng-message="required">Required</p>               
+                    </div>
+              </div>
+              <div class="col-xs-4"  ng-class="{ 'has-error': required && !month && ($parent.Submitted || myform['{!model}{!field}_month' + $parent.$index].$touched)}">
+                                    
+                      <select class="form-control arbBox hidden-xs" ng-model="month" ng-options="option.key as option.value  for option in months" ng-required="required" name="{!model}{!field}_month{{$parent.$index}}">
+                      </select>   
+                      
+                      <select class="form-control arbBox visible-xs" ng-model="month" ng-options="option.key as option.value  for option in monthsSM" ng-required="required" name="{!model}{!field}_month1{{$parent.$index}}">
+                      </select>
+                                                  
+                      <div class="input-validation hidden-xs" ng-messages="myform['{!model}{!field}_month' + $parent.$index].$error" ng-show="myform['{!model}{!field}_month' + $parent.$index].$touched || Submitted">
+                        <p class="alert alert-danger" ng-message="required">This field is required</p> 
+                    </div>
+                    <div class="input-validation visible-xs" ng-messages="myform['{!model}{!field}_month1' + $parent.$index].$error" ng-show="myform['{!model}{!field}_month1' + $parent.$index].$touched || Submitted">
+                        <p class="alert alert-danger" ng-message="required">Required</p> 
+                    </div>
+                    
+                    
+                    
+                    
+              </div>
+              <div class="col-xs-4" ng-class="{ 'has-error': required && !year && ($parent.Submitted || myform['{!model}{!field}_year' + $parent.$index].$touched)}">
+                  
+                  
+                  
+                  
+                  <select class="form-control arbBox hidden-xs" ng-model="year" ng-options="option.key as option.value  for option in years" ng-required="required" name="{!model}{!field}_year{{$parent.$index}}">
+                  </select>
+                     <!-- <option value="0">Please select</option>
+                      <apex:repeat value="{!YearList}" var="y">
+                          <option value="{!y}">{!y}</option>
+                      </apex:repeat>-->
+                      <!--<apex:selectOptions value="{!Years}"></apex:selectOptions>-->   
+                      <select class="form-control arbBox visible-xs" ng-model="year" ng-options="option.key as option.value  for option in yearsSM" ng-required="required" name="{!model}{!field}_year1{{$parent.$index}}">            
+                  </select>
+                  <div class="input-validation hidden-xs" ng-messages="myform['{!model}{!field}_year' + $parent.$index].$error" ng-show="myform['{!model}{!field}_year' + $parent.$index].$touched || Submitted">
+                        <p class="alert alert-danger" ng-message="required">This field is required</p>           
+                    </div>
+                    <div class="input-validation visible-xs" ng-messages="myform['{!model}{!field}_year1' + $parent.$index].$error" ng-show="myform['{!model}{!field}_year1' + $parent.$index].$touched || Submitted">
+                        <p class="alert alert-danger" ng-message="required">Required</p>           
+                    </div>
+              </div>
+              
+              
+          </div>
+          
+
+          
+        
+          
+          <div class="input-validation" ng-show="IsInValid()">
+               <p class="alert alert-danger">Please enter a valid date</p>
+          </div>
+          </div>
+
+</apex:component>

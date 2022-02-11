@@ -1,0 +1,5 @@
+<apex:page standardController="IBB_Product_Suitability__c" recordsetVar="IBB_Product_Suitability__cs" extensions="RedirectCE" id="thePage" action="{!redirectIBBProductSuitabilityListPage}" showHeader="false" sidebar="false">
+
+  Account Redirect page: {!ProfileName}
+  
+</apex:page>

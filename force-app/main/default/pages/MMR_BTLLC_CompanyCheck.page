@@ -1,0 +1,140 @@
+<apex:page controller="MMR_BTLLC_CompanyCheck" sidebar="false" showheader="false" title="Company Check" action="{!Setup}"><!-- C0644 -->
+        <apex:param assignto="{!PageMessage}" value="HPPSubmission_Results" />
+        <c:KendoResource ></c:KendoResource>
+    <style>
+
+
+#content .contentheader
+    {
+        background-color: #000;
+        padding:10px;
+        margin-bottom:20px;
+    }
+    
+    h1
+    {
+        color:#fff;
+        font-family: 'Optima LT W01 Medium', Arial, sans-serif;
+        font-weight :500;
+        font-size:18px;
+    }
+    #content td {
+            padding:7px;
+    }
+    #content input[type=checkbox] {
+            transform: scale(2);
+    }
+    #content a {
+        text-decoration: underline;
+        font-weight: bold;
+    }
+    .requiredInput {
+        border-left:solid 5px red;
+    }
+    </style>
+        <apex:form >
+
+            <div id="formWrapper">
+                <c:HPPSummary objacc="{!Accounts[0]}" objopp="{!opp}" objexopp="{!ExOpp}" product="{!Prod}" />
+
+                <div id="container">
+                    <table width="100%">
+                        <tr>
+                            <td valign="top" id="sidebar">
+                                <c:HPPBOMenu oppid="{!Opp.Id}" directorid="{!Opp.ProductEventDirector__c}" />
+                            </td>
+                            <td valign="top" id="contenttd">
+                                <div id="content">
+                                    <div class="contentheader">
+                                        <h1>Limited Company Check Confirmation</h1>
+                                    </div>
+                                    <apex:outputpanel rendered="{!!IsCompleted}">
+                                        <table class="detailList">
+                                            <tr>
+                                                <td colspan="2">
+                                                    Please follow the link below and complete the Equifax Company Check. The report must then be attached to <a href="/{!Opp.Id}" target="_blank"> this opportunity.</a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    EquiFax Link
+                                                </td>
+                                                <td>
+                                                    <a href="https://www.equifax.co.uk/equifax/commercial/" target="_blank">https://www.equifax.co.uk/equifax/commercial/</a><!-- TODO: Save as a CustomSetting-->
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Have you completed the Equifax Limited Company Check?
+                                                </td>
+                                                <td>
+                                                    <input type="checkbox" id="checkComplete" onclick="OkToComplete()" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Have you attached the Equifax Limited Company Check results to the opportunity?
+                                                </td>
+                                                <td>
+                                                    <input type="checkbox" id="checkAttach" onclick="OkToComplete()" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Limited Company Credit Score</td>
+                                                <td><apex:inputfield value="{!Accounts[0].Limited_Company_Credit_Score__c}" required="true" styleclass="form-control" /></td>
+                                            </tr>
+                                        </table>
+                                    </apex:outputpanel>
+                                    <apex:outputpanel rendered="{!IsCompleted}">
+                                        <table class="detailList">
+                                            <tr>
+                                                <td colspan="2" width="100%">
+                                                    Please view the completed Equifax Company Check report in <a href="/{!Opp.Id}" target="_blank">this opportunity's</a> Notes and Attachments.
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td width="10%" style="white-space:nowrap;">
+                                                    <b>Stage completed by:</b>
+                                                </td>
+                                                <td width="90%">
+                                                    {!EventCompletedBy}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td width="10%" style="white-space:nowrap;">
+                                                    <b>Stage completed on:</b>
+                                                </td>
+                                                <td width="90%">
+                                                    <apex:outputtext value="{0,date,dd' 'MMMMM' 'yyyy}">
+                                                        <apex:param value="{!EventCompletedDate}" />
+                                                    </apex:outputtext>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </apex:outputpanel>
+                                    <div id="complete" style="display:none;text-align:right;">
+                                        <div>
+                                            <apex:commandbutton styleclass="redBtn" value="Complete" rendered="{!!IsCompleted}" action="{!Complete}" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <script type="text/javascript">
+                function OkToComplete(){
+                    if($('#checkComplete').prop('checked') && $('#checkAttach').prop('checked'))
+                    {
+                        $('#complete').prop('style','display:block;text-align:right;');
+                    }
+                    else
+                    {
+                        $('#complete').prop('style','display:none;');
+                    }
+                    return;
+                }
+            </script>
+        </apex:form>
+</apex:page>

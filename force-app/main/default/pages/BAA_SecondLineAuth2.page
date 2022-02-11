@@ -1,0 +1,284 @@
+<!-- C00233 new page -->
+
+<apex:page showHeader="false" sidebar="false" docType="html-5.0" controller="BAA_SecondLineAuthorisationController2" action="{!Setup}">
+    <head>       
+        <c:BAA_Resource ></c:BAA_Resource>        
+    </head>
+    
+    <body>    
+        <c:BAA_Header objOpp="{!BaseOpportunity}" title="Second Line Authorisation"></c:BAA_Header>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-lg-3">
+                    <apex:form >
+                        <c:BAA_Menu oppId="{!BaseOpportunity.Id}"  DirectorId="{!BaseOpportunity.ProductEventDirector__c}" />
+                    </apex:form>
+                </div>            
+                <div class="col-md-8 col-lg-9">
+                    <apex:form >
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <apex:pagemessages ></apex:pagemessages>
+                            </div>
+                        </div>
+                        
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">Checklist</div>
+                            <div class="panel-body">
+                                <div class="row" >
+                                    <div class="col-xs-12">
+                                        <div>
+                                           When approving the application, you need to verify that the relevant Know Your Customer documents have been received:
+                                        </div>
+                                        <table class="table" width="50%">
+                                            <tbody>
+                                                
+                                                <tr>
+                                                    <td class="labelCol">•  Has Proof of ID For each Director/Proprietor/Partner/Signatory been obtained?</td>
+                                                    <td class="dataCol"><apex:outputText value="{!thisOpp.Proof_of_ID_obtained__c}"/></td> 
+                                                </tr>
+                                                <tr>   
+                                                    <td class="labelCol">•  Has Proof of Address For each Director/Proprietor/Partner/Signatory been obtained?</td>
+                                                    <td class="dataCol"><apex:outputField value="{!thisOpp.Proof_of_Address_obtained__c}"/></td> 
+                                                </tr>      
+                                                <tr>
+                                                    <td class="labelCol">•  Has the Registered Company Name and Number evidence been obtained? </td>
+                                                    <td class="dataCol"><apex:outputField value="{!thisOpp.Company_evidence_obtained__c}"/></td> 
+                                                </tr>
+                                                <tr>     
+                                                    <td class="labelCol">•  Has the registered address evidence been obtained?</td>
+                                                    <td class="dataCol"><apex:outputField value="{!thisOpp.Registered_address_evidence_obtained__c}"/></td> 
+                                                </tr>
+                                                <tr>     
+                                                    <td class="labelCol">•  Has the current Trading Address evidence been obtained?</td>
+                                                    <td class="dataCol"><apex:outputField value="{!thisOpp.Trading_address_evidence_obtained__c}"/></td> 
+                                                </tr> 
+                                                <tr>     
+                                                    <td class="labelCol">•  Have you taken a legible photocopy of all documents?</td>
+                                                    <td class="dataCol"><apex:outputField value="{!thisOpp.Legible_Photocopies__c}"/></td> 
+                                                </tr> 
+                                                <tr>    
+                                                    <td class="labelCol">•  Have you certified all photocopies taken, with your signature and date?</td>
+                                                    <td class="dataCol"><apex:outputField value="{!thisOpp.Certified_all_photocopies__c}"/></td> 
+                                                </tr>
+                                                <tr>     
+                                                    <td class="labelCol">•  Sanction Check - <br></br>Check FCU sanctions list, complete check with FCU where applicable
+                                                    </td>
+                                                    <td class="dataCol"><apex:outputField value="{!thisOpp.Sanction_Check__c}"/></td> 
+                                                </tr>
+                                                <tr>     
+                                                    <td class="labelCol">•  Politically Exposed Person (PEP) Check - <br></br>Ask question “Are you a Politically Exposed Person”? For PEP, take manual application , For Sanction raise Sanction case
+</td>
+                                                    <td class="dataCol"><apex:outputField value="{!thisOpp.PEP_Check__c}"/></td> 
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                       </div>
+                       <div class="panel panel-primary">
+                            <div class="panel-heading">Additional Questions</div>
+                            <div class="panel-body">
+                                <div class="row" >
+                                    <div class="col-xs-12">
+                                        <table class="table" width="50%">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="labelCol">•  Have all pages been initialled and dated?</td>
+                                                    <td class="dataCol"><apex:outputField value="{!thisOpp.All_pages_intialled__c}"/></td> 
+                                                </tr>
+                                                <tr>
+                                                    <td class="labelCol">•  Have all alterations been counter-signed?</td>
+                                                    <td class="dataCol"><apex:outputField value="{!thisOpp.Alterations_countersigned__c}"/></td> 
+                                                </tr>
+                                                <tr>   
+                                                    <td class="labelCol">•  Have all signatures been confirmed and checked against the sample signatures in the ID documents?</td>
+                                                    <td class="dataCol"><apex:outputField value="{!thisOpp.Signatures_confirmed__c}"/></td> 
+                                                </tr>
+                                                <tr>      
+                                                    <td class="labelCol">•  Does the Business Name on the application exactly match the certificate of incorporation?</td>
+                                                    <td class="dataCol"><apex:outputField value="{!thisOpp.Business_name_match__c}"/></td> 
+                                                </tr>
+                                                <tr>     
+                                                    <td class="labelCol">•  Has the customer product suitability matrix been signed by the customer?</td>
+                                                    <td class="dataCol"><apex:outputField value="{!thisOpp.Signed_matrix__c}"/></td> 
+                                                </tr>
+                                                <tr>     
+                                                    <td class="labelCol">•  If the Business annual turnover is over £900,000, get approval from the Head of Sales</td>
+                                                     
+                                                </tr>
+                                                
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                       </div>
+                       
+                       <div class="panel panel-primary">
+                            <div class="panel-heading">When deciding whether to approve the account opening, have you considered the following?</div>
+                            <div class="panel-body">
+                                <div class="row" >
+                                    <div class="col-xs-12">
+                                        <table class="table" width="50%">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="labelCol">•  Why are we opening this account?</td>
+                                                    
+                                                </tr>
+                                                <tr>   
+                                                    <td class="labelCol">•  What are the benefits to IBB?</td>
+                                                    
+                                                </tr>
+                                                <tr>      
+                                                    <td class="labelCol">•  Do we understand the Business that we are entering into a relationship with?</td>
+                                                    
+                                                </tr>
+                                                <tr>     
+                                                    <td class="labelCol">•  Are we comfortable with the people behind the Business?</td>
+                                                    
+                                                </tr>
+                                                <tr>     
+                                                    <td class="labelCol">•  Are we satisfied with the information provided by Credit Checks and information provided by other sources such as:
+                                                        <br></br>    o  Companies House
+                                                        <br></br>    o  Personal Visits/checks
+                                                        <br></br>    o  Secondary Sources
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="labelCol"></td>
+                                                </tr>
+                                                
+                                               
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                       </div>
+                            
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">Advisor Comments</div>
+                            <div class="panel-body">
+                               <apex:outputField styleClass="form-control"  value="{!thisOpp.Seller_Comments__c}"/> 
+                            </div>
+                       </div>
+                       
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">Approver Comments</div>
+                            <div class="panel-body">
+                               <apex:inputField styleClass="form-control"  value="{!thisOpp.Approver_Comments__c}"/> 
+                            </div>
+                       </div>
+                    
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">Further Information</div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <apex:variable value="{!0}" var="rowNumFi" />
+                                    <table class="table">
+                                        <thead>
+                                            <tr class="headerRow">
+                                                <th>F.I Code</th>
+                                                <th>Detail</th>
+                                                <th>Advisor Comments</th>
+                                                <th>F.I Accepted</th>
+                                                <th>Approver Comments</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                           <apex:repeat value="{!FiCases}" var="c">
+                                               <tr>
+                                                   <td><a href="/{!c.id}">{!c.CaseNumber }</a></td>
+                                                   <td valign="top">
+                                                       <apex:inputTextarea rows="2"
+                                                                      style="width:100%;"
+                                                                      value="{!c.Further_Information__c}" />
+                                                   </td>
+                                                   <td>{!c.BDM_Comments__c}</td>
+                                                   <td>
+                                                       <apex:inputField value="{!c.Further_Info_Satisfied__c}" />
+                                                   </td>
+                                                   <td valign="top">
+                                                       <apex:inputTextarea rows="2"
+                                                            style="width:100%;"
+                                                            value="{!c.Underwriter_Comments__c}" />
+                                                   </td>
+                                                    <td vlaign="top">                                                                                    
+                                                    <apex:commandLink oncomplete="SetUpDropdown();"
+                                                                
+                                                                action="{!DeleteFI}" value="Remove"
+                                                                rerender="uwPanel" immediate="true"
+                                                                rendered="{!!IsCompleted}">
+                                                                <apex:param name="delFi"
+                                                                    value="{!rowNumFi}"
+                                                                    assignTo="{!delFi}" />
+                                                            </apex:commandLink>
+                                                    </td>
+                                                </tr>
+                                                <apex:variable var="rowNumFi"
+                                                        value="{!rowNumFi+ 1}" />
+                                            </apex:repeat>
+                                        </tbody>
+                                    </table>   
+                                    <table>
+                                        <tbody>    
+                                            
+                                            <tr >
+                                                <td>
+                                                    <apex:commandButton styleClass="btn-success" value="Add Further Information"  action="{!AddCase}" rendered="{!!IsCompleted && NOT(Declined)}"/>
+                                                </td>
+                                            </tr>
+                                            
+                                        
+                                       </tbody>
+                                   </table>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                      
+                    
+                    
+                    <div class="row">
+                        <apex:commandButton styleClass="btn-danger" value="Authorise" rendered="{!!IsCompleted && NOT(Declined)}" action="{!Authorise}" />
+                        <apex:commandButton styleClass="btn-danger" value="Further Information" rendered="{!!IsCompleted && NOT(Declined)}" action="{!FurtherInformation}" />
+                        <apex:commandButton styleClass="btn-danger" value="Decline" rendered="{!!IsCompleted && NOT(Declined)}" action="{!Decline}" /> 
+                        <apex:commandButton styleClass="btn-success" value="Save" rendered="{!!IsCompleted && NOT(Declined)}" action="{!Save}" />
+                    </div>                
+                    </apex:form>
+                </div>
+            </div>
+        </div>
+        
+        
+    <script type="text/javascript"> 
+    $(document).ready(function() {    
+        $('.comment').click(function(e) {
+            var ee = $(this);
+            var p1 = ee.parent();
+            var p2 = ee.parent().parent();
+        
+            var p3 = ee.parent().parent().next("tr");
+            
+            p3.toggle();
+            
+            var v = ee.text();
+            
+            if(ee.text() == 'Show')
+            {
+                ee.text('Hide');
+            }
+            else
+            {
+                ee.text('Show');
+            }
+        });
+        
+    });
+</script>
+        
+    </body>
+</apex:page>

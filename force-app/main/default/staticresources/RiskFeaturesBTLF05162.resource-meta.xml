@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StaticResource xmlns="http://soap.sforce.com/2006/04/metadata">
+    <cacheControl>Public</cacheControl>
+    <contentType>application/pdf</contentType>
+    <description>R&amp;F BTLF05161 75% fixed 3.89% 31 12 2018</description>
+</StaticResource>

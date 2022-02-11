@@ -1,0 +1,317 @@
+<!-- C0301 rebranding -->
+
+<apex:component >
+<apex:attribute type="Boolean" name="HideOldAngular" description=""/>
+
+<apex:includeScript value="{!URLFOR($Resource.ibbstyle,'/kendo/jquery.min.js')}"/>
+<!--
+<apex:stylesheet value="{!URLFOR($Resource.Bootstrap, '/css/ibbbootstrap.min.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.Bootstrap, '/css/bootstrap-theme.min.css')}"/>
+-->
+<apex:stylesheet value="{!URLFOR($Resource.Bootstrap, '/css/bootstrap.min.css')}"/>
+
+
+<apex:includeScript value="{!URLFOR($Resource.Bootstrap, '/js/bootstrap.min.js')}"/>
+
+<apex:stylesheet value="{!URLFOR($Resource.ibbstyle, '/kendo/kendo.common.min.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.ibbstyle, '/kendo/kendoibb.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.ibbstyleexternal, 'bpi-additional.css')}"/>
+<apex:includeScript value="{!URLFOR($Resource.ibbstyle, '/kendo/kendo.all.min.js')}"/>
+
+
+<apex:outputPanel rendered="{!Not(HideOldAngular)}">
+    <!-- Angular -->
+    <apex:includescript value="{!URLFOR($Resource.Angular_1_3_11, 'angular.min.js')}" />
+    <apex:includescript value="{!URLFOR($Resource.Angular_1_3_11, 'angular-animate.min.js')}" />
+    <apex:includescript value="{!URLFOR($Resource.Angular_1_3_11, 'angular-sanitize.js')}" />
+    <apex:includescript value="{!URLFOR($Resource.Angular_1_3_11, 'angular-messages.js')}" />
+    <!--  Mandate App  -->
+    <apex:includeScript value="{!URLFOR($Resource.BAA_Mandate_App_UnProtected, '/BAA_Mandate_App/app/app.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.BAA_Mandate_App_UnProtected, '/BAA_Mandate_App/services/service_mandates.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.BAA_Mandate_App_UnProtected, '/BAA_Mandate_App/controller/controller_mandates.js')}"/>
+</apex:outputPanel>
+ 
+
+
+
+    <meta name="viewport" content="width=device-width"/>
+  
+    <!--  CPDR01-->
+  <style>
+      
+      .panel-info>.panel-heading
+      {
+          background-color:#000 !important;
+      }
+
+      
+  </style>
+  <!--  CPDR01-->
+    
+<script>
+    function FadeInput(value, compareTo,fadeClass)
+    {
+        if(value == compareTo)
+        {
+            $("." + fadeClass).fadeIn(500);
+        }
+        else
+        {
+            $("." + fadeClass).fadeOut(500);
+        } 
+    }
+
+    function FadeInputContains(value, contains,fadeClass)
+    {
+        if(value.indexOf(contains) !== -1)
+        {
+            $("." + fadeClass).fadeIn(500);
+        }
+        else
+        {
+            $("." + fadeClass).fadeOut(500);
+        } 
+    }
+
+    function GetApplicantNo(className,objId)
+    {
+        var classList = document.getElementById(objId).className.split(/\s+/);
+        for (var i = 0; i < classList.length; i++) {
+           if (classList[i].substr(0,classList[i].length-1 ) === className) {
+             return classList[i].substr(classList[i].length-1);
+           }
+        }
+    }
+</script>
+    
+<style>
+
+.container{
+    width:100%;
+}
+
+    .requiredInput{
+    border-left: solid 5px red;
+}
+
+.form-group .dateOnlyInput input{
+    width: 100%;
+}
+
+body button, body .btn{
+    color:#fff;
+    font-size:12px;
+    font-weight:normal;
+    background-image:none;
+    min-width: 100px;   
+}
+
+body .btn-default{
+    color:#777;
+}
+
+
+body button .btn-primary, body .btn.btn-primary{
+    /* background-color:#162f61; */
+    background-color:#000; 
+    
+    border-color:#11254c;
+}
+
+
+body button .btn-danger, body .btn.btn-danger{
+    background-color:#d9534f;
+    border-color:#d43f3a;
+}
+
+body button .btn-success, body .btn.btn-success
+{
+     /* CPDR01
+    background-color:#5cb85c;
+    border-color:#4cae4c;
+    */
+    background-color:#b3995d;
+    border-color:#b3995d;
+}
+
+body button .btn-success:hover, body .btn.btn-success:hover
+{
+    /* CPDR01
+    background-color:#47a447;
+    border-color:#398439;
+    */
+     background-color:#333333;
+    border-color:#333333;
+}
+
+body button .btn-danger:hover, body .btn.btn-danger:hover
+{
+    /* CPDR01
+    background-color:#47a447;
+    border-color:#398439;
+    */
+     background-color:#333333;
+    border-color:#333333;
+}
+
+body button .btn-info, body .btn.btn-info
+    {
+    color:#fff;
+    /* CPDR01
+    background-color:#3057a4;
+    border-color:#285888;
+    */
+    background-color:#b3995d;
+    border-color:#b3995d;
+}
+
+body button .btn-info:hover, body .btn.btn-info:hover
+{
+    /* CPDR01
+    background-color:#285888;
+    border-color:#285888;
+    */
+    background-color:#333333;
+    border-color:#333333;
+}
+
+
+.datePicker{
+    z-index:1200;
+}
+
+.budgetrow{
+    height:35px;
+    padding-left:5px;
+    padding-top:5px;
+}
+.budgetrow2{
+    height:35px;
+    background-color:#dcdcdc;
+    padding-left:5px;
+    padding-top:5px;    
+}
+
+/* CPDR01 */
+.navbar-header
+{
+    background-color:#000;
+}
+/* CPDR01 end */
+    
+.multiSelectPicklistRow select
+{
+    color:#000;
+}
+
+.navbar-default
+{
+    /* border-bottom: 4px solid #e92e23; */
+    border-bottom: 4px solid #b3995d;
+}
+
+.nav-pills>li>a, .nav-pills>li>a:hover, .nav-pills>li>a:focus
+{
+    border: 1px solid #ddd;  
+    /*min-height:60px;  */
+    /* CPDR01 */
+    color:#000;
+}
+    .nav-pills>li.active>a
+    {
+    /* CPDR01*/
+    background-color:#000;
+    }
+    
+    .nav-pills>li.active>a:hover
+    {
+    /* CPDR01*/
+    background-color:#b3995d;
+    }
+    .nav-pills>li.active>a:focus
+    {
+    /* CPDR01*/
+    background-color:#b3995d;
+    }
+.nav-pills>li>a:hover, .nav-pills>li>a:focus
+{
+   /*background-color:#fff;*/
+}
+
+
+.nav-tabs>li>a
+{
+    border-left: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+    border-right: 1px solid #ddd;    
+}
+.nav-tabs>li>a:hover, .nav-tabs>li>a:focus
+{
+    background-color:#fff;
+}
+
+
+
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus
+{
+    background-color:#162f61;
+    color:#fff;
+}
+    
+/* CPDR01 */
+.panel-primary
+    {
+        border-color:#000;
+    }
+.panel-primary>.panel-heading
+{
+    color:#fff;
+    background-color:#000;
+    border-color:#000;
+}
+
+
+    
+    a
+    {
+        color:#b3995d;
+    }
+    /* CPDR01*/
+
+/* CPDR01 */
+.modal-header
+{
+    background-color:#000;
+}
+    
+.modal-title
+{
+    color:#fff;
+    background-color:#000;
+}
+    
+.table>thead>tr>th
+{
+    color:#fff;
+    background-color:#000;
+}
+    
+tr.headerRow th
+{
+    color:#fff;
+    background-color:#000;
+}
+    
+body .pbBody table.list tr.headerRow td, body .pbBody table.list tr.headerRow th
+{
+    background:#000;
+    background-color:#000;
+    color:#fff;
+}
+/* CPDR01 */
+
+</style>
+
+
+
+</apex:component>

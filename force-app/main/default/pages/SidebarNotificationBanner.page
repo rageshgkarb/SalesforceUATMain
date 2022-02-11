@@ -1,0 +1,207 @@
+<!--
+============================================================================================== 
+PAGE FOR DISPLAYING NOTIFICATIONS TO NOTICE RECIPIENTS IN A NARROW FORM FACTOR 
+(E.G., AS A SIDEBAR COMPONENT) WITH AUTOMATED / SLIDER NOTIFICATION ANIMATION
+NO PARAMETERS REQUIRED.
+
+Copyright (c.) Improved Apps Limited 2015. All Rights Reserved.
+============================================================================================== 
+ -->
+
+<apex:page controller="ianb.ControllerNoticeBoard" showheader="false" sidebar="false" standardstylesheets="false">
+
+    <head>
+        <apex:stylesheet value="{!URLFOR($Resource.ianb__noticeboard_resources, 'noticeboard_resources/css/noticeboard_banner.css')}"/> 
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> 
+
+    
+        <style>
+            body                                {font-family: Arial,Helvetica,sans-serif; font-size: 75%;}
+            #BannerSidebar                      {margin: 0px; padding: 0px; width: 100%; overflow: hidden; border-radius: 5px;}
+            #ListContainer                      {margin: 0; padding: 0; height: 80px; width: Calc(100% - 2px); border-top: 0; border-bottom: 0; border-left: 1px solid silver; border-right: 1px solid silver;}
+            #NotificationList                   {overflow: hidden; padding-top: 5px;}
+            #NotificationList ul                {list-style: none; width: 100%; margin: 0; padding: 0; position: relative;}         
+            #NotificationList li                {width: 100%; float: left; text-align: center; position: relative;}     
+            .ListItemRow                        {padding: 0 5px 5px 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+            div#ListNav                         {padding: 0; font-weight: bold; color: white; font-size: 12px;}
+            div#BannerNav                       {margin: 0; padding: 0;}
+            div#BannerNav a                     {color: white;}
+        </style>
+    </head>
+    
+    <body>      
+        <div id="BannerSidebar">
+        
+            <apex:outputPanel rendered="{!HasRecipients}" layout="none">
+                <script type="text/javascript">
+                    $(document).ready(function(){
+                        setDisplayedStatus(); 
+                    });
+                    
+                    function gotoURL(myURL) {
+                        window.open("/" + myURL);
+                    }                    
+                </script>  
+            </apex:outputPanel>
+
+            <apex:form >
+                <apex:outputPanel id="divResult" />
+                <apex:actionFunction name="setDisplayedStatus" action="{!SetDisplayedStatus}" rerender="divResult" />
+            </apex:form>
+        
+            <div id="banner-icon" style="background-color: #ff0000; height: 16px; padding: 5px 3px 3px 1px; width: 100%; border-radius: 5px 5px 0px 0px; ">
+
+                <a title="Explore notifications" href="javascript:window.parent.location='{!URLFOR($Action.ianb__Notification__c.Tab, $ObjectType.ianb__Notification__c)}'">
+                    Notifications:
+                </a>&nbsp;
+                   
+                <div style="display: {!IF(NOT(HasRecipients), 'none', 'inline')};">
+                    <span id="NotificationNum">1</span> of                         
+                </div>
+    
+                <div style="display: {!IF(NOT(HasRecipients), 'inline', 'none')};">
+                </div>
+
+                <apex:outputPanel title="View my notifications requiring action">
+                    <a href="javascript:window.parent.location='{!URLFOR($Action.ianb__Notification__c.Tab, $ObjectType.ianb__Notification__c)}">{!TEXT(PendingNotices)}</a>     
+                </apex:outputPanel>                         
+            </div>
+
+            <div id="ListContainer">
+                <div id="NotificationList">
+                
+                    <div style="display: {!IF(NOT(HasRecipients), 'block', 'none')}; padding: 5px; text-align: center;">
+                        You have no new or pending Notifications requiring attention
+                    </div>      
+
+                    <ul>
+                                  
+                        <apex:repeat value="{!Recipients}" var="rec">
+                            <li class="slide">
+                                <div class="ListItem" >                                                             
+                                    <a class="ListItemLink" href="javascript:gotoURL('{!rec.Id}');" title="Click to open: {!rec.Title} - {!rec.RequiredAction}">
+                                        <div class="ListItemRow NotifFrom" style="color: #333; font-style: italic; font-weight: bold;">
+                                            From:&nbsp;{!rec.From}
+                                        </div>
+                                        <div class="ListItemRow NotifTitle" style="color: #004080; font-weight: bold;">
+                                            {!rec.Title}
+                                        </div>
+                                        <div class="ListItemRow NotifBAM" style="color: red; font-weight: bold;">
+                                            {!rec.RequiredAction}
+                                        </div>
+                                        <div class="ListItemRow NotifRAD" style="display: {!IF(ISNULL(rec.FormattedRequiredActionDeadline),'none', 'block')}; color: red; font-style: italic; font-weight: bold;">
+                                            {!IF(ISNULL(rec.FormattedRequiredActionDeadline), '', IF(ISNULL(rec.RequiredAction), rec.FormattedRequiredActionDeadline, ' ...by: ' + rec.FormattedRequiredActionDeadline))}
+                                        </div>
+                                    </a>
+                                </div>                          
+                            </li>                       
+                        </apex:repeat>
+                        
+                  </ul>           
+                </div>
+            </div>                
+ 
+            <div id="ListNav" style="background-color: #ff0000; height: 16px; padding: 5px 0; border-radius: 0 0 5px 5px;">               
+                            
+                <div id="BannerNav" style="display: {!IF(Recipients.size > 1, 'block', 'none')};">
+                    <div style="float: left; cursor: pointer; margin-left: 10px;"  title="Previous Notification" xhref="javascript:void(0);" onclick="javascript:manualSlide('prev', 200);">&larr; Previous</div>
+                    <div style="float: right; cursor: pointer; margin-right: 10px;" title="Next Notification" xhref="javascript:void(0);" onclick="javascript:manualSlide('next', 200);">Next &rarr;</div>
+                </div>
+            </div>
+                        
+        </div>
+        
+        <script>
+            var notnum = 1;
+            var navInterval = 5000;             
+            var slides;
+            var container;
+            var elm;
+            var item_width;
+            var run;
+            
+            $(document).ready(function () {
+                
+                slides = $('.slide');
+                container = $('#NotificationList ul')
+                elm = container.find(':first-child').prop("tagName");
+                item_width = container.width();             
+                slides.width(item_width);
+                container.parent().width(item_width);
+                container.width(slides.length * item_width); //set the slides container to the correct total width
+                container.find(elm + ':first').before(container.find(elm + ':last'));
+                
+                if (slides.length > 1) {
+                    run = setInterval(rotate, navInterval);
+                    resetSlides();
+                }
+                
+                
+                container.parent().mouseenter(function () {
+                    clearInterval(run);
+                }).mouseleave(function () {
+                    if (slides.length > 1) {
+                        run = setInterval(rotate, navInterval);
+                    }
+                });
+
+            });
+
+            function rotate() {
+                showSlide ('next', 1500);
+            }
+            
+            function manualSlide (direction, navSpeed) {
+                // If user interacts with buttons, prevent further automated navs
+                clearInterval(run);
+                showSlide (direction, navSpeed);
+            }
+
+            function showSlide (direction, navSpeed) {
+            
+                if (container.is(':animated')) {
+                    return false;
+                }
+                                
+                if (direction == 'prev') {
+                    container.stop().animate({
+                        'left': 0
+                    }, navSpeed, function () {
+                        container.find(elm + ':first').before(container.find(elm + ':last'));
+                        resetSlides();
+                    });
+                    
+                    notnum -=1;
+                    if (notnum == 0) {notnum = slides.length;}
+                }
+                
+                if (direction == 'next') {
+                
+                    container.stop().animate({
+                        'left': (item_width * -2)
+                    }, navSpeed, function () {
+                        container.find(elm + ':last').after(container.find(elm + ':first'));
+                        resetSlides();
+                    });
+
+                    notnum +=1;
+                    if (notnum > slides.length) {notnum = 1;}
+                }
+                
+                
+                $('#NotificationNum').html(notnum);
+                
+                return false;                   
+            }
+
+
+            function resetSlides() {
+                container.css({
+                    'left': -1 * item_width
+                });
+            }
+
+        </script>
+    
+    </body>
+</apex:page>

@@ -1,0 +1,172 @@
+<apex:page applyBodyTag="false" showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false">
+	
+
+			<div class="scrollSection" ng-class="Accounts.length == 0 ? 'customerSummarySection' : 'customerScrollSection'">
+				
+					<div style="margin-bottom: 10px;">
+					  	<span class="anchorCustomerDetails" id="anchorCustomerDetails"></span>
+						<label class="pageSubTitleGray" style="margin-left: 5px;">Details</label>
+					</div>
+					<div class="verticalScroller verticalScrollSection">
+						<div style="display: inline-block;">
+							<!-- Alerts -->
+							<div style="margin-left:10px; margin-bottom: 20px;" ng-show="Alerts.length > 0">
+								<label class="sectionTitle">Alerts</label>
+								<label class="sectionTitle">({{Alerts.length}})</label>
+								<div class="sectionDetail">
+									<table>
+										<colgroup>
+										<col span="1" style="width: 40px;"></col>
+										<col span="1" style="width: 75px;"></col>
+										<col span="1" style="width: 200px;"></col>
+										</colgroup>
+										<tr ng-repeat="alert in Alerts">
+											<td>
+												<div style="line-height: 30px; margin-left:5px;">
+													<img style="height: 22px;" ng-show="{{alert.Title == 'General'}}"
+													ng-src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/info.png')}">
+													</img>
+													<img style="height: 22px;" ng-show="{{alert.Title == 'Security'}}"
+													ng-src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/stop.png')}">
+													</img>
+													<img style="height: 22px;" ng-show="{{alert.Title == 'Warning'}}"
+													ng-src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/warning.png')}">
+													</img>
+												</div>
+											</td>
+											<td class="textDarkGray"><i>{{alert.Title}}</i></td>
+											<td class="textDarkGray">{{alert.Data}}</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+							<!-- Personal Information -->
+							<div style="margin-left:10px; margin-bottom: 20px;">
+								<label class="sectionTitle">Personal Information</label>
+								<div class="sectionDetail">
+									<table>
+										<colgroup>
+										<col span="1" style="width: 150px;"></col>
+										<col span="1"></col>
+										</colgroup>
+										<tr>
+											<td class="textDarkGray"><i>Address:</i></td>
+											<td class="textDarkGray">{{CustomerDetails.BillingStreet}},  {{CustomerDetails.Customer_Address_District__c}}, {{CustomerDetails.BillingCity}}, {{CustomerDetails.BillingPostalCode}}</td>
+										</tr>
+										
+										<tr>
+											<td class="textDarkGray"><i>Date of Birth:</i></td>
+											<td class="textDarkGray">{{CustomerDetails.Date_of_Birth__c | date:'dd-MM-yyyy'}}</td>
+										</tr>
+										
+										<tr>
+											<td class="textDarkGray"><i>Town of Birth:</i></td>
+											<td class="textDarkGray">{{CustomerDetails.Town_of_Birth__c}}</td>
+										</tr>
+										
+										<tr>
+											<td class="textDarkGray"><i>Country of Birth:</i></td>
+											<td class="textDarkGray">{{CustomerDetails.Country_of_Birth__c}}</td>
+										</tr>
+										
+										<tr>
+											<td class="textDarkGray"><i>Mother Maiden Name:</i></td>
+											<td class="textDarkGray">{{CustomerDetails.Mother_s_family_name_security_question__c}}</td>
+										</tr>
+										
+										<tr>
+											<td class="textDarkGray"><i>School Name:</i></td>
+											<td class="textDarkGray">{{CustomerDetails.School_name_security_question__c}}</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+							<!--Contact-->
+							<div style="margin-left:10px; margin-bottom: 20px;">
+								<label class="sectionTitle">Contact</label>
+								<div class="sectionDetail">
+									<table>
+										<colgroup>
+										<col span="1" style="width: 20%;"></col>
+										<col span="1" style="width: 80%;"></col>
+										</colgroup>
+										<tr>
+											<td class="textDarkGray"><i>Telephone:</i></td>
+											<td class="textDarkGray">{{CustomerDetails.Home_Telephone_No__c}}</td>
+										</tr>
+										
+										<tr>
+											<td class="textDarkGray"><i>Alternate Telephone:</i></td>
+											<td class="textDarkGray">{{CustomerDetails.Phone}}</td>
+										</tr>
+										
+										<tr>
+											<td class="textDarkGray"><i>Mobile:</i></td>
+											<td class="textDarkGray">{{CustomerDetails.PersonMobilePhone}}</td>
+										</tr>
+										
+										<tr>
+											<td class="textDarkGray"><i>Email:</i></td>
+											<td class="textDarkGray">{{CustomerDetails.PersonEmail}}</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+							<!--Products-->
+							<div style="margin-left:10px; margin-bottom: 20px;">
+								<label class="sectionTitle">Products</label>
+								<div class="sectionDetail">
+									<table>
+										<colgroup>
+										<col span="1" style="width: 150px;"></col>
+										<col span="1"></col>
+										</colgroup>
+										<tr>
+											<td class="textDarkGray"><i>Recommended Products:</i></td>
+											<td class="textDarkGray"> {{Account.Experian_Reference_Number__c}}</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+							<!--Marketing-->
+							<div style="margin-left:10px; margin-bottom: 20px;">
+								<label class="sectionTitle">Marketing Preferences</label>
+								<label class="sectionTitle">({{MarketingPrefs}})</label>
+								<div class="sectionDetail">
+									<table>
+										<colgroup>
+										<col span="1" style="width: 30%;"></col>
+										</colgroup>
+										<tr>
+											<td>
+												<div class="textDarkGray">Please indicate if you <B>DO NOT</B> wish to be contacted by Al Rayan Bank by any of the following:<br/>
+												IF THE CUSTOMER REQUIRES MARKETING BY ALL FORMS, PLEASE PRESS SAVE WITH NO BOXES TICKED</div>
+											</td>
+										</tr>
+									</table>
+									<div id="navlist">
+										<ul>
+											<li class="textDarkGray">Email : <input class="scaleUp" type="checkbox"></input></li>
+											<li class="textDarkGray">Mail : <input class="scaleUp" type="checkbox"></input></li>
+											<li class="textDarkGray">Phone : <input  class="scaleUp" type="checkbox"></input></li>
+											<li class="textDarkGray">SMS : <input class="scaleUp" type="checkbox"></input></li>
+											<li><button class="goldButton" type="button">SAVE</button></li>
+											<!-- <li><apex:commandButton styleClass="redBtn" value="SAVE" action="{!saveMarketingPreferences}" reRender="txtMarketPrefList"/></li> -->
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				
+			</div>
+
+	<div class="horizontalScrollContainer" ng-cloak="ng-cloak">		
+		<ul id="horizontalScrollList" class="horizontalScrollList horizontalScroller">			
+			<li ng-show="Accounts.active.length > 0 && !ShowViewReason" class="scrollSection accountScrollSection" ng-repeat="account in Accounts.active track by account.AccountNo" ng-cloak="ng-cloak">		
+				<c:Teller_Account_Template accountStatus="Active"></c:Teller_Account_Template>	
+			</li>
+			
+		</ul>		
+	</div>
+</apex:page>

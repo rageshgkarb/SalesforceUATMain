@@ -1,0 +1,41 @@
+<apex:component >
+    <apex:attribute name="Model" type="String" description="" />
+    <apex:attribute name="IsABranch" type="String" description="" />
+    <!-- C0592 -->
+    <div class="panel panel-primary" ng-show="{!IsABranch} && isBranch">
+        <div class="panel-heading">
+            Application Approval
+        </div>
+        <div class="panel-body">
+            <div style="margin-top:5px;">
+                <div>
+                    <label class="control-label">Please advise your branch manager that this application needs approval to continue:</label>
+                </div>
+            </div>
+            <div style="margin-top:5px;">
+                <div class="row" ng-show="ManagerAuthorisors.Authorisors.length > 0">
+                    <div class="col-sm-4 text-right">
+                        <label>Approved User:</label>
+                    </div>
+                    <div class="col-sm-4 col-md-3">
+                        <select class="form-control" ng-model="ManagerAuthorisors.selectedAuthorisor" ng-options="item.Name for item in ManagerAuthorisors.Authorisors" ng-disabled="ManagerAuthorisors.selectedAuthorisor!=''">
+                            <option>{{item.Name}}</option>
+                        </select>
+                        <a ng-click="ManagerAuthorisors.selectedAuthorisor=''" ng-show="ManagerAuthorisors.selectedAuthorisor.Verified!=true">Clear</a>
+                        <label style="color:rgb(26, 205, 69)" ng-show="ManagerAuthorisors.selectedAuthorisor.Verified==true">Verified</label>
+                    </div>
+                </div>
+                <div class="row" ng-show="(ManagerAuthorisors.Authorisors.length > 0) && (ManagerAuthorisors.selectedAuthorisor!='') && (ManagerAuthorisors.selectedAuthorisor.Verified!=true)">
+                    <div class="col-sm-4 text-right">
+                        <label>Password:</label>
+                    </div>
+                    <div class="col-sm-4 col-md-3">
+                        <input class="form-control" type="password" ng-model="ManagerAuthorisors.selectedAuthorisor.Password" ng-show="ManagerAuthorisors.selectedAuthorisor!=''" /><br />
+                        <button class="btn btn-success" ng-click="PasswordVerification(ManagerAuthorisors.selectedAuthorisor)">Verify</button>
+                        <label style="color:red" ng-show="ManagerAuthorisors.selectedAuthorisor.IncorrectPassword==true">Incorrect Password</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</apex:component>

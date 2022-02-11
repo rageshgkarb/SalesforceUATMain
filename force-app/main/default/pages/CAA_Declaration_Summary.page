@@ -1,0 +1,169 @@
+<apex:page showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false" controller="CAA_Core_Controller" action="{!Declaration_Summary}">
+
+<apex:composition template="CAA_Template">
+    <apex:define name="include">
+        <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/controller/controller_declaration_summary.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/service/service_declaration_summary.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/controller/controller_documents.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/service/service_documents.js')}"/>
+    </apex:define>
+
+        <apex:define name="body">
+        <div ng-controller="controllerDeclarationSummary" ng-init="EventLogId = '{!EventLogId}';SessionId='{!SessionId}'"> <!--ctl -->
+         
+        <div class="row">
+<div class="col-md-9">
+        
+<apex:outputPanel rendered="{!IsGuest}">
+<div class="SectionHeader" style="margin-bottom:18px;">
+    <div class="numberCircleReverse">4</div>
+    <div>Next Steps</div>
+</div>
+</apex:outputPanel>
+
+
+<apex:outputPanel rendered="{!Not(IsGuest)}">
+<div class="SectionHeader" style="margin-bottom:18px;">
+    <div class="numberCircleReverse">4</div>
+    <div>Summary</div>
+</div>
+
+</apex:outputPanel>
+
+
+<div class=""/>
+
+
+    <apex:outputPanel rendered="{!Not(IsGuest)}">
+    <div class="PanelContents">
+    <!--
+        INTERNAL USER START
+    -->
+        <div class="SectionTitle">
+            Cases
+        </div>
+    
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Case Number</th>
+                    <th>Subject</th>
+                    <th>Referral Decision</th>
+                </tr>
+            </thead>
+            <tbody>
+                <apex:repeat value="{!Cases}" var="c">            
+                    <tr>
+                        <td><a href="/{!c.id}" target="_blank">{!c.CaseNumber}</a></td>
+                        <td>{!c.Subject}</td>
+                        <td>{!c.Referral_Decision__c}</td>
+                    </tr>
+                </apex:repeat>
+            </tbody>
+        </table>
+        <apex:outputPanel rendered="{!AllowComplete}">
+            <button class="btn btnArb" ng-click="CompleteSummary()">Next</button>
+        </apex:outputPanel>
+        
+  </div>      
+   </apex:outputPanel>
+
+ 
+<div class="PanelContents">
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    
+    <!--
+        EXTERNAL USER START
+    -->
+    <apex:outputPanel >
+    
+
+        
+        <apex:outputPanel rendered="{!DeResponse == 'SYSTEMERROR' || DeResponse == 'ADDRESSMISMATCH' ||  DeResponse == 'REFER' || DeResponse == 'ERROR'}" layout="none">
+            <c:CAA_Next_Steps_Refer_FCU Productname="{!ibbProductName }"></c:CAA_Next_Steps_Refer_FCU>
+        </apex:outputPanel>
+        
+        <apex:outputPanel rendered="{!DeResponse == 'FCU'}" layout="none">      
+            <c:CAA_Next_Steps_Refer_FCU productname="{!ibbProductName }"></c:CAA_Next_Steps_Refer_FCU> 
+            <!--<c:CAA_Next_Steps_Documents Stage="{!DeResponse}" EventLogId="{!EventLogId}" SessionId="SessionId"></c:CAA_Next_Steps_Documents>-->
+        </apex:outputPanel> 
+        
+        <apex:outputPanel rendered="{!DeResponse == 'DECLINE'}" layout="none">      
+            <c:CAA_Next_Steps_Decline product="{!Product}"></c:CAA_Next_Steps_Decline> 
+            <!--<c:CAA_Next_Steps_Documents Stage="{!DeResponse}" EventLogId="{!EventLogId}" SessionId="SessionId"></c:CAA_Next_Steps_Documents>-->
+        </apex:outputPanel> 
+        
+        <apex:outputPanel rendered="{!DeResponse == 'DOCS'}" layout="none">      
+            <c:CAA_Next_Steps_Refer_Docs ProductName="{!ibbProductName }" OppReference="{!Opp.Application_Reference_Number__c}" ></c:CAA_Next_Steps_Refer_Docs> 
+            <c:CAA_Next_Steps_Documents Stage="{!DeResponse}" EventLogId="{!EventLogId}" SessionId="{!SessionId}"></c:CAA_Next_Steps_Documents>
+        </apex:outputPanel> 
+        
+        <apex:outputPanel rendered="{!DeResponse == 'SIG'}" layout="none">      
+            <c:CAA_Next_Steps_Refer_Sig ProductName="{!ibbProductName }" OppReference="{!OppLibRef}"></c:CAA_Next_Steps_Refer_Sig> 
+            <c:CAA_Next_Steps_Documents Stage="{!DeResponse}" EventLogId="{!EventLogId}" SessionId="{!SessionId}"></c:CAA_Next_Steps_Documents>
+        </apex:outputPanel> 
+        
+        <apex:outputPanel rendered="{!DeResponse == 'SUCCESS'}" layout="none">
+            <c:CAA_Next_Steps_Refer_FCU productname="{!ibbProductName }"></c:CAA_Next_Steps_Refer_FCU>
+        </apex:outputPanel>
+        
+        
+        
+        <div class="SectionBreak"/>                      
+        <c:CAA_Next_Steps_Footer rendered="{!IsGuest}"></c:CAA_Next_Steps_Footer>
+    </apex:outputPanel>
+    <!--
+        EXTERNAL USER END
+    -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        
+  
+</div>
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+<div class="col-md-3">
+<div class="rightcol visible-md visible-lg" id="sidebar" >
+     <c:CAA_Progress Stage="4" rendered="{!IsGuest}"></c:CAA_Progress>  
+     <c:CAA_Event_Menu rendered="{!Not(IsGuest)}" />
+</div>
+
+</div>
+</div> <!-- row -->
+</div> <!-- ctl -->
+
+
+</apex:define>
+</apex:composition>
+</apex:page>

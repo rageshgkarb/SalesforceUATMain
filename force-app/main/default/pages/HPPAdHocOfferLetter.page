@@ -1,0 +1,207 @@
+<!-- C00108 Get some product switching information -->
+
+<apex:page controller="HPPEventAdHocReIssueOfferController"   sidebar="false" showHeader="false" title="Generate Offer Letter" action="{!Setup}">
+    <head>
+        <c:KendoResource ></c:KendoResource>
+    </head>
+    <body>
+        <apex:form >
+            <div id="formWrapper">
+
+                <c:HPPSummary objAcc="{!Accounts[0]}" objOpp="{!opp}" objExOpp="{!ExOpp}" Product="{!Prod}" />
+                <div id="container" >
+                    <table width="100%">
+                        <tr>
+                            <td valign="top" id="sidebar">
+                                <c:HPPBOMenu oppId="{!Opp.Id}"  DirectorId="{!Opp.ProductEventDirector__c}" />
+                            </td>
+                            <td valign="top" id="contenttd">
+                                <div id="content">
+                                    <h1>Offer Letter</h1>
+                                
+                                    <apex:outputPanel id="mainPageBlock">
+                                    <div style="padding:20px;">
+                                    <!-- content -->
+                                    
+                                    
+                                 
+                                    
+                <div>
+                                        
+                                             
+<apex:outputPanel rendered="{!!RCEFailed}">
+    <script>
+        function RceResult()
+        {
+            HideDocumentLoad1();
+            ShowDocumentLoad();
+            offerletter();
+        }        
+    </script>
+</apex:outputPanel>
+<apex:outputPanel rendered="{!RCEFailed}">
+    <script>
+        function RceResult()
+        {
+            HideDocumentLoad1();
+            
+            var errwindow = $("#errWindow");
+            
+             if (!errwindow .data("kendoWindow")) {
+                        errwindow .kendoWindow({
+                            width: "400px",                            
+                            title: "EBS Failed",
+                            modal: true
+                            });                        
+                        }
+                        errwindow .data("kendoWindow").open();                   
+                        errwindow .data("kendoWindow").center(); 
+                        
+        }        
+    </script>
+</apex:outputPanel>
+                                    
+                                        <apex:commandButton value="Create Letter" action="{!CallRCE}" immediate="true" 
+                                            reRender="mainPageBlock" onclick="ShowDocumentLoad1()"  
+                                            oncomplete="RceResult();"/>   
+                                            
+                                            
+                                            <apex:actionFunction oncomplete="HideDocumentLoad()" name="offerletter" action="{!CreateDoc}" rerender="mainPageBlock"/>
+                                                                             
+                                    </div>
+                                    <div>
+                                        <apex:outputtext escape="false" value="{!DocLink}" rendered="{!DocLinkCreated }"></apex:outputtext>
+                                    </div>
+                                    
+                                    <br/><br/>
+                                    
+                                    <apex:outputPanel rendered="{!DocLinkCreated && opp.Attachment_Offer_Letter__c!=null }">
+                                    <div>
+                                    <table>
+                                    <tr>
+                                        <td>Date Offer Letter Sent</td>
+                                        <td><apex:inputField required="true" value="{!exopp.Offer_letter_sent__c}" /></td>
+                                    </tr>
+                                    </table>
+                                    
+                                <apex:commandButton value="Take Payment" action="{!TakePayment}" rendered="{!DocLinkCreated && !IsCompleted }"/>    
+                                </div>
+                                </apex:outputPanel>
+                                
+                                
+                                
+                                </div>
+                                    </apex:outputPanel>
+                                </div>
+                                
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div id="fade"></div>
+<div id="overlay">
+Generating document...
+<br/>
+<br/>
+This may take a few seconds.
+
+<div style="padding-top: 50px;" >
+<!--  CPDR01 
+<img src="{!URLFOR($Resource.ibbstyle, 'images/269.gif')}"></img>
+	-->
+<img src="{!URLFOR($Resource.ibbstyleexternal, 'graphics/logos/circular-timer.gif')}"></img>
+</div>
+
+
+</div>
+
+<div id="errWindow" style="display:none;" >
+<div style="text-align: center;padding:20px;">
+There was an issue calling RCE.<br/><br/>
+Please contact IT Service Desk.
+
+</div>
+
+</div> 
+
+
+  <div id="fade1"></div>
+<div id="overlay1">
+Calling EBS...
+<br/>
+<br/>
+This may take a few seconds.
+
+<div style="padding-top: 50px;" >
+<!--  CPDR01 
+<img src="{!URLFOR($Resource.ibbstyle, 'images/269.gif')}"></img>
+	-->
+<img src="{!URLFOR($Resource.ibbstyleexternal, 'graphics/logos/circular-timer.gif')}"></img>
+</div>
+
+
+</div>
+
+
+            
+        </apex:form>
+        <style type="text/css">
+#overlay, #overlay1 {
+    display: none; /* ensures it’s invisible until it’s called */
+    position: absolute; /* makes the div go into a position that’s absolute to the browser viewing area */
+    left: 25%; /* positions the div half way horizontally */
+    top: 25%; /* positions the div half way vertically */
+    padding: 25px; 
+    border: 2px solid black;
+    background-color: #ffffff;
+    width: 50%;
+    height: 50%;
+    z-index: 100; /* makes the div the top layer, so it’ll lay on top of the other content */
+    text-align: center;
+    font-size: 18px;
+}
+#fade,#fade1 {
+    display: none;  /* ensures it’s invisible until it’s called */
+    position: absolute;  /* makes the div go into a position that’s absolute to the browser viewing area */
+    left: 0%; /* makes the div span all the way across the viewing area */
+    top: 0%; /* makes the div span all the way across the viewing area */
+    background-color: #ccc;
+    -moz-opacity: 0.7; /* makes the div transparent, so you have a cool overlay effect */
+    opacity: .70;
+    filter: alpha(opacity=70);
+    width: 100%;
+    height: 100%;
+    z-index: 90; /* makes the div the second most top layer, so it’ll lay on top of everything else EXCEPT for divs with a higher z-index (meaning the #overlay ruleset) */
+}
+</style>
+
+<script>
+function ShowDocumentLoad()
+{
+    $('#overlay').show('slow');
+    $('#fade').show('slow');
+}
+
+function HideDocumentLoad()
+{
+    $('#overlay').hide('slow');
+    $('#fade').hide('slow');
+}
+function ShowDocumentLoad1()
+{
+    $('#overlay1').show('slow');
+    $('#fade1').show('slow');
+}
+
+function HideDocumentLoad1()
+{
+    $('#overlay1').hide('slow');
+    $('#fade1').hide('slow');
+}
+
+
+
+</script>
+        </body>
+</apex:page>

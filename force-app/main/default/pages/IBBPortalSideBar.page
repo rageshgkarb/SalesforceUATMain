@@ -1,0 +1,82 @@
+<apex:page controller="IBBPortalSidebarController" showHeader="false">
+
+<body onLoad="checkPermissions();">
+<apex:form >
+<apex:actionFunction action="{!createITIncident}" name="createITIncident" rerender="refreshPanel">
+</apex:actionFunction>
+<apex:outputPanel id="refreshPanel">
+</apex:outputPanel>
+
+
+
+
+<h1>Portal Sidebar Component</h1>
+<h2>This will be hidden! {!IFrameOrigin}</h2>
+<h2>User Type: {!UserType}, Partner: {!IsPartnerPortalUser}</h2>
+<span id="UserTypeSpan">{!UserType}</span>
+<span id="IsPartnerPortalUser">{!IsPartnerPortalUser}</span>
+<span id="IsSuspiciousActivity">{!IsSuspiciousActivity}</span>
+
+</apex:form>
+</body>
+
+
+<script type="text/javascript">
+
+	
+    function isRunningInIFrame()
+    {
+        return !(top === self);
+        // return true;
+    }
+    
+    function checkPermissions()
+    {
+        //alert('Checking Perms!');
+        
+        //alert('isRunningInIFrame :'+isRunningInIFrame());
+        
+        if (isRunningInIFrame())
+        {
+            // alert('Parent Url is '+getPageURL());
+            
+            // if (getIsSuspiciousActivity() )
+            // alert('Is Partner: '+getIsPartnerPortalUser());
+            // alert('Is Suspicious Activity: '+getIsSuspiciousActivity());
+            
+            if (getIsPartnerPortalUser() === 'true' && getIsSuspiciousActivity() === 'true')
+            {
+                
+                // TODO - Testing - Uncomment
+                createITIncident();
+                
+                // TODO - Dialog Box - Accept to close the page?
+                alert('Suspicious Activity has been logged and this window will now close');
+                parent.window.close();
+                parent.location = 'http://www.islamic-bank.com/';
+            }
+        }
+    }
+    
+    function getPageURL()
+    {
+    	return '{!IFrameOrigin}';
+    }
+    
+    function getIsSuspiciousActivity()
+    {
+    	// return document.getElementById('IsSuspiciousActivity').innerText;
+    	return '{!IsSuspiciousActivity}';
+    }
+    
+    function getIsPartnerPortalUser()
+    {
+    	// return document.getElementById('IsPartnerPortalUser').innerText;
+    	return '{!IsPartnerPortalUser}';
+    }
+    
+    
+</script>
+
+
+</apex:page>

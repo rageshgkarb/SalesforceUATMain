@@ -1,0 +1,225 @@
+.camera {
+    margin-top: 9px;
+}
+
+.cameraContainer {
+    background: #e5e5e5;
+    height: 497px;
+    width: 659px;
+}
+
+.dragdropContainer {
+    border: 2px dashed rgb(168, 168, 168);
+}
+
+.resize-container {
+    position: relative;
+    display: inline-block;
+    cursor: move;
+    margin: 0 auto;
+}
+
+.resize-container img {
+    display: block
+}
+
+.resize-container:hover img,
+.resize-container:active img {
+    outline: 2px dashed rgba(92, 92, 92, 1);
+}
+
+.resize-handle-ne,
+.resize-handle-ne,
+.resize-handle-se,
+.resize-handle-nw,
+.resize-handle-sw {
+    position: absolute;
+    display: block;
+    width: 10px;
+    height: 10px;
+    background: black;
+    z-index: 999;
+}
+
+.resize-handle-nw {
+    top: -5px;
+    left: -5px;
+    cursor: nw-resize;
+}
+
+.resize-handle-sw {
+    bottom: -5px;
+    left: -5px;
+    cursor: sw-resize;
+}
+
+.resize-handle-ne {
+    top: -5px;
+    right: -5px;
+    cursor: ne-resize;
+}
+
+.resize-handle-se {
+    bottom: -5px;
+    right: -5px;
+    cursor: se-resize;
+}
+
+.overlay {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -100px;
+    margin-top: -100px;
+    z-index: 999;
+    width: 200px;
+    height: 200px;
+    border: solid 3px rgba(5, 132, 255, 1);
+    box-sizing: content-box;
+    pointer-events: none;
+}
+
+.overlay:after,
+.overlay:before {
+    content: '';
+    position: absolute;
+    display: block;
+    width: 204px;
+    height: 40px;
+    border-left: dashed 2px rgba(5, 132, 255, 1);
+    border-right: dashed 2px rgba(5, 132, 255, 1);
+}
+
+.overlay:before {
+    top: 0;
+    margin-left: -2px;
+    margin-top: -40px;
+}
+
+.overlay:after {
+    bottom: 0;
+    margin-left: -2px;
+    margin-bottom: -40px;
+}
+
+.overlay-inner:after,
+.overlay-inner:before {
+    content: '';
+    position: absolute;
+    display: block;
+    width: 40px;
+    height: 204px;
+    border-top: dashed 2px rgba(5, 132, 255, 1);
+    border-bottom: dashed 2px rgba(5, 132, 255, 1);
+}
+
+.overlay-inner:before {
+    left: 0;
+    margin-left: -40px;
+    margin-top: -2px;
+}
+
+.overlay-inner:after {
+    right: 0;
+    margin-right: -40px;
+    margin-top: -2px;
+}
+
+.signature-overlay {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -200px;
+    margin-top: -100px;
+    z-index: 999;
+    width: 400px;
+    height: 147px;
+    border: solid 3px rgba(5, 132, 255, 1);
+    box-sizing: content-box;
+    pointer-events: none;
+}
+
+.signature-overlay:after,
+.signature-overlay:before {
+    content: '';
+    position: absolute;
+    display: block;
+    width: 404px;
+    height: 40px;
+    border-left: dashed 2px rgba(5, 132, 255, 1);
+    border-right: dashed 2px rgba(5, 132, 255, 1);
+}
+
+.signature-overlay:before {
+    top: 0;
+    margin-left: -2px;
+    margin-top: -40px;
+}
+
+.signature-overlay:after {
+    bottom: 0;
+    margin-left: -2px;
+    margin-bottom: -40px;
+}
+
+.signature-overlay-inner:after,
+.signature-overlay-inner:before {
+    content: '';
+    position: absolute;
+    display: block;
+    width: 40px;
+    height: 152px;
+    border-top: dashed 2px rgba(5, 132, 255, 1);
+    border-bottom: dashed 2px rgba(5, 132, 255, 1);
+}
+
+.signature-overlay-inner:before {
+    left: 0;
+    margin-left: -40px;
+    margin-top: -2px;
+}
+
+.signature-overlay-inner:after {
+    right: 0;
+    margin-right: -40px;
+    margin-top: -2px;
+}
+
+.cropcontainer {
+    position: relative;
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+.signature-croppedImg {
+    margin-left: 129px !important;
+    margin-top: 149px !important;
+    width: 400px !important;  
+    height: 147px !important;
+}
+
+.croppedImg {
+    margin-left: 230px;
+    margin-top: 148px;
+    position: absolute;
+    width: 200px;  
+    height: 200px;
+}
+
+.tileIconLocation {
+  position: absolute;
+  left: 107px;
+  top: 45px;
+  width: 40px;
+  -webkit-filter: invert(1);
+  filter: invert(1);
+}
+
+.signature-write-container {
+  background: white;
+  position: absolute;
+  top: 180px;
+  left: 55px;
+  box-shadow: 0px 0px 15px #888888;
+  cursor: crosshair;
+}

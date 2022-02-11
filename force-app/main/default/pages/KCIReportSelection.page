@@ -1,0 +1,122 @@
+<apex:page controller="KCIReportSelection">
+<head>
+<apex:includeScript value="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"/>
+<apex:includeScript value="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"/>
+<style>
+.bu_block
+{
+	cursor: pointer;
+	text-align: left;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	background: #d2e1f0;
+	font-weight: bold;
+	padding-left: 10px;
+	/* border:1px solid #000; */
+}
+.category_block label
+{
+	float:right;
+	padding-right:5px;
+}
+.dataCol
+{
+	width:14% !important;
+}
+</style>
+
+</head>
+<apex:pageMessages />
+<apex:form id="form">
+
+	<apex:sectionHeader title="KCI Report Setup" subtitle="Option Selection">
+	</apex:sectionHeader>
+	 
+	<apex:pageBlock id="filter_block">
+		<apex:pageBlockSection columns="2" collapsible="false">
+			<apex:pageBlockSectionItem >  
+				Select Date Range:
+				<apex:selectList value="{!dateRanges}" style="width: 100px;">
+		            <apex:selectOptions value="{!dateRange}"/>
+		        </apex:selectList>
+ 			</apex:pageBlockSectionItem>
+			
+	        <apex:pageBlockSectionItem >  
+		        Filter By Business Unit:
+		        <apex:actionRegion >
+		        <apex:outputPanel layout="block" id="filter_bu" styleClass="filter_bu_block" style="width:300px; overflow-y:auto;">
+		        	<apex:repeat value="{!availableBusinessUnitHierarchy}" var="buId">
+		        		<apex:repeat value="{!availableBusinessUnitHierarchy[buId]}" var="busUnit">				        			
+		        			<apex:outputPanel layout="block" styleClass="bu_block" style="border:{!if(busUnit.selected,'2px solid #000000','1px solid #FFF')}; margin-left:{!busUnit.level * 10}px;">				        				
+		        				<apex:outputText value="{!busUnit.me.name}" escape="false"/>
+		        				<apex:actionSupport event="onclick" rerender="filter_bu" action="{!getSelection}" oncomplete="enableChildCheckbox('{!busUnit.HasChildren}');">
+		                        	<apex:param name="selecteBUID" assignTo="{!chosenBusinessUnitId}" value="{!busUnit.me.Id}"/>
+		                    	</apex:actionSupport>
+		        			</apex:outputPanel>					        						        			  			
+		        		</apex:repeat>
+		        		<br/>
+		        	</apex:repeat>
+		        </apex:outputPanel>
+		        </apex:actionRegion>
+	        </apex:pageBlockSectionItem>
+	        
+	        <apex:pageBlockSectionItem >
+	        	Show results for child Business Units:
+	        	<apex:inputCheckbox id="child_bu_en" styleClass="child_bus" value="{!AllChildrenSelected}" />
+	        </apex:pageBlockSectionItem>
+	        
+	        <!--COMMENTED  -->
+	       <apex:pageBlockSectionItem >
+       		Filter by Risk Category: 
+     			<apex:selectCheckboxes value="{!SelectedCategories}" styleClass="category_block">
+     				<apex:selectOption itemValue="All" itemLabel="All" />
+     				<apex:selectOptions value="{!CategoryFilterOption}"/>
+      			</apex:selectCheckboxes>
+       			
+       	</apex:pageBlockSectionItem> 	 
+        
+        </apex:pageBlockSection>
+       <apex:commandButton action="{!buildReport}" value="Build Report" /> 
+        
+	</apex:pageBlock> 
+  
+
+</apex:form>	
+<script>
+$(document).ready(function() {
+	$(".child_bus").attr("disabled", true);
+});
+
+function enableChildCheckbox(boxParam)
+{
+	if(boxParam == 'true')
+	{
+		$(".child_bus").removeAttr("disabled");
+	}
+	else
+	{
+		$(".child_bus").attr("checked", false);
+		$(".child_bus").attr("disabled", true);
+	}
+}
+
+$('.category_block').find('input:checkbox:first').click(function(e){
+  var checkboxes = $('.category_block').find(':checkbox');
+    if($(this).is(':checked')) {
+        checkboxes.attr('checked', 'checked');
+    } else {
+        checkboxes.removeAttr('checked');
+    }
+});
+
+function toggleCheckboxes(){
+	alert('hi');
+    var checkboxes = $('.category_block').find(':checkbox');
+    if($(this).is(':checked')) {
+        checkboxes.attr('checked', 'checked');
+    } else {
+        checkboxes.removeAttr('checked');
+    }
+}
+</script>
+</apex:page>

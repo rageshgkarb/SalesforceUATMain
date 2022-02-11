@@ -1,0 +1,24 @@
+<apex:page sidebar="false" showHeader="false" >
+  <!-- Begin Default Content REMOVE THIS -->
+
+  <apex:pageBlock >                
+  
+ <apex:form >
+        
+  
+          <h1>An issue has arisen with your application</h1>
+          <div></div>       
+          Please call our Customer Services team on 0800 4086 407, between 9.00am and 7.00pm Monday to Friday, and between 9.00am and 1.00pm on Saturday.
+  Please do not attempt to rekey your application.
+         <div></div>
+          <div></div>
+          <apex:pageBlockSection >
+                <img src="https://{!$Label.Domain_URL}/servlet/servlet.ImageServer?id=015D00000035aYe&oid=00D3H0000000WJb&lastMod=1418039257000">
+</img>
+          </apex:pageBlockSection>     
+ 
+  </apex:form>
+   
+  </apex:pageBlock>
+  <!-- End Default Content REMOVE THIS -->
+</apex:page>

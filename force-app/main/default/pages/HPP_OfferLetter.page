@@ -1,0 +1,222 @@
+<!-- C00108 Get some product switching information -->
+
+<apex:page controller="HPP_OfferLetterController" sidebar="false" showHeader="false" title="Generate Offer Letter" action="{!Setup}" doctype="html-5.0" standardstylesheets="false" >
+    <apex:composition template="HPPProductSwitchTemplate">
+        <apex:define name="include">
+            <script>
+                hppApp.controller('offerLetterController', ['$scope', '$timeout','serviceApplication','serviceOffer','$window',
+                    function($scope, $timeout,serviceApplication,serviceOffer,$window) {
+                        
+                        $scope.Complete= function()
+                        {
+                            if(!$scope.OppId) return null;
+                            serviceApplication.LoadShow('Processing...');
+                            serviceOffer.Complete($scope.EventLogId)
+                            .then(
+                                function(result){
+                                    if(result.URL)
+                                    {
+                                        $window.location.href = result.URL;                                                                                              
+                                    }
+                                    else
+                                    {
+                                          serviceApplication.LoadHide(true);   
+                                    }
+                                                                      
+                                },
+                                function(error){
+                                    serviceApplication.LoadHide(true);
+                                    $scope.ErrorMessage = error;
+                                }
+                               );
+                        }
+                        
+                        $scope.CreateDoc= function()
+                        {
+                            if(!$scope.OppId) return null;
+                            serviceApplication.LoadShow('Processing...');
+                            serviceOffer.CreateDoc($scope.OppId)
+                            .then(
+                                function(result){
+                                    if(result.URL)
+                                    {
+                                        $scope.LetterId= result.URL; 
+                                        var date = new Date();
+                                        var day = date.getDate();
+                                        var monthIndex = date.getMonth();
+                                        var year = date.getFullYear();
+                                        
+                                        $scope.OfferLetterSent = day + '/' + monthIndex + '/' + year;                                                                                                
+                                    }
+                                    serviceApplication.LoadHide(true);                                   
+                                },
+                                function(error){
+                                    serviceApplication.LoadHide(true);
+                                    $scope.ErrorMessage = error;
+                                }
+                               );
+                        }
+                        
+                        $scope.CreateStubs= function()
+                        {
+                            if(!$scope.OppId) return null;
+                            serviceApplication.LoadShow('Processing...');
+                            serviceOffer.CreateStubs($scope.OppId)
+                            .then(
+                                function(result){
+                                   $scope.CallRCE();                               
+                                },
+                                function(error){
+                                    serviceApplication.LoadHide(true);
+                                    $scope.ErrorMessage = error;
+                                }
+                               );
+                        }
+                        
+                        
+                        $scope.CallRCE = function()
+                        {                           
+                            if(!$scope.OppId) return null;
+                            
+                            serviceApplication.LoadShow('Loading');
+                            serviceOffer.CallRCE($scope.OppId)
+                            .then(
+                                function(result){
+                                    if(result.Success)
+                                    {
+                                       $scope.CreateDoc();
+                                    }
+                                    else
+                                    {
+                                        serviceApplication.LoadHide(false);
+                                        $scope.ErrorMessage = result.Error;
+                                    }
+                                },
+                                function(error){
+                                    serviceApplication.LoadHide(false);
+                                    $scope.ErrorMessage = error;
+                                }
+                                
+                               );
+                        }
+                    }]);
+                    
+                    
+                    angular.module("hppApp").service('serviceOffer', ['$q', '$rootScope', function ($q, $rootScope) {
+                        this.CreateDoc = function(id)
+                        {
+                            var deferred = $q.defer();
+                            HPP_OfferLetterController.CreateDoc(id,function(result, event){
+                                if(event.status){
+                                    deferred.resolve(result);
+                                }
+                                else {
+                                    deferred.reject(event);
+                                }     
+                            },{ buffer: false, escape: false, timeout: 30000} );
+                            return deferred.promise;
+                        }
+                        
+                        this.CallRCE = function(id)
+                        {
+                            var deferred = $q.defer();
+                            HPP_OfferLetterController.CallRCE(id,function(result, event){
+                                if(event.status){
+                                    deferred.resolve(result);
+                                }
+                                else {
+                                    deferred.reject(event);
+                                }     
+                            },{ buffer: false, escape: false, timeout: 30000} );
+                            return deferred.promise;
+                        }
+                        this.CreateStubs = function(id)
+                        {
+                            var deferred = $q.defer();
+                            HPP_OfferLetterController.CreateStubs(id,function(result, event){
+                                if(event.status){
+                                    deferred.resolve(result);
+                                }
+                                else {
+                                    deferred.reject(event);
+                                }     
+                            },{ buffer: false, escape: false, timeout: 30000} );
+                            return deferred.promise;
+                        }
+                        
+                        this.Complete = function(id)
+                        {
+                            var deferred = $q.defer();
+                            HPP_OfferLetterController.Complete(id,function(result, event){
+                                if(event.status){
+                                    deferred.resolve(result);
+                                }
+                                else {
+                                    deferred.reject(event);
+                                }     
+                            },{ buffer: false, escape: false, timeout: 30000} );
+                            return deferred.promise;
+                        }
+                        
+                        
+                     }]);
+                    
+            </script>
+        </apex:define>
+        
+        
+        <apex:define name="header">
+           <c:HPP_Header title="Offer Letter" numapps="1" opp="{!Opp}" />
+        </apex:define>
+        <apex:define name="menu">
+            <c:HPP_Angular_Menu oppid="{!Opp.Id}" directorid="{!DirectorID}">
+            </c:HPP_Angular_Menu>
+        </apex:define>
+        <apex:define name="body">
+        
+        <div style="100%" ng-controller="offerLetterController" ng-init="OppId='{!Opp.id}';EventLogId='{!eventId}';
+                                                                            LetterId='{!exOpp.Opportunity__r.Attachment_Offer_Letter__c}';
+                                                                            OfferLetterSent = '{!LetterDate}'"> <!-- controller -->
+            <div class="container" style="height:100%">
+                <div class="row" style="height:100%">
+                    <div class="col-md-12" style="height:100%;">
+                        <div class="PanelContents" style="height:100%;" >
+                            <div class="verticalScrollSection" style="height:calc(100%);">
+                                <div class="verticalSection">
+                                    <div class="SectionTitle">Offer Letter</div>
+                                    
+                                    <div ng-show="LetterId">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <label style="font-size:14px;"><a target="_blank" href="/servlet/servlet.FileDownload?file={{LetterId}}"> <span>
+  <i class="fa fa-file-word-o fa-2x"></i>
+</span> Offer letter</a></label>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <label>Offer letter sent</label>
+                                                
+                                                
+                                                
+                                                <input kendo-date-picker="kendo-date-picker" ng-model="OfferLetterSent"
+            
+             k-format="'dd/MM/yyyy'"
+             style="width: 100%;" />{{DD}}
+                                            </div>
+                                        </div>
+                                    </div>                                    
+                                    
+                                    <div>
+                                        <button type="button" class="btn btn-default" ng-click="CreateStubs()">Create offer letter</button>
+                                        <button ng-show="LetterId" type="button" class="btn btn-default" ng-click="Complete()">Complete</button>
+                                    </div>                                    
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>        
+        </div>
+    </apex:define>
+</apex:composition>
+</apex:page>

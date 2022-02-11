@@ -1,0 +1,692 @@
+<apex:page showHeader="false" sidebar="false" docType="html-5.0" controller="BAA_ProductSelect_Controller">
+    <head>
+        <c:BAA_Resource HideOldAngular="true"></c:BAA_Resource>
+        
+        <apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.11/angular.min.js"/>
+        <apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.11/angular-animate.min.js"/>
+        <apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.11/angular-sanitize.js"/>
+        <apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular-messages.js"/>
+        
+        <!--<apex:includeScript value="{!URLFOR($Resource.baa_include, 'js/app/app.js')}"/>-->
+        <!--<apex:includeScript value="{!URLFOR($Resource.baa_include, 'js/controller/product_select.js')}"/>-->
+        
+        <style>
+            .red td{
+                color: red;
+            }
+            
+            input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+        
+        </style>
+        
+        
+        <script>
+        
+        var baaaApp = angular.module('baaaApp', []);
+        
+        
+            baaaApp.controller('controllerProductSelection', ['$scope','$window','$filter','serviceProductSelect',
+        function ($scope,$window,$filter,serviceProductSelect) 
+        {
+            
+            $scope.GetProducts = function(){
+                
+                return "1";
+            };
+            
+            
+            //$scope.AccountType = " ";
+            //$scope.Access = " ";
+            
+            $scope.UniquetypeOfAccess = function(){
+            
+                if(!$scope.typeOfAccess()) return null;
+            
+              return $filter('unique')($scope.typeOfAccess(),"Access");
+            };
+            
+            $scope.OrgType = function(){
+                var f = $("[id$='orgType']");
+                var v = f.find(":selected").text();       
+                return v;
+            };
+            
+            
+            $scope.typeOfAccess = function (){
+                return $filter('filter')($scope.products, {Category: $scope.AccountType});
+            };
+            
+            $scope.listProducts = function()
+            {
+                if(!$scope.OrgType) return [];
+                
+                var validProducts = $filter('filter')($scope.products, {Category: $scope.AccountType, Access: $scope.Access });
+                
+                if(!validProducts) return [];
+                
+                //filter these products against the ones allowed for the org type
+                
+                var lstProducts = [];
+                
+                for(var i = 0; i < validProducts.length; i++)
+                {
+                    var id = validProducts[i].SuitId;
+                    
+                    for(var s = 0; s < $scope.settings.length; s++)
+                    {
+                        var setting = $scope.settings[s];
+                    
+                        if(setting.Suitability_Id__c == id && setting.Organisation_Type__c == $scope.OrgType){
+                            lstProducts.push(validProducts[i]);
+                        }
+                        
+                    }
+                }
+                
+               return lstProducts;
+            };
+            
+            $scope.$watch('OrgType', function(newValue, oldValue) {
+              $scope.ProdSelected = null;
+              
+            });
+            
+            $scope.$watch('Access', function(newValue, oldValue) {
+              $scope.ProdSelected = null;
+            })
+            
+            $scope.$watch('AccountType', function(newValue, oldValue) {
+              $scope.ProdSelected = null;
+            })
+            
+            $scope.$watch('MinDeposit', function(newValue, oldValue) {
+              $scope.ProdSelected = null;
+            })
+            
+            
+            
+            $scope.lowDeposit = function(val){
+                var dec = parseFloat(val);
+                
+                var scopeVal = $scope.MinDeposit;
+                
+                if(!scopeVal ) scopeVal  = 0;
+                
+                
+                return val > parseFloat(scopeVal  );
+            };
+            
+            
+            $scope.validProducts = function(){
+            
+                var valid = [];
+                
+                
+                
+                var items = $scope.listProducts();
+                
+                if(!items) return valid;
+                
+                for(var i = 0; i< items.length; i++)
+                {
+                    if(parseFloat(items[i].MinDeposit) <= parseFloat($scope.MinDeposit)) valid.push(items[i]);
+                }
+                
+                if(valid.length == 0) $scope.ProdSelected =null;
+                
+            
+                return valid;
+            }
+            
+            $scope.lessThan = function(prop, val){
+                return function(item){
+                  return item[prop] <= val;
+                }
+            }
+            
+            
+            serviceProductSelect.GetSettings()
+                .then(
+                    function(result){
+                        $scope.settings= result;                       
+
+                    },
+                    function(error){
+                    
+                    }
+                   );
+            
+            
+            serviceProductSelect.GetProductSuitability ()
+                .then(
+                    function(result){
+                        $scope.products= result;
+
+                        for(var i = 0; i< $scope.products.length; i++)
+                        {
+                            $scope.products[i].Name = $scope.products[i].Name.replace("&#39;","'");
+                        }
+
+                    },
+                    function(error){
+                    
+                    }
+                   ); 
+                        
+            
+        }   
+]);
+        
+        
+        
+       baaaApp.service('serviceProductSelect', ['$q', '$rootScope', function ($q, $rootScope) {
+        this.GetProductSuitability = function()
+        {
+            var deferred = $q.defer();
+            BAA_ProductSelect_Controller.GetProductSuitability(function(result, event){
+                if(event.status){
+                    deferred.resolve(result);
+                }
+                else {
+                    deferred.reject(event);
+                }     
+            });
+            return deferred.promise;
+        }  
+        
+        
+        this.GetSettings= function()
+        {
+            var deferred = $q.defer();
+            BAA_ProductSelect_Controller.GetSettings(function(result, event){
+                if(event.status){
+                    deferred.resolve(result);
+                }
+                else {
+                    deferred.reject(event);
+                }     
+            });
+            return deferred.promise;
+        }     
+        
+        
+        
+        
+       
+    
+    }]);
+    
+    
+    baaaApp.filter('unique', function() {
+
+  return function (arr, field) {
+    var o = {}, i, l = arr.length, r = [];
+    for(i=0; i<l;i+=1) {
+      o[arr[i][field]] = arr[i];
+    }
+    for(i in o) {
+      r.push(o[i]);
+    }
+    return r;
+  };
+}) 
+        
+        
+        </script>
+        <!--<apex:includeScript value="{!URLFOR($Resource.baa_include, 'js/services/service_product_select.js')}"/>-->
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <style>
+            #header{
+                width:100%;
+            }
+            
+        </style>
+    </head>
+     
+    <body ng-app="baaaApp">
+
+<div id="header">
+    <c:LiabilitiesLogo ></c:LiabilitiesLogo>
+</div>
+
+    
+    <apex:form >
+        <!--<c:BAA_Header objOpp="{!bOpp}" ></c:BAA_Header>-->
+        <div class="container" ng-controller="controllerProductSelection" ng-init="Name = '{!Name}';OrgType = '{!Acc.Organisation_type__c}';
+                                                                                   SubType='{!Acc.Organisation_sub_type__c}'; BusType = '{!Acc.Business_Type__c}'
+                                                                                     ">
+        
+        <apex:pageMessages ></apex:pageMessages>
+        
+        
+        <div class="panel panel-primary">
+            <div class="panel-heading">Company</div>
+            <div class="panel-body">
+        <div class="row">
+                <div class="form-group">
+                <div class="col-sm-6">
+                    <label>Organisation Name</label>
+                </div>
+                <div class="col-sm-6">
+                    <apex:inputText styleClass="form-control" value="{!Name}" html-ng-model="Name"/>
+                 
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="form-group">
+            </div>
+        </div>
+        
+        <div class="row">
+                <div class="form-group">
+                <div class="col-sm-6">
+                    <label>Organisation Type</label>
+                </div>
+                <div class="col-sm-6">
+                    <apex:inputField styleClass="form-control" value="{!Acc.Organisation_type__c}" html-ng-model="OrgType" />
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="form-group">
+            </div>
+        </div>
+            
+        <div class="row">
+            <div class="form-group">
+                <div class="col-sm-6">
+                    <label>Organisation Sub-Type</label>
+                </div>
+                <div class="col-sm-6">
+                    
+                    <apex:inputField styleClass="form-control"  value="{!Acc.Organisation_sub_type__c}" html-ng-model="SubType"/>
+                </div>
+            </div>        
+        </div>
+        
+       <div class="row">
+            <div class="form-group">
+            </div>
+        </div>
+        
+        <!-- C0056 start -->
+        <div class="row">
+            <div class="form-group">
+                <div class="col-sm-6">
+                    <label>Business Type</label>
+                </div>
+                <div class="col-sm-6">
+                    <apex:inputField styleClass="form-control" value="{!Acc.Business_Type__c}" html-ng-model="BusType"/>
+                </div>
+            </div>        
+        </div>
+        <!-- C0056 end -->
+        </div>
+        </div>
+        
+        
+        <div class="panel panel-primary">
+            <div class="panel-heading">Product</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col-sm-6">
+                            <label>Type of account</label>
+                        </div>
+                        <div class="col-sm-6">
+                        
+                            <select class="form-control" id="prodType" ng-model="AccountType" style="width: 200px">
+                                <option value="">-- Please Select --</option>
+                                <option value="current">Current Account</option>
+                                <option value="savings">Savings Account</option>                                
+                            </select>
+                        
+                        <!--
+                            <select class="form-control" style="width: 200px" id="prodType"
+                                        data-bind="options: uniqueCategories,value: filter, optionsCaption: '-- Please Select --'"></select>
+                        -->                                        
+                                        
+                                    <apex:inputhidden id="productTypeHidden" value="{!productType}" />
+                        </div>
+                    </div>        
+                </div>
+                
+                <div class="row">
+                    <div class="form-group">
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col-sm-6">
+                            <label>When will you want to withdraw your money?</label>
+                        </div>
+                        <div class="col-sm-6">
+                            <select class="form-control" ng-model="Access"  id="access" style="width: 200px">
+                                <option value="">-- Please Select --</option>
+                                <option ng-repeat="item in UniquetypeOfAccess()">{{item.Access}}</option>                                    
+                                
+                            </select>
+                        
+                        
+                        
+                            <!--<select class="form-control" id="access" style="width: 200px"
+                                        data-bind="options: uniqueAccess ,value: access, visible : filter() != null,optionsCaption: '-- Please Select --'"></select>
+                                        
+                                        -->
+                                        <apex:inputhidden id="accessHidden" value="{!accessToFunds}" />
+                        </div>
+                    </div>        
+                </div>
+                
+        
+                
+                <div class="row">
+                    <div class="form-group">
+                    </div>
+                </div>
+                               
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col-sm-6">
+                            <label>Deposit amount</label>
+                        </div>
+                        <div class="col-sm-6">
+                            <input class="form-control" style="width: 200px" type="number"
+                                        ng-model="MinDeposit" />
+                        </div>
+                    </div>        
+                </div>
+                
+                <div class="row">
+                    <div class="form-group">
+                    </div>
+                </div>
+                
+                
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col-sm-6">
+                            <label>Select product</label>
+                        </div>
+                        <div class="col-sm-6">
+                        
+                            <select class="form-control" id="prodSelect" ng-model="ProdSelected" style="width: 200px">                               
+                                <option ng-repeat=" product in validProducts()" value="{{product.Id}}">{{product.Name}}</option>
+                            </select>
+                                
+                                
+                                
+                                <apex:inputHidden value="{!ibbProductSelected }"
+                                    id="prodSelectHidden" />
+                        </div>
+                    </div>        
+                </div>
+                
+                <div class="row">
+                    <div class="form-group">
+                    </div>
+                </div>
+                
+                
+           
+                <table class="table" width="100%" id="grid1">
+                <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Access</th>                              
+                                <th>Min Deposit</th>                               
+                            </tr>
+                        </thead>
+                        <tbody ng-show="Access && AccountType">
+                <tr ng-repeat="product in listProducts()" ng-class="{'red': lowDeposit(product.MinDeposit)  }" >
+                          
+                
+                <td class="ng-binding">{{product.Name}}</td>
+                <td class="ng-binding">{{product.Access}}</td>
+                <td class="ng-binding">{{product.MinDeposit| currency: "£" : 0  }}</td> 
+              </tr>
+              </tbody>
+              </table>
+                
+                
+                
+                
+               
+                
+                <div class="row">
+                    <div class="form-group">
+                    </div>
+                </div>
+                
+                
+             
+                
+            </div><!--  close panel body -->
+        </div><!-- close panel -->
+        
+        <div class="panel panel-primary">
+            <div class="panel-heading">Marketing</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col-sm-6">
+                            <label>Campaign Source</label>
+                        </div>
+                        <div class="col-sm-6">
+                            <apex:selectList size="1" value="{!Opp.CampaignId}" styleClass="form-control" html-ng-model="Campaign">
+                                <apex:selectOptions value="{!Campaigns}"> </apex:selectOptions>
+                            </apex:selectList>
+                        </div>
+                    </div>        
+                </div>
+                
+                <div class="row">
+                    <div class="form-group">
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col-sm-6">
+                            <label>How did you hear about Al Rayan Bank?</label>
+                        </div>
+                        <div class="col-sm-6">
+                            <apex:inputField styleClass="form-control" value="{!Opp.How_did_you_hear_about_IBB__c}" html-ng-model="Marketing"/>
+                        </div>
+                    </div>        
+                </div>
+            </div>
+        </div>
+        
+        
+         <div class="row text-right">
+                    <input type="submit" id="knockoutClick"  value="Next" ng-show="ProdSelected && OrgType && BusType && Name && Marketing && Campaign "
+                            class="btn btn-danger"  />
+                            <apex:actionFunction action="{!Next}" name="GoNext"/>
+                </div>
+        
+    </div> <!-- end container -->
+    </apex:form>    
+    
+    
+    <!--
+    <script>
+    
+    
+    
+    !function() {
+  
+    
+      // The Account model
+      function Account(options) {
+        this.Name= options.Name || ''
+        this.Access = options.Access || ''        
+        this.Category = options.Category || '' 
+        this.MinDeposit = options.MinDeposit || '0'
+        this.MaxDeposit = options.MaxDeposit || '0'        
+        this.Id = options.Id || ''
+
+      }
+      
+      // all of the magic happens in the model
+      // the viewModel just holds the accounts array
+      view_model = {
+        accounts: ko.observableArray([]),
+        filter: ko.observable(""),
+        access: ko.observable(""),
+        deposit:ko.observable(0), 
+     
+        product: ko.observable()
+  
+      }
+      
+view_model.filteredProdItems = ko.dependentObservable(function() {
+
+    var filter = this.filter();
+    var access= this.access();
+    var deposit =  parseFloat(this.deposit());
+
+    
+    if (!filter ) {
+        return []; //return this.accounts();
+    } else {
+        return ko.utils.arrayFilter(this.accounts(), function(item) {
+            return item.Access == access && item.Category == filter;
+        }).sort();
+    }
+}, view_model);    
+
+view_model.filteredProdItems2 = ko.dependentObservable(function() {
+
+    var filter = this.filter();
+    var access= this.access();
+    var dep = this.deposit().toString();
+    var deposit =  parseFloat(dep.replace(',',''));
+
+    
+    
+    
+    if (!filter ) {
+        return []; //return this.accounts();
+    } else {
+        return ko.utils.arrayFilter(this.accounts(), function(item) {
+            var match= item.Access == access && item.Category == filter && 
+                  
+            parseFloat(view_model.deposit().toString().replace(',','')) >= item.MinDeposit && parseFloat(view_model.deposit().toString().replace(',','')) <= item.MaxDeposit ;
+        
+        return match;
+        }).sort();
+    }
+}, view_model);    
+      
+      
+      //ko.utils.arrayFilter - filter the items using the filter text
+view_model.filteredItems = ko.dependentObservable(function() {
+
+    var filter = this.filter();
+    if (!filter) {
+        return this.accounts();
+    } else {
+        return ko.utils.arrayFilter(this.accounts(), function(item) {
+            return item.Category ==  filter  ;
+        });
+    }
+}, view_model);
+      
+  view_model.uniqueAccess = ko.computed(function() {
+        var f = this.filter();
+        var types = ko.utils.arrayMap(view_model.filteredItems() , function(item){ return item.Access})
+        
+        return ko.utils.arrayGetDistinctValues(types).sort();
+    },view_model);       
+      
+      
+      
+  view_model.uniqueCategories = ko.dependentObservable(function() {
+        var types = ko.utils.arrayMap(view_model.accounts(), function(item){ return item.Category})
+        return ko.utils.arrayGetDistinctValues(types).sort();
+    });
+      
+      
+      // here we have our mapped and transformed to
+      // account objects
+      view_model.accounts(ko.utils.arrayMap({!getProductsSuitJson}, function(account) {
+        return new Account(account)
+      }))
+      // last but not least we need to apply all bindings
+      ko.applyBindings(view_model)
+    }()
+    
+    function formatCurrency(value) {
+    return "£" + parseFloat(value).toFixed(2);
+}
+
+
+$.each(view_model.accounts(), function(index, item){
+    item.Valid= ko.computed(function(){
+    var deposit = view_model.deposit();
+    return parseFloat(deposit.toString().replace(',','')) >= parseFloat(item.MinDeposit)  &&  parseFloat(deposit.toString().replace(',','')) <= parseFloat(item.MaxDeposit) ;
+    
+    });
+});
+
+-->
+    
+    
+    <script>
+$('#prodSelect').change(function(){
+    var v = $('#prodSelect').val();
+    $('[id$=prodSelectHidden]').val(v);    
+});
+
+$('#numApps').change(function(){
+    var v = $('#numApps').val();
+    $('[id$=numAppsHidden]').val(v);    
+});
+
+$('#access').change(function(){
+    var v = $('#access').val();
+    $('[id$=accessHidden]').val(v);    
+});
+
+$('#prodType').change(function(){
+    var v = $('#prodType').val();
+    $('[id$=productTypeHidden]').val(v);    
+});
+
+
+
+    
+    
+    jQuery('[id$=knockoutClick]').click( function(event) {
+    
+        event.preventDefault();
+        GoNext();
+   
+});
+    
+    </script>
+    
+    
+    
+    
+    
+    </body>        
+</apex:page>

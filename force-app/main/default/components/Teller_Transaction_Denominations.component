@@ -1,0 +1,130 @@
+<apex:component >
+    <div style="height: calc(100% - 63px); min-height: 200px;">		
+		<ul class="verticalScroller accountsMenu" style="margin-top: 0px; height: calc(100% - 5px); padding-right: 2px; min-width: 530px;">			
+			<li ng-repeat="denomItem in pageData.Denominations.TransactionDenonminations track by denomItem.DenominationValue">
+				
+<!--  				<div style="height: 70px; background: rgb(247, 247, 247); margin-bottom: 3px;">
+					 <div style="float:  left; height: 100%; width: 70px; position: relative;">
+						<img ng-src="{{getDenominationThumbnail(denomItem)}}" style="position: absolute;"></img>
+						<div style="position:  absolute; width: 100%; background: rgb(58, 58, 58); height: 23px; bottom: 0; opacity: 0.6;"></div>
+						<div class="textSmallWhiteBold" style="text-align: right; position: absolute; bottom: 0; right: 5px;">{{denomItem.FormattedDenominationValue}}</div>
+					</div>
+					
+					<div style="float: left; height: 100%;width: 70px; margin-left: 2px;padding: 5px;background: rgb(231, 231, 231);">
+						<div class="textSmallestDarkGray">Till Count</div>
+						<div class="textMediumDarkGray" style="text-align: right; margin-top: 25px; margin-right: 1px;">{{denomItem.NoInTill}}</div>
+					</div>
+					<div style="float: left; height: 100%;width: 70px; margin-left: 2px; opacity: 0.8; padding:0px !important; -webkit-user-select: none;" class="goldButton" ng-click="onIncrementDenomination(denomItem)">
+						<img src="{!URLFOR($Resource.Teller_Includes,'/Teller_Includes/media/plus.png')}" style="height: 40px; -webkit-filter: invert(1); filter: invert(1); margin-left: 15px; margin-top: 15px;"></img>
+					</div>
+					<div style="float: left; height: 100%;width: 70px; opacity: 0.8; padding:0px !important; -webkit-user-select: none;" class="goldButton" ng-click="onDecrementDenomination(denomItem)">
+						<img src="{!URLFOR($Resource.Teller_Includes,'/Teller_Includes/media/minus.png')}" style="height: 40px; -webkit-filter: invert(1); filter: invert(1); margin-left: 15px; margin-top: 15px;"></img>
+					</div>				
+
+					<div style="float: right; height: 100%; min-width: 130px; padding: 5px; background: rgb(182, 182, 182);">
+						<div class="textSmallestDarkGray" style="color:white;">Total</div>
+						<div class="textSmallWhiteBold" style="text-align: right; margin-top: 25px; margin-right: 1px;">
+							<span>{{pageData.AccountCurrency | filter_currencytosymbol}}</span>
+							<span>{{denomItem.DenominationValue * denomItem.NumberSelected | number : 2}}</span>
+						</div>
+					</div>
+					
+					<div class="goldButton" style="float: right; height: 100%; min-width: 100px; padding: 5px !important; margin-left: 2px; opacity: 0.9; -webkit-user-select: none;" ng-click="onSetAmountFocus($event)">
+						<div class="textSmallestDarkGray" style="color:white;">Amount</div>
+						<div class="textMediumDarkGray" style="text-align: right; margin-top: 25px; margin-right: 1px; color:white;" contenteditable="true" ng-model="denomItem.NumberSelected" type="number">{{denomItem.NumberSelected}}</div>
+					</div>
+					
+				</div>  -->
+						
+			<!-- Current template -->				
+			<!--<div style="height: 60px; background: rgb(247, 247, 247); margin-bottom: 4px;">
+					<div style="float:  left; height: 100%; position: relative;width: 90px; background: rgb(126, 126, 126);">
+						<div class="textSmallWhiteBold ng-binding" style="text-align: right; position: absolute; font-size: 20px; color: white; right: 15px; top: 17px; font-family: simpleMedium;">{{denomItem.FormattedDenominationValue}}</div>
+					</div>
+										
+					<div ng-click="onSetAmountFocus($event)" style="float: left; height: 100%; width: 150px; padding: 5px !important; margin-left: 2px; opacity: 0.9; -webkit-user-select: none; background-color: rgb(215, 215, 215) !important; cursor: pointer;">
+						<div class="textSmallestDarkGray" style="color: black;font-size: 11px;font-family: simpleMedium;">Notes/Coins</div>
+						<div class="textMediumDarkGray ng-untouched ng-valid ng-binding ng-dirty" contenteditable="true" type="integer" change="NumberSelected" sourceName="denomItem" denomValue="{{denomItem.DenominationValue}}" ng-model="denomItem.NumberSelected" style="text-align: right; margin-top: 9px; margin-right: 1px; color: black;font-size: 17px;background: rgb(255, 255, 255); padding-right: 3px;">{{denomItem.NumberSelected}}</div>
+					</div>
+					
+					<div style="float: left; margin-left:2px;">
+						<div class="goldButton" style="  opacity: 0.7; height: 29px; width: 29px; background: rgb(193, 172, 124); margin-bottom: 2px; -webkit-user-select: none; cursor: pointer; padding: 0px !important; display: inherit !important;" ng-click="onIncrementDenomination(denomItem)">
+							<img src="/resource/1433754715000/Teller_Includes/Teller_Includes/media/plus.png" style="height: 29px; -webkit-filter: invert(1); filter: invert(1);"></img>
+						</div>
+						<div class="goldButton" style="  opacity: 0.7; height: 29px; width: 29px; background: rgb(193, 172, 124); -webkit-user-select: none; cursor: pointer; padding: 0px !important; display: inherit !important;" ng-click="onDecrementDenomination(denomItem)">
+							<img src="/resource/1433754715000/Teller_Includes/Teller_Includes/media/minus.png" style="height: 29px; -webkit-filter: invert(1); filter: invert(1);"></img>
+						</div>
+					</div>
+					
+					<div style="float: right; height: 100%;width: 60px; margin-left: 2px;padding: 5px;background: rgb(247, 247, 247);">
+						<div class="textSmallestDarkGray">Till Count</div>
+						<div class="textMediumDarkGray ng-binding" style="text-align: right; margin-top: 17px; margin-right: 1px;">{{denomItem.NoInTill}}</div>
+					</div>		
+					
+					<div ng-click="onSetAmountFocus($event)" style="position:relative; float: right; height: 100%; width: 150px; padding: 5px; background: rgb(219, 219, 219); cursor: pointer;">
+						<div class="textSmallestDarkGray" style="color: black;">Total</div>
+						<div class="textMediumDarkGray ng-untouched ng-valid ng-binding ng-dirty" contenteditable="true" type="currency" currency="{{pageData.AccountCurrency | filter_currencytosymbol}}" change="TotalValue" sourceName="denomItem" denomValue="{{denomItem.DenominationValue}}" ng-model="denomItem.TotalValue" style="text-align: right; margin-top: 9px; margin-right: 1px; color: black;font-size: 17px;background: rgb(255, 255, 255); padding-right: 3px;">{{denomItem.TotalValue | number : 2}}</div>						
+						<div class="textMediumDarkGray" style="position: absolute; top: 31px; left: 10px;">{{pageData.AccountCurrency | filter_currencytosymbol}}</div>
+					</div>
+				</div> -->
+				
+				
+				<div style="height: 70px; background: rgb(247, 247, 247); margin-bottom: 4px;">
+					<div style="float:  left; height: 100%; width: 70px; position: relative;">
+						<img ng-src="{{getDenominationThumbnail(denomItem)}}" style="position: absolute;"></img>
+						<div style="position:  absolute; width: 100%; background: rgb(58, 58, 58); height: 23px; bottom: 0; opacity: 0.6;"></div>
+						<div class="textSmallWhiteBold" style="text-align: right; position: absolute; bottom: 0; right: 5px;">{{denomItem.FormattedDenominationValue}}</div>
+					</div>
+					
+					<div ng-click="onSetAmountFocus($event)" style="float: left; height: 100%; width: 150px; padding: 7px !important; margin-left: 2px; opacity: 0.9; -webkit-user-select: none; background-color: rgb(215, 215, 215) !important; cursor: pointer;">
+						<div class="textSmallestDarkGray" style="color: black;font-size: 13px;font-family: simpleMedium;">Notes/Coins</div>
+						<div class="textMediumDarkGray ng-untouched ng-valid ng-binding ng-dirty" contenteditable="true" type="integer" change="NumberSelected" sourceName="denomItem" denomValue="{{denomItem.DenominationValue}}" ng-model="denomItem.NumberSelected" style="text-align: right; margin-top: 12px; margin-right: 1px; color: black;font-size: 17px;background: rgb(255, 255, 255); padding-right: 3px;">{{denomItem.NumberSelected}}</div>
+					</div>
+					
+					<div style="float: left; margin-left:2px;">
+						<div class="goldButton" style="  opacity: 0.7; height: 34px; width: 34px; background: rgb(193, 172, 124); margin-bottom: 2px; -webkit-user-select: none; cursor: pointer; padding: 0px !important; display: inherit !important;" ng-click="onIncrementDenomination(denomItem)">
+							<img src="/resource/1433754715000/Teller_Includes/Teller_Includes/media/plus.png" style="height: 34px; -webkit-filter: invert(1); filter: invert(1);"></img>
+						</div>
+						<div class="goldButton" style="  opacity: 0.7; height: 34px; width: 34px; background: rgb(193, 172, 124); -webkit-user-select: none; cursor: pointer; padding: 0px !important; display: inherit !important;" ng-click="onDecrementDenomination(denomItem)">
+							<img src="/resource/1433754715000/Teller_Includes/Teller_Includes/media/minus.png" style="height: 34px; -webkit-filter: invert(1); filter: invert(1);"></img>
+						</div>
+					</div>
+					
+					<div style="float: right; height: 100%;width: 70px; margin-left: 2px;padding: 7px;background: rgb(247, 247, 247);">
+						<div class="textSmallestDarkGray" style="color: black; font-size: 13px; font-family: simpleMedium;">Till Count</div>
+						<div class="textMediumDarkGray ng-binding" style="text-align: right; margin-top: 17px; margin-right: 1px;">{{denomItem.NoInTill}}</div>
+					</div>
+
+					<div ng-click="onSetAmountFocus($event)" style="position:relative; float: right; height: 100%; width: 150px; padding: 7px; background: rgb(219, 219, 219); cursor: pointer;">
+						<div class="textSmallestDarkGray" style="color: black; font-size: 13px; font-family: simpleMedium;">Total</div>
+						<div class="textMediumDarkGray ng-untouched ng-valid ng-binding ng-dirty" contenteditable="true" type="currency" currency="{{pageData.CashCurrency | filter_currencytosymbol}}" change="TotalValue" sourceName="denomItem" denomValue="{{denomItem.DenominationValue}}" ng-model="denomItem.TotalValue" style="text-align: right; margin-top: 12px; margin-right: 1px; color: black;font-size: 17px;background: rgb(255, 255, 255); padding-right: 3px;">{{denomItem.TotalValue | number : 2}}</div>						
+						<div class="textMediumDarkGray" style="position: absolute; top: 39px; left: 10px;">{{pageData.CashCurrency | filter_currencytosymbol}}</div>
+					</div>	
+					
+				</div>
+				
+			</li>			
+		</ul>		
+	</div>
+	
+	<!-- Bottom section -->
+    <div style="height:63px; border-top: 1px solid rgb(215, 215, 215);">
+        <div style="float:  left;">
+            <div class="accountFunctionRoot" style="height: 55px; width: 80px; margin-left: 0px;" ng-show="false">
+                <div style="white-space: pre-wrap; margin-top: 8px; margin-left: 10px;" class="textSmallerWhite">Auto Complete</div>
+            </div>
+        </div>
+		<div style="float:right; padding-top: 11px; padding-right: 10px;">
+    		<div class="textDarkGray" style="text-align: right;">
+        		<span>Transaction Total:</span>
+        		<span style="margin-left: 10px;">{{pageData.CashCurrency | filter_currencytosymbol}}</span>
+				<span>{{pageData.TransactionAmount | number : 2}}</span>
+    		</div>
+    		<div class="textMediumDarkGray" style="text-align: right; margin-top: 3px;">
+        		<span>Denomination Total:</span>
+        		<span ng-class="{'colorGreen' : pageData.Denominations.TotalSelectedValue == pageData.TransactionAmount, 'colorRed' : pageData.Denominations.TotalSelectedValue != pageData.TransactionAmount }" style="margin-left: 10px;">{{pageData.CashCurrency | filter_currencytosymbol}}</span>
+				<span ng-class="{'colorGreen' : pageData.Denominations.TotalSelectedValue == pageData.TransactionAmount, 'colorRed' : pageData.Denominations.TotalSelectedValue != pageData.TransactionAmount }">{{pageData.Denominations.TotalSelectedValue | number : 2}}</span>
+    		</div>
+		</div>
+    </div>
+</apex:component>

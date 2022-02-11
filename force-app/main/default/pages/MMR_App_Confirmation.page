@@ -1,0 +1,101 @@
+<apex:page showHeader="false" sidebar="false" controller="MMR_App_Confirmation" docType="html-5.0" action="{!Setup}">
+<head>
+    <c:MMR_PageHeader ></c:MMR_PageHeader>   
+
+</head>
+<body>
+  <c:MMR_Header title="Application - Confirmation" numapps="{!numapplying}" opp="{!bopp}"/>
+
+      <div class="container">
+              <c:MMR_App_Nav active="5" EventId="{!EventId}" rendered="{!!IsCompleted}"/>
+              <c:MMR_App_Nav_Links active="5" EventId="{!EventId}" rendered="{!IsCompleted}"/>
+    
+        <apex:form id="aForm" styleClass="form-horizontal">
+        <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h2>Documents</h2>
+        </div>
+        <div class="panel-body">
+        <div class="col-sm-12">
+        
+        
+        <div class="row">
+            <div class="form-group">
+                <div class="col-sm-3">
+                    <a href="/{!Opp.id}" target="_blank" >{!Opp.Name}</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        <div class="row">
+             <div class="form-group">
+                 <div class="col-sm-3">
+                     <apex:commandButton styleClass="btn-danger" value="Create Application Form" action="{!CreateDoc}" rendered="{!!IsCompleted}" 
+                                            reRender="aForm" onclick="ShowDocumentLoad('Generating Application Form','This may take a few seconds...')" 
+                                            oncomplete="HideDocumentLoad()" /> 
+                 </div>
+                 <div class="col-sm-6">
+                     <apex:outputPanel rendered="{!DocLinkCreated}">   
+                         <a target="_blank" href="/servlet/servlet.FileDownload?file={!Opp.Attachment_App_Form__c}">View Document</a>
+                     </apex:outputPanel>  
+                 </div>
+             </div>
+        </div>
+        
+        
+        
+        
+        
+        
+        <apex:outputPanel rendered="{!!IsBTL && !IsPremier && !disableLetterGeneration }">
+        
+        <div class="row">
+        <div class="form-group">
+                        <div class="col-sm-3">
+                            <apex:commandButton styleClass="{!IF(RecommendCreated,'btn-info','btn-danger')}" value="Create Letter" reRender="aForm" onclick="ShowDocumentLoad('Creating letter','This may take a few seconds...');" oncomplete="HideDocumentLoad();" action="{!CreateRecommend}" rendered="{!!IsCompleted}" />                                      
+                        </div>
+                        <div class="col-sm-6">
+                            <apex:outputPanel rendered="{!RecommendCreated}">
+                                <a target="_blank" href="/servlet/servlet.FileDownload?file={!RecommendId}" >View Document</a>
+                            </apex:outputPanel>
+                        </div>
+                    </div>
+                    </div>
+        </apex:outputPanel>
+        
+        
+        <div class="row">
+             <div class="form-group">
+                 <div class="col-sm-3">
+                     Risk and Features Document
+                 </div>
+                 <div class="col-sm-6">
+                     <apex:outputLink value="{!KeyFactsLink}" rendered="true" target="_blank">View Document</apex:outputLink>
+                 </div>
+             </div>
+        </div>
+        <div class="row">
+             <div class="form-group">
+                 <div class="col-sm-3">
+                     Initial Disclosure Document
+                 </div>
+                 <div class="col-sm-6">
+                     <apex:outputLink value="{!IDDLink}" rendered="true" target="_blank">View Document</apex:outputLink>
+                 </div>
+             </div>
+        </div>
+        </div>
+        </div>
+        </div>
+<apex:commandButton styleClass="btn-info" value="Previous" action="{!Previous}" rendered="{!!IsCompleted}"/>
+
+                                <apex:commandButton styleClass="btn-danger" value="Complete Event" action="{!Complete}" rendered="{!!IsCompleted && DocLinkCreated && (IsBTL || IsPremier || disableLetterGeneration)}"/>
+                                <apex:commandButton styleClass="btn-danger" value="Complete Event" action="{!Complete}" rendered="{!!IsCompleted && DocLinkCreated && RecommendCreated}"/>    
+                                <apex:commandButton styleClass="btn-danger" value="Go To Next Event" action="{!NextEvent}" rendered="{!IsCompleted}"/>
+
+<c:MMR_PopupLoad />
+        </apex:form>
+    </div>
+</body>
+</apex:page>

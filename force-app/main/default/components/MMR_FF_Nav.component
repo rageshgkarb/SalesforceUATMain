@@ -1,0 +1,40 @@
+<apex:component >
+    <apex:attribute type="String" description="" name="Active" required="true" />
+    <apex:attribute type="String" description="" name="ActiveSection" required="true" />
+    <apex:attribute type="String" description="" name="EventId" required="true" />
+    <!-- C0644 Added text decoration to styles -->
+    <style>
+        .nav-pills > li.active {
+            font-weight: bold;
+            text-decoration:underline;
+        }
+
+        .nav-tabs > li.active {
+            font-weight: bold;
+            text-decoration:underline;
+        }
+    </style>
+    <div style="padding-bottom:10px;">
+        <ul class="nav nav-pills nav-justified">
+            <li class="{!IF((ActiveSection=='A')," active","") }">Property Details</li>
+            <li class="{!IF((ActiveSection=='B')," active","") }">Applicants</li>
+        </ul>
+
+
+    </div>
+
+    <apex:outputpanel rendered="{!ActiveSection=='B'}">
+        <div style="padding-bottom:10px;">
+            <ul class="nav nav-tabs nav-justified">
+                <li class="{!IF((Active=='1')," active","") }">Personal Details</li>
+                <li class="{!IF((Active=='2')," active","") }">Applicant Addresses</li>
+                <li class="{!IF((Active=='3')," active","") }">Current Ownership</li>
+                <li class="{!IF((Active=='4')," active","") }">Employment &amp; Income</li>
+                <li class="{!IF((Active=='5')," active","") }">Financial Information</li>
+                <li class="{!IF((Active=='6')," active","") }">Credit History</li>
+                <li class="{!IF((Active=='7')," active","") }">Budget Planner</li>
+            </ul>
+
+        </div>
+    </apex:outputpanel>
+</apex:component>

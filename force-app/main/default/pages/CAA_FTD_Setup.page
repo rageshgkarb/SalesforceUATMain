@@ -1,0 +1,123 @@
+<apex:page showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false" controller="CAA_Core_Controller" >
+
+
+<apex:composition template="CAA_Template">
+
+<apex:define name="include">
+            <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/controller/controller_ftdsetup.js')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/service/service_ftdsetup.js')}"/>
+            <apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/datejs/1.0/date.min.js"/>
+</apex:define>
+
+
+
+        <apex:define name="body">
+            <!-- C0551 -->
+            <div ng-controller="controllerFTDSetup" ng-init="EventLogId='{!EventLogId}';IsFTDSetup = {!IsFTDSetup};IsFITSetup = {!IsFITSetup};Submitted=true;FTDSetupInit();">
+                <form name="myform" novalidate="novalidate">
+                    <div class="SectionHeader">
+                        <div class="numberCircleReverse">--</div>
+                        <div>FTD Setup</div>
+                    </div>
+                    <div class="PanelContents">
+
+                        <div ng-show="!IsFTDSetup && Data" ng-repeat="d in Data">
+                            <div ng-show="State == 1">
+                                <div ng-class="{ 'has-error': myform.paymentamount.$invalid }">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <label class="control-label">Initial payment amount</label>
+                                            <input class="form-control" type="number" ng-model="d.PaymentAmount" name="paymentamount" ng-required="true" />
+                                            <style>
+                                                .input-validation .alert {
+                                                    max-width: 250px;
+                                                    padding: 5px;
+                                                    margin-top: 5px;
+                                                }
+                                            </style>
+
+                                            <div class="input-validation" ng-messages="myform['paymentamount'].$error" ng-show="myform['paymentamount'].$touched || Submitted">
+                                                <p class="alert alert-danger" ng-message="required">This field is required</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="row">
+                                        <div class="col-sm-12 col-lg-8">
+                                            <c:CAA_Date model="d" field="PaymentDate" req="true" title="Initial payment date" numyears="2"></c:CAA_Date>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div ng-show="State == 2">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <label class="control-label">Initial payment amount</label>
+                                        <div>
+                                            {{d.PaymentAmount}}
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <label class="control-label">Initial payment date</label>
+                                        <div>
+                                            {{d.PaymentDate.Day}}/{{d.PaymentDate.Month}}/{{d.PaymentDate.Year}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" style="padding-top:10px;">
+                                <div class="col-sm-12">
+                                    <button class="btn btnArb" ng-click="FTDSetupSave(d);Submitted=true; State=2" ng-show="!SuccessMessage && State==1 && myform.$valid">Confirm</button>
+                                    <button class="btn btnArb" ng-click="State = 1" ng-show="!SuccessMessage && State==2">Edit</button>
+                                    <button class="btn btnArb" ng-click="FTDSetup()" ng-show="!SuccessMessage && State==2">Setup FTD</button>
+                                </div>
+                            </div>
+
+                            <div class="alert alert-danger" ng-show="ErrorMessage">
+                                {{ErrorMessage}}
+                            </div>
+
+                            <div class="alert alert-success" ng-show="SuccessMessage">
+                                {{SuccessMessage}}
+                            </div>
+                        </div>
+                        <div ng-show="IsFTDSetup">
+                            <!-- C0551 -->
+                            <div ng-show="!IsFITSetup" class="alert alert-success">
+                                FTD has already been setup
+                            </div>
+                            <div ng-show="IsFITSetup" class="alert alert-success">
+                                FiT account has been set up successfully
+                            </div>
+
+                            <!--
+                     <div ng-show="Data && Data[0].ShowAJE">
+
+                         <div class="alert alert-success" ng-show="Data[0].AJECompleted">
+                             AJE has been processed
+                         </div>
+                         <div ng-hide="Data[0].AJECompleted">
+                             <button type="button" class="btn btnArb" ng-click="CallAJE()">Send AJE</button>
+                         </div>
+                     </div>
+                        -->
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+</apex:define>
+        <apex:define name="Menu">
+        
+  </apex:define>
+</apex:composition>              
+        
+        
+</apex:page>

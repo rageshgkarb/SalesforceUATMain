@@ -1,0 +1,5 @@
+<apex:page standardController="Contact" extensions="RedirectCE" id="thePage" action="{!redirectEditPage}" showHeader="false" sidebar="false">
+
+  Contact Redirect page: {!ProfileName}
+  
+</apex:page>

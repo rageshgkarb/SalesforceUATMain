@@ -1,0 +1,5 @@
+<apex:page standardController="Opportunity" recordsetVar="Opportunities" extensions="RedirectCE" id="thePage" action="{!redirectOpportunityListPage}" showHeader="false" sidebar="false">
+
+  Account Redirect page: {!ProfileName}
+  
+</apex:page>

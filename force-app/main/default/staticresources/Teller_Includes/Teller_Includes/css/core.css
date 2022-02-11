@@ -1,0 +1,284 @@
+@font-face {
+  font-family: 'simpleLight';
+  src: url('../fonts/Roboto-Thin.woff?orgId=00D20000000MKv1&orgId=00D20000000MKv1&orgId=00D20000000MKv1');
+}
+
+@font-face {
+  font-family: 'simple';
+  src: url('../fonts/Roboto-Light.woff?orgId=00D20000000MKv1&orgId=00D20000000MKv1&orgId=00D20000000MKv1');
+}
+
+@font-face {
+  font-family: 'simpleMedium';
+  src: url('../fonts/Roboto-Regular.woff?orgId=00D20000000MKv1&orgId=00D20000000MKv1&orgId=00D20000000MKv1');
+}
+
+@font-face {
+  font-family: 'simpleBold';
+  src: url('../fonts/Roboto-Medium.woff?orgId=00D20000000MKv1&orgId=00D20000000MKv1&orgId=00D20000000MKv1');
+}
+
+.menuTitle {
+  color: white;
+  font-family: simple;
+  font-size: 20px;
+  vertical-align: middle;
+}
+
+.sectionTitle {
+  font-size: 19px;
+  font-family: simple;
+  color: #b3995d !important;
+  font-weight: normal;
+}
+
+.sectionTitleSmallGray {
+  color: #8e8e8e;
+  font-family: simpleMedium;
+  font-size: 16px;
+  font-weight: normal;
+  margin-bottom: 0px !important;
+}
+
+.textWhite {
+  color: white;
+  font-family: simpleMedium;
+  font-size: 19px;
+  font-weight: normal;
+}
+
+.textSmallWhite {
+  color: white;
+  font-family: simpleMedium;
+  font-size: 16px;
+  vertical-align: middle;
+  font-weight: normal;
+}
+
+.textSmallWhiteBold {
+  color: white;
+  font-family: simpleBold;
+  font-size: 16px;
+  vertical-align: middle;
+}
+
+.textSmallerWhite {
+  color: white;
+  font-family: simpleMedium;
+  font-size: 14px;
+  vertical-align: middle;
+  font-weight: normal;
+}
+
+.textSmallerWhiteBold {
+  color: white;
+  font-family: simpleBold;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.textDarkGray {
+  color: #8c8c8c;
+  font-family: simpleMedium;
+  font-size: 14px;
+  font-weight: normal;
+}
+
+.textWarning {
+  color: red !important;
+  font-weight: bold !important;
+}
+
+.textBlack {
+  color: black;
+  font-family: simpleMedium;
+  font-size: 14px;
+  font-weight: normal;
+}
+
+.textMediumDarkGray {
+  color: rgb(71, 70, 70);
+  font-family: simpleMedium;
+  font-size: 16px;
+  font-weight: normal;
+}
+
+.textSmallDarkGray {
+  color: rgb(71, 70, 70);
+  font-family: simpleMedium;
+  font-size: 14px;
+  font-weight: normal;
+}
+
+.textSmallestDarkGray {
+  color: #8c8c8c;
+  font-family: simpleBold;
+  font-size: 11px;
+  font-weight: normal;
+}
+
+.textLargeGold {
+  color: #b3995d;
+  font-family: simple;
+  font-size: 28px;
+}
+
+.textGold {
+  color: #b3995d;
+  font-family: simple;
+  font-size: 18px;
+}
+
+.pageTitleBlack {
+  color: black;
+  font-family: simple;
+  font-size: 24px;
+  margin-left: 7px;
+  vertical-align: middle;
+}
+
+.pageTitleGray {
+  color: #8e8e8e;
+  font-family: simple;
+  font-size: 24px;
+  margin-left: 7px;
+  vertical-align: middle;
+}
+
+.pageSubTitleGray {
+  color: #5a5a5a;
+  font-family: simple;
+  font-size: 20px;
+  font-weight: normal;
+  margin-bottom: 0px !important;
+}
+
+.tileTitleText {
+  font-size: 13px;
+  font-family: simpleMedium;
+  font-weight: normal;
+  margin-bottom: 0px !important;
+}
+
+.tileTitleTextBold {
+  font-size: 13px;
+  font-family: simpleBold;
+  font-weight: normal;
+  margin-bottom: 0px !important;
+}
+
+.tileValueText {
+  font-size: 20px;
+  font-family: simpleMedium;
+  font-weight: normal;
+  margin-bottom: 0px !important;
+}
+
+.btn_back {
+  width: 29px;
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.btn_back:hover {
+  opacity: 1;
+}
+
+.sectionDetail {
+  margin-left: 10px !important;
+}
+
+.goldButton {
+  margin-right: 2px;
+  border-radius: 0px !important;
+  border-width: 0px !important;
+  display: inline-block !important;
+  color: #ffffff !important;
+  font-family: simpleMedium !important;
+  font-size: 13px !important;
+  font-weight: normal !important;
+  padding: 7px 12px !important;
+  text-decoration: none !important;
+  background-color: #b3995d !important;
+  border: none !important;
+  background-image: none !important;
+  cursor: pointer;
+}
+
+.goldButton:hover {
+  background-color: #333333 !important;
+}
+
+.goldButton:active {
+  position: relative !important;
+}
+
+.goldButton:disabled {
+  background-color: gainsboro !important;
+}
+
+.closeBtn {
+  opacity: 0.3;
+  height: 40px;
+  position: absolute;
+  right: 0;
+  cursor: pointer;
+}
+
+.closeBtn:hover {
+  opacity: 1.0;
+}
+
+.arbLogoBig {
+  width: 400px;
+  padding: 50px;
+  position: absolute;
+  bottom: 0;
+}
+
+.arbLogoSmall {
+  height: 60px;
+  margin: 30px;
+  margin-bottom: 5px;
+}
+
+.splashImage {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: 0;
+  height: 80%;
+}
+
+.engageChatterFeed {
+  padding: 20px;
+  font-family: simpleMedium;
+  font-size: 10pt;
+  height: calc(100% - 270px);
+  overflow-y: auto;
+}
+
+.engageChatterFeed > span > .publishercontainer {
+  display: none;
+}
+
+.engageChatterFeed > span > .cxfeedinnerwrapper > .feedcontainer > .feedDropDown {
+  display: none;
+}
+
+.engageChatterFeed > span > .zen-select {
+  display: none;
+}
+
+.cxfeeditem > .feeditemcontent > .feeditembodyandfooter > .feeditemfooter > .cxallfeedactions > .feeditemActionMenu > .zen-select {
+  display: none;
+}
+
+.cxfeeditem {
+  border: none !important;
+  border-bottom: 1px solid rgb(200, 186, 157) !important;
+}
+
+ul li, ol li {
+  margin-left: 0 !important;
+}

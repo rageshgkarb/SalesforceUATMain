@@ -1,0 +1,471 @@
+		@media(max-width:767px) {
+			nav {
+				left: -250px;
+			}
+			.regionContent {
+				padding-left: 0px;
+			}
+			.pageTitleGray {
+				margin-left: 0px;
+			}
+			.pageContentRight {
+				padding-left: 5px;
+				padding-right: 5px;
+				left: 0px !important;
+				width:100% !important;
+			}
+			.regionWaitBackground {
+				margin-left: 0px;
+				width: 100%;
+				height: 100% !important;
+			}
+			.regionWaitMessage {
+				margin-left: 0px;
+				width: 100%;
+			}
+			.splash {
+				white-space: normal !important;
+			}
+			.splash-content {
+				float: none !important;
+				width: 100% !important;
+			}
+			.splashImage {
+				height: 55%;
+			}
+			
+			.headerSearch{
+				position: absolute;
+				top:0;
+				right:0;
+				z-index: 1;
+				width: calc(100% - 45px);
+			}
+			
+			.headerSearchInput > span{
+				width: calc(100% - 56px) !important;
+			}
+			
+			.headerIconContainer{
+				float:right;
+			}
+			
+			.engageTitle{
+				font-size: 30px !important;
+			}
+			
+			.engageSubTitle{
+				font-size: 20px !important;
+			}
+			
+			.customerCoreRight{
+				display: none;
+			}
+			
+			.customerCoreLeft{
+				max-width: inherit !important;
+				width: 100%;
+				min-height: 400px !important;
+				height: calc(100% - 100px) !important;
+			}
+			
+			.customerSearchResults{
+				overflow-x: hidden;
+				height: calc(100% - 95px) !important;
+			}
+			
+			.searchResultsCustName{
+				font-size:14px !important;
+			}
+			
+			.searchResultsCustDetails{
+				font-size:13px !important;
+			}
+			
+			.mb-searchBar{
+				margin-top: -15px !important;
+				height: 100px !important;
+			}
+			
+			.mb-recentSearch{
+				clear:  both;
+				text-align: -webkit-right;
+				width: calc(100% - 58px);
+				padding-top: 8px;
+			}
+			
+			.mb-removeMargin{
+				margin-top: 0px !important;
+			}
+			
+			.customerTitle{
+				font-size: 17px;
+			}
+			
+			.LastUpdateGray{
+				display: none;
+			}
+			
+			.summaryTiles{
+				display: none;
+			}
+			
+			.customerImageTile > .tileIndicator{
+				height: 75px !important;
+			}
+			
+			.customerImageTile > .customerImg{
+				height: 75px !important;
+				width: 75px !important;
+			}
+
+			.customerImageTile > .customerImg > img{
+				height: 75px !important;
+				width: 75px !important;
+			}	
+			
+			.signatureImageTile{
+				margin-left: 3px;
+			}	
+					
+			.signatureImageTile > .tileIndicator{
+				height: 75px !important;
+			}
+
+			.signatureImageTile > .tileBody > .customerImg > img{
+				height: 75px !important;
+			}	
+			
+			.signatureImageTile > .tileBody > .signatureHeaderContainer	{
+				display: none;				
+			}		
+			
+			.lastViewedTile > .lastViewedTileBody{
+				width: calc(100% - 5px) !important;	
+			}
+			
+			.accountListContainer{
+				width: calc(100% - 30px) !important;
+				margin-right: 15px;
+				height: calc(100% - 115px) !important; 
+				margin-top: -10px !important;
+			}
+						
+			.headerSection {
+				width: calc(100% - 30px) !important;
+			}
+			.requiredInput > select{
+				width: calc(100% - 14px) !important;
+			}
+						
+			.regionContent{
+				height: calc(100% - 40px) !important;				
+			}			
+			.footerBar{
+				display: none;
+			}
+			
+			.activitiesList
+			{
+				height: calc(100% - 110px) !important;
+			}
+			
+			.filtersList
+			{
+				height: calc(100% - 101px) !important;
+			}
+			
+			.mobileText{
+				font-size: 13px !important;
+			}
+			
+			.md-mobileText{
+				font-size: 16px !important;
+			}
+			
+			.sm-mobileText{
+				font-size: 12px !important;
+			}
+			
+			.xs-mobileText{
+				font-size: 11px !important;
+			}
+			
+			.regionModalContent
+			{
+				width: 100% !important;
+			}
+			
+			.regionModalBody 
+			{
+				margin: 10px !important;
+				width: 100% !important;
+			}
+			
+			.regionModalTitle
+			{
+				margin-left: 20px;
+				font-size: 20px !important;
+			}
+			
+			#activitiesContainer{
+				height: calc(100% - 15px) !important;
+			}
+			
+			.searchResultItem {
+				position:relative;
+			}
+
+			.searchResultActivityDateTime {
+				display: block !important;
+				width: auto !important;
+				border-right: none !important;
+				padding-right: 0px !important;
+			}
+
+				.searchResultActivityDateTime :nth-child(1) {
+					display: inline-flex !important;
+					display: -webkit-inline-flex !important;
+					display: -ms-inline-flexbox !important;
+				}
+
+				.searchResultActivityDateTime :nth-child(2) {
+					display: inline-flex !important;
+					display: -webkit-inline-flex !important;
+					display: -ms-inline-flexbox !important;
+				}
+			
+			.searchResultActivityDetails {
+				display: block !important;
+				padding-left: 0px !important;
+    			padding-right: 0px !important;
+			}
+
+				.searchResultActivityDetails :nth-child(1) {
+					display: inline-flex !important;
+					display: -webkit-inline-flex !important;
+					display: -ms-inline-flexbox !important;
+				}
+
+				.searchResultActivityDetails :nth-child(2) {
+					display: inline-flex !important;
+					display: -webkit-inline-flex !important;
+					display: -ms-inline-flexbox !important;
+				}
+
+				.searchResultActivityDetails :nth-child(3) {
+					display: inline-flex !important;
+					display: -webkit-inline-flex !important;
+					display: -ms-inline-flexbox !important;
+				}
+			
+			.searchResultActivityStatus {
+				display: block !important;
+				padding-right: 0px !important;
+    			padding-left: 0px !important;
+    			border-left: none !important;
+			}
+				.searchResultActivityStatus :nth-child(1) {
+					display: inline-flex !important;
+					display: -webkit-inline-flex !important;
+					display: -ms-inline-flexbox !important;
+				}
+
+				.searchResultActivityStatus :nth-child(2) {
+					display: inline-flex !important;
+					display: -webkit-inline-flex !important;
+					display: -ms-inline-flexbox !important;
+					float: none !important;
+				}
+
+			.searchResultActivityAmount {
+				padding-left: 0px !important;
+				border-left: none !important;
+			}
+					
+			.activityDetailButtons{
+				margin-bottom: 55px !important;
+			}
+			
+			/*Account Template*/
+			
+			.summaryContainer {
+				width: 99% !important;
+				height: 133px !important;
+			}
+			
+			.goldTile {
+				width: 49% !important;
+				height: 58px !important;
+				margin-left: 0px !important;
+			}
+			
+			.accStatusTile{
+				float: right !important;
+			}
+			
+			.tileValueText {
+				font-size: 17px !important;
+			}
+			
+			.accountInfoHeader{
+				width: calc(100% - 60px) !important;
+				height: 55px !important;
+			}
+			
+			.accountInfoHeader :nth-child(2){
+				float: left !important;
+				margin-left: 10px !important;
+			}
+			
+			.accountInfoHeader :nth-child(2) > div{
+				font-size: 13px !important;
+				margin-left: 0px !important;
+			}
+			
+			.accountExpanderContainer {
+				width: 99% !important;
+				height: calc(100% - 215px) !important;/*MB changed from 20160226 calc(100% - 172px)  !important;"*/
+				min-height: 0px !important;
+			}
+			
+			.accountTitle{
+				font-size: 15px !important;
+				width: calc(100% - 35px) !important;
+				padding-left: 5px;
+			}
+			
+			.transactionHistoryContainer{
+				width: 100% !important;
+    			padding-right: 7px !important;
+			}
+			
+			.transactionHistoryContainer > .kendo-loading {
+    			margin-left: 50% !important;
+			}
+			
+			.sigMandatesList{
+				min-width: 50px !important;
+			}
+			
+			.THContent, .SMContent, .AAContent{
+				height: calc(100% - 45px) !important;
+			}
+			
+			.mandateAmount{
+				width: auto !important;
+			}	
+			
+			.tag{
+				height: 20px !important;
+				min-width: 15px !important;
+				padding: 2px !important;
+			}
+			
+			.mb-sig-info{
+				width: calc(100% - 85px) !important;		
+			}	
+			
+			.subDialog{
+				width: calc(100% - 75px) !important;
+				margin-left: 15px !important;
+			}	
+			
+			.subDialogBackground{
+				height: calc(100% - 53px) !important;
+			}
+			
+			.mb-accountOptions{
+				height: 55px; 
+				width: 55px; 
+				float: right; 
+				background: #868686;
+				cursor: pointer;
+			}
+			
+			.mb-accountOptions:hover{
+				background: black;
+			}
+			
+			.mb-accountOptions > img {
+				height: 40px;
+				width: 40px;
+    			-webkit-filter: invert(100%);
+    			margin-top: 7px;
+   				margin-left: 8px;
+			}
+			
+			.mb-accountOptionsMenu
+			{
+				position: absolute;
+				width: 91%;
+				/*height: calc(100% - 150px);*/
+				background: white;
+				top: 120px;
+				left: 17px;
+				border: 1px solid #D8D8D8;
+				box-shadow: 2px 2px 5px #2B2B2B;
+				z-index: 1;
+			}
+			
+			.mb-accountOptionsMenu:before
+			{
+				content: '';
+				position: absolute;
+				width: 20px;
+				height: 20px;
+				right: 12px;
+				top: -10px;
+				border: 1px solid;
+				border-color: #D8D8D8 transparent transparent #D8D8D8;
+				-webkit-transform: rotate(45deg);
+				background: white;
+			}		
+			
+			.mb-accountOptionsMenu.ng-hide-add, .mb-accountOptionsMenu.ng-hide-remove {
+				-webkit-transition:all linear 0.3s;
+				-moz-transition:all linear 0.3s;
+				-o-transition:all linear 0.3s;
+				transition:all linear 0.3s;
+			}
+			.mb-accountOptionsMenu.ng-hide-add.ng-hide-add-active,
+			.mb-accountOptionsMenu.ng-hide-remove {
+				opacity:0;
+			}
+			.mb-accountOptionsMenu.ng-hide-add,
+			.mb-accountOptionsMenu.ng-hide-remove.ng-hide-remove-active {
+				opacity:1;
+			}
+			
+			.mb-accountOptionsMenuList{
+				margin-top: 0;
+    			list-style: none;
+    			padding: 10px;
+				padding-bottom: 0px;
+				margin-top: 5px;
+			}
+			
+			.mb-accountOptionsMenuListItem:hover{
+				opacity: 1;
+			}
+			
+			.mb-accountOptionsMenuListItem{
+				height: 50px;
+				margin-bottom: 4px;
+				cursor: pointer;
+				opacity: 0.9;
+			}
+			
+				.mb-accountOptionsMenuListItem :nth-child(1) {
+					float: left;
+    				padding: 15px;
+    				background: #B3995D;
+					width: 50px;					
+				}
+				.mb-accountOptionsMenuListItem :nth-child(2) {
+					float:  left;
+    				padding: 15px;
+    				background:  #DCDCDC;
+    				width: calc(100% - 50px);
+				}			
+		}	

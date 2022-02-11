@@ -1,0 +1,29 @@
+<apex:page controller="HPPEventController"   sidebar="false" showHeader="false" title="Submit to decison engine">
+    <head>
+        <c:KendoResource ></c:KendoResource>
+    </head>
+    <body>
+        <apex:form > 
+            <div id="formWrapper">
+                <!-- C00095-->
+                <c:HPPSummary objAcc="{!Accounts[0]}" objOpp="{!opp}" objExOpp="{!ExOpp}" Product="{!Prod}" />
+                <div id="container" >
+                    <table width="100%">
+                        <tr>
+                            <td valign="top" id="sidebar">
+                                <c:HPPBOMenu oppId="{!Opp.Id}"  DirectorId="{!Opp.ProductEventDirector__c}" />
+                            </td>
+                            <td valign="top" id="contenttd">
+                                <div id="content">
+                                    <h1>Set finance on EBS</h1>
+                                    <!-- content -->
+                                </div>
+                                <apex:commandButton styleClass="redBtn" value="Compelte Event" action="{!Complete}" rendered="{!!IsCompleted}"/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </apex:form>
+    </body>
+</apex:page>

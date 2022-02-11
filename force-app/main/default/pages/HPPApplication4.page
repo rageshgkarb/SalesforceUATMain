@@ -1,0 +1,118 @@
+<apex:page controller="HPPEventApplicationController" sidebar="false" showHeader="false" title="Applicant Details">
+<head>
+
+
+</head>
+<body>
+<c:KendoResource ></c:KendoResource>
+<apex:form >
+
+
+<div id="formWrapper" >
+<!-- C00095--> 
+<c:HPPSummary objAcc="{!Acc}" objOpp="{!opp}" objExOpp="{!ExOpp}" Product="{!Prod}" rendered="false"/>
+
+<div id="container" >
+
+<table width="100%">
+<tr>
+<td valign="top" id="sidebar" style="display: none;">
+    <c:HPPBOMenu oppId="{!Opp.Id}"  DirectorId="{!Opp.ProductEventDirector__c}" />
+</td>
+<td valign="top" id="contenttd">
+<div  id="topNav">
+<ul>
+<li><apex:commandLink action="{!PageApplication1}" value="Property Details" id="theCommandLink"/></li>
+<li><apex:commandLink rendered="{!Opp.Number_of_People_Applying__c> 0}" action="{!PageApplicant1}" value="Applicant 1" id="appLink1"/></li>
+<li><apex:commandLink rendered="{!Opp.Number_of_People_Applying__c> 1}" action="{!PageApplicant2}" value="Applicant 2" id="appLink2"/></li>
+<li><apex:commandLink rendered="{!Opp.Number_of_People_Applying__c> 2}" action="{!PageApplicant3}" value="Applicant 3" id="appLink3"/></li>
+<li><apex:commandLink rendered="{!Opp.Number_of_People_Applying__c> 3}" action="{!PageApplicant4}" value="Applicant 4" id="appLink4"/></li>
+<li><apex:commandLink action="{!PageApplication3}" value="Additional Information" id="link3"/></li>
+<li class="active"><apex:commandLink action="{!PageApplication4}" value="Valuation Information" id="link4"/></li>
+
+<li><apex:commandLink action="{!PageApplication6}" value="Payment Details" id="link6"/></li>
+<li><apex:commandLink action="{!PageApplication7}" value="Application Confirmation" id="link7"/></li>
+</ul>
+</div>
+<div style="padding: 20px;">
+
+<h1 style="font-size: 20pt;padding-bottom:30px;">Valuation Information</h1>
+
+<apex:pageBlock >
+
+<table>
+    <tr>
+        <td class="labelCol">Select valuation type</td><td class="dataCol">
+
+            <apex:selectList style="width:300px;" value="{!ValuationId }" size="1" required="true" >
+            <apex:selectOptions value="{!Valuations}"> </apex:selectOptions>
+            </apex:selectList>
+        
+        
+          
+        
+        
+        </td>
+
+    </tr>
+
+</table>
+
+
+<div style="padding:20px;">
+<apex:dataTable value="{!Valuationss}" var="v" border="" width="100%" styleClass="tableClass">
+
+
+<apex:column >
+<apex:facet name="header">Type of valuation</apex:facet>
+<apex:outputField value="{!v.Type_of_valuation__c}"/>  </apex:column>
+<apex:column >
+<apex:facet name="header">Price of valuation</apex:facet>
+<apex:outputField value="{!v.Price_of_valuation__c}"/>  </apex:column>
+<apex:column >
+<apex:facet name="header">Min property price</apex:facet>
+<apex:outputField value="{!v.Minimum_property_value__c}"/>  </apex:column>
+<apex:column >
+<apex:facet name="header">Max property price</apex:facet>
+<apex:outputField value="{!v.Property_up_to_the_value_of__c}"/>  </apex:column>
+
+</apex:dataTable>
+</div>
+
+
+
+        
+         <apex:commandButton styleClass="redBtn" value="Previous" action="{!PageApplication3}"/>
+         <apex:commandButton styleClass="redBtn" value="Save" action="{!Save}"/>
+         <apex:commandButton styleClass="redBtn" value="Next" action="{!PageApplication6}"/>
+        
+      <apex:messages /> 
+
+            <script>
+                $(document).ready(function() {
+                    $("#tabstrip").kendoTabStrip({
+                        animation:  {
+                            open: {
+                                effects: "fadeIn"
+                            }
+                        }
+                    
+                    });
+                });
+            </script>
+       
+</apex:pageBlock>
+</div>
+</td></tr></table>
+</div>
+</div>
+<apex:outputPanel rendered="{!IsCompleted}">
+<script>
+SetReadOnly();
+</script>
+</apex:outputPanel>
+
+  </apex:form>
+  </body>
+
+</apex:page>

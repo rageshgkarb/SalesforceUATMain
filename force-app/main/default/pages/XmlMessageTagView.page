@@ -1,0 +1,5 @@
+<apex:page standardController="XML_Message_Tag__c" extensions="RedirectCE" id="thePage" action="{!redirectViewPage}" showHeader="false" sidebar="false">
+
+  XML_Message__c Redirect page: {!ProfileName}
+  
+</apex:page>

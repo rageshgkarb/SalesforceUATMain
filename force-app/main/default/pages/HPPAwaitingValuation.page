@@ -1,0 +1,89 @@
+<!-- C00199 alerts on set up problems -->
+
+
+<apex:page controller="HPPAwaitingValuationController"   sidebar="false" showHeader="false" title="Awaiting Valuation" action="{!Setup}">
+    <head>
+        <c:KendoResource ></c:KendoResource>
+    </head>
+    <body>
+        <apex:form >
+            <div id="formWrapper">
+                <!-- C00095--> 
+                <c:HPPSummary objAcc="{!Accounts[0]}" objOpp="{!opp}" objExOpp="{!ExOpp}" Product="{!Prod}" />
+                <div id="container" >
+                    <table width="100%">
+                        <tr>
+                            <td valign="top" id="sidebar">
+                                <c:HPPBOMenu oppId="{!Opp.Id}"  DirectorId="{!Opp.ProductEventDirector__c}" />
+                            </td>
+                            <td valign="top" id="contenttd">
+                                <div id="content">
+                                    <h1>Awaiting Valuation</h1>
+                                
+                                   
+                                    <div style="padding:20px;">
+                                    <!-- content -->
+                                    
+                                    <!-- C00199 -->
+                                    <apex:pageMessages ></apex:pageMessages>
+                                    <!-- C00199 end -->
+                                    
+                                    <table class="detailList" width="100%">
+                                    <tr>
+                                        <td class="labelCol">Notification/Updates</td>
+                                        <td class="dataCol"><apex:outputField value="{!Valuation.General_Comments__c}"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="labelCol">Date valuation is booked for</td>
+                                        <td class="dataCol"><apex:outputField value="{!Valuation.Date_of_Valuation__c}"/></td>
+                                         <!--C0785: HPP - Automatic Valuation Model START-->
+                                        <td class="labelCol" id="outcome">AVM Outcome</td>                      
+                                        <td class="dataCol"><apex:outputLabel value="{!Exopp.AVM_OutCome__c}"/></td>
+                                         <!--C0785: HPP - Automatic Valuation Model END-->
+                                    </tr>
+                                    <tr>
+                                        <td class="labelCol">Valuation attached</td>
+                                        <td class="dataCol"><apex:inputField value="{!Exopp.Valuation_attached__c}"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="labelCol">Date</td>
+                                        <td class="dataCol"><apex:inputField required="true" value="{!Exopp.Valuation_received__c}"/></td>
+                                         <!--C0785: HPP - Automatic Valuation Model start-->
+                                        <td><apex:commandButton styleClass="redBtn" value="UploadValuationReport" onclick="window.open('{!URLFOR($Action.Valuation_Report__c.New,null,[CF00ND0000004dN2g=opp.name],true)}')" />
+                                        </td>
+                                         <!--C0785: HPP - Automatic Valuation Model END-->
+                                    </tr>
+                                   
+                                    </table>
+                                   
+                                    
+                                    <br/><br/>
+                                   
+                                <apex:commandButton styleClass="redBtn" value="Complete Event" rendered="{!!IsCompleted}" action="{!Complete}" />    
+                                </div>
+                                   
+                                </div>
+                                
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div id="fade"></div>
+<div id="overlay">
+Generating document...
+<br/>
+<br/>
+This may take a few seconds.
+
+<div style="padding-top: 50px;" >
+<img src="{!URLFOR($Resource.ibbstyle, 'images/269.gif')}"></img>
+</div>
+
+
+</div>
+            
+        </apex:form>
+
+        </body>
+</apex:page>

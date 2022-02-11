@@ -1,0 +1,137 @@
+<apex:page controller="HPPEventApplicationController" sidebar="false" showHeader="false" title="Applicant Details">
+<head>
+
+
+</head>
+<body>
+<c:KendoResource ></c:KendoResource>
+<apex:form >
+
+
+<div id="formWrapper" >
+<!-- C00095--> 
+<c:HPPSummary objAcc="{!Acc}" objOpp="{!opp}" objExOpp="{!ExOpp}" Product="{!Prod}" rendered="false"/>
+
+<div id="container" >
+
+<table width="100%">
+<tr>
+<td valign="top" id="sidebar" style="display: none;">
+    <c:HPPBOMenu oppId="{!Opp.Id}"  DirectorId="{!Opp.ProductEventDirector__c}" />
+</td>
+<td valign="top" id="contenttd">
+<div  id="topNav">
+<ul>
+<li><apex:commandLink action="{!PageApplication1}" value="Property Details" id="theCommandLink"/></li>
+<li><apex:commandLink rendered="{!Opp.Number_of_People_Applying__c> 0}" action="{!PageApplicant1}" value="Applicant 1" id="appLink1"/></li>
+<li><apex:commandLink rendered="{!Opp.Number_of_People_Applying__c> 1}" action="{!PageApplicant2}" value="Applicant 2" id="appLink2"/></li>
+<li><apex:commandLink rendered="{!Opp.Number_of_People_Applying__c> 2}" action="{!PageApplicant3}" value="Applicant 3" id="appLink3"/></li>
+<li><apex:commandLink rendered="{!Opp.Number_of_People_Applying__c> 3}" action="{!PageApplicant4}" value="Applicant 4" id="appLink4"/></li>
+<li><apex:commandLink action="{!PageApplication3}" value="Additional Information" id="link3"/></li>
+<li class="active"><apex:commandLink action="{!PageApplication4}" value="Valuation Information" id="link4"/></li>
+<li><apex:commandLink action="{!PageApplication6}" value="Payment Details" id="link6"/></li>
+
+<li><apex:commandLink action="{!PageApplication7}" value="Application Confirmation" id="link7"/></li>
+</ul>
+</div>
+<div style="padding: 20px;">
+
+<h1 style="font-size: 20pt;padding-bottom:30px;">Valuation Information</h1>
+
+<apex:pageBlock >
+
+<div><!-- budget planner -->
+                        <div class="pbSubheader" >
+                       <h3>Budget Planner</h3> 
+                       </div>
+                       <table class="detailList">
+                       <tbody>
+                       <tr>
+                            <td class="labelCol">Anticipated HPP Payment</td><td class="dataCol"><apex:inputField styleClass="budgetItem" value="{!Budget.Anticipated_HPP_payment__c}"   /></td>
+                            <td class="labelCol">Do you have an existing mortgage?</td><td class="dataCol">></td>
+                       </tr>
+                       <tr>
+                            <td class="labelCol">Existing monthly loan payments</td><td class="dataCol"><apex:inputField styleClass="budgetItem" value="{!Budget.Existing_monthly_Loan_HP_payments__c}"   /></td>
+                            <td class="labelCol">Existing credit store card payments</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Existing_Credit_Store_card_payments__c}"   /></td>
+                       </tr> 
+                       <tr>
+                            <td class="labelCol">Home Insurance</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Home_insurance__c}"   /></td>
+                            <td class="labelCol">Existing life PP or critical illness</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Existing_Life_PP_or_Critical_Illness__c }"   /></td>
+                       </tr>  
+                       <tr>
+                            <td class="labelCol">Additional pension</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Additional_Pension_commitments__c}"   /></td>
+                            <td class="labelCol">Council Tax</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Council_tax__c}"   /></td>
+                       </tr>  
+                       <tr>
+                            <td class="labelCol">Water</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Water__c}"   /></td>
+                            <td class="labelCol">Electricity</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Electricity__c}"   /></td>
+                       </tr>  
+                       <tr>
+                            <td class="labelCol">Gas</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Gas__c}"   /></td>
+                            <td class="labelCol">Telephone</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Telephone__c}"   /></td>
+                       </tr> 
+                       <tr>
+                            <td class="labelCol">Mobile</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Mobile__c}"   /></td>
+                            <td class="labelCol">TV License</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.TV_License__c}"   /></td>
+                       </tr>   
+                       <tr>
+                            <td class="labelCol">Household</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Household_eg_Food_cleaning_clothing__c}"   /></td>
+                            <td class="labelCol">Travel expenses</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Travel_expenses__c}"   /></td>
+                       </tr>  
+                       <tr>
+                            <td class="labelCol">Car Petrol</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Car_Petrol_Insurance_and_Servicing__c}"   /></td>
+                            <td class="labelCol">Sky/Cable Internet</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Sky_Cable__c}"   /></td>
+                       </tr>  
+                       <tr>
+                            <td class="labelCol">Other commitments</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Other_Commitments__c}"   /></td>
+                            <td class="labelCol">Total commitments</td><td class="dataCol"><span id="budgetTotal"></span></td>
+                       </tr>                                                                                                                                                                                                                     
+                       </tbody>
+                   </table>     
+                   
+                   </div>
+
+
+
+
+
+
+
+
+  
+        
+         <apex:commandButton styleClass="redBtn" value="Previous" action="{!PageApplication4}"/>
+         <apex:commandButton styleClass="redBtn" value="Save" action="{!Save}"/>
+         <apex:commandButton styleClass="redBtn" value="Next" action="{!PageApplication7}"/>
+        
+       
+
+            <script>
+                $(document).ready(function() {
+                    $("#tabstrip").kendoTabStrip({
+                        animation:  {
+                            open: {
+                                effects: "fadeIn"
+                            }
+                        }
+                    
+                    });
+                });
+            </script>
+       
+</apex:pageBlock>
+</div>
+</td></tr></table>
+</div>
+</div>
+
+<apex:outputPanel rendered="{!IsCompleted}">
+<script>
+SetReadOnly();
+</script>
+</apex:outputPanel>
+
+  </apex:form>
+  </body>
+
+</apex:page>

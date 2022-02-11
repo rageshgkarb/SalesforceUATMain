@@ -1,0 +1,631 @@
+<apex:page standardController="Opportunity" showHeader="true" 
+      tabStyle="Opportunity" >
+      
+      
+
+      
+
+<!-- C0178 -->
+<chatter:feedwithFollowers entityId="{!opportunity.id}"/>
+
+<apex:stylesheet value="{!$Resource.Style_Layout}" />
+
+
+
+
+
+   
+  <apex:tabPanel switchType="client" selectedTab="tabdetails" 
+                  id="OpportunityTabPanel" tabClass="activeTab" 
+                  inactiveTabClass="inactiveTab"> 
+                  
+                  <apex:tab style="background-color: #FFFFFF" label="Details" name="OppDetails" rendered="{!$Profile.Name == 'SGH Martineau' }">
+         <apex:detail relatedList="true" title="true"/>
+      </apex:tab>
+                  
+                  
+                  
+                  <apex:tab style="background-color: #FFFFFF" label="One View" name="OneView">
+            <iframe src="/apex/pagelayouttab?id={!opportunity.id}" style="overflow:hidden;height:100%;width:100%;min-height:2000px;" height="100%" width="100%">>
+                    
+            </iframe>
+        
+            
+        </apex:tab> 
+                  
+                  
+                  
+   <!-- **********************C0158: Opportunity tab view***************************************************
+        ************************* Opportunity Summary Tab HPP ************************
+        ******************************************************************************-->
+        <apex:tab style="background-color: #FFFFFF" label="Opportunity Summary" rendered="{!opportunity.RecordTypeId == '012D0000000QhlAIAS'}">                    
+                    <apex:pageBlock >                                                
+                    
+                    <apex:outputLink value="/apex/HPPEventRedirect?oppid={!Opportunity.Id}" target="_blank">View/Continue HPP Application</apex:outputLink>
+                    
+                    <apex:pageBlocksection columns="2" collapsible="false" >
+                            
+                        <apex:PageBlocksectionitem >
+                        <apex:outputLabel value="Product" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputtext value="{!opportunity.IBB_Product__r.Name}" />                      
+                            </apex:panelgrid>                         
+                        </apex:PageBlocksectionitem>
+                        
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Prospect/Customer Name" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputtext value="{!opportunity.Account.Name}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Stage" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputtext value="{!opportunity.StageName}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+                        
+                         <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Status" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputtext value="{!opportunity.Status_HPP_CAA__c}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+                        
+                        <apex:PageBlocksectionitem >                         
+                        </apex:PageBlocksectionitem>
+                        
+                        <apex:PageBlocksectionitem >                         
+                        </apex:PageBlocksectionitem>
+                        
+                                                            
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Opportunity Owner" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputtext value="{!opportunity.Owner.Name}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem> 
+                                                            
+                         <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Seller" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputtext value="{!opportunity.Seller__r.Name}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+                        
+                                                
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Finance Required" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputfield value="{!opportunity.Finance_Required__c}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+                        
+                         <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Property Address" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputtext value="{!opportunity.New_property_street__c}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+                        
+                       
+                                     
+                                      
+                        <apex:PageBlocksectionitem >                         
+                        </apex:PageBlocksectionitem>
+                        
+                        <apex:PageBlocksectionitem >                         
+                        </apex:PageBlocksectionitem>
+
+                    </apex:pageBlocksection>
+                    </apex:pageBlock>
+                    <!-- ****************** END Opportunity Summary  ********************** -->                                                    
+
+   </apex:tab>
+   
+    <!-- *************************************************************************
+        ************************* Opportunity Summary Tab PRODUCT SWITCH ************************
+        ******************************************************************************-->
+        <apex:tab style="background-color: #FFFFFF" label="Opportunity Summary" rendered="{!opportunity.RecordTypeId == '012D0000000QklNIAS'}">                    
+                    <apex:pageBlock >                                                
+                    <apex:pageBlocksection columns="2" collapsible="false" >
+                            
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Prospect/Customer Name" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputtext value="{!opportunity.Account.Name}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Stage" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputtext value="{!opportunity.StageName}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+                                      
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Opportunity Owner" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputtext value="{!opportunity.Owner.Name}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem> 
+                                                            
+                         <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Seller" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputtext value="{!opportunity.Seller__r.Name}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+                        
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Finance Required" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputfield value="{!opportunity.Finance_Required__c}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+                        
+                         <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Property Address" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputtext value="{!opportunity.New_property_street__c}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+                                     
+                                      
+                        <apex:PageBlocksectionitem >                         
+                        </apex:PageBlocksectionitem>
+                        
+                        <apex:PageBlocksectionitem >                         
+                        </apex:PageBlocksectionitem>
+
+                    </apex:pageBlocksection>
+                    </apex:pageBlock>
+                    <!-- ****************** END Opportunity Summary  ********************** -->                                                    
+
+   </apex:tab>
+   
+   <!-- *************************************************************************
+        ************************* Opportunity Summary Tab CPF ************************
+        ******************************************************************************-->
+        <apex:tab style="background-color: #FFFFFF" label="Opportunity Summary" rendered="{!opportunity.RecordTypeId == '012D0000000Qj54IAC'}">                    
+                    <apex:pageBlock >                                                
+                    <apex:pageBlocksection columns="2" collapsible="false" >
+                            
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="CPF Customer Name" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputtext value="{!opportunity.CPF_Customer_Name__c}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Stage" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputtext value="{!opportunity.StageName}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+                                      
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Opportunity Owner" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputtext value="{!opportunity.Owner.Name}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem> 
+                                                            
+                         <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Seller" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputtext value="{!opportunity.Seller__r.Name}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+                        
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Finance Required" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputfield value="{!opportunity.Finance_Required__c}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+                        
+                         <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Property Address" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputtext value="{!opportunity.New_property_street__c}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+                                     
+                                      
+                        <apex:PageBlocksectionitem >                         
+                        </apex:PageBlocksectionitem>
+                        
+                        <apex:PageBlocksectionitem >                         
+                        </apex:PageBlocksectionitem>
+
+                    </apex:pageBlocksection>
+                    </apex:pageBlock>
+                    <!-- ****************** END Opportunity Summary  ********************** -->                                                    
+
+   </apex:tab>
+   
+   <!-- *************************************************************************
+        ************************* Opportunity Summary Tab LIABILITIES ************************
+        ******************************************************************************-->
+        <apex:tab style="background-color: #FFFFFF" label="Opportunity Summary" rendered="{!opportunity.RecordTypeId == '012D0000000QWmKIAW'}">                    
+                    <apex:pageBlock > 
+                    
+         <apex:outputLink value="/apex/CAA_Continue?id={!Opportunity.Id}" target="_blank">Continue CAA</apex:outputLink>
+                                                        
+                    <apex:pageBlocksection columns="2" collapsible="false" >
+                            
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Prospect/Customer Name" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputtext value="{!opportunity.Account.Name}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+                        
+                        <apex:PageBlocksectionitem >                         
+                        </apex:PageBlocksectionitem>
+                        
+                      
+
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Stage" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputtext value="{!opportunity.StageName}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+                        
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Status" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputtext value="{!opportunity.Status_HPP_CAA__c}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+                        
+                                                         
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Opportunity Owner" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputtext value="{!opportunity.Owner.Name}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem> 
+                                                            
+                         <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Seller" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputtext value="{!opportunity.Seller__r.Name}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+                        
+                                                         
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Initial Deposit" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputfield value="{!opportunity.Initial_Payment_Amount__c}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+                        
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Balance on opened account" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputfield value="{!opportunity.Balance_on_Opened_Account__c}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+                        
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Printing status" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputfield value="{!opportunity.Printing_Status__c}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+                        
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="To be printed date" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputfield value="{!opportunity.To_Be_Printed_Date__c}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+                        
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Primary campaign source" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputfield value="{!opportunity.Campaign.Name}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+                        
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Team dealing with application" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputfield value="{!opportunity.Team_dealing_with_application__c}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+                                               
+                                                                                   
+                        <apex:PageBlocksectionitem >                         
+                        </apex:PageBlocksectionitem>
+                        
+                        <apex:PageBlocksectionitem >                         
+                        </apex:PageBlocksectionitem>
+
+                    </apex:pageBlocksection>
+                    </apex:pageBlock>
+                    <!-- ****************** END Opportunity Summary  ********************** -->                                                    
+
+   </apex:tab>
+   
+   <!-- *************************************************************************
+        ************************* Opportunity Summary Tab NPAA ************************
+        ******************************************************************************-->
+        <apex:tab style="background-color: #FFFFFF" label="Opportunity Summary" rendered="{!opportunity.RecordTypeId == '012D0000000QnZzIAK'}">                    
+                    <apex:pageBlock >                                                
+                    <apex:pageBlocksection columns="2" collapsible="false" >
+                            
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Prospect/Customer Name" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputtext value="{!opportunity.Account.Name}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Stage" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputtext value="{!opportunity.StageName}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+                                      
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Opportunity Owner" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputtext value="{!opportunity.Owner.Name}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem> 
+                                                            
+                         <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Seller" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputtext value="{!opportunity.Seller__r.Name}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+                                     
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Initial Deposit" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputfield value="{!opportunity.Initial_Payment_Amount__c}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+                                               
+                                                                                   
+                        <apex:PageBlocksectionitem >                         
+                        </apex:PageBlocksectionitem>
+                        
+                        <apex:PageBlocksectionitem >                         
+                        </apex:PageBlocksectionitem>
+
+                    </apex:pageBlocksection>
+                    </apex:pageBlock>
+                    <!-- ****************** END Opportunity Summary  ********************** -->  
+                    
+                  </apex:tab>  
+                    
+   <!-- *************************************************************************
+        ************************* Opportunity Summary Tab LIABILITIES ELIGIBILITY************************
+        ******************************************************************************-->
+        <apex:tab style="background-color: #FFFFFF" label="Opportunity Summary" rendered="{!opportunity.RecordTypeId == '012250000000KhvAAE'}">                    
+                    <apex:pageBlock >
+
+<apex:outputLink value="/apex/CAA_product_screen?oppid={!Opportunity.Id}" target="_blank">Progress to CAA</apex:outputLink>
+
+                                                
+                    <apex:pageBlocksection columns="2" collapsible="false" >
+                            
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Prospect/Customer Name" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputtext value="{!opportunity.Account.Name}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Stage" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputtext value="{!opportunity.StageName}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+                                      
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Opportunity Owner" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputtext value="{!opportunity.Owner.Name}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem> 
+                                                                                                
+                                                
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Interested in" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputfield value="{!opportunity.Interested_in__c}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+                        
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Comments" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputfield value="{!opportunity.Liabilities_eligibility_comments__c}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+                        
+                          <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Primary campaign source" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputfield value="{!opportunity.Campaign.Name}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>                                          
+                                                                                   
+                        <apex:PageBlocksectionitem >                         
+                        </apex:PageBlocksectionitem>
+                        
+                        <apex:PageBlocksectionitem >                         
+                        </apex:PageBlocksectionitem>
+
+                    </apex:pageBlocksection>
+                    </apex:pageBlock>
+                    <!-- ****************** END Opportunity Summary  ********************** -->                                                    
+
+   </apex:tab>
+
+   
+   
+   
+   
+   
+   <!-- *************************************************************************
+        ************************* Financial Details tab for Liabilities ************************
+        ******************************************************************************-->
+        <apex:tab style="background-color: #FFFFFF" label="Financial Details" rendered="{!opportunity.RecordTypeId == '012D0000000QWmKIAW'}">                    
+                    
+            <apex:form styleclass="StandardText">
+            
+                                      
+             
+                <apex:pageBlock >
+ 
+                    <apex:pageblockbuttons location="top">
+                        <apex:commandButton value="Edit" action="{!Edit}" />
+                    </apex:pageblockbuttons>          
+                              
+                 </apex:pageBlock>   
+                    
+                    
+                    
+                    <apex:pageBlock >                                                
+                    <apex:pageBlocksection columns="2" collapsible="false" >
+                            
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Initial deposit" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputtext value="{!opportunity.Initial_Payment_Amount__c}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Method of deposit" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputtext value="{!opportunity.Payment_Type_List__c}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+                                      
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="New money" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputtext value="{!opportunity.New_Money__c}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem> 
+                                                            
+                         <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Existing money" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputtext value="{!opportunity.Existing_Money_Amount__c}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+                                     
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Date of initial payment" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputfield value="{!opportunity.Initial_payment_date__c}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+                        
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Source of existing funds" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputfield value="{!opportunity.Source_of_Existing_Funds__c}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+                        
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Cheque clearance date" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputfield value="{!opportunity.Cheque_Clearance_Date__c}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+                        
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Term deposit expected profit rate" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputfield value="{!opportunity.Term_Deposit_Expected_Profit_Rate__c}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+                                               
+                        <apex:PageBlocksectionitem >
+                            <apex:outputLabel value="Deposit funding comments" />
+                            <apex:panelgrid columns="1">
+                                <apex:outputfield value="{!opportunity.Deposit_Funding_Comments__c}" />                      
+                            </apex:panelgrid>
+                        </apex:PageBlocksectionitem>
+                                                                                   
+                        <apex:PageBlocksectionitem >                         
+                        </apex:PageBlocksectionitem>
+                        
+                        <apex:PageBlocksectionitem >                         
+                        </apex:PageBlocksectionitem>
+
+                    </apex:pageBlocksection>
+                    </apex:pageBlock>
+                    <!-- ****************** END Opportunity Summary  ********************** -->                                                    
+</apex:form>
+   </apex:tab>                                                  
+
+   
+         
+      <apex:tab style="background-color: #FFFFFF" label="Details" name="OppDetails" rendered="{!$Profile.Name != 'SGH Martineau' }">
+         <apex:detail relatedList="true" title="true"/>
+      </apex:tab>
+     
+     <apex:tab style="background-color: #FFFFFF" label="Cases" name="Cases" id="tabCases">
+            <apex:relatedList subject="{!opportunity}" list="Cases__r" />
+
+        </apex:tab>
+     
+     
+           
+     <apex:tab style="background-color: #FFFFFF" label="Activities" name="OpenActivities" id="tabOpenAct">
+            <apex:relatedList subject="{!opportunity}" list="OpenActivities" rendered="true"/>
+            <apex:relatedList subject="{!opportunity}" list="ActivityHistories" rendered="true"/>
+     </apex:tab> 
+      
+      <apex:tab style="background-color: #FFFFFF" label="Notes and Attachments" 
+                name="NotesAndAttachments" id="tabNoteAtt">
+         <apex:relatedList subject="{!opportunity}" 
+                           list="CombinedAttachments" />
+      </apex:tab>
+      
+      
+        
+      <apex:tab style="background-color: #FFFFFF" label="Additional HPP Details" name="Additional_HPP_Details" rendered="{!opportunity.RecordTypeId == '012D0000000QhlAIAS'}">
+            <apex:relatedList subject="{!opportunity}" list="HPP_extended_opportunities__r" />
+      </apex:tab>
+      
+       <apex:tab style="background-color: #FFFFFF" label="Applicants" name="Applicants" rendered="{!opportunity.RecordTypeId != '012D0000000Qj54IAC'}">
+            <apex:relatedList subject="{!opportunity}" list="Applicants__r" />
+        </apex:tab>
+      
+        <apex:tab style="background-color: #FFFFFF" label="Customer Account" name="Customer Account">
+            <apex:relatedList list="Accounts_with_IBB1__r" />
+        </apex:tab>
+        
+         <apex:tab style="background-color: #FFFFFF" label="Audits" name="Audits">
+            <apex:relatedList list="Audits__r" />
+            <apex:relatedList subject="{!opportunity}" list="EventLogs__r" />
+        </apex:tab>  
+        
+     
+        
+    
+       
+            
+         </apex:tabPanel>
+         
+</apex:page>

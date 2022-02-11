@@ -1,0 +1,138 @@
+<apex:component >
+
+	<div ng-controller="controllerActivityDetail" ng-init="Initiate()" style="height: 100%;">
+		
+		<!-- Sub dialog -->
+ 		<div class="subDialogBackground" ng-if="SubDialogType != ''" ng-class="{'subDialogBackgroundShow' : SubDialogType != ''}"></div> 		
+		<div class="subDialog" ng-if="SubDialogType != ''" ng-class="{'subDialogShow' : SubDialogType != ''}">			
+			<div class="sectionTitle ng-binding" style="box-sizing: content-box !important; -webkit-box-sizing: content-box !important; float: left;">{{SubDialogTitle}}</div>
+			<div class="md_group" style="margin-top: 50px; margin-left: 10px; margin-right: 10px;">      
+				<input class="md_input" required="required" type="password" ng-model="SubDialogPassword" arb-focus="true"></input>
+				<span class="md_highlight"></span>
+				<span class="md_bar"></span>
+				<label class="md_label">Password</label>
+			</div>
+			<div class="md_group" style="margin-left: 10px; margin-right: 10px;">      
+				<textarea class="md_input" required="required" style="margin: 0px -8px 0px 0px; height: 100px; overflow: visible;" rows="3" ng-model="SubDialogNotes"></textarea>
+				<span class="md_highlight"></span>
+				<span class="md_bar"></span>
+				<label class="md_label">Notes</label>
+			</div>
+							
+			<div class="dialogButtons" style="margin-bottom: 20px;">			
+				<div class="goldButton" ng-click="SubDialogActionClick()">{{SubDialogButtonText}}</div>
+				<div class="goldButton" ng-click="SubDialogCancel()">CLOSE</div>			
+			</div>
+		</div>		
+		
+		<div ng-if="ActivityDetails != null" style="height:100%;">
+            <ul id="kendoPanelBar" kendo-panel-bar="kendo-panel-bar" class="accountExpander" k-options="{{AccountPanelBarOptions}}" ng-style="{ height: ActivityDetails.Name == 'Transaction' ? '85%' : '94%' }" k-on-expand="OnExpand(kendoEvent)" k-on-collapse="OnCollapse(kendoEvent)">                
+				
+				<li class="sectionTitle k-state-active" style="max-height: calc(100% - 134px);">
+                    {{ActivityDetails.Name}}
+                    <div style="overflow-y: auto; max-height: calc(100% - 75px); overflow-y: auto; display:table; background: white; border: none; padding: 15px;">  						
+						<div  style="display: table-row; width: 100%;" ng-repeat='activity in ActivityDetails.Details track by activity.Name'>
+							<div style="display: table-cell; border-bottom: 1px solid #E9E9E9; width: 100%; padding-top: 5px; padding-bottom: 5px;" class="sm-mobileText textDarkGray"><i>{{activity.Label}}</i></div>
+							<div ng-if="activity.Type == 'DATE'" style="display: table-cell; border-bottom: 1px solid #E9E9E9; padding-left: 15px; min-width: 350px; vertical-align: middle;" class="sm-mobileText textBlack">{{activity.Value | date:'dd/MM/yyyy'}}</div>
+							<div ng-if="activity.Type == 'DATETIME'" style="display: table-cell; border-bottom: 1px solid #E9E9E9; padding-left: 15px; min-width: 350px; vertical-align: middle;" class="sm-mobileText textBlack">{{activity.Value | date:'dd/MM/yyyy HH:mm:ss'}}</div>
+							<div ng-if="activity.Type != 'DATETIME' && activity.Type != 'DATE'" style="display: table-cell; border-bottom: 1px solid #E9E9E9; padding-left: 15px; min-width: 350px; vertical-align: middle;" class="sm-mobileText textBlack">{{activity.Value}}</div>							
+						</div>
+					</div>
+				</li>
+				
+				
+				<li class="sectionTitle" style="max-height: calc(100% - 134px);" ng-repeat="(key, prop) in ActivityDetails.AdditionalInfo track by key">
+                    {{key}}
+                    <div ng-if="ActivityDetails.Name == 'Customer Image'" style="overflow-y: auto; max-height: calc(100% - 46px); overflow-y: auto;">  
+						<div ng-repeat='item in prop'>
+							<img ng-src="{{item}}" style="background:#DDDDDD; max-width:145px;"></img>	    
+	    				</div>
+					</div>					
+					 <div ng-if="ActivityDetails.Name != 'Customer Image'" style="overflow-y: auto; max-height: calc(100% - 75px); overflow-y: auto; display:table; background: white; border: none; padding: 15px;">  						
+						
+
+						<div ng-if="key != 'Signatories' && key != 'Overrides'" style="display: table-row; width: 100%; padding-top: 5px; padding-bottom: 5px;" ng-repeat='item in prop track by item.Name'>
+							<div style="display: table-cell; border-bottom: 1px solid #E9E9E9; width: 100%; padding-top: 5px; padding-bottom: 5px;" class="sm-mobileText textDarkGray"><i>{{item.Label}}</i></div>
+							<div style="display: table-cell; border-bottom: 1px solid #E9E9E9; padding-left: 15px; min-width: 350px; vertical-align: middle;" class="sm-mobileText textBlack">{{item.Value}}</div>							
+						</div>
+						<div ng-if="key == 'Signatories'" style="display: table-row; width: 100%;" ng-repeat='item in prop track by item.Name'>
+							<div style="display: table-cell; border-bottom: 1px solid #E9E9E9; padding-bottom: 10px;" class="sm-mobileText textDarkGray">								
+								<img ng-src="{{item.Value.Photo_Image_URL__c | filter_removedoublebackslash}}" onError="this.onerror=null; this.src='{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/user_error.png')}';" style="background:#DDDDDD; max-width: 75px;"></img>
+							</div>
+							<div style="display: table-cell; border-bottom: 1px solid #E9E9E9; padding-left: 15px; width: 90%;" class="sm-mobileText textBlack">{{item.Value.Account_Holder__r.Prospect_Customer__r.Name}}</div>	
+							
+							<div class="GrayCircleItems GrayCircleItemsOpen" ng-click="GotoCustomer(item)" style="display: table-cell; border-bottom: 1px solid #E9E9E9; padding-right: 10px;">
+								<div class="GrayCircle GoldCircleButton GrayCirleOpen" ng-init="sigMouseOver = false" ng-mouseleave="sigMouseOver = false" ng-mouseover="sigMouseOver = true" style="box-shadow: rgb(137, 137, 137) 1px 1px 2px; margin-bottom: 15px; margin-left: 4px; background: rgb(179, 153, 93);">								
+									<div class="textSmallerWhiteBold GrayCircleLabel" ng-class="{'GrayCircleLabelHover' : sigMouseOver}">Customer</div>								
+									<img class="GoldCircleIcon" src="/resource/1430213855000/Teller_Includes/Teller_Includes/media/btn_customer.png" style="margin-top: 6px; margin-left: 7px; height: 28px;"></img>
+								</div>
+							</div>
+							
+							<div class="GrayCircleItems GrayCircleItemsOpen" ng-click="PopoutAccountHistory(item)" style="display: table-cell; border-bottom: 1px solid #E9E9E9;">
+								<div class="GrayCircle GoldCircleButton GrayCirleOpen" ng-init="sfdcMouseOver = false" ng-mouseleave="sfdcMouseOver = false" ng-mouseover="sfdcMouseOver = true" style="box-shadow: rgb(137, 137, 137) 1px 1px 2px; margin-bottom: 15px; margin-left: 4px; background: rgb(0, 161, 224);">								
+									<div class="textSmallerWhiteBold GrayCircleLabel" ng-class="{'GrayCircleLabelHover' : sfdcMouseOver}" style="width: 90px;">Activity History</div>								
+									<img class="GoldCircleIcon" src="/resource/1430213855000/Teller_Includes/Teller_Includes/media/btn_salesforce.png" style="margin-top: 6px; margin-left: 7px; height: 28px;"></img>
+								</div>
+							</div>	
+							
+						</div>
+						<div ng-if="key == 'Overrides'" ng-repeat='item in prop track by item.Name' style="border-bottom: 1px solid #E9E9E9; padding-bottom: 10px;">
+ 							<div ng-repeat='(ovrkey, ovrprop) in item.Value track by ovrkey' style="display: table-row; line-height: 30px; width: 100%;">								
+								<div style="display: table-cell;" class="sm-mobileText textDarkGray">{{ovrprop.Label}}</div>	
+								<div style="display: table-cell;" class="sm-mobileText textBlack">{{ovrprop.Value}}</div>
+							</div> 						
+						</div>
+					</div>
+				</li>			
+			</ul>			
+		</div>
+		
+		<div ng-show="false">
+	        <div id="printoutSectionActivityDetail" arb-Dynamic-Html="arbDynamicHtml" dynamic-template="{{ActivityDetails.PrintedReciept}}"></div>
+	    </div>
+		
+		<div class="dialogButtons">
+			<div class="goldButton" ng-click="Close()">CLOSE</div>			
+		</div>
+		
+		<div class="activityDetailButtons" ng-if="ActivityDetails.Name == 'Transaction'" style="position: absolute; margin-bottom: 75px; bottom: 0;">
+			<div style="margin-top: 15px; margin-right: 25px; float:left;" ng-show="TransactionStatus == 'Complete' || TransactionStatus == 'Error'">
+				<div class="toolbarButton hidden-xs" arb-Print="arbPrint" print-html-string="{{ActivityDetails.PrintedReciept}}">
+					<div class="imgCircle">
+						<img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_print.png')}"></img>
+					</div>
+					<div class="textSmallestDarkGray caption">RE-PRINT</div>
+				</div>
+
+				<div class="toolbarButton" ng-click="CancelTransaction(ActivityDetails.Details.Id)">
+					<div class="imgCircle">
+						<img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_cancel_transaction.png')}"></img>
+					</div>
+					<div class="textSmallestDarkGray caption">CANCEL</div>
+				</div>
+			</div>
+			<div style="margin-top: 15px; margin-right: 25px; float:left;">		
+				<div class="toolbarButton" ng-click="SubDialogSendToHostClick()" ng-show="TransactionDisplayFlags.DisplaySendToHostFlag">
+					<div class="imgCircle">
+						<img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_upload.png')}"></img>
+					</div>
+					<div class="textSmallestDarkGray caption">SEND</div>
+				</div>				
+				<div class="toolbarButton" ng-click="SubDialogShow('decline')" ng-show="TransactionDisplayFlags.DisplayDeclineFlag">
+					<div class="imgCircle">
+						<img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_cancel.png')}"></img>
+					</div>
+					<div class="textSmallestDarkGray caption">DECLINE</div>
+				</div>				
+				<div class="toolbarButton" ng-click="SubDialogShow('authorise')" ng-show="TransactionDisplayFlags.DisplayApprovalFlag">
+					<div class="imgCircle">
+						<img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_check.png')}"></img>
+					</div>
+					<div class="textSmallestDarkGray caption">AUTHORISE</div>
+				</div>
+			</div>
+		</div>		
+		
+	</div>
+	
+</apex:component>

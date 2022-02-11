@@ -1,0 +1,39 @@
+<apex:page controller="CAA_Continue_Controller" action="{!Setup}">
+<apex:outputPanel layout="none" rendered="{!IsOldCAA}">
+
+<style>
+h1{
+    font-size:16px;
+}
+</style>
+
+
+<h1>
+    This is an opportunity created on the old CAA system.
+</h1>
+<br/>
+<br/>
+<h1>
+    Please use the 'Continue errored application' or 'Continue refered application' buttons
+</h1>
+
+</apex:outputPanel>
+
+<!-- Sharia Compliance changes START-->
+<apex:outputPanel layout="none" rendered="{!isAccountLost}">
+
+<style>
+h1{
+    font-size:16px;
+}
+</style>
+
+
+<h1>
+    <apex:outputText value="{!$Label.CAA_Restriction}" escape="false"  style="color: red;"> </apex:outputText>
+</h1>
+
+
+</apex:outputPanel>
+<!-- Sharia Compliance changes END -->
+</apex:page>

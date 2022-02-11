@@ -1,0 +1,229 @@
+<apex:page controller="HPPUnderwritterQueue"   sidebar="false" showHeader="false" title="Underwritter Queue" action="{!Setup}">
+    <head>
+        <c:KendoResource ></c:KendoResource>
+        
+        <style>
+        
+        tr .red
+        {
+            background-color: #FFBBBB;
+        }
+        tr .orange
+        {
+            background-color: #FFCEA2;
+        }
+        tr .green
+        {
+            background-color: #CAFEB8;
+        }
+        
+        </style>
+        
+    </head>
+    <body>
+        <apex:form >
+            <div id="formWrapper">
+                <div class="header">
+                    <h1>Underwriter Queue</h1>
+                </div>
+                
+                <div id="container" >
+                    <table width="100%">
+                        <tr>
+                           
+                            <td valign="top" id="contenttd">
+                                <div id="content">
+                                    <h1>Underwritter Queue</h1>
+                                
+                                    <apex:outputPanel id="mainPageBlock">
+                                    <div style="padding:20px;">
+                                    <!-- content -->
+                                    
+                                    <h2>Premier</h2>
+                                    <table width="100%">
+                                      <tr>
+                                          <th>Title</th>
+                                          <th>First Name</th>
+                                          <th>Surname</th>
+                                          <th>Opportunity</th>
+                                          <th>Product Type</th>
+                                          <th align="right">Finance Required</th>
+                                          <th align="right">Market Value</th>
+                                           <th>Link</th>
+                                          <th>Created</th>
+                                          <th>Expected</th>
+                                          <th>Event</th>
+                                          <th>SLA (Days)</th>
+                                          <th>Days Left</th>
+                                          <th>Time (Mins)</th>
+                                         
+                                      </tr>
+                                      <apex:repeat value="{!PremierLogs}" var="log">
+                                      <tr class="{!log.css}">
+                                          
+                                          
+                                          <td>
+                                              {!log.Title}
+                                          </td>
+                                          <td>
+                                              {!log.FirstName}
+                                          </td>
+                                          <td>
+                                              {!log.Lastname}
+                                          </td>
+                                          <td><a target="_blank" href="/{!log.Opp.id}">                                          
+                                           {!log.accountno }
+                                          </a>
+                                          </td>
+                                          <td>{!log.ProductType}</td>
+                                                     <td align="right">
+                                          <apex:outputText value="£{0, number, ###,##0}">
+   <apex:param value="{!log.FinanceRequired}"/>
+ </apex:outputText>
+                                          
+                                              
+                                          </td>
+                                          <td align="right">
+                                          <apex:outputText value="£{0, number, ###,##0}">
+   <apex:param value="{!log.PropertyValue}"/>
+ </apex:outputText>
+                                              
+                                          </td>
+                                           <td>
+                                          <a class="redBtn" href="/apex/HPPEventRedirect?oppid={!log.Opp.id}">
+                                              Open
+                                          </a>
+                                          
+                                          </td>
+                                          <td>
+                                          <apex:outputText value="{0,date,dd'/'MM'/'yyyy}">
+    <apex:param value="{!log.createddate}" /> 
+</apex:outputText>
+                                          </td>
+                                          <td>
+                                          <apex:outputText value="{0,date,dd'/'MM'/'yyyy}">
+    <apex:param value="{!log.ExpectedDate}" /> 
+</apex:outputText>
+                                          </td>
+                                          
+                                          
+                                          
+                                          <td>{!log.EventName}</td>
+                                          <td>{!log.sla}</td>
+                                          <td>{!log.DaysLeft}</td>
+                                          <td>{!log.Minutes}</td>
+                                          
+                                          
+                                          
+                                      </tr>
+                                      </apex:repeat>
+                                     
+                                      
+                                        </table>
+                                    
+                                    
+                                    <br/>
+                                    <h2>HPP / HPS / BTL</h2>
+                                    
+                                    
+                                    
+                                      <table width="100%">
+                                      <tr>
+                                          <th>Title</th>
+                                          <th>First Name</th>
+                                          <th>Surname</th>
+                                          <th>Opportunity</th>
+                                          <th>Product Type</th>
+                                          <th align="right">Finance Required</th>
+                                          <th align="right">Market Value</th>
+                                           <th>Link</th>
+                                          <th>Created</th>
+                                          <th>Expected</th>
+                                          <th>Event</th>
+                                          <th>SLA (Days)</th>
+                                          <th>Days Left</th>
+                                          <th>Time (Mins)</th>
+                                       
+                                      </tr>
+                                      <apex:repeat value="{!Logs}" var="log">
+                                      <tr class="{!log.css}">
+                                         <td>
+                                              {!log.Title}
+                                          </td>
+                                          <td>
+                                              {!log.FirstName}
+                                          </td>
+                                          <td>
+                                              {!log.Lastname}
+                                          </td>
+                                          <td> <a target="_blank" href="/{!log.Opp.id}">                                          
+                                           {!log.accountno }
+                                          </a>
+                                          
+                                          </td>
+                                          <td>{!log.ProductType}</td>
+                                          <td align="right">
+                                          <apex:outputText value="£{0, number, ###,##0}">
+   <apex:param value="{!log.FinanceRequired}"/>
+ </apex:outputText>
+                                          
+                                              
+                                          </td>
+                                          <td align="right">
+                                          <apex:outputText value="£{0, number, ###,##0}">
+   <apex:param value="{!log.PropertyValue}"/>
+ </apex:outputText>
+                                              
+                                          </td>
+                                           <td>
+                                          <a class="redBtn" href="/apex/HPPEventRedirect?oppid={!log.Opp.id}">
+                                              Open
+                                          </a>
+                                          
+                                          </td>
+                                          <td>
+                                          <apex:outputText value="{0,date,dd'/'MM'/'yyyy}">
+    <apex:param value="{!log.createddate}" /> 
+</apex:outputText>
+                                          </td>
+                                          <td>
+                                          <apex:outputText value="{0,date,dd'/'MM'/'yyyy}">
+    <apex:param value="{!log.ExpectedDate}" /> 
+</apex:outputText>
+                                          </td>
+                                          
+                                          
+                                          
+                                          <td>{!log.EventName}</td>
+                                          <td>{!log.sla}</td>
+                                          <td>{!log.DaysLeft}</td>
+                                          <td>{!log.Minutes}</td>
+                                          
+                                          
+                                          
+                                      </tr>
+                                      </apex:repeat>
+                                     
+                                      
+                                        </table>
+                                    <div style="margin: 10px;padding: 20px;border: solid 1px #bbb">
+                                        Queue Length : {!TotalMinutes}
+                                    </div>
+                               
+                                    
+                               
+                                </div>
+                                    </apex:outputPanel>
+                                </div>
+                                
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            
+        </apex:form>
+
+        </body>
+</apex:page>

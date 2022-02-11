@@ -1,0 +1,25 @@
+<apex:page applyBodyTag="false" showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false">
+            
+        <apex:includeScript value="{!URLFOR($Resource.AngularJS, '/AngularJS/angular-1.3.11/angular.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.AngularJS, '/AngularJS/angular-ui-router/angular-ui-router.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.AngularJS, '/AngularJS/test/app.js')}"/>
+
+
+    
+        
+    <head>
+        <title></title>
+    </head>
+    <body ng-app="myApp">
+        <div>
+            <ul>
+                <li><a ui-sref="index">Home</a></li>
+                <li><a ui-sref="item1">Item 1</a></li>
+                <li><a ui-sref="item2">Item 2</a></li>
+                <li><a ui-sref="Parent">Parent</a></li>
+            </ul>
+        </div>
+        <div ui-view="viewContent">            
+        </div>        
+    </body>
+</apex:page>

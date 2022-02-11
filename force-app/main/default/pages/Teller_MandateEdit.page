@@ -1,0 +1,131 @@
+<apex:page applyBodyTag="false" showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false">
+
+
+             <div ng-init="LoadMandateItems()">
+                  <div style="padding-bottom:50px margin-top: 20px; margin-left:20px;">
+                     <table style="width:100%">
+                         <tr>
+                             <td style="width:50%;vertical-align: top">
+                                 <form class="form-horizontal" role="form">
+                                     <div class="form-group">
+                                         <label class="col-md-2 control-label">Currency</label>
+                                         <div class="col-md-4">
+                                             <input id="AccountCurrency" type="text" class="form-control" name="responseMandate.Ccy"
+                                                    ng-model="responseMandate.Ccy" ng-disabled="true" />
+                                         </div>
+                                     </div>
+                                     <div class="form-group">
+                                         <label class="col-md-2 control-label">Limit</label>
+                                         <div class="col-md-4">
+                                             <input id="MandateLimitId" type="text" class="form-control" name="responseMandate.MandateLimit"
+                                                    ng-model="responseMandate.MandateLimit" />
+                                         </div>
+                                     </div>
+								</form>
+                             </td>
+                         </tr>
+                         <tr>
+                             <td style="width:50%;vertical-align: top">
+                                 <div style="padding-bottom:20px">
+                                     <h3>Add a Mandate Rule</h3>
+                                 </div>
+                                 <form class="form-horizontal" role="form" ng-submit="$parent.AddMandateRule()">
+                                     <input type="radio" name="MandateRuleType" value="signatory" ng-model="mandateRuleForm.ruleType">Signatory {{mandateRuleForm.isSignatory}}</input>
+                                     <input type="radio" name="MandateRuleType" value="signatoryGroup" ng-model="mandateRuleForm.ruleType">Signatory Group</input>
+                                 	 <input type="radio" name="MandateRuleType" value="relationship" ng-model="mandateRuleForm.ruleType">Relationship Type</input>
+                         			 <div class="form-group" id="SignatoryEntry">
+                                         <div class="form-group" ng-show="mandateRuleForm.ruleType == 'signatory'">
+                                             <label class="col-md-2 control-label">Signatory</label>
+                                             <div class="col-md-4">
+                                                 <select id="signatoryInput" class="form-control" ng-model="mandateRuleForm.signatory" ng-options="sig.Label for sig in responseMandate.SignatoryTypes" ng-disabled="mandateRuleForm.ruleType == 'relationship'"></select>
+                                             </div>
+                                         </div>
+                         			 </div>
+
+                                     <div class="form-group" id="SignatoryGroupEntry">
+                                        <div class="form-group" ng-show="mandateRuleForm.ruleType == 'signatoryGroup'">
+                                            <label class="col-md-2 control-label">Signatory Group</label>
+                                            <div class="col-md-4">
+                                             <select id="signatoryGroupInput" class="form-control" ng-model="mandateRuleForm.signatoryGroup" ng-options="sig.Label for sig in responseMandate.SignatoryGroupTypes" ng-disabled="mandateRuleForm.ruleType != 'signatoryGroup'"></select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" ng-show="mandateRuleForm.ruleType == 'signatoryGroup'">
+                                             <label class="col-md-2 control-label">No from Group</label>
+                                             <div class="col-md-4">
+                                                 <input id="noFromGroupInput" type="text" class="form-control" name="nofromgroup"
+                                                        ng-model="mandateRuleForm.nofromgroup"  ng-disabled="mandateRuleForm.ruleType != 'signatoryGroup'"/>
+                                             </div>
+                                         </div>
+                                     </div>
+
+                                     <div class="form-group" id="RelationshipTypeEntry" ng-show="mandateRuleForm.ruleType == 'relationship'">
+                                         <div class="form-group">
+                                             <label class="col-md-2 control-label">Relationship Type</label>
+                                             <div class="col-md-4">
+                                                 <select id="relationshipTypeInput" class="form-control" ng-model="mandateRuleForm.relationshiptype" ng-options="rt.Label for rt in responseMandate.RelationshipTypes"  ng-disabled="mandateRuleForm.ruleType != 'relationship'"></select>
+                                             </div>
+                                         </div>
+                                         <div class="form-group">
+                                             <label class="col-md-2 control-label">No from Group</label>
+                                             <div class="col-md-4">
+                                                 <input id="noFromGroupInput" type="text" class="form-control" name="nofromgroup"
+                                                        ng-model="mandateRuleForm.nofromgroup"  ng-disabled="mandateRuleForm.ruleType != 'relationship'"/>
+                                             </div>
+                                         </div>
+                                    </div>
+                                    <div class="form-group">								
+                                         <div style="padding-left:110px">
+                                             <input type="submit" value="ADD" class="goldButton" />
+                                         </div>
+                                     </div>
+                                    
+                                 </form>
+                             </td>
+                             <td style="vertical-align: top">
+                                 <table class="table">
+                                     <tr>
+                                         <th>Signatory
+                                         </th>
+                                         <th>Signatory Group
+                                         </th>
+                                         <th>Relationship Type
+                                         </th>
+                                         <th>No from Group
+                                         </th>
+                                         <th>
+                                         </th>
+                                     </tr>
+                                     <tr ng-repeat="mi in responseMandate.MandateItems track by $index">
+                                         <td>{{mi.Signatory}}
+                                         </td>
+                                         <td>{{mi.SignatoryGroup}}
+                                         </td>
+                                         <td>{{mi.RelationshipType}}
+                                         </td>
+                                         <td>{{mi.NoFromGroup}}
+                                         </td>
+                                         <td>
+                                             <input type="button" value="REMOVE" class="goldButton" ng-click="RemoveMandateRule($index)"/>
+                                         </td>
+                                     </tr>
+                                 </table>
+                             </td>
+                         </tr>
+                     </table>
+                 </div>
+                 <div class="functionfooter" >
+                     <div class="row">
+                         <div class="col-sm-offset-1 col-sm-10">
+                             <button class="goldButton btn-default" ui-sref="mandates.mandate_view">CANCEL</button>   
+                             <button class="goldButton pull-right" ng-click="SaveMandateRule()">SAVE</button>
+                         </div>
+                     </div>
+                 </div> 
+             </div> <!-- #contDiv -->
+
+
+
+
+
+	
+</apex:page>

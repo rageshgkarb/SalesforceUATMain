@@ -1,0 +1,25 @@
+<apex:component layout="none">
+<apex:attribute name="field" description="" type="string"/>
+    
+    <style>
+        .input-validation .alert{
+            max-width:250px;
+            padding:5px;
+            margin-top:5px;
+        }
+    </style>
+    
+<div class="input-validation" ng-messages="myform['{!field}'].$error" ng-show="myform['{!field}'].$touched || Submitted">
+    <p class="alert alert-danger" ng-message="required">This field is required</p>
+    <p class="alert alert-danger" ng-message="minlength">This field is too short</p>
+    <p class="alert alert-danger" ng-message="maxlength">This field is too long</p>
+    <p class="alert alert-danger" ng-message="required">This field is required</p>
+    <p class="alert alert-danger" ng-message="email">This needs to be a valid email</p>
+</div>
+    
+    
+    
+    
+    
+    
+</apex:component>

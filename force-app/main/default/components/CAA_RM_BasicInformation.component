@@ -1,0 +1,279 @@
+<apex:component >
+    <apex:attribute name="YPSA" type="Boolean" description="" />
+    <apex:attribute name="CurrentAccount" type="Boolean" description="" />
+    <apex:attribute name="FTD" type="Boolean" description="" />
+    <apex:attribute name="Model" type="String" description="" />
+    <apex:attribute name="IsGuest" type="Boolean" description="" />
+    <!-- C0592 -->
+    <div class="panel-heading" role="tab" id="heading{{$index}}">
+        <h4 class="panel-title">
+            <!--C0750: CAA Quick Wins Starts-->
+            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{$index}}" aria-expanded="false" aria-controls="collapse{{$index}}" style="text-decoration:none;">
+                <apex:outputpanel rendered="{!YPSA}">
+                    {{$index === 0 ? "Young Person" : "Guardian " + ($index) }}
+                </apex:outputpanel>
+                <apex:outputpanel rendered="{!Not(YPSA)}">
+                   <!-- Applicant {{$index + 1}} -->
+                   <button class="btn btnArb" style="padding: 5px 12px;">
+                        <span>
+                            <strong class="ng-binding">Applicant {{SerialNo[$index]}}</strong>
+                            <span class="fa-stack fa">
+                                <i class="fa fa-circle-thin fa-stack-2x"></i>
+                                <i class="fa fa-chevron-right fa-stack-1x"></i>
+                            </span>
+                        </span>
+                    </button>
+                </apex:outputpanel>
+               <!-- - {{app.FirstName}} , {{app.LastName}}-->
+                <!--
+                    <i class="fa fa-check" ng-show="app.Valid"></i>
+                    <i class="fa fa-close" ng-hide="app.Valid"></i>
+                    -->
+            </a>
+        <!--C0750: CAA Quick Wins Ends-->    
+        </h4>
+    </div>
+    <div id="collapse{{$index}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{{$index}}">
+        <div class="panel-body">
+                <!-- GARNET - START
+                <div class="row" ng-show="!isRMT">
+                    <div class="col-sm-12">
+                        <div class="SectionBreak" />
+                        <div class="SectionTitle">Further Information</div>
+                    </div>
+                </div>
+                <div ng-show="!isRMT || isBranch || !isEDD">
+                    <div style="margin-bottom:10px;">
+                        As a fully regulated UK bank, we are required to identify any customers who fulfil a prominent public function; these people are referred to as '<strong>politically exposed people</strong>'. We are also required to identify the close family members of the 'politically exposed people'.<br /><br />
+                        Please answer the below questions to proceed to the next stage of the account application.
+                    </div>
+                    <div ng-class="{ 'has-error':( myform.optPEP{{$index}}.$touched|| Submitted) && myform.optPEP{{$index}}.$invalid }">
+                        <div>
+                            <label class="control-label">Are you a politically exposed person?</label>
+                            <span class="borderCircle pull-right" data-toggle="popover" data-placement="auto right" data-trigger="click" data-html="true"
+                                  data-content="The term 'politically exposed persons' (PEPs) refers to people who hold high public office.">?</span>
+                        </div>
+                        <div>
+                            <label class="radio-inline"><input type="radio" ng-required="!app.PEP_c" name="optPEP{{$index}}" ng-model="app.PEP_c" ng-checked="app.PEP_c == 'true'" value="true" />Yes</label>
+                            <label class="radio-inline"><input type="radio" ng-required="!app.PEP_c" name="optPEP{{$index}}" ng-model="app.PEP_c" ng-checked="app.PEP_c == 'false'" value="false" />No</label>
+                        </div>
+                        <c:CAA_InputError field="optPEP" />
+                        <hr />
+                    </div>
+                    <div ng-class="{ 'has-error':( myform.optPEPAssociate{{$index}}.$touched|| Submitted) && myform.optPEPAssociate{{$index}}.$invalid }">
+                        <div>
+                            <label class="control-label">Are you a close family member of a politically exposed person?</label>
+                            <span class="borderCircle pull-right" data-toggle="popover" data-placement="auto right" data-trigger="click" data-html="true"
+                                  data-content="A person that is linked to a PEP.<br/><br />Closely related family members include:<br/>&bull;&nbsp;A spouse;<br/>&bull;&nbsp;A partner (including a person who is considered by their national las as
+equivalent to a spouse);<br/>&bull;&nbsp;Children and their spouses or partners; and<br/>&bull;&nbsp;Parents<br/><br/>Persons known to be close associates include:<br/>&bull;&nbsp;Any individual who is known to have joint beneficial ownership of a legal entity or legal arrangement, or any other close business relationship, with a person who is a PEP;<br/>&bull;&nbsp;Any individual who has sole beneficial ownership of a legal entity or legal arrangement which is known to have been set up for the benefit of a person who is a PEP;<br/>">?</span>
+                        </div>
+                        <div>
+                            <label class="radio-inline"><input type="radio" ng-required="!app.PEP_Associate_c" name="optPEPAssociate{{$index}}" ng-model="app.PEP_Associate_c" ng-checked="app.PEP_Associate_c == 'Yes'" value="Yes" />Yes</label>
+                            <label class="radio-inline"><input type="radio" ng-required="!app.PEP_Associate_c" name="optPEPAssociate{{$index}}" ng-model="app.PEP_Associate_c" ng-checked="app.PEP_Associate_c == 'No'" value="No" />No</label>
+                        </div>
+                        <c:CAA_InputError field="optPEPAssociate" />
+                        <hr />
+                    </div>
+                    <div>
+                        <span>Please us the help icons&nbsp;</span><span class="borderCircle" style="float:none;margin-right:0px;padding-left:5px;padding-right:5px;">?</span><span>&nbsp;if you require further clarification.</span>
+                    </div>
+                </div>
+                GARNET END -->
+                <div ng-show="app.EDD_Data_Missing">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="SectionBreak" />
+                            <div class="SectionTitle">Customer Application - Further Information</div>
+                            <div>In order for us to complete your application we just require a few more details</div>
+                        </div>
+                    </div>  
+                    <!-- Garnet - START  -->
+                    <div style="margin-top:5px;" ng-class="{ 'has-error':( myform.optCountryOfExpCredits{{$index}}.$touched|| Submitted) && myform.optCountryOfExpCredits{{$index}}.$invalid }">
+                        <div>
+                            <label class="control-label">Countries of Expected Transaction Activity (Credits)</label>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <select ng-model="app.Country_of_Expected_Transactions_Credits_c" class="form-control" name="optCountryOfExpCredits{{$index}}" ng-required="(app.EDD_Data_Missing) && !app.Country_of_Expected_Transactions_Credits_c"
+                                        ng-options="option.Key as option.Value  for option in Data.CountryOfExpCredits"></select>
+                                <c:CAA_InputError field="optCountryOfExpCredits" />
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top:5px;" ng-class="{ 'has-error':( myform.optCountryOfExpDebits{{$index}}.$touched|| Submitted) && myform.optCountryOfExpDebits{{$index}}.$invalid }">
+                        <div>
+                            <label class="control-label">Countries of Expected Transaction Activity (Debits)</label>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <select ng-model="app.Country_of_Expected_Transactions_Debits_c" class="form-control" name="optCountryOfExpDebits{{$index}}" ng-required="(app.EDD_Data_Missing) && !app.Country_of_Expected_Transactions_Debits_c"
+                                        ng-options="option.Key as option.Value  for option in Data.CountryOfExpDebits"></select>
+                                <c:CAA_InputError field="optCountryOfExpDebits" />
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top:5px;" ng-class="{ 'has-error':( myform.optCountryOfExpDebits{{$index}}.$touched|| Submitted) && myform.optCountryOfExpDebits{{$index}}.$invalid }">
+                        <div>
+                            <label class="control-label">Currencies of Expected Transaction Activity (Denominations)</label>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <select ng-model="app.Currencies_of_Expected_Transactions_c" class="form-control" name="optCountryOfExpDebits{{$index}}" ng-required="(app.EDD_Data_Missing) && !app.Currencies_of_Expected_Transactions_c"
+                                        ng-options="option.Key as option.Value  for option in Data.CurrenciesOfExpDenomination"></select>
+                                <c:CAA_InputError field="optCountryOfExpDebits" />
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Garnet - END  -->                  
+                    <div style="margin-top:5px;" ng-class="{ 'has-error':( myform.optSourceOfWealth{{$index}}.$touched|| Submitted) && myform.optSourceOfWealth{{$index}}.$invalid }">
+                        <div>
+                            <label class="control-label">How did you generate or acquire your wealth?</label>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <select ng-model="app.Source_of_Wealth_c" class="form-control" name="optSourceOfWealth{{$index}}" ng-required="(app.EDD_Data_Missing) && !app.Source_of_Wealth_c"
+                                        ng-options="option.Key as option.Value  for option in Data.SourceOfWealth"></select>
+                                <c:CAA_InputError field="optSourceOfWealth" />
+                            </div>
+                        </div>
+                    </div>
+                    <!--  GARNET - START
+                    <div style="margin-top:5px;" ng-class="{ 'has-error':( myform.optSourceOfFunds{{$index}}.$touched|| Submitted) && myform.optSourceOfFunds{{$index}}.$invalid }">
+                        <div>
+                            <label class="control-label">From where did the funds originate?</label>                            
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <select ng-model="app.Source_of_Funds_c" class="form-control" name="optSourceOfFunds{{$index}}" ng-required="(isRMT  || isEDD) && !app.Source_of_Funds_c"
+                                        ng-options="option.Key as option.Value  for option in Data.SourceOfFunds"></select>
+                                <c:CAA_InputError field="optSourceOfFunds" />
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top:5px;" ng-class="{ 'has-error':( myform.optSourceOfFundsCountry{{$index}}.$touched|| Submitted) && myform.optSourceOfFundsCountry{{$index}}.$invalid }">
+                        <div>
+                            <label class="control-label">From which country did the funds originate?</label>                            
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <select ng-model="app.Source_of_Funds_Country_c" class="form-control" name="optSourceOfFundsCountry{{$index}}" ng-required="(isRMT  || isEDD) && !app.Source_of_Funds_Country_c"
+                                        ng-options="option.Key as option.Value  for option in Data.SourceOfFundsCountry"></select>
+                                <c:CAA_InputError field="optSourceOfFundsCountry" />
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top:5px;" ng-class="{ 'has-error':( myform.optIntFundTxFreq{{$index}}.$touched|| Submitted) && myform.optIntFundTxFreq{{$index}}.$invalid }">
+                        <div>
+                            <label class="control-label">Approximately how many transfers will be made internationally?</label>                            
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <select ng-model="app.International_Fund_Transfer_Frequency_c" class="form-control" name="optIntFundTxFreq{{$index}}" ng-required="(isRMT  || isEDD) && !app.International_Fund_Transfer_Frequency_c"
+                                        ng-options="option.Key as option.Value  for option in Data.IntFundsFrequency"></select>
+                                <c:CAA_InputError field="optIntFundTxFreq" />
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top:5px;" ng-class="{ 'has-error':( myform.optIntFundTxSource{{$index}}.$touched|| Submitted) && myform.optIntFundTxSource{{$index}}.$invalid }" ng-show="app.International_Fund_Transfer_Frequency_c!='Never'">
+                        <div>
+                            <label class="control-label">From where did the funds being transferred internationally originate?</label>                            
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <select ng-model="app.International_Fund_Transfer_Source_c" class="form-control" name="optIntFundTxSource{{$index}}" ng-required="(isRMT  || isEDD) && !app.International_Fund_Transfer_Source_c && app.International_Fund_Transfer_Frequency_c!='Never'"
+                                        ng-options="option.Key as option.Value  for option in Data.SourceOfFundsCountry"></select>
+                                <c:CAA_InputError field="optIntFundTxSource" />
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top:5px;" ng-class="{ 'has-error':( myform.optIntFundTxDest{{$index}}.$touched|| Submitted) && myform.optIntFundTxDest{{$index}}.$invalid }" ng-show="app.International_Fund_Transfer_Frequency_c!='Never'">
+                        <div>
+                            <label class="control-label">To which country are the funds being transferred?</label>                            
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <select ng-model="app.International_Fund_Transfer_Destination_c" class="form-control" name="optIntFundTxDest{{$index}}" ng-required="(isRMT  || isEDD) && !app.International_Fund_Transfer_Destination_c && app.International_Fund_Transfer_Frequency_c!='Never'"
+                                        ng-options="option.Key as option.Value  for option in Data.SourceOfFundsCountry"></select>
+                                <c:CAA_InputError field="optIntFundTxDest" />
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top:5px;" ng-class="{ 'has-error':( myform.optEstMnthlyVolIn{{$index}}.$touched|| Submitted) && myform.optEstMnthlyVolIn{{$index}}.$invalid }">
+                        <div>
+                            <label class="control-label">Approximately how much will you transfer into the account per month (in &pound;s)?</label>                            
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <select ng-model="app.Estimated_Monthly_Volume_Inward_c" class="form-control" name="optEstMnthlyVolIn{{$index}}" ng-required="(isRMT  || isEDD) && !app.Estimated_Monthly_Volume_Inward_c"
+                                        ng-options="option.Key as option.Value  for option in Data.EstMnthlyVolIn"></select>
+                                <c:CAA_InputError field="optEstMnthlyVolIn" />
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top:5px;" ng-class="{ 'has-error':( myform.optEstMnthlyTxIn{{$index}}.$touched|| Submitted) && myform.optEstMnthlyTxIn{{$index}}.$invalid }">
+                        <div>
+                            <label class="control-label">Approximately how many transactions will you make into the account per month?</label>                            
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <select ng-model="app.Est_Monthly_Num_of_Transactions_Inward_c" class="form-control" name="optEstMnthlyTxIn{{$index}}" ng-required="(isRMT  || isEDD) && !app.Est_Monthly_Num_of_Transactions_Inward_c"
+                                        ng-options="option.Key as option.Value  for option in Data.EstMnthlyNumTxIn"></select>
+                                <c:CAA_InputError field="optEstMnthlyTxIn" />
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top:5px;" ng-class="{ 'has-error':( myform.optEstMnthlyVolOut{{$index}}.$touched|| Submitted) && myform.optEstMnthlyVolOut{{$index}}.$invalid }">
+                        <div>
+                            <label class="control-label">Approximately how much will you transfer out of the account per month (in &pound;s)?</label>                            
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <select ng-model="app.Estimated_Monthly_Volume_Outward_c" class="form-control" name="optEstMnthlyVolOut{{$index}}" ng-required="(isRMT  || isEDD) && !app.Estimated_Monthly_Volume_Outward_c"
+                                        ng-options="option.Key as option.Value  for option in Data.EstMnthlyVolOut"></select>
+                                <c:CAA_InputError field="optEstMnthlyVolOut" />
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top:5px;" ng-class="{ 'has-error':( myform.optEstMnthlyTxOut{{$index}}.$touched|| Submitted) && myform.optEstMnthlyTxOut{{$index}}.$invalid }">
+                        <div>
+                            <label class="control-label">Approximately how many transactions will you make out of the account per month?</label>                            
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <select ng-model="app.Est_Monthly_Num_of_Transactions_Outward_c" class="form-control" name="optEstMnthlyTxOut{{$index}}" ng-required="(isRMT  || isEDD) && !app.Est_Monthly_Num_of_Transactions_Outward_c"
+                                        ng-options="option.Key as option.Value  for option in Data.EstMnthlyNumTxOut"></select>
+                                <c:CAA_InputError field="optEstMnthlyTxOut" />
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top:5px;" ng-class="{ 'has-error':( myform.optEstCashWthdrwlFreq{{$index}}.$touched|| Submitted) && myform.optEstCashWthdrwlFreq{{$index}}.$invalid }">
+                        <div>
+                            <label class="control-label">Approximately how many cash withdrawals will you make out of the account per month?</label>                            
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <select ng-model="app.Estimated_Cash_Withdrawal_Frequency_c" class="form-control" name="optEstCashWthdrwlFreq{{$index}}" ng-required="(isRMT  || isEDD) && !app.Estimated_Cash_Withdrawal_Frequency_c"
+                                        ng-options="option.Key as option.Value  for option in Data.EstCashWthdrwlFreq"></select>
+                                <c:CAA_InputError field="optEstCashWthdrwlFreq" />
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top:5px;" ng-class="{ 'has-error':( myform.optEstCashDepositFreq{{$index}}.$touched|| Submitted) && myform.optEstCashDepositFreq{{$index}}.$invalid }">
+                        <div>
+                            <label class="control-label">Approximately how many cash deposits will you make into the account per month?</label>                            
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <select ng-model="app.Estimated_Cash_Deposit_frequency_c" class="form-control" name="optEstCashDepositFreq{{$index}}" ng-required="(isRMT  || isEDD) && !app.Estimated_Cash_Deposit_frequency_c"
+                                        ng-options="option.Key as option.Value  for option in Data.EstCashDepositFreq"></select>
+                                <c:CAA_InputError field="optEstCashDepositFreq" />
+                            </div>
+                        </div>
+                    </div>
+                    GARNET - END -->
+                </div>
+        </div>
+    </div>
+</apex:component>

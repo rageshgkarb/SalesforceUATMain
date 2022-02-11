@@ -1,0 +1,27 @@
+<apex:component >
+<apex:attribute name="deposit" description="This is the debt." type="GenericObject__c"  required="true"/>
+
+<table class="detailList">
+<tbody>
+<tr>
+    <td class="labelCol">Deposit Source</td><td>
+  
+    
+    
+    <apex:inputField value="{!deposit.Refinance_Type__c}"   />
+    
+    </td>
+</tr>
+<tr>    
+    <td class="labelCol">Deposit Value</td><td><apex:inputField value="{!deposit.Refinance_Value__c}"  /></td>
+</tr>
+<tr>
+    <td class="labelCol">Details</td><td><apex:inputField value="{!deposit.Refinance_Details__c}"   /></td>
+</tr>
+
+</tbody>
+</table>
+
+
+
+</apex:component>

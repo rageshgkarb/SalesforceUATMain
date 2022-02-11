@@ -1,0 +1,73 @@
+<apex:page standardController="Goal" extensions="RefreshGoalMetricsController">
+<style>
+    /* This is for the full screen DIV */
+    .popupBackground {
+        /* Background color */
+        background-color:black;
+        opacity: 0.25;
+        filter: alpha(opacity = 25);
+    
+        /* Dimensions */
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 998;
+        position: absolute;
+        
+        /* Mouse */
+        cursor:wait;
+    }
+ 
+    /* This is for the message DIV */
+    .PopupPanel {
+        /* Background color */
+        border: solid 2px #56aadf;
+        border-radius: 10px 10px 10px 10px;
+        background-color: white;
+ 
+        /* Dimensions */
+        left: 50%;
+        width: 200px;
+        margin-left: -100px;
+        top: 50%;
+        height: 100px;
+        margin-top: -20px;
+        z-index: 999;
+        position: fixed;
+        
+        /* Mouse */
+        cursor:pointer;
+    }
+</style>
+
+<apex:form id="form">
+    <apex:actionFunction name="refreshMetricsJS" action="{!refreshMetrics}" reRender="form" oncomplete="redirectToGoal()" status="status"/>
+        <apex:actionStatus id="status">
+            <apex:facet name="start">
+              <div>
+            <div class="popupBackground" />
+            <div class="PopupPanel">
+                <table border="0" width="100%" height="100%">
+                    <tr>
+                        <td align="center"><b>Refreshing Metrics<br></br> Please Wait..</b></td>
+                    </tr>
+                    <tr>
+                        <td align="center"><img src="{!URLFOR($Resource.CategoryApp, 'app/assets/loader.gif')}"  height="50" width="50"/></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        </apex:facet>
+    </apex:actionStatus>
+</apex:form> 
+   
+<script>
+window.onload = new function(){ refreshMetricsJS();}
+
+function redirectToGoal(){
+    window.location.href="/{!Goal.Id}";
+}
+</script>
+
+</apex:page>

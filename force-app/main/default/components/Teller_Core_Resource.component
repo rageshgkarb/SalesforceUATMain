@@ -1,0 +1,59 @@
+<apex:component >
+
+<apex:attribute name="OldKendo" type="Boolean" description="Whether to use the old version of kendo"/>
+<meta name="viewport" content="width=device-width, user-scalable=no"/>
+
+<!-- Misc -->
+<apex:stylesheet value="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+<apex:stylesheet value="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/spacelab/bootstrap.min.css"/>
+<apex:stylesheet value="{!URLFOR($Resource.Cashier, '/css/cashier.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.Cashier, '/css/cashier-theme.css')}"/>
+
+<apex:stylesheet value="//maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css"/>
+
+
+<!-- Kendo UI Styles -->
+<apex:stylesheet value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/styles/kendo.common.min.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/styles/kendo.material.min.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/styles/kendo.dataviz.min.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/styles/kendo.dataviz.material.min.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/styles/kendo.material.mobile.min.css')}"/>
+
+<!-- JQuery -->
+<!--<apex:includeScript value="https://code.jquery.com/jquery-1.9.1.min.js"/>-->
+<apex:includeScript value="{!URLFOR($Resource.JQuery, '/jquery-1.9.1.min.js')}"/>
+
+<!-- Angular -->
+<!-- <apex:includeScript value="{!URLFOR($Resource.AngularJS, '/AngularJS/angular-1.3.11/angular.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.AngularJS, '/AngularJS/angular-1.3.11/angular-animate.min.js')}"/> -->
+
+
+<!-- OLD LB 
+<apex:includeScript value="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular.min.js"/>
+<apex:includeScript value="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular-animate.min.js"/>
+<apex:includeScript value="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular-sanitize.js"/>
+
+
+<apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.11/angular.min.js"/>
+<apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.11/angular-animate.min.js"/>
+<apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.11/angular-sanitize.js"/>
+-->
+
+<apex:includeScript value="{!URLFOR($Resource.Angular_1_3_11, '/angular.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.Angular_1_3_11, '/angular-animate.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.Angular_1_3_11, '/angular-sanitize.js')}"/>
+
+
+<apex:includeScript value="{!URLFOR($Resource.AngularJS, '/AngularJS/angular-ui-router/angular-ui-router.js')}"/>
+
+<!-- Kendo UI -->
+<!-- <apex:includeScript value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/js/kendo.all.min.js')}"/> -->
+<!-- <apex:includeScript value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/js/kendo.web.min.js')}"/> -->
+<apex:includeScript value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/js/kendo.engage_2015_1_429.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/js/cultures/kendo.culture.en-GB.min.js')}"/>
+
+<!-- BootStrap -->
+<!--<apex:includeScript value="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"/>-->
+<apex:includeScript value="{!URLFOR($Resource.Bootstrap_3_2_0, '/js/bootstrap.min.js')}"/>
+
+</apex:component>

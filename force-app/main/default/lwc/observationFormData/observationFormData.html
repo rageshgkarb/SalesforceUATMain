@@ -1,0 +1,435 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 01-12-2022
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+  Modifications Log 
+  Ver   Date         Author                               Modification
+  1.0   04-26-2021   ChangeMeIn@UserSettingsUnder.SFDoc   Initial Version
+-->
+<template>
+    <div class="spinner">
+        <template if:true={isLoading}>
+             <lightning-spinner alternative-text="Loading" variant="brand" size="large">
+             </lightning-spinner>
+        </template>
+    </div>
+    <template if:true={hasPermission}>
+    <template if:true={resultForm}> 
+        <center>
+            <template if:false={loginUserDetail.agent}>
+                <template if:false={showAppealSection}>
+                    <lightning-button variant="brand" label="Save as Draft" icon-name="utility:save" icon-position="center" onclick={saveForm}></lightning-button>
+                    &nbsp;<lightning-button  variant="brand" label="Save and Submit Form" icon-name="utility:save" icon-position="center" onclick={saveFormAndSubmit}></lightning-button>
+                </template>
+                <template if:true={showAppealSection}>
+                <lightning-button  variant="brand" label="Save Form" icon-name="utility:save" icon-position="center" onclick={saveForm}></lightning-button>
+                </template>
+            
+           
+            </template>
+            &nbsp;<lightning-button  variant="brand" label="Cancel" icon-name="utility:save" icon-position="center"  onclick={cancelForm}></lightning-button>
+        </center><br/>
+    <div class="slds-card-Main" style="background-color:rgb(215 229 242);">
+   
+        <p id="action" class="slds-box slds-text-heading_small">
+            <lightning-icon icon-name="standard:environment_hub" alternative-text="Approved" title="Approved"></lightning-icon>
+            <b style="padding-left: 8px;">{resultForm.form.Form_Name__c}</b>          
+          </p>
+
+          <template if:true={visible}>
+            <div style="position:absolute;top:1rem;left:1rem;right:1rem">
+                <div class="slds-notify_container slds-is-relative">
+                    <div class="slds-notify slds-notify_toast slds-theme_default slds-box slds-box_small" style="border-color:red;" role="error">
+                    <div class="slds-align_absolute-center">
+                        <h2 class="slds-text-heading_large" style="color:red;">{toastMessage}</h2>
+                        <h2 class="slds-text-heading_large" style="color:rgb(89, 140, 170);">{pageMessage}</h2>
+                    </div>
+                    </div>
+                </div>
+            </div>
+         </template>
+              
+        
+        <lightning-record-edit-form
+            object-api-name="Observation_Form__c" record-id={recordIdForm} columns="4" style=" overflow: initial;overflow: visible">
+            <lightning-messages></lightning-messages>
+            <div class="slds-grid slds-wrap">
+            <template  for:each={recordInfo} for:item="field">
+                <template if:false={field.hide}>
+                    <div class="slds-col slds-size_4-of-12" key={field} style="font-weight:700">
+           
+                
+                <lightning-input-field
+                        key={field.name}
+                        field-name={field.name}
+                        value={field.value}
+                        fields={selectedFields} data-fieldname={field.name} onchange={onchangeField} required={field.required} disabled={loginUserDetail.agent}>
+                    </lightning-input-field>
+                
+                
+            
+
+                </div>
+            </template>
+            </template>
+            <template if:false={showAppealSection}>
+            &nbsp;<div style="margin-top: 15px;"></div>
+                <b style="font-size: 12px;color:var(--lwc-colorTextLabel,rgb(107, 109, 112))">Do not Send email upon submission?</b><lightning-input   class="strong-text"  type="checkbox" 
+                value={donotSendEmail} checked={donotSendEmail} onchange={sendEmailChange} ></lightning-input>
+            </template>
+            </div>
+            
+            </lightning-record-edit-form>
+
+           
+
+            <!-- <lightning-layout-item padding="around-small" size="6">
+                <lightning-input label="Line Manager Name"  type="text" variant="standard" data-fieldname="Line_Manager_Name__c" value={resultForm.form.Line_Manager_Name__c} onchange={onchangeField}></lightning-input>
+                <lightning-input label="Observer Name"  type="text" variant="standard" data-fieldname="Observer_Name__c" value={resultForm.form.Observer_Name__c} onchange={onchangeField}></lightning-input>
+                <lightning-input label="Date of Observation" type="date" data-fieldname="Date_of_Observation__c" value={resultForm.form.Date_of_Observation__c} onchange={onchangeField} variant="standard"></lightning-input>
+            </lightning-layout-item>
+            <lightning-layout-item padding="around-small" size="6">
+                <lightning-input label="Complaint Ref"  type="text"  data-fieldname="Complaint_Ref__c" value={resultForm.form.Complaint_Ref__c} onchange={onchangeField} variant="standard"></lightning-input>
+                <lightning-input label="Incorrect Customer Outcome" type="text" variant="standard"></lightning-input>
+                <lightning-input label="Corrective Action Complete" type="text" variant="standard"></lightning-input>
+            </lightning-layout-item> -->
+            
+       
+        <lightning-layout>
+            <!-- <lightning-layout-item padding="around-small" size="4">
+               
+                <b><lightning-input label="Overall Score" value={score} type="number" variant="standard" disabled=True></lightning-input></b>-->
+                <!--<lightning-formatted-text  value={score} variant="standard"></lightning-formatted-text>-->   
+            <!-- </lightning-layout-item> -->
+
+            <lightning-layout-item padding="around-small" size="3">
+               
+                <b><lightning-input label="Overall Percentage" value={percentage} type="text" variant="standard" disabled={managerDiscretion.disableoverall} onchange={changeOverallPercentage}></lightning-input></b>
+                <!--<lightning-formatted-text  value={score} variant="standard"></lightning-formatted-text>-->   
+            </lightning-layout-item>
+
+            <lightning-layout-item padding="around-small" size="3">
+               
+                <b><lightning-input label="Overall Rating" value={result} type="text" variant="standard" disabled="true" onchange={changeOverallResult}></lightning-input></b>
+               
+                  <!--<lightning-formatted-text  value={score} variant="standard"></lightning-formatted-text>-->   
+            </lightning-layout-item>
+
+            <lightning-layout-item padding="around-small" size="1">
+                <template if:true={showAppealSection}>
+                    <template if:true={loginUserDetail.manager}>
+                        <div style="margin-top: 15px;"></div>
+                            <b style="font-size: 12px;color:var(--lwc-colorTextLabel,rgb(107, 109, 112))">Manager discretion?</b><lightning-input   class="strong-text"  type="checkbox" 
+                            value={managerDiscretion.showComments} checked={managerDiscretion.showComments} onchange={ManagerDiscretionChange} disabled={managerDiscretion.disabled}></lightning-input>
+                       
+                    </template>
+                </template>
+            </lightning-layout-item>
+
+            <lightning-layout-item padding="around-small" size="3">
+                <template if:true={showAppealSection}>
+                    <template if:true={loginUserDetail.manager}>
+                        <template if:true={managerDiscretion.showComments}>    
+                            <div style="padding-left:20px;">
+                            
+                                <div class="custom-box-width" ><b><lightning-textarea size="5"  name="dicretionComments" class="strong-text" label="Comments"  value={resultForm.form.Manager_Discretion_Comments__c} onchange={appealCommentHandler} disabled={managerDiscretion.disabled}></lightning-textarea></b></div>
+                            </div>
+                        </template>
+                    </template>
+                </template>
+            </lightning-layout-item>
+
+            <lightning-layout-item padding="around-small" size="2">
+                <template if:true={showAppealSection}>
+                    <template if:true={loginUserDetail.manager}>
+                        <template if:true={managerDiscretion.showComments}>   
+                        <div style="margin-top:20px;"></div>
+                        
+                            <lightning-button variant="brand" label="Save" icon-name="utility:save" icon-position="center" name="Save" onclick={saveManagerDiscretion}></lightning-button>
+                           
+                      
+                    </template> 
+                 </template>
+                 </template>
+            </lightning-layout-item>
+           
+        </lightning-layout>
+
+
+         
+        </div>
+        <template if:true={showAppealSection}>
+            
+            <div class="slds-card-Main" style="background-color:rgb(187 203 218);padding-left:20px;">
+    
+                <br/>
+                <lightning-icon icon-name="standard:case" alternative-text="Appeal Section" title="Appeal Section"></lightning-icon>
+                <b style="padding-left: 8px;">Appeal Section</b> 
+                
+                <template if:true={visible}>
+                    <div style="position:center;">
+                        <div class="slds-notify_container slds-is-relative">
+                            <div class="slds-notify slds-notify_toast slds-theme_default slds-box slds-box_small" style="border-color:red;" role="error">
+                            <div class="slds-align_absolute-center">
+                                <h2 class="slds-text-heading_large" style="color:red;">{toastMessage}</h2>
+                                <h2 class="slds-text-heading_large" style="color:rgb(89, 140, 170);">{pageMessage}</h2>
+                               
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+                <template if:true={showinfo}>
+                    <div style="position:center;">
+                        <div class="slds-notify_container slds-is-relative">
+                            <div class="slds-notify slds-notify_toast slds-theme_default slds-box slds-box_small" style="border-color:rgb(89, 140, 170);" role="infor">
+                            <div class="slds-align_absolute-center">
+                                <h2 class="slds-text-heading_large" style="color:rgb(89, 140, 170);">{toastMessage}</h2>
+                               
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                 </template>
+               
+                <lightning-layout style="padding-left:50px;">
+                    <b><table><tr><td>
+                        <lightning-layout-item padding="around-small" size="4">
+                        <lightning-combobox
+                        class="start-select"
+                        name="Appeal"
+                        label="Appeal?"
+                        value={appealValue}
+                        placeholder="--None--"
+                        options={appealOptions}
+                        onchange={handleAppealChange} disabled={appealApprovalStatus.disableAppeal}></lightning-combobox>
+                    </lightning-layout-item></td>
+                        
+                        <td><template if:true={displayAppealCommentary}>
+                            <lightning-layout-item padding="around-small" size="4">
+                            <div style="padding-left:20px;">
+                        
+                                <div class="custom-box-width" ><b><lightning-textarea size="5"  name="agentComment" class="strong-text" label="Agent Comments"  value={resultForm.form.Agent_Comment_for_Appeal__c} onchange={appealCommentHandler} disabled={loginUserDetail.agentComment}></lightning-textarea></b></div>
+                             </div>
+                            </lightning-layout-item>
+
+                        </template></td>
+
+                       <template if:true={displayAppealCommentary}>
+                        <td><lightning-layout-item padding="around-small" size="4">
+                            <div style="padding-left:20px;">
+                        
+                                <div class="custom-box-width" ><b><lightning-textarea size="5"  name="managerComment" class="strong-text" label="Manager Comments"  value={resultForm.form.Manager_Commentary_for_Appeal__c} onchange={appealCommentHandler} disabled={loginUserDetail.managerComment}></lightning-textarea></b></div>
+                             </div>
+                            </lightning-layout-item></td>
+
+                        </template>
+
+                        <template if:true={displayAppealCommentary}>
+                            <td><lightning-layout-item padding="around-small" size="4">
+                            <div style="padding-left:20px;">
+                        
+                                <div class="custom-box-width" ><b><lightning-textarea size="5"  name="AssessorComment" class="strong-text" label="Assessor Comments"  value={resultForm.form.Assessor_Comment_for_Appeal__c} onchange={appealCommentHandler} disabled={loginUserDetail.assessorComment}></lightning-textarea></b></div>
+                             </div>
+                            </lightning-layout-item></td>
+
+                        </template>
+
+                        <template if:true={displayAppealCommentary}>
+                            <td><lightning-layout-item padding="around-small" size="4">
+                            <template if:true={appealApprovalStatus.displaySubmit}>    
+                                <div style="padding-left:20px;">
+                            
+                                    <lightning-button variant="brand" label="Submit for Approval" icon-name="utility:save" icon-position="center" name="submission" onclick={approvalSubmission}></lightning-button>
+                                </div>
+                             </template>
+
+                             <template if:true={appealApprovalStatus.submitted}> 
+                                <template if:true={loginUserDetail.manager}>
+                                    <div style="padding-left:20px;">
+                                    
+                                        <lightning-button variant="brand" label="Approve" icon-name="utility:save" icon-position="center" name="approve" onclick={approvalSubmission}></lightning-button>
+                                        &nbsp;<lightning-button variant="brand" label="Reject" icon-name="utility:save" icon-position="center" name="rejected" onclick={approvalSubmission}></lightning-button>
+                                    </div>
+                                </template> 
+                             </template>
+
+                             <template if:true={appealApprovalStatus.displaySave}> 
+                                <template if:true={loginUserDetail.assessor}>
+                                    <div style="padding-left:20px;">
+                                    
+                                        <lightning-button variant="brand" label="Approve" icon-name="utility:save" icon-position="center" name="assessorapprove" onclick={approvalSubmission}></lightning-button>
+                                        &nbsp;<lightning-button variant="brand" label="Reject" icon-name="utility:save" icon-position="center" name="assessorrejected" onclick={approvalSubmission}></lightning-button>
+                                       
+                                    </div>
+                                </template> 
+                             </template>
+                            </lightning-layout-item></td>
+
+                        </template>
+                        
+                        </tr>
+                    </table>
+                        
+                    </b>
+            </lightning-layout>
+                
+            </div>
+        </template>
+
+        
+
+        <template for:each={resultForm.sectionList} for:item="section" for:index="index"> 
+            
+            <div class="slds-card" key={section}>
+   
+                <p class="slds-box slds-text-heading_small">
+                    <lightning-icon icon-name="standard:question_feed" alternative-text="Approved" title="Approved"></lightning-icon>
+                    <b style="padding-left: 8px;">{section.section.Section__c}</b>          
+                  </p>
+            <table class="slds-table slds-table_bordered slds-border_left slds-border_right" width="100%" >
+                <thead>
+                    
+                    <tr class="slds-line-height_reset" >
+                        <th class="thTable" scope="col">
+                          <div class="slds-truncate" title="Ref">Ref</div>
+                        </th>
+                       
+                        <th class="thTable" scope="col">
+                            <div class="slds-truncate" title="Details">Details</div>
+                        </th>
+                        <th class="thTable" scope="col">
+                            <div class="slds-truncate" title="Outcome">Outcome</div>
+                        </th>
+                        <th class="thTable" scope="col">
+                            <div class="slds-truncate" title="Cooments">Comments</div>
+                        </th>
+                    </tr>
+                    </thead>
+
+                
+            <tbody>
+            <template for:each={section.questionAndOptionList} for:item="ques" for:index="qindex">
+               
+                <tr class="slds-line-height_reset" key={somekey} >
+                    <td class="tdTable" style="width: 5%;">
+                      <div >
+                            <lightning-formatted-text value={ques.Question.Question_Number__c}></lightning-formatted-text>
+                            <b >{ques.Question.Question_Number__c}</b>
+                        </div>
+                    </td>
+                   
+                   
+                    <td class="tdTable"  style="width: 50%;">
+                        <div >
+                       <b style="white-space: break-spaces;"> {ques.Question.Question__c}</b>
+                       
+                        <template if:true={ques.hasObjective}>&nbsp;<span><lightning-icon icon-name="utility:info_alt" name={index} id={qindex} data-type="objectiveToolTip" size="x-small" onmouseover={showTooltip} onmouseout={hideTooltip}></lightning-icon>
+                          <template if:true={ques.objectiveToolTip}>
+                                <div class="slds-popover slds-popover_tooltip slds-slide-from-top-to-bottom" role="tooltip"  style="position:absolute;top:3px;margin-left: -6px;width: max-content;">
+                                    <div class="slds-popover__body">{ques.Question.Objective__c}</div>
+                                </div>
+                          </template></span> 
+                        </template>
+                       <template if:true={ques.isCritical}> <b style="Color:red">[Critical]</b></template>
+                    </div>
+                    
+                    </td>
+
+                    <td class="tdTable" style="width: 20%;padding-right: 130px;">
+                        <template if:true={ques.isDropdown}>  
+                           
+                            <div >
+                               
+                                
+                            <label class="slds-form-element__label" for="select-01"></label>
+                        
+                                <select class="slds-select" name={index} id={qindex}  onchange={scoreHandler} disabled={loginUserDetail.agent}>
+                                <option value="" key={option}></option>
+                                <template for:each={ques.optionsList} for:item="option" for:index="opindex">    
+                                    <template if:true={option.Critical__c}>
+                                        <option value={option.ScoreText__c} key={option.Option__c} selected>{option.Option__c}</option>
+                                    </template> 
+                                    <template if:false={option.Critical__c}>
+                                        <option value={option.ScoreText__c} key={option.Option__c}>{option.Option__c}</option>
+                                    </template>                
+                                    
+                                </template> 
+                                </select>
+                                &nbsp;<template if:true={ques.showGuide}><span><lightning-icon icon-name="utility:knowledge_base" name={index} id={qindex} data-type="guideToolTip" alternative-text="Guide"  size="x-small" onmouseover={showTooltip} onmouseout={hideTooltip}></lightning-icon>
+                                    <template if:true={ques.guideToolTip}>
+                                            <div class="slds-popover slds-popover_tooltip slds-slide-from-top-to-bottom" role="tooltip"  style="position:absolute;top:3px;margin-left:-6px;width: max-content;">
+                                                <div class="slds-popover__body">{ques.Question.Guide__c}</div>
+                                            </div>
+                                        
+                                        </template>
+                                    </span>
+                                
+                                </template>
+                                
+                            </div>
+                        
+                        </template>
+                    </td>
+                    <td class="tdTable"  style="width: 25%;">
+                        <div >
+                        
+                            <div class="custom-box-width" ><b><lightning-textarea size="5" data-indexc={qindex} name={index} class="strong-text" label="Comments"  value={ques.response.Commentary__c} onchange={commentryHandler}></lightning-textarea></b></div>
+                         </div>
+                    </td>
+
+               </tr>
+           
+            </template>
+            </tbody>
+        </table>
+                
+                
+            </div>
+            
+        </template>
+</template> 
+
+ <template if:true={visible}>
+            <div style="position:center;">
+                <div class="slds-notify_container slds-is-relative">
+                    <div class="slds-notify slds-notify_toast slds-theme_default slds-box slds-box_small" style="border-color:red;" role="error">
+                    <div class="slds-align_absolute-center">
+                        <h2 class="slds-text-heading_large" style="color:red;">{toastMessage}</h2>
+                        <h2 class="slds-text-heading_large" style="color:rgb(89, 140, 170);">{pageMessage}</h2>
+                    </div>
+                    </div>
+                </div>
+            </div>
+         </template>
+
+
+<br/>
+        <center>
+            <template if:false={loginUserDetail.agent}>
+                <template if:false={showAppealSection}>
+                    <lightning-button variant="brand" label="Save as Draft" icon-name="utility:save" icon-position="center" onclick={saveForm}></lightning-button>
+                    &nbsp;<lightning-button  variant="brand" label="Save and Submit Form" icon-name="utility:save" icon-position="center" onclick={saveFormAndSubmit}></lightning-button>
+                </template>
+                <template if:true={showAppealSection}>
+                <lightning-button  variant="brand" label="Save Form" icon-name="utility:save" icon-position="center" onclick={saveForm}></lightning-button>
+                </template>
+            
+           
+            </template>
+            &nbsp;<lightning-button  variant="brand" label="Cancel" icon-name="utility:save" icon-position="center"  onclick={cancelForm}></lightning-button>
+        </center>
+        
+    </template>
+    <template if:false={hasPermission}>
+        <div class="slds-card-Main" style="background-color:rgb(187 203 218);padding-left:20px;">
+    
+            <br/>
+            
+            <b style="padding-left: 8px;">You do not have access to view this form</b> 
+        </div>    
+    </template>
+
+</template>

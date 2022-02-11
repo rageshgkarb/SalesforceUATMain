@@ -1,0 +1,366 @@
+<apex:component >
+    <apex:attribute name="model" type="String" required="true" description="" />
+    <apex:attribute name="modellist" type="String" required="false" description="" />
+    <apex:attribute name="ShowPersonDetails" type="Boolean" required="false" default="true" description="" />
+    <apex:attribute name="TinAddButtonLabel" type="String" required="false" default="Add more Tax Residency details for a Controlling Person" description="" />
+    <apex:attribute name="ControllingPersonHeader" type="String" required="false" default="Controlling Person " description="" />
+    <apex:attribute name="form" type="string" required="true" description="" />
+    <apex:attribute name="index" type="string" required="false" description="" />
+
+    <div class="panel panel-primary" ng-controller="controllerControllingPerson">
+        <span ng-if="Initialised" ng-init="InitPersonPCA({!model}, {!model}.Applicant_Number_c)"></span>
+        <div class="panel-heading">
+            <div>{!ControllingPersonHeader}: {{{!model}.Firstname}} {{{!model}.Lastname}}</div>
+        </div>
+        <div class="panel-body">
+
+           
+            <div class="row" ng-show="'{!form}'=='formSection4'">
+                <div class="col-md-6" >
+                    <div class="form-group">
+                        <div class="col-sm-6">
+                            <label>CP: Choose the capacity/position of the controlling person</label>
+                        </div>
+                        <div class="col-sm-6" style="margin-bottom: 10px;">
+                            <select class="form-control" ng-model="{!model}.Controlling_Person_Capacity_c" ng-required="'{!form}'=='formSection4'" ng-options="option for option in Data.ControllingCapacities"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6" ng-show="{!model}.Controlling_Person_Capacity_c == 'Other'">
+                    <div class="form-group">
+                        <div class="col-sm-6">
+                            <label>CP: If other please state what capacity/position</label>
+                        </div>
+                        <div class="col-sm-6">
+                            <input class="form-control" ng-model="{!model}.Controlling_Person_Other_Capacity_c" ng-required="{!model}.Controlling_Person_Capacity_c == 'Other'"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+             <div ng-if="{!ShowPersonDetails}">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Title</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <select class="form-control" ng-model="{!model}.Salutation" ng-required="true" ng-options="option for option in Data.Salutations"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>First Name</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" ng-required="true" ng-model="{!model}.Firstname" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Last Name</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" ng-required="true" ng-model="{!model}.Lastname" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Date of Birth</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="date" class="form-control" ng-required="true" ng-model="SelectedDateOfBirth" ng-change="DOBChanged(SelectedDateOfBirth, {!model})"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Town of Birth</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" ng-required="true" ng-model="{!model}.Town_of_Birth_c" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Country of Birth</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <select class="form-control" ng-model="{!model}.Country_of_Birth_c" ng-required="true" ng-options="option for option in Data.CountriesOfBirth"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Nationality</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <select class="form-control" ng-model="{!model}.Country_of_nationality_c" ng-required="true" ng-options="option for option in Data.Nationalities"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Billing Address Street</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input class="form-control" ng-attr-id="{{'streetBilling' + {!model}.Applicant_Number_c}}" ng-model="{!model}.BillingStreet" ng-required="true" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Billing Address City</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input class="form-control" ng-attr-id="{{'cityBilling' + {!model}.Applicant_Number_c}}" ng-model="{!model}.BillingCity" ng-required="true" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Billing Address Postcode</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input autocomplete="pca" ng-attr-id="{{'postcodeBilling' + {!model}.Applicant_Number_c}}" class="form-control" ng-model="{!model}.BillingPostalCode" ng-required="true" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Billing Address Country</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input class="form-control" ng-attr-id="{{'countryBilling' + {!model}.Applicant_Number_c}}" ng-model="{!model}.BillingCountry"
+                                   ng-required="true" ng-change="BillingCountryChanged({!model})" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" ng-if="false">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Country Code</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <select class="form-control" ng-model="SelectedCountryCode" ng-change="CountryCodeChanged({!model}, SelectedCountryCode)" ng-required="true" ng-options="option.Key for option in Data.CountryCodes track by option.Key" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- mailing address -->
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Person Mailing Address Street</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input class="form-control" ng-attr-id="{{'streetMailing' + {!model}.Applicant_Number_c}}" ng-model="{!model}.PersonMailingStreet" ng-required="true" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Person Mailing Address City</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input class="form-control" ng-attr-id="{{'cityMailing' + {!model}.Applicant_Number_c}}" ng-model="{!model}.PersonMailingCity" ng-required="true" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Person Mailing Address Postcode</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input autocomplete="pca" ng-attr-id="{{'postcodeMailing' + {!model}.Applicant_Number_c}}" class="form-control" ng-model="{!model}.PersonMailingPostalCode" ng-required="true" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Person Mailing Address Country</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input class="form-control" ng-attr-id="{{'countryMailing' + {!model}.Applicant_Number_c}}" ng-model="{!model}.PersonMailingCountry" ng-required="true" ng-change="MailingCountryChanged({!model})" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" ng-if="false">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Country Code</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <select class="form-control" ng-model="SelectedCountryCode" ng-required="true" ng-options="option.Key for option in Data.CountryCodes track by option.Key"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr/>
+
+
+                 </div>
+            <c:BAA_USTaxInfo model="{!model}" form="{!form}" identifier="{!model}.Applicant_Number_c"
+                             HasTinPropertyName="US_Do_you_have_a_TIN_c" TinReasonCodePropertyName="US_Tin_Reason_Code_c" TinReasonBPropertyName="US_TIN_Reason_B_explanation_c"
+                             TinPropertyName="US_Tin_c" ></c:BAA_USTaxInfo>
+
+
+            <div >
+                <div class="row" ng-class="{ 'has-error':( {!form}.NonUkTax{!ShowPersonDetails}{{$index}}.$touched|| Submitted) && {!form}.NonUkTax{!ShowPersonDetails}{{$index}}.$invalid }">
+                    <div class="col-sm-6">
+
+                        <label>Are you resident for tax purposes in any country other than the UK?</label>
+
+
+                    </div>
+                    <div class="col-sm-6">
+                            <span class="radio-group" ng-class="{!form}['NonUKYes{!ShowPersonDetails}{{$index}}'].$invalid ? 'ng-invalid' : ''">
+                            <label class="radio-inline">
+                                <input ng-attr-name="NonUKYes{!ShowPersonDetails}{{$index}}" type="radio" value="Yes" ng-required="true"
+                                       ng-model="{!model}.NonUkTax"
+                                />Yes</label>
+                            <label class="radio-inline">
+                                <input ng-attr-name="NonUKNo{!ShowPersonDetails}{{$index}}" type="radio" value="No" ng-required="true"
+                                       ng-model="{!model}.NonUkTax"
+                                />No</label>
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div ng-if="{!model}.NonUkTax == 'Yes'">
+
+                <c:BAA_Self_Cert_cTin model="{!model}" form="{!form}" TinIndex="1" identifier="{!model}.Applicant_Number_c" CountryTaxResidencyPropertyName="TIN1_Country_Tax_Residence_c"
+                                      HasTinPropertyName="TIN_1_Check_c" TinReasonCodePropertyName="TIN_1_reason_code_c" TinReasonBPropertyName="TIN_1_reason_B_explanation_c"
+                                      TinPropertyName="TIN_1_c" RequiredRuleCtryTaxRes="true"></c:BAA_Self_Cert_cTin>
+
+                <div ng-if="CPTinCount >= 1">
+                    <c:BAA_Self_Cert_cTin model="{!model}" form="{!form}" TinIndex="2" identifier="{!model}.Applicant_Number_c" CountryTaxResidencyPropertyName="TIN2_Country_Tax_Residence_c"
+                                          HasTinPropertyName="TIN_2_Check_c" TinReasonCodePropertyName="TIN_2_reason_code_c" TinReasonBPropertyName="TIN_2_reason_B_explanation_c"
+                                          TinPropertyName="TIN_2_c" RequiredRuleCtryTaxRes="true"></c:BAA_Self_Cert_cTin>
+                </div>
+                <div ng-if="CPTinCount >= 2">
+                    <c:BAA_Self_Cert_cTin model="{!model}" form="{!form}" TinIndex="3" identifier="{!model}.Applicant_Number_c" CountryTaxResidencyPropertyName="TIN3_Country_Tax_Residence_c"
+                                          HasTinPropertyName="TIN_3_Check_c" TinReasonCodePropertyName="TIN_3_reason_code_c" TinReasonBPropertyName="TIN_3_reason_B_explanation_c"
+                                          TinPropertyName="TIN_3_c" RequiredRuleCtryTaxRes="true"></c:BAA_Self_Cert_cTin>
+                </div>
+                <div ng-if="CPTinCount >= 3">
+                    <c:BAA_Self_Cert_cTin model="{!model}" form="{!form}" TinIndex="4" identifier="{!model}.Applicant_Number_c" CountryTaxResidencyPropertyName="TIN4_Country_Tax_Residence_c"
+                                          HasTinPropertyName="TIN_4_Check_c" TinReasonCodePropertyName="TIN_4_reason_code_c" TinReasonBPropertyName="TIN_4_reason_B_explanation_c"
+                                          TinPropertyName="TIN_4_c" RequiredRuleCtryTaxRes="true"></c:BAA_Self_Cert_cTin>
+                </div>
+                <div ng-if="CPTinCount >= 4">
+                    <c:BAA_Self_Cert_cTin model="{!model}" form="{!form}" TinIndex="5" identifier="{!model}.Applicant_Number_c" CountryTaxResidencyPropertyName="TIN5_Country_Tax_Residence_c"
+                                          HasTinPropertyName="TIN_5_Check_c" TinReasonCodePropertyName="TIN_5_reason_code_c" TinReasonBPropertyName="TIN_5_reason_B_explanation_c"
+                                          TinPropertyName="TIN_5_c" RequiredRuleCtryTaxRes="true"></c:BAA_Self_Cert_cTin>
+                </div>
+
+
+
+
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <button class="btn btn-info" style="padding:5px;" ng-click="CPTinCount = CPTinCount + 1">{!TinAddButtonLabel}</button>
+                        <button class="btn btn-info" style="padding:5px;" ng-click="removeTin({!modellist},CPTinCount,$index);CPTinCount = CPTinCount - 1;" ng-show="CPTinCount > 0 || {!model}.TIN_2_Check_c">
+                            <span>
+                                Remove Tax Residency details
+                            </span>
+0                        </button>
+                    </div>
+                </div>
+
+
+
+
+
+
+            </div>
+
+
+
+            <div style="padding-top: 20px;" ng-if="false">
+                <div class="SectionTitle"><strong>Keeping you informed</strong></div>
+
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="marketing-pref">
+                        <!-- C0737 Start -->
+
+                        <label><input type="checkbox" ng-model="{!model}.consentNewsletter" ng-click="UnCheckConsentNone({!model})" /> E-Newsletter </label>
+                        <label><input type="checkbox" ng-model="{!model}.consentEmail" ng-click="UnCheckConsentNone({!model})" /> Email </label>
+                        <label><input type="checkbox" ng-model="{!model}.consentMail" ng-click="UnCheckConsentNone({!model})" /> Post </label>
+                        <label><input type="checkbox" ng-model="{!model}.consentSMS" ng-click="UnCheckConsentNone({!model})" /> SMS </label>
+                        <label><input type="checkbox" ng-model="{!model}.consentPhone" ng-click="UnCheckConsentNone({!model})" /> Phone </label>
+                        <!-- C0737 End -->
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <p>If you would prefer not to hear from us with Al Rayan Bank marketing information and offers, please tick here:&nbsp;<input type="checkbox" ng-model="{!model}.consentNone" ng-click="checkNoContact({!model})" /> </p>
+                    <p>You can change your preferences at any time, by writing to us at Al Rayan Bank, PO Box 12461, Birmingham, B16 6AQ or calling us on 0800 4086 407.</p>
+                    <p>In accordance with the General Data Protection Regulation, Al Rayan Bank PLC is registered as a Data Controller on the public register of Data Controllers as maintained by the Information Commissioner.</p>
+                    <p>If you would like more information about how we use your information please click <a href="https://www.alrayanbank.co.uk/privacy" target="_blank">here</a></p>
+                </div>
+            </div>
+            <!-- C0737 Start -->
+            <div class="row" ng-if="{!model}.IsMarketPrefSelected===false">
+                <div class="panel-invalid">
+                    Please select a marketing preference, we cannot proceed with your application without capturing this information.
+                </div>
+            </div>
+            </div>
+
+
+        </div>
+    </div>
+</apex:component>

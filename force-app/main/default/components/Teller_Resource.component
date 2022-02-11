@@ -1,0 +1,28 @@
+<apex:component >
+<apex:attribute name="OldKendo" type="Boolean" description="Whether to use the old version of kendo"/>
+<meta name="viewport" content="width=device-width, user-scalable=no"/>
+<apex:stylesheet value="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+<!--<apex:stylesheet value="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/flatly/bootstrap.min.css"/>-->
+<apex:stylesheet value="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/spacelab/bootstrap.min.css"/>
+<apex:stylesheet value="https://da7xgjtj801h2.cloudfront.net/2014.2.716/styles/kendo.common.min.css"/>
+<apex:stylesheet value="https://da7xgjtj801h2.cloudfront.net/2014.2.716/styles/kendo.bootstrap.min.css"/>
+<apex:stylesheet value="https://da7xgjtj801h2.cloudfront.net/2014.2.716/styles/kendo.bootstrap.mobile.min.css"/>
+<apex:stylesheet value="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css"/>
+<!--<apex:stylesheet value="{!URLFOR($Resource.CashierStyle, 'style.css')}"/>-->
+<apex:stylesheet value="{!URLFOR($Resource.Cashier, '/css/cashier.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.Cashier, '/css/cashier-theme.css')}"/>
+
+<!--<apex:includeScript value="https://code.jquery.com/jquery-1.9.1.min.js"/>-->
+<apex:includeScript value="{!URLFOR($Resource.JQuery, '/jquery-1.9.1.min.js')}"/>
+
+
+<apex:includeScript value="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.22/angular.min.js"/>
+<apex:includeScript value="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"/>
+<apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/jquery.touchswipe/1.6.4/jquery.touchSwipe.min.js"/>
+
+<apex:includeScript value="https://da7xgjtj801h2.cloudfront.net/2014.2.716/js/kendo.all.min.js"/>
+<!--<apex:includeScript value="https://cdn.kendostatic.com/2014.2.716/js/cultures/kendo.culture.en.GB.min.js"/>-->
+<apex:includeScript value="{!URLFOR($Resource.Kendo_2014_2_716, '/js/cultures/kendo.culture.en-GB.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.Cashier, '/js/cashier.js')}"/>
+
+</apex:component>

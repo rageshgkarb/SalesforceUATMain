@@ -1,0 +1,88 @@
+<!-- C00233 new page -->
+
+<apex:page showHeader="false" sidebar="false" docType="html-5.0" controller="BAA_SetUpFinanceController" action="{!Setup}">
+    <head>       
+        <c:BAA_Resource ></c:BAA_Resource>        
+    </head>
+    
+     <body>    
+        <c:BAA_Header objOpp="{!BaseOpportunity}" title="Advisor Checklist"></c:BAA_Header>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-lg-3">
+                    <apex:form >
+                        <c:BAA_Menu oppId="{!BaseOpportunity.Id}"  DirectorId="{!BaseOpportunity.ProductEventDirector__c}" />
+                    </apex:form>
+                </div>            
+                <div class="col-md-8 col-lg-9">
+                    <apex:form >
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <apex:pagemessages ></apex:pagemessages>
+                            </div>
+                        </div>
+                        
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">Set Up of Customer </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div>
+                                            Application Form Signed
+                                        </div>
+                                        <table class="table" width="50%">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="labelCol">•  Has the signed application form been received?</td>
+                                                    <td class="dataCol"><apex:inputCheckbox required="true" value="{!thisOpp.NPAA_Application_Signed__c}"/></td> 
+                                                </tr>
+                                                <tr>
+                                                    <td class="labelCol">•  Have the supporting documents been received?</td>
+                                                    <td class="dataCol"><apex:inputCheckbox required="true" value="{!thisOpp.NPAA_Documents_Received__c}"/></td> 
+                                                </tr>
+                                                <tr>
+                                                    <td class="labelCol">•  Date Received?</td>
+                                                    <td class="dataCol"><apex:inputField required="true" value="{!thisOpp.Date_Application_Received__c}"/></td> 
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <apex:variable value="{!thePrimaryApplicant}" var="thePrimeApp"/> 
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">{!thePrimeApp.Prospect_Customer__r.Name}</div>
+                            <div class="panel-body">
+                                <table class="table">
+                                    <tbody>
+                                        <apex:repeat value="{!theSecondaryAccountHolders}" var="theJAR">
+                                            <tr class="dataRow">
+                                                <td>
+                                                    {!theJAR.Prospect_Customer__r.Name} Relationship to {!thePrimeApp.Prospect_Customer__r.Name} :
+                                                </td>
+                                                <td>
+                                                    <apex:selectList value="{!theJAR.Relationship_To_Primary_Applicant1__c}" required="true"  size="1">
+                                                        <apex:selectOptions value="{!Relationships}" />
+                                                    </apex:selectList>
+                                                </td>
+                                            </tr>
+                                        </apex:repeat> 
+                                        
+                                        <tr>
+                                            <td>
+                                                <apex:commandButton value="Continue to Set Up" action="{!ContinueToEBS}" styleclass="btn-success" />
+                                            </td>
+                                        </tr>  
+                                    </tbody>
+                                </table>
+                             </div>
+                        </div>
+                     </apex:form>
+                </div>
+             </div>
+         </div>
+      </body>
+</apex:page>

@@ -1,0 +1,11 @@
+<apex:page controller="IFMProxyLogonController" action="{!doLogin}">
+<h1>Debug Info. Remove before going to Production</h1>
+<p>i3rdPartySessionID: {!i3rdPartySessionID}
+</p>
+<p>Customer From IFM: {!CustId}
+</p>
+<p>User From IFM: {!UserId}
+</p>
+<p>Session From SF: {!Login.FullURL}
+</p>
+</apex:page>

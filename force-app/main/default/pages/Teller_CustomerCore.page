@@ -1,0 +1,354 @@
+<apex:page applyBodyTag="false" showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false">
+	
+<div style="height:calc(100% - 4px); width:100%;" ng-controller="controllerCustomerDetails" ng-show="ShowCustomerCore">
+	<!-- Page Title -->
+	<div class="pageTitleContainer" ng-init="InitialiseCustomer()">
+		<div style="float: left;">
+			<img class="btn_back" src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_back.png')}" ui-sref="customers"></img>
+			<span class="pageTitleGray hidden-xs">Customer:</span>
+			<span class="pageTitleBlack customerTitle"> 
+				<!-- {{CustomerDetails.Salutation}} {{CustomerDetails.FirstName}} {{CustomerDetails.LastName}} ({{CustomerDetails.EBS_ID__c}}) -->
+				<span ng-bind-html="CustomerDetails.Salutation"></span><span> </span>
+				<span ng-bind-html="CustomerDetails.FirstName"></span><span> </span>
+				<span ng-bind-html="CustomerDetails.LastName"></span><span> </span>
+				<span>({{CustomerDetails.EBS_ID__c}})</span>
+			</span>
+		</div>
+		<div class="toolbar hidden-xs">
+			<div class="toolbarButton" ng-click="onClickRefresh()">
+				<div class="imgCircle">
+					<img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_refresh.png')}"></img>
+				</div>
+				<div class="textSmallestDarkGray caption">REFRESH</div>
+			</div>
+
+
+			<div class="toolbarButton" ng-show="!ShowViewReason" ng-click="gotoAnchor('CustomerDetails')">
+				<div class="imgCircle">
+					<img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_customer.png')}"></img>
+				</div>
+				<div class="textSmallestDarkGray caption">DETAILS</div>
+			</div>
+
+		</div>		
+	</div>
+	
+	<!-- Page Content -->
+	<div class="pageStructure">
+		<div class="pageContentContainer">
+			
+			<div class="pageContentLeft customerCoreLeft">
+				<div style="margin-top: 15px; margin-left:10px;">
+					 <div style="margin-bottom: 10px;">
+                     	<label class="pageSubTitleGray hidden-xs" style="margin-left: 5px;">Overview</label>
+                     </div>
+                	 <div style="margin-left: 7px;">
+                     <!-- start -->
+						<div style="display: inline-block;">
+
+							<!-- customer image -->
+							<div class="customerImageTile smallTile" style="float: left;" ng-class="GetCustomerStatusTileClass()">
+						    	<div class="tileIndicator" style="height:145px;"></div>
+							    	<div class="customerImg" ng-class="GetChangeImgClass()" ng-click="gotoCameraDialog()" style="height: 145px; width: 145px; background:#DDDDDD; text-align: center; overflow: hidden;">
+							    		<img onError="this.onerror=null; this.src='{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/user_error.png')}';" ng-src="{{ImageUrl}}" style="background:#DDDDDD; max-width:145px;"></img>	
+
+							    		<div class="cameraIcon" style="background: rgb(255, 255, 255); height: 36px; width: 45px;position: absolute;top: 154px;left: 116px;">
+							    			<img src="/resource/1425763481000/Teller_Includes/Teller_Includes/media/btn_camera.png" style="width: inherit; padding: 2px; margin-top: -3px;"></img>
+							    		</div>
+							    	</div>
+						   	</div>
+
+						    <div class="summaryTiles" style="float: left; margin-left: 7px; width: 195px;">
+						        <!--Status-->
+						        <div class="smallTile" ng-class="GetCustomerStatusTileClass()">
+						            <div class="tileIndicator"></div>
+						            <div class="tileBody">
+						                <div class="tileContent">
+						                    <label class="tileValue tileValueText">{{CustomerDetails.Status__c}}</label>
+						                    <label class="tileTitle tileTitleText">Status</label>
+						                </div>
+						                <img style="height: 30px; margin-top: 9px; margin-left: 20px;" src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/status.png')}"></img>
+						            </div>
+						        </div>
+
+						    	<div style="margin-top:7px;"></div>
+
+								<!--Alerts-->
+						        <div class="smallTile" ng-class="GetAlertsTileClass()">
+						            <div class="tileIndicator"></div>
+						            <div class="tileBody">
+						                <div class="tileContent">
+						                    <label class="tileValue tileValueText">{{Alerts.length}}</label>
+						                    <label class="tileTitle tileTitleText">Alerts</label>
+						                </div>
+						                <img style="height: 30px; margin-top: 9px; margin-left: 20px;" src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/alerts.png')}"></img>
+						            </div>
+						        </div>
+						    </div>
+						</div>
+
+						<div style="display:inline-block; margin-top:2px;">
+
+							<!--  Signature -->
+							<div class="signatureImageTile smallTile" style="float: left;">
+						    	<div class="tileIndicator" style="height:101px;"></div>
+						        <div class="tileBody">							             
+									<div class="customerImg" ng-class="GetChangeImgClass()" ng-click="gotoScanDialog()" style="height: 75px; width: 214px; background:#DDDDDD; overflow: hidden;">
+										<img style="max-width: 212px; margin-left: 1px;" alt="Missing" 
+										onError="this.onerror=null; this.src=null;" 
+										src="{{SignatureUrl}}"></img>
+
+										<div class="cameraIcon" style="background: rgb(255, 255, 255); height: 36px; width: 45px;position: absolute;  top: 237px;left: 184px;">
+							    			<img src="/resource/1425763481000/Teller_Includes/Teller_Includes/media/btn_sign.png" style="width: inherit; padding: 2px; margin-top: -3px;"></img>
+							    		</div>
+
+									</div>	
+								   	<div class="signatureHeaderContainer" style="height: 26px; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-width: 1px; border-color: #dadada;">
+									   	<label class="tileTitleText" style="margin-left:6px; margin-top:3px;">Signature</label>
+								    </div>
+						        </div>
+						   	</div>
+
+                            <!--  Last update -->
+							<div class="LastUpdateGray">
+								<label class="textSmallerWhite" style="margin-left: 7px;margin-top: 5px;">Last update</label>
+								<div style="text-align: center; width:115px; height: 30px; margin-top:5px;">
+									<div id="tile-content">
+										<div style="float:left; width: 115px">
+											<label class="textWhite">Missing</label>
+										</div>
+									</div>
+								</div>
+								<div>
+									<img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/date.png')}" height="18" style="float:right;margin-top:11px; margin-right:7px;" width="18"></img>
+								</div>
+							</div>
+	                    </div>
+
+                     <!-- end -->
+
+                     	<!-- Last Viewed -->
+						<div class="headerSection" ng-show="ShowViewReason" style="display:inline-block; width:343px;">
+							<div>
+								<hr style="margin-top:15px !important; margin-bottom: 10px !important; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.2); border-bottom: 1px solid rgba(255, 255, 255, 0.3)"></hr>
+							</div>
+							<div>
+								<div>
+									<label class="sectionTitleSmallGray">Last Viewed</label>
+								</div>
+								<div class="lastViewedTile" style="height: 45px; float: left; margin-top: 5px; width: 100%;">
+									<div style="background:#9c9c9c; height:64px; float: left; width: 5px;"></div>
+									<div class="lastViewedTileBody" style="float: left; height: 64px; width: 338px; background:#fdfdfd;">
+										<div style="float: left; height: 64px; width: 64px; overflow: hidden;">
+											<img style="height:64px;" onError="this.onerror=null; this.src='{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/user_error.png')}';" ng-src="{{LastViewImageUrl}}"></img>
+										</div>
+										<div style="float: left; margin-left:20px; margin-top:15px;">
+											<div>
+												<label class="textDarkGray" style="line-height: 12px;"><i>User: </i>{{LastViewName}}</label>
+											</div>
+											<div>
+												<label class="textDarkGray"><i>At: </i></label>
+												<span>
+													<span class="textDarkGray">
+														<span>{{LastViewDate | date: 'dd/MM/yyyy HH:mm:ss'}}</span>
+													</span>
+												</span>												
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Reason for viewing -->
+						<div class="headerSection" ng-show="ShowViewReason" style="width: 345px; bottom: 0; position: absolute; margin-bottom: 20px;">
+							<div>
+								<hr style="margin-top:15px !important; margin-bottom: 10px !important; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.2); border-bottom: 1px solid rgba(255, 255, 255, 0.3)"></hr>
+								<div style="margin-left:5px;">
+									<label class="sectionTitleSmallGray">Reason for Viewing</label>
+								</div>
+								<div>
+									<div class="requiredIndicator" style="height: 29px !important"></div>
+									<div class="requiredInput">
+										<div class="requiredBlock"></div>
+										<select class="textBlack" style="margin: 5px 5px 5px 0px; width:330px; height:30px;" ng-model="SelectedViewReason" ng-options="reason for reason in ReasonList">
+										</select>
+									</div>
+								</div>
+								<div style="float:right; margin-right: 5px;">
+									<input class="goldButton" type="button" value="CANCEL" ng-click="GotoCustomerSearch()"></input>
+									<input class="goldButton" type="submit" value="SUBMIT" ng-click="onClickSubmitReason()"></input>
+								</div>
+							</div>
+						</div>
+
+						<!-- Account list -->
+
+						<div ng-show="!ShowViewReason" style="display:inline-block; width:343px; margin-top:10px;">
+							<label class="pageSubTitleGray hidden-xs" style="margin-left: 5px;">Accounts</label>
+							<div class="accountListContainer">		
+																
+								<div class="menuScroll accountsMenu">									
+									<!-- Active accounts -->
+									<div ng-repeat="account in Accounts.active track by account.AccountNo" ng-show="Accounts.active.length > 0" style="display: inline-block; position: relative; width: calc(100% - 16px);">
+										<div class="accountTile tileColourGreen" ng-click="gotoAnchor(account)" style="display: table; position: relative; width: 100%;">
+											<div class="tileIndicator" style="float: none; display: table-cell; clear: both;"></div>
+											<div style="display: table-cell; vertical-align: middle; padding-left: 10px;  padding-right: 15px; padding-top: 6px; padding-bottom: 6px;">
+												<div class="sectionTitleSmallGray" style="color: black; font-size: 15px;" ng-bind-html="account.AccountType"></div>
+												<div class="textDarkGray" style="font-size: 13px;" ng-bind-html="account.AccountShortName"></div>
+												<div class="textDarkGray" style="font-size: 13px;">{{account.Name | filter_accountNumber}}</div>
+											</div>
+											<div class="sectionTitleSmallGray" style="color: black; margin-top:11px; display: table-cell; vertical-align: middle; text-align: right; padding-right: 10px;">{{account.Lines[0].Ccy | filter_currencytosymbol}}{{account.Lines[0].Amount | number: 2}}</div> 
+										</div>
+										<div ng-if="account.AccountHolders != null" style="position: absolute; top: 3px; right: -3px; background: rgb(107, 134, 179); height: 17px; width: 17px; cursor: pointer;">
+  											<div style="font-family: simpleBold; color:  white; text-align: center;">J</div>
+										</div>
+									</div>								
+								
+									<!-- blocked accounts -->								
+									<div ng-repeat="account in Accounts.blocked track by account.AccountNo" ng-show="Accounts.blocked.length > 0" style="display: inline-block; position: relative; width: calc(100% - 16px);">
+										<div class="accountTile tileColourRed" ng-click="gotoAnchor(account.Name)" style="display: table; position: relative; width: 100%;">
+											<div class="tileIndicator" style="float: none; display: table-cell; clear: both;"></div>
+											<div style="display: table-cell; vertical-align: middle; padding-left: 10px;  padding-right: 15px; padding-top: 6px; padding-bottom: 6px;">
+												<div class="sectionTitleSmallGray" style="color: black; font-size: 15px;" ng-bind-html="account.AccountType"></div>
+												<div class="textDarkGray" style="font-size: 13px;" ng-bind-html="account.AccountShortName"></div>
+												<div class="textDarkGray" style="font-size: 13px;">{{account.Name | filter_accountNumber}}</div>
+											</div>
+											<div class="sectionTitleSmallGray" style="color: black; margin-top:11px; display: table-cell; vertical-align: middle; text-align: right; padding-right: 10px;">{{account.Lines[0].Ccy | filter_currencytosymbol}}{{account.Lines[0].Amount | number: 2}}</div> 
+										</div>
+										<div ng-if="account.AccountHolders != null" style="position: absolute; top: 3px; right: -3px; background: rgb(107, 134, 179); height: 17px; width: 17px; cursor: pointer;">
+  											<div style="font-family: simpleBold; color:  white; text-align: center;">J</div>
+										</div>
+									</div>								
+								
+									<!-- inactive accounts -->								
+									<div ng-repeat="account in Accounts.inactive track by account.AccountNo" ng-show="Accounts.inactive.length > 0" style="display: inline-block; position: relative; width: calc(100% - 16px);">
+										<div class="accountTile tileColourAmber" ng-click="gotoAnchor(account.Name)" style="display: table; position: relative; width: 100%;">
+											<div class="tileIndicator" style="float: none; display: table-cell; clear: both;"></div>
+											<div style="display: table-cell; vertical-align: middle; padding-left: 10px;  padding-right: 15px; padding-top: 6px; padding-bottom: 6px;">
+												<div class="sectionTitleSmallGray" style="color: black; font-size: 15px;" ng-bind-html="account.AccountType"></div>
+												<div class="textDarkGray" style="font-size: 13px;" ng-bind-html="account.AccountShortName"></div>
+												<div class="textDarkGray" style="font-size: 13px;">{{account.Name | filter_accountNumber}}</div>
+											</div>
+											<div class="sectionTitleSmallGray" style="color: black; margin-top:11px; display: table-cell; vertical-align: middle; text-align: right; padding-right: 10px;">{{account.Lines[0].Ccy | filter_currencytosymbol}}{{account.Lines[0].Amount | number: 2}}</div> 
+										</div>
+										<div ng-if="account.AccountHolders != null" style="position: absolute; top: 3px; right: -3px; background: rgb(107, 134, 179); height: 17px; width: 17px; cursor: pointer;">
+  											<div style="font-family: simpleBold; color:  white; text-align: center;">J</div>
+										</div>
+									</div>
+								
+								
+									<!-- closed accounts -->								
+									<div ng-repeat="account in Accounts.closed track by account.AccountNo" ng-show="Accounts.closed.length > 0" style="display: inline-block; position: relative; width: calc(100% - 16px);">
+										<div class="accountTile" ng-click="gotoAnchor(account.Name)" style="display: table; position: relative; width: 100%;">
+											<div class="tileIndicator" style="float: none; display: table-cell; clear: both;"></div>
+											<div style="display: table-cell; vertical-align: middle; padding-left: 10px;  padding-right: 15px; padding-top: 6px; padding-bottom: 6px;">
+												<div class="sectionTitleSmallGray" style="color: black; font-size: 15px;" ng-bind-html="account.AccountType"></div>
+												<div class="textDarkGray" style="font-size: 13px;" ng-bind-html="account.AccountShortName"></div>
+												<div class="textDarkGray" style="font-size: 13px;">{{account.Name | filter_accountNumber}}</div>
+											</div>
+											<div class="sectionTitleSmallGray" style="color: black; margin-top:11px; display: table-cell; vertical-align: middle; text-align: right; padding-right: 10px;">{{account.Lines[0].Ccy | filter_currencytosymbol}}{{account.Lines[0].Amount | number: 2}}</div> 
+										</div>
+										<div ng-if="account.AccountHolders != null" style="position: absolute; top: 3px; right: -3px; background: rgb(107, 134, 179); height: 17px; width: 17px; cursor: pointer;">
+  											<div style="font-family: simpleBold; color:  white; text-align: center;">J</div>
+										</div>
+									</div>
+								</div>
+																
+								<!-- <ul class="menuScroll accountsMenu">
+									<li ng-show="Accounts.active.length > 0" style="display: inline-block; position: relative;" ng-repeat="account in Accounts.active track by account.AccountNo">
+										<div class="accountTile tileColourGreen" ng-click="gotoAnchor(account.Name)">
+											<div class="tileIndicator" style="height: 70px;"></div>  
+											<div class="tileBody" style="min-height: 70px; min-width: 322px;"> 
+												<div style="float: left;padding: 6px;margin-left: 4px;">
+													<div class="sectionTitleSmallGray" style="color: black; font-size: 15px;">{{account.AccountType}}</div>
+													<div class="textDarkGray" style="font-size: 13px;">{{account.AccountShortName}}</div>
+													<div class="textDarkGray" style="font-size: 13px;">{{account.Name | filter_accountNumber}}</div>
+												</div>
+												<div class="sectionTitleSmallGray" style="float: right;padding: 16px; color: black; margin-top:11px;">{{account.Lines[0].Ccy | filter_currencytosymbol}}{{account.Lines[0].Amount | number: 2}}</div> 
+											</div>
+										</div>
+										<div ng-if="account.AccountHolders != null" style="position: absolute; top: 3px; right: 6px; background: rgb(107, 134, 179); height: 17px; width: 17px; cursor: pointer;">
+  											<div style="font-family: simpleBold; color:  white; text-align: center;">J</div>
+										</div>
+									</li>
+									
+									<li ng-show="Accounts.blocked.length > 0" style="display: inline-block; position: relative;" ng-repeat="account in Accounts.blocked track by account.AccountNo">
+										<div class="accountTile tileColourRed" ng-click="gotoAnchor(account.Name)">
+											<div class="tileIndicator" style="height: 70px;"></div>  
+											<div class="tileBody" style="min-height: 70px; min-width: 322px;"> 
+												<div style="float: left;padding: 6px;margin-left: 4px;">
+													<div class="sectionTitleSmallGray" style="color: black; font-size: 15px;">{{account.AccountType}}</div>
+													<div class="textDarkGray" style="font-size: 13px;">{{account.AccountShortName}}</div>
+													<div class="textDarkGray" style="font-size: 13px;">{{account.Name | filter_accountNumber}}</div>
+												</div>
+												<div class="sectionTitleSmallGray" style="float: right;padding: 16px; color: black; margin-top:11px;">{{account.Lines[0].Ccy | filter_currencytosymbol}}{{account.Lines[0].Amount | number: 2}}</div> 
+											</div>
+										</div>
+										<div ng-if="account.AccountHolders != null" style="position: absolute; top: 3px; right: 6px; background: rgb(107, 134, 179); height: 17px; width: 17px; ">
+  											<div style="font-family: simpleBold; color:  white; text-align: center;">J</div>
+										</div>
+									</li>
+									
+									<li ng-show="Accounts.inactive.length > 0" style="display: inline-block; position: relative;" ng-repeat="account in Accounts.inactive track by account.AccountNo">
+										<div class="accountTile tileColourAmber" ng-click="gotoAnchor(account.Name)">
+											<div class="tileIndicator" style="height: 70px;"></div>  
+											<div class="tileBody" style="min-height: 70px; min-width: 322px;"> 
+												<div style="float: left;padding: 6px;margin-left: 4px;">
+													<div class="sectionTitleSmallGray" style="color: black; font-size: 15px;">{{account.AccountType}}</div>
+													<div class="textDarkGray" style="font-size: 13px;">{{account.AccountShortName}}</div>
+													<div class="textDarkGray" style="font-size: 13px;">{{account.Name | filter_accountNumber}}</div>
+												</div>
+												<div class="sectionTitleSmallGray" style="float: right;padding: 16px; color: black; margin-top:11px;">{{account.Lines[0].Ccy | filter_currencytosymbol}}{{account.Lines[0].Amount | number: 2}}</div> 
+											</div>
+										</div>
+										<div ng-if="account.AccountHolders != null" style="position: absolute; top: 3px; right: 6px; background: rgb(107, 134, 179); height: 17px; width: 17px; ">
+  											<div style="font-family: simpleBold; color:  white; text-align: center;">J</div>
+										</div>
+									</li>
+									
+									<li ng-show="Accounts.closed.length > 0" style="display: inline-block; position: relative" ng-repeat="account in Accounts.closed track by account.AccountNo">
+										<div class="accountTile" ng-click="gotoAnchor(account.Name)">
+											<div class="tileIndicator" style="height: 70px;"></div>  
+											<div class="tileBody" style="min-height: 70px; min-width: 322px;"> 
+												<div style="float: left;padding: 6px;margin-left: 4px;">
+													<div class="sectionTitleSmallGray" style="color: black; font-size: 15px;">{{account.AccountType}}</div>
+													<div class="textDarkGray" style="font-size: 13px;">{{account.AccountShortName}}</div>
+													<div class="textDarkGray" style="font-size: 13px;">{{account.Name | filter_accountNumber}}</div>
+												</div>
+												<div class="sectionTitleSmallGray" style="float: right;padding: 16px; color: black; margin-top:11px;">{{account.Lines[0].Ccy | filter_currencytosymbol}}{{account.Lines[0].Amount | number: 2}}</div> 
+											</div>
+										</div>
+										<div ng-if="account.AccountHolders != null" style="position: absolute; top: 3px; right: 6px; background: rgb(107, 134, 179); height: 17px; width: 17px; ">
+  											<div style="font-family: simpleBold; color:  white; text-align: center;">J</div>
+										</div>
+									</li>
+								</ul> -->
+								
+							</div>
+						</div>
+                     </div>
+				</div>
+			</div>
+			
+			<div class="pageContentRight customerCoreRight">
+
+				<div style="height:calc(100% - 15px);" ui-view="viewCustomerChild"></div>
+
+			</div>
+
+		</div>
+	</div>
+	
+	<!--  Mobile view of account -->
+	<div ng-show="mobileMode == true && account != null" style="position: absolute; top: 50px; background: white; width: 100%; height: calc(100% - 50px); padding-top: 0px; padding-right:3px; padding-bottom: 0px !important;">
+		<div style="position: relative;">
+			<img class="closeBtn" src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/close.png')}" style="float: right; margin-top: 0px; margin-right: 4px; background: #F4F4F4;" ng-click="account = null;"></img>
+		</div>
+		<div ng-if="mobileMode == true && account != null" style="height: 100%;width: 100%;">
+			<c:Teller_Account_Template accountStatus="Active"></c:Teller_Account_Template>
+		</div>
+	</div>
+</div>
+
+</apex:page>

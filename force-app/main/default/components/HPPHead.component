@@ -1,0 +1,56 @@
+<apex:component >
+    <head>
+        <apex:includeScript value="{!$Resource.pca__LookupComponent}" />
+        <apex:includeScript value="{!$Resource.pca__EditPageLauncher}" />
+        <apex:includeScript value="{!$Page.pca__EditPageSettings}" />
+        
+        <style type="text/css" media="screen">
+#container {
+    width: 100%;
+    
+    
+}
+#content1 {
+    background: #f1f2ea;
+    margin-left: 200px;
+   
+}
+#sidebar {
+    width: 200px;
+    float: left;
+}
+
+.clearing {
+    height: 0;
+    clear: both;
+}
+
+.bPageBlock{
+    clear:none;
+}
+
+.apexp .bPageBlock.apexDefaultPageBlock .pbBody {
+    margin: 0px;
+}
+
+.EvRed
+{
+    Background-color:#FF7373;    
+}
+.EvGreen
+{
+    Background-color:#74E868;    
+}
+.EvYellow
+{
+    Background-color:#F7FE72;    
+}
+
+.EvOrange
+{
+    Background-color:#ffc040;    
+}
+
+</style>
+    </head>
+</apex:component>

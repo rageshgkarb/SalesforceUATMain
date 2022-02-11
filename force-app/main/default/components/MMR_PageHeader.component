@@ -1,0 +1,62 @@
+<apex:component >
+<apex:includeScript value="{!URLFOR($Resource.ibbstyle,'/kendo/jquery.min.js')}"/>
+<!--
+<apex:stylesheet value="{!URLFOR($Resource.Bootstrap, '/css/ibbbootstrap.min.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.Bootstrap, '/css/bootstrap-theme.min.css')}"/>
+-->
+<apex:stylesheet value="{!URLFOR($Resource.Bootstrap, '/css/bootstrap.min.css')}"/>
+
+
+<apex:includeScript value="{!URLFOR($Resource.Bootstrap, '/js/bootstrap.min.js')}"/>
+<!--<apex:includeScript value="{!URLFOR($Resource.Bootstrap, '/js/hammer.min.js')}"/>-->
+<!--<apex:stylesheet value="{!URLFOR($Resource.KendoNew, '/styles/kendo.common-bootstrap.min.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.KendoNew, '/styles/kendo.bootstrap.min.css')}"/>-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  
+<!--  CPDR01-->
+  <style>
+	  
+	  .panel-info>.panel-heading
+	  {
+	  	  background-color:#000 !important;
+	  }
+  </style>
+  <!--  CPDR01-->
+	
+<script>
+    function FadeInput(value, compareTo,fadeClass)
+    {
+        if(value == compareTo)
+        {
+            $("." + fadeClass).fadeIn(500);
+        }
+        else
+        {
+            $("." + fadeClass).fadeOut(500);
+        } 
+    }
+
+    function FadeInputContains(value, contains,fadeClass)
+    {
+        if(value.indexOf(contains) !== -1)
+        {
+            $("." + fadeClass).fadeIn(500);
+        }
+        else
+        {
+            $("." + fadeClass).fadeOut(500);
+        } 
+    }
+
+    function GetApplicantNo(className,objId)
+    {
+        var classList = document.getElementById(objId).className.split(/\s+/);
+        for (var i = 0; i < classList.length; i++) {
+           if (classList[i].substr(0,classList[i].length-1 ) === className) {
+             return classList[i].substr(classList[i].length-1);
+           }
+        }
+    }
+</script>
+    
+</apex:component>

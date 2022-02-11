@@ -1,0 +1,45 @@
+<apex:page action="{!Setup}" sidebar="false" showHeader="false" controller="HPPTempRewindController" >
+  <!-- Begin Default Content REMOVE THIS -->
+   <head><c:KendoResource ></c:KendoResource></head>
+ <apex:form >
+ 
+<div style="padding:20px;">
+<h1 style="font-size: 20px;">Rewind Event</h1>
+<br/><br/>
+    <table>
+    <tr>
+     <td valign="top" style="text-align:right;" ><apex:commandButton styleClass="redBtn" value="Go back to AIP" action="{!BackToAIP}"/></td>
+     
+<td>
+    <ul>
+        <li>Go back to AIP stage</li>    
+        <li>Delete FIS if one exists</li>
+        <li>Redo application event once AIP is completed</li>    
+        <li>Any data already entered in AIP or application form will still be there and the screen will be prepopulated.</li>    
+                
+    </ul>
+    </td>     
+</tr>
+
+<tr>
+    <td valign="top" style="text-align:right;"><apex:commandButton styleClass="redBtn" value="Go back to Application" action="{!BackToAPP}"/></td>
+    <td>
+     <ul>
+        <li>Go back to the start of application event</li>    
+        <li>Delete application form if one exists</li>  
+              <li>Any data already entered in application will still be there and the screen will be prepopulated.</li>    
+                
+    </ul>
+    </td>
+    </tr>
+
+</table>
+
+    
+  After clicking a button, you will be redirected to the select event.
+    
+ 
+ </div>
+  <!-- End Default Content REMOVE THIS -->
+  </apex:form>
+</apex:page>

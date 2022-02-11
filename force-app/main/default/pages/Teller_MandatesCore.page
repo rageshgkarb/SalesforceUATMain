@@ -1,0 +1,31 @@
+<apex:page applyBodyTag="false" showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false">
+    <head>
+        <!-- <c:Teller_Resource ></c:Teller_Resource> -->
+        
+        <apex:includeScript value="{!URLFOR($Resource.Cashier, '/js/pages/formatting.js')}"/>
+        </head>
+        <body>
+            <div ng-controller="controllerMandates">
+                <div ng-init="init()">
+                    <div class="pageTitleContainer">
+                        <div style="float: left;">
+                            <span ng-show="stage == '20'">
+                                <img class="btn_back" src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_back.png')}" ng-click="GoBackToSearch()"></img>
+                            </span>
+                            <span class="pageTitleGray">{{thisPageTitle}}</span>
+                            
+                        </div>
+                        
+                    </div>
+                    <!-- <div class="pageTitleGray">
+                        <span ng-show="stage == '20'">
+                            <img class="btn_back" src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_back.png')}" ng-click="GoBackToSearch()"></img>
+                        </span>
+                        <span class="pageTitle">{{thisPageTitle}}</span>
+                    </div> -->
+                    <div ui-view="viewMandateChild">
+                    </div>
+                </div>
+                </div> <!-- #BranchController -->
+            </body>
+        </apex:page>

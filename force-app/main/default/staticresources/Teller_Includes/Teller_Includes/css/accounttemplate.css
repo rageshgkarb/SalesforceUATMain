@@ -1,0 +1,316 @@
+.summaryContainer
+{
+	width: 665px;
+	height: 160px;
+	background: rgb(244, 244, 244);
+	padding: 7px;
+}
+
+.goldTile
+{
+    width: 323px;
+    height: 69px;
+    background: rgb(190, 175, 139);
+    margin-top: 5px;
+}
+
+
+.accountExpanderContainer
+{
+	margin-top:7px;
+	width: 665px;	
+	height: calc(100% - 200px); 
+	min-height: 300px; 
+	border:  1px solid rgb(229, 229, 229);
+}
+
+.accountExpanderHeader
+{
+	padding: 7px; 
+	padding-left: 17px; 
+	background: rgb(249, 249, 249); 
+	border: 1px solid rgb(229, 229, 229); 
+	cursor: pointer;
+}
+
+.accountExpanderHeader:hover
+{ 
+	background: rgb(231, 231, 231);
+}
+
+.accountExpanderHeaderSelected
+{ 
+	background: rgb(231, 231, 231);
+}
+
+.accountExpanderContent
+{
+	height: calc(100% - 215px);/*MB changed from 20160226 calc(100% - 172px);"*/
+	background: rgb(252, 252, 252);
+	overflow-y: auto;
+  	overflow-x: hidden;
+}
+
+
+.accountExpander > .k-item > .k-link
+{
+	color: #b3995d !important;
+}
+
+.accountScrollSection > span
+{
+	display: inline-block;
+	width: 100%;
+	height: 100%;
+}
+
+.accountFunctionRootsContainer {
+	max-width: 663px;
+	height: auto;
+	padding: 5px;
+	white-space: normal;
+	/* margin-left: 2px; */
+}
+
+.accountFunctionRoot {
+	display: inline-flex;
+	position: relative;
+	background: #AEAEAE;
+	z-index: 0;
+	cursor: pointer;
+	margin: 3px !important;
+	opacity: 0.8;
+}
+
+.accountFunctionRootNormal
+{
+	width: 157px;
+	height: 90px;
+	-webkit-transition: width 0.5s ease, height 0.5s ease;
+	transition: width 0.5s ease, height 0.5s ease;
+}
+
+.accountFunctionRootMinimised
+{
+	width: 70px;
+	height: 60px;
+	font-size: 11px;
+	-webkit-transition: width 0.5s ease, height 0.5s ease;
+	transition: width 0.5s ease, height 0.5s ease;
+}
+
+.accountFunctionRootMinimised > .accountFunctionRootIcon
+{
+	visibility: collapse;
+	margin: 0px;
+}
+
+.accountFunctionRootHidden
+{
+	width: 0px;
+	height: 0px;
+	margin: 0px;
+	visibility: collapse;
+}
+
+.accountFunctionRoot:hover {
+	z-index: 100;
+	opacity:1;
+	background: #BEAF8B;
+	box-shadow: 1px 1px 3px #5A5A5A;
+}
+
+.accountFunctionRootContent
+{
+	width: 154px;
+	margin: 0.6em;
+}
+
+.accountFunctionRootIcon
+{
+	height: 5px;
+	width: 25px;
+	margin-top: 76px;
+	margin-right: 10px;
+}
+
+.accountFunctionContainer {
+	/*display: inline-flex;*/
+	position: relative;
+	width: 0px;
+	height: 0px;
+	background: #E7E7E7;
+	/*z-index: 0;*/
+	cursor: pointer;
+	margin: 3px;
+	opacity: 0.8;
+	visibility: collapse;
+	overflow: hidden;
+}
+
+.accountFunctionContainerShow {
+    width: 647px;
+	/*height: 300px;*/
+	height:100%;
+	-webkit-transition:  height 0.5s ease;
+	transition: height 0.5s ease;
+	visibility: visible;
+}
+
+.accountFunctionsListContainer
+{
+	/*height: 240px;*/
+	width: 605px;
+    /*position: absolute;*/
+    left: 0;
+    /*margin-top: 35px;*/
+    margin-left: 12px;
+    margin-bottom: 12px;
+}
+
+.accountFunctionList
+{
+	visibility: visible;
+	/*height: 247px;	*/
+	width: 624px;
+	margin: 0;
+	margin-top: 5px;
+	padding: 0;
+}
+
+.accountFunctionContainer {
+	white-space: initial;
+	padding:0;
+
+}
+
+.accountFunction {
+	display: inline-flex;
+	display: -webkit-inline-flex;
+	display: -ms-inline-flexbox;
+	position: relative;
+	background: #B3995D;
+	z-index: 0;
+	cursor: pointer;
+	margin: 3px;
+	opacity: 0.7;
+	height: 90px;
+	width: 120px;
+}
+
+.accountFunction:hover {
+	z-index: 100;
+	opacity:1;
+	background: black;
+	box-shadow: 1px 1px 3px #5A5A5A;
+}
+
+.accountFunctionContent
+{	
+	margin: 0.5em;
+}
+
+.transactionHistory > .k-grid-content
+{
+	height: 360px;
+}
+
+.tag
+{
+	float: right; 
+	height: 30px; 
+	vertical-align: middle; 
+	text-align: center;  
+	padding: 6px;
+	margin-left: 5px;
+	min-width: 30px;
+}
+
+.primaryTag
+{
+	background: rgb(179, 153, 93);
+}
+
+.groupTag
+{
+	background: #929292;
+}
+
+
+/*Account activity list*/
+
+.accSearchResultItem{
+	height: auto !important;
+	width: 100%;
+}
+
+.accItemText{
+	font-size: 13px !important;
+}
+
+.accSearchResultActivityDateTime {
+	display: block !important;
+	width: auto !important;
+	border-right: none !important;
+	padding-right: 0px !important;
+}
+
+	.accSearchResultActivityDateTime :nth-child(1) {
+		display: inline-flex !important;
+		display: -webkit-inline-flex !important;
+		display: -ms-inline-flexbox !important;
+	}
+
+	.accSearchResultActivityDateTime :nth-child(2) {
+		display: inline-flex !important;
+		display: -webkit-inline-flex !important;
+		display: -ms-inline-flexbox !important;
+	}
+
+.accSearchResultActivityDetails {
+	display: block !important;
+	padding-left: 0px !important;
+	padding-right: 0px !important;
+}
+
+	.accSearchResultActivityDetails :nth-child(1) {
+		display: inline-flex !important;
+		display: -webkit-inline-flex !important;
+		display: -ms-inline-flexbox !important;
+	}
+
+	.accSearchResultActivityDetails :nth-child(2) {
+		display: inline-flex !important;
+		display: -webkit-inline-flex !important;
+		display: -ms-inline-flexbox !important;
+	}
+
+	.accSearchResultActivityDetails :nth-child(3) {
+		display: inline-flex !important;
+		display: -webkit-inline-flex !important;
+		display: -ms-inline-flexbox !important;
+	}
+
+.accSearchResultActivityStatus {
+	display: block !important;
+	padding-right: 0px !important;
+	padding-left: 0px !important;
+	border-left: none !important;
+}
+	.accSearchResultActivityStatus :nth-child(1) {
+		display: inline-flex !important;
+		display: -webkit-inline-flex !important;
+		display: -ms-inline-flexbox !important;
+	}
+
+	.accSearchResultActivityStatus :nth-child(2) {
+		display: inline-flex !important;
+		display: -webkit-inline-flex !important;
+		display: -ms-inline-flexbox !important;
+		float: none !important;
+	}
+
+.accSearchResultActivityAmount {
+	padding-left: 0px !important;
+	border-left: none !important;
+}

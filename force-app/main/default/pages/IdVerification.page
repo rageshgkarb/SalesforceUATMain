@@ -1,0 +1,20 @@
+<apex:page sidebar="true" showHeader="true"  >
+    <apex:includeLightning />    
+    <div id="LightningComponentid" />   
+<!-- the Id of div tag which will be used to render your LWC component  -->
+    <script>
+        $Lightning.use("c:IdVerificationApp", function() {
+            $Lightning.createComponent("c:IdVerificationComponent",
+            { 
+                message   : 'Simple Message From VF Page', // You can pass the value to @api attributes if you have inside JavaScript Class.
+                recordId : '{!$CurrentPage.parameters.id}',
+                outbound: '{!$CurrentPage.parameters.outbound}'
+               
+            },
+            "LightningComponentid", // the Id of div tag where your component will be rendered
+            function(cmp) {
+                console.log('Calling the LWC Component');
+            });
+        });
+    </script>
+</apex:page>

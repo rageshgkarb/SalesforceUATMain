@@ -1,0 +1,248 @@
+<apex:component >
+    <div class="row">
+        <div class="panel panel-primary">
+            <div class="panel-body">
+                <div class="col-sm-12">
+                    Please provide the Entity status below by selecting one of the options for Entity type 'Financial institution (FI)' or
+                    'Non-Financial Entity (NFE)'. Where the Entity is a NFE, please advise of its  status, active or passive.
+                    For your assistance, you can read the selected summaries of defined terms on our website at alrayanbank.co.uk/tax-forms.
+
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">Section 3 - Entity Type</div>
+            <div class="panel-body">
+                <form name="formSection3" novalidate="novalidate">
+                    <div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Please select an Entity type</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <select class="form-control" ng-model="Data.Applicant.Entity_Type_c" ng-required="true" ng-options="option for option in Data.EntityTypes"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6" ng-show="Data.Applicant.Entity_Type_c == 'Non Financial Entity'">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Please select Non-Financial Entity type</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <select class="form-control" ng-model="Data.Applicant.Non_Financial_Entity_Type_c" ng-required="Data.Applicant.Entity_Type_c == 'Non-Financial Institution'"
+                                                ng-options="option for option in Data.NonFinancialEntityTypes" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12" ng-show="Data.Applicant.Entity_Type_c == 'Financial Institution'">
+                                <div class="form-group">
+                                    <div class="col-sm-3">
+                                        <label>Please select Financial Institution type</label>
+                                    </div>
+                                    <div class="col-sm-9" style="padding-left: 7px;">
+                                        <select class="form-control" ng-model="Data.Applicant.Financial_Institution_Type_c" ng-required="Data.Applicant.Entity_Type_c == 'Financial Institution'"
+                                                ng-options="option for option in Data.FinancialInstitutionTypes" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row" ng-if="Data.Applicant.Entity_Type_c == 'Financial Institution'">
+                            <div class="col-md-6">
+                                <div class="form-group" ng-show="Data.Applicant.Entity_Type_c == 'Financial Institution'">
+                                    <div class="col-sm-6">
+                                        <label>Please provide, if held the Entity’s Global Intermediary Identification Number (GIIN)
+                                            for FATCA purposes</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="text" style="margin-bottom: 8px;" class="form-control" ng-model="Data.Applicant.GIIN_For_FATCA_c"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div ng-show="Data.Applicant.Entity_Type_c">
+
+                            <!--
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Please select Investment Entity type</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <select class="form-control" ng-model="Data.Applicant.Investment_Entity_Type_c" ng-required="Data.Applicant.Financial_Institution_Type_c == 'Investment Entity'"
+                                                ng-options="option for option in Data.InvestmentEntityTypes" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Please select Non-Investment Entity type</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <select class="form-control" ng-model="Data.Applicant.Non_Investment_Entity_Type_c" ng-required="Data.Applicant.Financial_Institution_Type_c == 'Non Investment Entity'"
+                                                ng-options="option for option in Data.NonInvestmentEntityTypes" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            -->
+
+
+
+
+                            <div  ng-show="Data.Applicant.Non_Financial_Entity_Type_c=='Active' && Data.Applicant.Entity_Type_c == 'Non Financial Entity'">
+
+
+                                <div class="row">
+
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                        <label>Please select the active status that applies</label>
+                                            </div>
+                                    </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
+                                <div class="col-lg-8">
+
+
+
+                                            <div class="checkbox">
+                                                <label>
+                                                    <!--
+                                                    <select class="form-control" ng-model="Data.Applicant.ActiveNFEType_c" ng-required="Data.Applicant.ActiveNFEType == 'Non Investment Entity' && Data.Applicant.Non_Financial_Entity_Type_c=='Active'"
+                                                            ng-options="option for option in Data.ActiveNFETypes" />
+                                                            -->
+
+                                                    <select class="form-control" ng-model="Data.Applicant.ActiveNFEType_c" ng-required="Data.Applicant.ActiveNFEType == 'Non Investment Entity' && Data.Applicant.Non_Financial_Entity_Type_c=='Active'"
+                                                            ng-options="item as item.Value for item in Data.ActiveNFETypesKeyValues track by item.keyVal" />
+
+
+
+
+
+                                                    <!--
+                                                    <input type="checkbox" ng-model="status.checked">
+                                                    <span ng-bind-html="status.Value"></span>
+                                                    </input>-->
+                                                </label>
+                                            </div>
+
+
+                                        <!--
+                                        <div class="col-md-6">
+                                            <div class="checkbox" ng-repeat="status in Data.ActiveStatuses" ng-if="$index + 1 <= (Data.ActiveStatuses.length / 2)">
+                                                <label>
+                                                    <input type="checkbox" ng-model="status.checked">
+                                                    <span ng-bind-html="status.Value"></span>
+                                                    </input>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="checkbox" ng-repeat="status in Data.ActiveStatuses" ng-if="$index + 1 > (Data.ActiveStatuses.length / 2)">
+                                                <label>
+                                                    <input type="checkbox" ng-model="status.checked">
+                                                    <span ng-bind-html="status.Value"></span>
+                                                    </input>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        -->
+
+                                </div>
+                                </div>
+
+
+                                <div  ng-if="Data.Applicant.ActiveNFEType_c=='Active NFE – a corporation the stock of which is regularly traded on an established securities market or a corporation which is a related entity of such a corporation'">
+
+                                    <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <div class="col-md-3 col-lg-4">
+                                                <label>Please provide the name of the established securities market on which the corporation is regularly traded</label>
+                                            </div>
+                                            <div class="col-md-9 col-lg-8">
+                                                <input type="text" style="margin-bottom: 8px;" class="form-control" ng-model="Data.Applicant.Established_Securities_Market_c" ng-maxlength="255"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                    <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <div class="col-md-3 col-lg-4">
+                                                <label>If you are a Related Entity of a regularly traded corporation, please provide the name of the regularly traded corporation that the Entity in (a) is a Related Entity of</label>
+                                            </div>
+                                            <div class="col-md-9 col-lg-8">
+                                                <input type="text" style="margin-bottom: 8px;" class="form-control" ng-model="Data.Applicant.Regularly_Traded_Corporation_c" ng-maxlength="255"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+
+                            <!--
+                            <div class="row" ng-show="Data.Applicant.ActiveNFEType_c=='Passive'">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Please select Passive status</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <select class="form-control" ng-model="Data.Applicant.Passive_Status_c" ng-required="Data.Applicant.Non_Financial_Entity_Type_c == 'Passive'"
+                                                    ng-options="option for option in Data.PassiveStatuses" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <div class="row" ng-show="Data.Applicant.Non_Financial_Entity_Type_c=='Passive'">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Please select Passive status</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <select class="form-control" ng-model="Data.Applicant.Passive_Status_c" ng-required="Data.Applicant.Non_Financial_Entity_Type_c == 'Passive'"
+                                                ng-options="option for option in Data.PassiveStatuses" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            -->
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</apex:component>

@@ -1,0 +1,29 @@
+<apex:component >
+	<div style="margin-top: 10px; min-height: 124px;">    
+		<div style="width: 430px; background: rgb(247, 247, 247);display: table-cell;" ng-show="pageData.ManagerAuthorisors.Authorisors.length > 0">
+			<div style="background: rgb(215, 215, 215); height: 50px; width: 50px; margin: 6px; float: left; position:relative;">
+				<img ng-show="pageData.ManagerAuthorisors.selectedAuthorisor != null" style="height: 50px; width: 50px; float: left; position:absolute;" ng-src="{{pageData.ManagerAuthorisors.selectedAuthorisor.ImageUrl}}" onError="this.onerror=null; this.src='{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/user_error.png')}';"></img>
+				<img style="height: 75px; width: 75px; position:absolute; top: -25px; left: -25px;" ng-show="pageData.ManagerAuthorisors.selectedAuthorisor.Verified" src="{!URLFOR($Resource.Teller_Includes,'/Teller_Includes/media/checked_corner.png')}"></img>
+			</div>
+			<div style="float: left;padding:  5px;width: 360px;padding-left: 5px;">
+				<c:Teller_Material_Select labelText="Override Authorisor" modelProperty="pageData.ManagerAuthorisors.selectedAuthorisor" width="100%" show="true" disabled="pageData.ManagerAuthorisors.selectedAuthorisor.Verified" datasource="pageData.ManagerAuthorisors.Authorisors" fieldTextName="Name" fieldValueName="AuthorisorId" styleBackground="rgb(247, 247, 247);" styleMarginBottom="0px;" onChange="onManagerChanged(kendoEvent, 'selectedAuthorisor')"></c:Teller_Material_Select>
+			</div>
+		</div>
+
+		<div style="float: left;" ng-show="(pageData.ManagerAuthorisors.selectedAuthorisor != null) || (pageData.ManagerAuthorisors.selectedAuthorisor.Name!='') || (pageData.ManagerAuthorisors.selectedAuthorisor.Verified != true)">
+			<div ng-show="(pageData.ManagerAuthorisors.selectedAuthorisor!=null) && (pageData.ManagerAuthorisors.selectedAuthorisor!='') && (pageData.ManagerAuthorisors.selectedAuthorisor.Verified != true)" style="width: 430px; background: rgb(247, 247, 247);display: table-cell;">
+				
+				<div style="float: left;padding:  5px;width: 422px;padding-left: 67px; margin-bottom: 5px;">
+					<div style="float:left;">
+						<c:Teller_Material_Input type="password" labelText="Password" modelProperty="pageData.ManagerAuthorisors.selectedAuthorisor.Password" width="318px" show="pageData.ManagerAuthorisors.selectedAuthorisor!=''" styleMarginBottom="0px;" infoText="{{pageData.ManagerAuthorisors.selectedAuthorisor.IncorrectPassword == true ? 'Incorrect password' : 'Verified'}}" infoTextNgShow="pageData.ManagerAuthorisors.selectedAuthorisor.IncorrectPassword || pageData.ManagerAuthorisors.selectedAuthorisor.Verified" infoTextIsError="pageData.ManagerAuthorisors.selectedAuthorisor.IncorrectPassword" disabled="pageData.ManagerAuthorisors.selectedAuthorisor.Verified"></c:Teller_Material_Input>
+					</div>
+					<div style="float: right; margin-top: 15px;">
+						<button class="goldButton" style="margin-right: 0px; padding: 3.5px !important; margin-left: -2px;" ng-click="PasswordVerification(pageData.ManagerAuthorisors.selectedAuthorisor)">
+							<img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/sort_direction.png')}" style="height: 25px; transform: rotate(-90deg); -webkit-filter: invert(1);"></img>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</apex:component>

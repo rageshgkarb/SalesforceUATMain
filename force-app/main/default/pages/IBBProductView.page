@@ -1,0 +1,5 @@
+<apex:page standardController="IBB_Product__c" extensions="RedirectCE" id="thePage" action="{!redirectViewPage}" showHeader="false" sidebar="false">
+
+  IBB_Product__c Redirect page: {!ProfileName}
+  
+</apex:page>

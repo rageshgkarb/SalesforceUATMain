@@ -1,0 +1,1020 @@
+<apex:page controller="MMR_UnderwriterPostAssesmentController" sidebar="false" showHeader="false" action="{!Setup}" >
+    <head>
+        <c:KendoResource ></c:KendoResource>
+        
+        <style>
+        .Section
+        {
+            padding: 20px;
+        }
+        .valtitle
+        {
+            text-align:right;
+            padding-right:10px;
+            font-weight: bold;
+        }
+        
+        .numberVal
+        {
+            text-align:right;
+            padding-right:10px;    
+        }
+        .box
+        {
+            border: solid 1px #666;
+            padding: 10px;
+        }
+        .highLight
+        {
+            border: solid 2px red;
+        }        
+        
+        </style>
+        
+         
+    </head>
+    <body>
+        <apex:form >
+            <div id="formWrapper">
+                <!-- C00095-->
+                <c:HPPSummary objAcc="{!Accounts[0]}" objOpp="{!opp}" objExOpp="{!ExOpp}" Product="{!Prod}" />
+                <div id="container" >
+                    <table width="100%">
+                        <tr>
+                            <td valign="top" id="sidebar">
+                                <c:HPPBOMenu oppId="{!Opp.Id}"  DirectorId="{!Opp.ProductEventDirector__c}" />
+                            </td>
+                            <td valign="top" id="contenttd">
+                                <div id="content">
+                                    <h1>Underwriter Assesment</h1>
+                                <apex:pageMessages ></apex:pageMessages>
+                                <ul id="asspanelbar">
+                                    <li class="k-state-active">
+                                        <span class="k-link k-state-selected">Section A: Application Information</span>
+                                        <div >
+                                            <apex:outputPanel id="affordUP">
+                                            <div class="Section">
+                                            <apex:commandButton styleClass="blueBtn" action="{!RerunAffordability}" value="Rerun Affordibility"/>
+                                            <c:Underwriter_Application_Info rendered="{!!IsBTL}" gross="{!TotalGross}" net="{!TotalNet}" res="{!Affordability}"  ></c:Underwriter_Application_Info>
+                                            <c:Underwriter_Application_BTL_Info rendered="{!IsBTL}" gross="{!TotalGross}" net="{!TotalNet}" res="{!Affordability}"  ></c:Underwriter_Application_BTL_Info>
+                                            </div>
+                                            </apex:outputPanel>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <span class="k-link">Section B: Existing Customer Asset Information</span>
+                                        <div>
+                                            <div class="Section">
+                                            <c:Underwritter_Existing_Asset accounts="{!IBBAccounts}" ></c:Underwritter_Existing_Asset>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <span class="k-link">Section C: Current Asset Applications within Pipeline</span>
+                                        <div>
+                                            <div class="Section">
+                                            <c:Underwriter_Pipeline_Asset accounts="{!IBBAccountsPipeline}" ></c:Underwriter_Pipeline_Asset>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <span class="k-link">Section D: Existing Customer Liability Information</span>
+                                        <div>
+                                            <div class="Section">
+                                            <c:Underwriter_Existing_Liability accounts="{!IBBAccountsLiability }" ></c:Underwriter_Existing_Liability>
+                                            </div>
+                                        </div>
+                                    </li>   
+                                                                                                                                             
+                                </ul>    
+                                
+                                <div style="min-height: 800px;">
+                                <div id="asstabstrip" >
+                                    <ul>
+                                      
+                                        <apex:repeat value="{!Credits}" var="a">
+                                        
+                                        <li>
+                                            Credit Response ({!a.Prospect_Customer__r.Name})
+                                        </li>
+                                        </apex:repeat>
+                                        <li>
+                                            Application Data
+                                        </li>
+                                        <li>
+                                            Valuation Assessment
+                                        </li>
+                                        <li>
+                                            Budget Planner
+                                        </li>
+                                    </ul>
+                                   
+                                               <apex:repeat value="{!Credits}" var="a">
+                                     <div>
+                                     <iframe frameBorder="0" width="100%" height="1200"   src="https://Appdev01:98/XMLDataViewer/CreditData?CallID={!a.Decision_ID__c}">
+                                    
+                                    </iframe> 
+                                    </div>
+                                    </apex:repeat>
+                                    <div>
+                                    <iframe frameBorder="0"  width="100%" height="1200" src="/apex/HPPUnderwritterApp1?id={!EventLog.id}">
+                                    
+                                    </iframe>
+                                    </div>
+                                    <div>
+                                    
+                                    <div style="padding:20px;">
+
+                                     <apex:repeat value="{!Accounts}" var="accs">
+<h2>{!accs.name}</h2>
+<h3>Status : {!Status[accs.id]}</h3>
+
+<table class="list" style="width: 100%;">
+<tbody>
+<tr class="headerRow">
+<th>Referral Code</th><th>Detail</th>
+<th>Referral addressed</th>
+<TH>BDM Comments</th>
+<th>Credit Accepted</th>
+<th>Credit Comments</th>
+</tr>
+
+<apex:repeat value="{!Cases[accs.id]}" var="cas">
+<tr class="dataRow">
+
+<td><a href="/{!cas.id}" >{!cas.CaseNumber }</a>  </td>
+<td>{!cas.Description}</td>
+<td>
+    {!cas.Satisfied__c} </td>
+
+<td>{!cas.Comments__c}</td>
+<td><apex:inputField value="{!cas.Credit_accepted__c}"/></td>
+
+<td><apex:inputField value="{!cas.Credit_comments__c}" /></td>
+
+</tr>
+
+</apex:repeat>
+</tbody>
+</table>
+
+</apex:repeat> 
+
+<apex:commandButton styleClass="redBtn" value="Save Cases" action="{!SaveCases}" rendered="{!!IsCompleted}"/>
+</div>
+                                    
+                                    
+                                    
+                                    <!---start of pasted in code-->
+                                    <div style="padding-top:30px;">
+<apex:outputPanel id="uwPanel">
+    <div style="text-align: right;height: 60px;">
+        <span class="box">Authority level required :</span>
+        <span class="box"><apex:outputLabel value="{!AuthLevel}"></apex:outputLabel></span>
+    </div>
+    
+    <div style="padding:10px;">
+    
+    
+    <div >
+        <div><h3>Underwriter Pre - Valuation Decision Rationale: </h3></div>
+        <apex:inputTextarea disabled="true" value="{!ExOpp.Underwriter_pre_val_decision_rational__c}" style="width:100%" rows="2"/>
+    </div>
+    
+    <div style="padding-top:20px;">
+        <h3>Pre - Valuation Further Information Section</h3>
+                
+        
+        <div class="pbBody">
+ 
+        <table class="list" width="100%">
+            <thead>
+                <tr class="headerRow">   
+                    <th class="headerRow">F.I Code</th>              
+                    <th class="headerRow">Detail</th>
+                    <th class="headerRow">BDM Comments</th>
+                    <th class="headerRow">Credit Accepted</th>
+                    <th class="headerRow">Underwriter Comments</th>                                          
+                </tr>
+            </thead>
+            <tbody>
+                
+                <apex:repeat value="{!PreCases}" var="c">                  
+                    <tr>     
+                        <td><a href="/{!c.id}" >{!c.CaseNumber }</a></td>              
+                        <td >{!c.Further_Information__c}</td>
+                        <td>{!c.BDM_Comments__c}</td>
+                        <td><apex:outputField value="{!c.Further_Info_Satisfied__c}"/></td>
+                        <td>{!c.Underwriter_Comments__c}</td>     
+                    </tr>
+                </apex:repeat>
+           
+            </tbody>
+        </table>
+        </div>
+      
+    </div>
+    
+    
+    
+      
+    
+    <div style="padding-top:20px;">
+         <h3>Valuation Report</h3>
+    <div class="pbBody">
+ 
+        <table class="list" width="100%">
+            <thead>
+                <tr class="headerRow">                  
+                    <th class="headerRow">Document</th>
+                   
+                                                 
+                </tr>
+            </thead>
+            <tbody>
+            <apex:repeat value="{!atts}" var="a">
+            <tr>
+                <td><a target="_blank" href="/servlet/servlet.FileDownload?file={!a.id}"> {!a.name}</a></td>
+               
+                
+            </tr>
+             </apex:repeat>
+            </tbody>
+            </table>
+            
+            </div>
+    </div>
+    
+    <div style="padding-top:20px;">
+         <h3>Security Address</h3>
+         
+         <table width="100%">
+             <tr>
+                 <td> New property street</td>
+                 <td class="box">{!Opp.New_property_street__c}</td>
+                 <td>New property country</td>
+                 <td class="box">{!Opp.New_property_country__c}</td>
+             </tr>
+             <tr>
+                 <td>New property city</td>
+                 <td class="box">{!Opp.New_property_city__c}</td>
+                 <td>New property postcode</td>
+                 <td class="box">{!Opp.New_property_postcode__c}</td>
+             </tr>
+         
+         </table>        
+    </div>    
+    
+    <div style="padding-top:20px;">
+        <h3>Valuation Fields</h3>        
+        <table width="100%">
+            <tr>
+                <td width="20%">Property type</td>
+                <td width="30%">{!ValReport.Property_Type__c}</td>
+                <td>Residential Dwelling</td>
+                <td>{!ValReport.Residential_Dwelling__c}</td>
+            </tr>
+            <tr>
+                <td>Property location type</td>
+                <td>{!ValReport.Property_Location_Type__c}</td>
+                <td>Parking</td>
+                <td>{!ValReport.Parking__c}</td>
+            </tr>
+            <tr>
+                <td>Tenure</td>
+                <td>{!ValReport.Property_Tenure__c}</td>
+                <td>How Many Parking Spaces</td>
+                <td>{!ValReport.How_Many_Parking_Spaces__c}</td>
+            </tr>
+            <tr>
+                <td>Unexpired term</td>
+                <td>{!ValReport.Unexpired_Term__c}</td>
+                <td>Garage</td>
+                <td>{!ValReport.Garage__c}</td> 
+            </tr>
+            <tr>
+                <td>Year Built</td>
+                <td>{!ValReport.Year_Built__c}</td>
+                <td>Level of Market Demand for Property</td>
+                <td>{!ValReport.Rate_Market_Demand_for_Property__c}</td>
+            </tr>
+            <tr>
+                <td>Walls</td>
+                <td>{!ValReport.Walls__c}</td>
+                <td>Service/Maintenance Charges</td>
+                <td>{!ValReport.Service_Maintenance_Charges__c}</td>
+            </tr>
+            <tr>
+                <td>Roof</td>
+                <td>{!ValReport.Roof__c}</td>
+                <td>Ground Rent</td>
+                <td>{!ValReport.Ground_Rent__c}</td>
+            </tr>
+            <tr>
+                <td>Floor Number</td>
+                <td>{!ValReport.Floor_Number__c}</td>
+                <td>Market value present condition</td>
+                <td> <apex:outputText value="£{0, number, ###,##0}">
+   <apex:param value="{!ValReport.Market_Value_Present_Condition__c}"/>
+ </apex:outputText></td>
+            </tr>
+            <tr>
+                <td width="20%">Number of bedrooms</td>
+                <td width="30%">{!ValReport.Number_of_Bedrooms__c}</td>
+                <td>Market value after repairs/completion</td>
+                <td><apex:outputText value="£{0, number, ###,##0}">
+   <apex:param value="{!ValReport.Market_Value_After_Repairs_Completion__c}"/>
+ </apex:outputText></td> 
+            </tr>
+            <tr>
+                <td>Number of floors</td>
+                <td>{!ValReport.Number_of_Floors__c}</td>
+                <td>Building reinstatement value</td>
+                <td>
+                <apex:outputText value="£{0, number, ###,##0}">
+   <apex:param value="{!ValReport.Building_reinstatement_value__c}"/>
+ </apex:outputText>
+                
+                </td>
+            </tr>
+                    
+            <tr>
+                <td colspan="2"></td>
+                <td>Fair Market Rental (pcm)</td>
+                <td>
+                <apex:outputText value="£{0, number, ###,##0}">
+   <apex:param value="{!ValReport.Fair_Market_Rental_pcm__c}"/>
+ </apex:outputText>                                
+                </td>                 
+            </tr>
+        </table>
+    </div>    
+        
+    <div style="padding-top:20px;">
+        <h3>Underwriter Post - Valuation Decision Rationale:</h3> 
+        <apex:inputTextarea styleClass="autoText" value="{!ExOpp.Underwriter_post_val_decision_rational__c}" style="width:100%" rows="2"/>
+    </div>   
+    
+    <div style="padding-top:20px;">
+    <h3>Post Valuation Further Information Section</h3>
+       <div class="pbBody">
+   <apex:variable value="{!0}" var="rowNumFi" />
+        <table class="list" width="100%">
+            <thead>
+                <tr class="headerRow">                  
+                    <th class="headerRow">F.I Code</th>              
+                    <th class="headerRow">Detail</th>
+                    <th class="headerRow">BDM Comments</th>
+                    <th class="headerRow">Credit Accepted</th>
+                    <th class="headerRow">Underwriter Comments</th>                                       
+                </tr>
+            </thead>
+            <tbody>
+                
+                <apex:repeat value="{!PostCases}" var="c">
+                  
+                    <tr>   
+                        <td><a href="/{!c.id}" >{!c.CaseNumber }</a></td>                
+                        <td ><apex:inputTextarea rows="2" style="width:100%;" value="{!c.Further_Information__c}"/></td>
+                        <td>{!c.BDM_Comments__c}</td>
+                        <td>
+                        <apex:inputField value="{!c.Further_Info_Satisfied__c}"/></td>
+                        <td><apex:inputTextarea rows="2" style="width:100%;" value="{!c.Underwriter_Comments__c}"/></td>
+                   
+                       <td>
+                            <apex:commandLink oncomplete="SetUpDropdown();"
+                                                                                                
+                                                                                                action="{!DeleteFI}" value="Remove"
+                                                                                                rerender="uwPanel" immediate="true"
+                                                                                                rendered="{!!IsCompleted}">
+                                                                                                <apex:param name="delFi"
+                                                                                                    value="{!rowNumFi}"
+                                                                                                    assignTo="{!delFi}" />
+                                                                                            </apex:commandLink>
+                       </td>
+                    </tr>
+                    <apex:variable var="rowNumFi"
+                                                                                        value="{!rowNumFi+ 1}" />
+                </apex:repeat>
+            </tbody>
+        </table>
+        </div>
+        <div>            
+            <apex:commandLink reRender="uwPanel" styleClass="redBtn" value="Add Further Information" action="{!AddCase}" rendered="{!!IsCompleted}"/>
+            <div style="text-align: right;">
+            <apex:commandLink reRender="uwPanel" styleClass="redBtn" value="Save Further Information" action="{!SaveFI}" rendered="{!!IsCompleted}"/>
+            </div>
+        </div>
+    </div>
+    
+    <div style="padding-top:20px;">
+        <apex:outputPanel id="criteriaPanel">
+    
+        <h3>Special Conditions</h3>
+        <div style="margin-bottom: 20px;">
+                                    <input id="conditionDropdown" class="conditionDropdown" style="width:600px;"/>
+                                   <apex:inputHidden id="DropDownValue"  value="{!SelectedCondition}" />
+                                   
+                                    <apex:commandButton oncomplete="SetUpDropdown();" status="save-lead-status" rendered="{!!IsCompleted}" reRender="uwPanel" value="Add Condition" action="{!AddCondition}"/>
+        
+        
+        
+        
+        
+        </div>
+        
+        <div class="pbBody">
+        <apex:variable value="{!0}" var="rowNumProp"/>
+        
+                                   <table class="list" width="100%">
+                                   <thead>
+                                   <tr class="headerRow">
+                                       <th class="headerRow">Action</th>
+                                       <th class="headerRow">Ref</th>
+                                       <th class="headerRow">Condition</th>
+                                       <th class="headerRow">UW</th>
+                                       <th class="headerRow">Reat</th>
+                                       <th class="headerRow">Added</th>
+                                       <th class="headerRow">Action</th>
+                                   </tr>
+                                   </thead>
+                                   <tbody>
+                                <apex:repeat value="{!Helper.CIList}" var="i">
+                                <tr class="{!IF(i.id = CurrentItem.id, 'highLight', '')}">
+                                <td>
+                                   <apex:commandLink oncomplete="SetUpDropdown();" status="save-lead-status" action="{!EditCondition}" value="Edit" rerender="criteriaPanel" immediate="true" rendered="{!!IsCompleted}">
+                            <apex:param name="edCondition" value="{!rowNumProp}" assignTo="{!edCondition}"/>
+                        </apex:commandLink>
+                                </td>
+                                <td>
+                                    <apex:outputLabel escape="false" value="{!i.Ref}"/>
+
+                                </td>
+                                <td>
+                                    <apex:outputLabel escape="false" value="{!i.Html}">  </apex:outputLabel>
+                                </td>
+                                <td>
+                                    <apex:inputCheckbox disabled="true" value="{!i.UW_Allowed}"/>
+                                </td>
+                                <td>
+                                    <apex:inputCheckbox disabled="true" value="{!i.Reat_Allowed}"/>
+                                </td>
+                                <td>{!i.PreOrPost}</td>
+                                
+                                <td>
+                                       <apex:commandLink oncomplete="SetUpDropdown();" status="save-lead-status" action="{!deleteCondition}" value="Remove" rerender="criteriaPanel" immediate="true" rendered="{!!IsCompleted}">
+                            <apex:param name="delCondition" value="{!rowNumProp}" assignTo="{!delCondition}"/>
+                        </apex:commandLink>
+                                </td>
+                                
+                                </tr>
+                                <apex:variable var="rowNumProp" value="{!rowNumProp+ 1}"/>
+                                 </apex:repeat>
+                                 </tbody>
+                                 </table>
+        </div>  
+        
+        <div>
+             <apex:outputPanel rendered="{!CurrentItem != null}">
+                                    <div style="padding: 20px; border: solid 1px #ccc;margin-bottom: 20px;">
+                                    <h2>Edit Condition</h2>
+                                    <table width="100%">
+                                    <tr><td width="50%">
+                                    <table width="100%">
+                                    <tr>
+                                        <th>Code</th><th>Title</th><th>Value</th>
+                                    </tr>
+                                        <apex:repeat value="{!CurrentItem.Values}" var="val">
+                                        <tr>
+                                            <td>{!val.Code}</td>
+                                            <td>{!val.Title}</td>
+                                            <td><apex:inputTextArea styleClass="editor" style="width:200px;"  value="{!val.Value}"/> </td>
+                                        </tr>    
+                                        </apex:repeat>
+                                    </table>    
+                                    </td>
+                                    <td valign="top">
+                                        <apex:outputLabel escape="false" value="{!CurrentItem.HTML}"></apex:outputLabel>
+                                    </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td colspan="2">Who can satisfy as complete?</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>UW</td><td>REAT</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><apex:outputLabel value="{!CurrentItem.UW_Allowed}"/> </td>
+                                                    <td><apex:inputCheckbox value="{!CurrentItem.Reat_Allowed}"/></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    </table>
+                                    
+                                    <apex:commandButton oncomplete="SetUpDropdown();" reRender="criteriaPanel" status="save-lead-status" value="Save" action="{!Hide}"/>    
+                                    <apex:commandButton oncomplete="SetUpDropdown();" reRender="criteriaPanel" status="save-lead-status" value="Quick Save" action="{!Save}"/>
+                                    <apex:commandButton oncomplete="SetUpDropdown();" reRender="criteriaPanel" status="save-lead-status" value="Cancel" action="{!Cancel}"/>
+                                    
+                                    </div>
+                                    </apex:outputPanel>
+        </div>
+        </apex:outputPanel> 
+                                           
+    </div>
+    </div>
+    
+    
+  
+    <apex:outputPanel rendered="{!!IsCompleted}">
+      <div>
+    <apex:outputPanel rendered="{!!OutsideAuth}">
+        <span class="authBtn redBtn">Authorise</span>
+    </apex:outputPanel>
+     
+     <apex:outputPanel rendered="{!OutsideAuth}">
+         <span class="authoutBtn redBtn">Authorise</span>  
+     </apex:outputPanel>
+     
+        
+    <apex:commandLink reRender="uwPanel" styleClass="redBtn" value="Save" action="{!FurtherInformation}"/>
+     <!--<span class="finfoBtn redBtn">Save</span>-->
+      <span class="decBtn redBtn">Decline</span>
+    
+    
+   
+    
+    
+    
+    </div>
+    
+    
+
+    <apex:inputHidden id="hauthselected" value="{!authSelected}"  />
+    
+    
+<div id="authoutWindow" style="display:none;" >
+<div style="text-align: center;padding:20px;">
+You do not have authority to sanction the application.<br/><br/>
+Under whose authority are you sanctioning on?
+<br/>
+<br/>
+<!-- -->
+    <table>
+    <tr>
+        <td>Limit of authority list</td><td>
+         <apex:selectList size="1" id="authLimit" value="{!authSelected1}">
+            <apex:selectOptions value="{!AuthList}"></apex:selectOptions>
+        </apex:selectList>
+        
+        </td>
+    </tr>
+</table>
+</div>
+<table width="100%">
+<tr>
+<td align="center">
+<apex:commandLink styleClass="redBtn" value="Save" action="{!AuthoriseOutside}"/>
+</td>
+<td align="center">
+<span id="authoutWindowNo" class="redBtn">Cancel</span>
+</td>
+</tr>
+</table>
+</div>     
+    
+<div id="authWindow" style="display:none;" >
+<div style="text-align: center;padding:20px;">
+Please confirm all mandatory fields have been completed.
+</div>
+<table width="100%">
+<tr>
+<td align="center">
+<apex:commandLink styleClass="redBtn" value="Save" action="{!Authorise}"/>
+</td>
+<td align="center">
+<span id="authWindowNo" class="redBtn">Cancel</span>
+</td>
+</tr>
+</table>
+</div> 
+
+<div id="authoutWindow" style="display:none;" >
+<div style="text-align: center;padding:20px;">
+Please confirm all mandatory fields have been completed.
+</div>
+<table width="100%">
+<tr>
+<td align="center">
+<apex:commandLink styleClass="redBtn" value="Save" action="{!AuthoriseOutside}"/>
+</td>
+<td align="center">
+<span id="authoutWindowNo" class="redBtn">No</span>
+</td>
+</tr>
+</table>
+</div>   
+
+<div id="decWindow" style="display:none;" >
+<div style="text-align: center;padding:20px;">
+Please confirm all mandatory fields have been completed.
+</div>
+<table width="100%">
+<tr>
+<td align="center">
+<apex:commandLink styleClass="redBtn" value="Save" action="{!Decline}"/>
+</td>
+<td align="center">
+<span id="decWindowNo" class="redBtn">No</span>
+</td>
+</tr>
+</table>
+</div>  
+
+<div id="finfoWindow" style="display:none;" >
+<div style="text-align: center;padding:20px;">
+Please confirm all mandatory fields have been completed and further information cases have been applied.
+</div>
+<table width="100%">
+<tr>
+<td align="center">
+<apex:commandLink styleClass="redBtn" value="Save" action="{!FurtherInformation}"/>
+</td>
+<td align="center">
+<span id="finfoWindowNo" class="redBtn">No</span>
+</td>
+</tr>
+</table>
+</div> 
+
+<script>
+
+
+
+
+
+ $(document).ready(function() {
+             SetUpDropdown();
+ 
+                   var window = $("#authWindow");
+                   var outwindow = $("#authoutWindow");
+                   var decwindow = $("#decWindow");
+                   var finfowindow = $("#finfoWindow");
+                              
+                   $('select[id*="authLimit"]').change(function(){
+                       var v = $('select[id*="authLimit"]').val(); 
+                       $('[id*="hauthselected"]').val(v);
+                      
+                   });
+                              
+                                                                       
+                   $(".authBtn").click(function(){                   
+                       if (!window.data("kendoWindow")) {
+                        window.kendoWindow({
+                            width: "300px",                            
+                            title: "Authorised Decision",
+                            modal: true
+                            });                        
+                        }
+                        window.data("kendoWindow").open();                   
+                        window.data("kendoWindow").center();                    
+                    });                   
+                   $("#authWindowNo").click(function(){
+                       window.data("kendoWindow").close();
+                   });
+                   
+                   $(".authoutBtn").click(function(){                   
+                       if (!outwindow.data("kendoWindow")) {
+                        outwindow.kendoWindow({
+                            width: "500px",                            
+                            title: "Authorised Decision",
+                            modal: true
+                            });                        
+                        }
+                        outwindow.data("kendoWindow").open();                   
+                        outwindow.data("kendoWindow").center();                    
+                    });                   
+                   $("#authoutWindowNo").click(function(){
+                       outwindow.data("kendoWindow").close();
+                   });
+                   
+                   $(".decBtn").click(function(){                   
+                       if (!decwindow.data("kendoWindow")) {
+                        decwindow.kendoWindow({
+                            width: "300px",                            
+                            title: "Decline Decision",
+                            modal: true
+                            });                        
+                        }
+                        decwindow.data("kendoWindow").open();                   
+                        decwindow.data("kendoWindow").center();                    
+                    });                   
+                   $("#decWindowNo").click(function(){
+                       decwindow.data("kendoWindow").close();
+                   });     
+                   
+                   $(".finfoBtn").click(function(){                   
+                       if (!finfowindow.data("kendoWindow")) {
+                        finfowindow.kendoWindow({
+                            width: "300px",                            
+                            title: "Decline Decision",
+                            modal: true
+                            });                        
+                        }
+                        finfowindow.data("kendoWindow").open();                   
+                        finfowindow.data("kendoWindow").center();                    
+                    });                   
+                   $("#finfoWindowNo").click(function(){
+                       finfowindow.data("kendoWindow").close();
+                   });                   
+                     
+                       
+               });   
+</script>
+
+  </apex:outputPanel>
+    
+ </apex:outputPanel>
+</div>
+
+                                    
+                                    
+                                  
+                                    </div>
+                                    
+                                     <!--  budget planner tab start -->
+                                        <div>
+                                        <apex:outputPanel id="budgetPanel">
+                               <div class="pbBody">    
+                               
+                                    
+                        <table class="list" width="100%">
+                            <thead>
+                            <tr>
+                                <th colspan="2"><apex:inputField style="width:250px;" value="{!ExOpp.Budget_Figures__c}"/></th>
+                                <th colspan="2">Number of Cars in household</th>
+                                <th><apex:inputField value="{!ExOpp.Number_of_cars__c}"/>  </th>
+                                <th><apex:commandButton oncomplete="SetupBudgetPlanner();" value="Save" reRender="budgetPanel,affordUP" styleClass="redBtn" action="{!SaveBudget}"/></th>
+                            </tr>
+                            
+                                <tr class="headerRow">
+                                    <th class="headerRow">Type</th>
+                                    <th class="headerRow"> Customer/Bank INPUT</th>
+                                    <th class="headerRow">IBB Minimum</th>
+                                    <th class="headerRow">Figure to be used</th>
+                                    <th class="headerRow">Confirmed by Banks stats, Credit only</th>
+                                    <th class="headerRow">Actual to be used</th>
+                                </tr>
+                            </thead>                        
+                       <tbody>           
+                       
+                       <apex:repeat value="{!BudgetItems}" var="bi">
+                      <tr>
+                      <td>
+                           <apex:outputLabel value="{!bi.Item.Display_Name__c}"> </apex:outputLabel>
+                           </td>
+                           <td align="right"><apex:outputText styleClass="bpInput" value="{0,number,£###,###,##0.00}" >
+                                   <apex:param value="{!bi.Item.Applicant_Total__c}"/>
+                               </apex:outputText>
+                           </td>
+                      <td align="right"><apex:outputText styleClass="bpMin" value="{0,number,£###,###,##0.00}"    >
+                                  <apex:param value="{!bi.Minimum}"/>
+                          </apex:outputText>
+                      </td>
+                      <td align="right"><apex:outputText styleClass="bpUsed" value="{0,number,£###,###,##0.00}">
+                                  <apex:param value="{!bi.FigureUsed}" />
+                          </apex:outputText>
+                      </td>
+                      <td align="right"><apex:inputField styleClass="bpCredit"  value="{!bi.Item.Credit_Value__c}"/></td>                      
+                      <td align="right"> <span class="toBeUsed">£0</span></td>
+                    </tr>
+                       </apex:repeat>
+                       
+                       <tr>
+                           <td></td>
+                           <td align="right"><b><span id="bpInput"></span></b></td>
+                           <td align="right"><b><span id="bpMin"></span></b></td>
+                           <td align="right"><b><span id="bpUsed"></span></b></td>
+                           <td align="right"><b><span id="bpCredit"></span></b></td>
+                           <td align="right"><b><span id="toBeUsed"></span></b></td>
+                       </tr>
+                       
+                       </tbody>
+                       </table>
+                       <apex:commandButton oncomplete="SetupBudgetPlanner();" value="Save" reRender="budgetPanel,affordUP" styleClass="redBtn" action="{!SaveBudget}"/>
+                       </div>
+                       </apex:outputPanel>
+                                        
+                                        
+                                        
+                                        
+                                        </div>                                  
+                                        
+                                        <!--  budget planner tab end -->
+                                    
+                                    
+                                    
+                                    
+                                </div>
+                                </div>                          
+                                
+                                    
+                                </div>
+                                
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+           
+            
+      
+          <script id="template" type="text/x-kendo-tmpl">
+           <div style="padding:10px;border: 1px solid black;">
+           <table width="100%">
+                 <tr>
+                 <td width="100px">${ data.Code}</td>
+                 <td>#= data.Template# </td>
+                 </tr>
+                 </table>
+             </div>
+         </script>
+        <script>
+        
+        
+           function onSelect(e){
+                var dataItem = this.dataItem(e.item.index());
+            
+            alert(dataItem.value + '   ' + dataItem.text);
+           
+        
+        }
+        
+        
+        var carFields = {!JsonCarFields};
+        function SetUpDropdown()
+            {
+            
+            var spjson = {!JsonConditions};
+            
+                var cmb =$(".conditionDropdown").kendoDropDownList({
+                    dataTextField: "Code",
+                    dataValueField: "Id",
+                    template:kendo.template($("#template").html()),
+                    width:800,
+                    height:500,
+                    select: function (e) {
+                    var index = e.item.index();
+                    var dataItem = this.dataItem(e.item.index());
+                    
+                    var item = e.item;
+    var text = dataItem.Id;
+                    
+                    
+                    var $item = $(this);
+                    
+                  $("[id$='DropDownValue']").val(text);
+//var v = $it.val();
+                 //   $it.val($item.val());
+                    
+                    //alert ($item.val());
+               
+            },
+                    dataSource: spjson
+                
+                });
+                
+                 $(".editor").kendoEditor({
+                    encoded: false,
+                    tools:[
+                         "bold", "italic", "underline"
+                    
+                     
+                    ]
+                
+                });
+            }
+            
+            function TotalToBeUsed(){
+                    var total = 0;
+                    $('.toBeUsed').each(function(){
+                    
+                       var val = parseFloat($(this).html().replace('£','').replace(',',''));
+                       if(val  !== '' && !isNaN(val))
+                           total += val;
+                    });    
+                    $('#toBeUsed').html('£' + total);
+                }
+                
+                function TotalCredit(){
+                    var total = 0;
+                    $('.bpCredit').each(function(){
+                        var val = parseFloat($(this).val().replace('£','').replace(',',''));
+                        if(!isNaN(val))
+                           total += val;
+                    });    
+                    $('#bpCredit').html('£' + total);
+                }
+                
+                function SetupBudgetPlanner()
+                {
+                    
+                    
+                    $('.bpCredit').each(function(){
+                         var tobeused = $(this).parent().parent().find('.toBeUsed');
+                        
+                         var txtVal = $(this).val().replace(',','').replace(',','');
+                         
+                         
+                         if(txtVal  === '')
+                         {
+                             var p = $(this).parent();
+                         
+                             tobeused.html('£' + $(this).parent().parent().find('.bpUsed').html().replace('£',''));
+                         }
+                         else
+                         {
+                             tobeused.html('£' + txtVal.replace('£',''));
+                         } 
+                         
+                         
+                     });
+                    
+                    TotalToBeUsed();
+                    TotalCredit();
+                    SetupKendo();
+                    
+                    
+                    var pbInputTotal = 0;
+                    $('.bpInput').each(function(){                          
+                        var inputVal =  $(this).html().replace('£','').replace(',','');
+                        pbInputTotal += parseFloat(inputVal );
+                    });
+                    $('#bpInput').html('£' + pbInputTotal );
+                    
+                    var pbMinTotal = 0;
+                    $('.bpMin').each(function(){
+                          
+                        var inputVal = $(this).html().replace('£','').replace(',','');
+                        pbMinTotal += parseFloat(inputVal );
+                    });
+                    $('#bpMin').html('£' + pbMinTotal );
+                    
+                    var pbUsedTotal = 0;
+                    $('.bpUsed').each(function(){
+                          
+                        var inputVal = $(this).html().replace('£','').replace(',','');
+                        pbUsedTotal += parseFloat(inputVal );
+                    });
+                    $('#bpUsed').html('£' + pbUsedTotal );
+                    
+                     $('.bpCredit').change(function(){
+                         var tobeused = $(this).parent().parent().find('.toBeUsed');
+                        
+                         var txtVal = $(this).val().replace(/\s/g,'').replace(',','');
+                         
+                         
+                         if(txtVal  === '' || isNaN(txtVal))
+                         {
+                             var p = $(this).parent();
+                         
+                             tobeused.html('£' + $(this).parent().parent().find('.bpUsed').html().replace('£',''));
+                             $(this).val('');
+                         }
+                         else
+                         {
+                             tobeused.html('£' + txtVal.replace('£',''));
+                         } 
+                         
+                         TotalToBeUsed();
+                         TotalCredit();
+                         
+                     });
+                
+                
+                }
+        
+        
+            $(document).ready(function() {
+            $('.autoText').autosize();
+            SetupBudgetPlanner();
+            SetUpDropdown();
+                $("#asspanelbar").kendoPanelBar({
+                        
+                    });
+            
+            
+                    $("#asstabstrip").kendoTabStrip({                        
+                        
+                    });
+                    
+                   /*$('#xmlView').load('http://Appsrv01:98/XMLDataViewer/CreditData?CallID=013E5F5A-0FA5-4043-9EF9-A4270EB65587l');
+                    */
+                });
+        </script>
+         </apex:form>
+        </body>
+</apex:page>

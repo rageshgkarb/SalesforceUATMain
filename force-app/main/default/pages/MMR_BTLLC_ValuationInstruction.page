@@ -1,0 +1,167 @@
+<apex:page controller="MMR_BTLLC_ValuationInstruction" sidebar="false" showheader="false" title="Valuation Instructed" action="{!autoRun}"><!-- C0644 -->
+    <head>
+        <c:KendoResource ></c:KendoResource>
+        <style>
+            #content .contentheader {
+                background-color: #000;
+                padding: 10px;
+                margin-bottom: 20px;
+            }
+
+            h1 {
+                color: #fff;
+                font-family: 'Optima LT W01 Medium', Arial, sans-serif;
+                font-weight: 500;
+                font-size: 18px;
+            }
+
+            #content input[type=checkbox] {
+                transform: scale(2);
+            }
+
+            #content a {
+                text-decoration: underline;
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+        <apex:form >
+            <div id="formWrapper">
+                <!-- C00095-->
+                <c:HPPSummary objacc="{!Accounts[0]}" objopp="{!opp}" objexopp="{!ExOpp}" product="{!Prod}" />
+                <div id="container">
+                    <table width="100%">
+                        <tr>
+                            <td valign="top" id="sidebar">
+                                <c:HPPBOMenu oppid="{!Opp.Id}" directorid="{!Opp.ProductEventDirector__c}" />
+                            </td>
+                            <td valign="top" id="contenttd">
+                                <div id="content">
+                                    <div class="contentheader">
+                                        <h1>Valuation Instruction</h1>
+                                    </div>
+                                    <apex:outputpanel id="mainPageBlock">
+                                        <div style="padding:20px;">
+                                            <!-- content -->
+                                            <apex:pagemessages ></apex:pagemessages>
+
+                                            <apex:pageblock >
+                                                <apex:pageblocksection >
+                                                    <apex:outputfield value="{!exOpp.Valuation_Table_Type__c }" />
+                                                    <apex:pageblocksectionitem >
+                                                        <apex:outputlabel value="Valuation Fee" />
+                                                        <apex:inputfield value="{!exOpp.ValuationPrice__c}" />
+                                                    </apex:pageblocksectionitem>
+                                                    <apex:outputfield value="{!opp.Finance_Required__c}" />
+                                                    <apex:outputfield value="{!opp.Purchase_price_market_value__c}" />
+
+                                                </apex:pageblocksection>
+                                            </apex:pageblock>
+
+
+                                            <apex:pageblock >
+                                                <apex:pageblocksection >
+                                                    <apex:pageblocksectionitem >
+                                                        <apex:outputlabel value="Address 1" />
+                                                        <apex:outputfield value="{!opp.New_property_street__c}" />
+                                                    </apex:pageblocksectionitem>
+                                                    <apex:pageblocksectionitem >
+                                                        <apex:outputlabel value="Access Name" />
+                                                        <apex:inputfield required="true" value="{!exOpp.Estate_agent_contact_name__c}" />
+                                                    </apex:pageblocksectionitem>
+
+                                                    <apex:pageblocksectionitem >
+                                                        <apex:outputlabel value="Address 2" />
+                                                        <apex:outputfield value="{!opp.New_property_city__c}" />
+                                                    </apex:pageblocksectionitem>
+                                                    <apex:pageblocksectionitem >
+                                                        <apex:outputlabel value="Access Telephone Number" />
+                                                        <apex:inputfield required="true" value="{!exOpp.Estate_agent_contact_telephone_number__c}" />
+                                                    </apex:pageblocksectionitem>
+
+                                                    <apex:pageblocksectionitem >
+                                                        <apex:outputlabel value="Address 3" />
+                                                        <apex:outputfield value="{!opp.New_property_postcode__c}" />
+                                                    </apex:pageblocksectionitem>
+                                                    <apex:outputfield value="{!exOpp.Property_Type__c}" />
+
+
+                                                    <apex:outputfield value="{!exOpp.Tenure__c}" />
+                                                    <apex:outputfield value="{!exOpp.Property_details__c}" />
+
+                                                    <apex:pageblocksectionitem >
+                                                        <apex:outputlabel value="Organisation Name" />
+                                                        <apex:outputfield value="{!acc.Name}" />
+                                                    </apex:pageblocksectionitem>
+                                                    <apex:pageblocksectionitem >
+                                                        <apex:outputlabel value="Current/Expected Rent" />
+                                                        <apex:inputfield value="{!opp.Estimated_actual_monthly_rental_income__c}" />
+                                                    </apex:pageblocksectionitem>
+
+                                                    <apex:pageblocksectionitem >
+                                                        <apex:outputlabel value="Trading Address Street" />
+                                                        <apex:outputfield value="{!acc.TradingAddressStreet__c}" />
+                                                    </apex:pageblocksectionitem>
+                                                    <apex:pageblocksectionitem >
+                                                    </apex:pageblocksectionitem>
+
+                                                    <apex:pageblocksectionitem >
+                                                        <apex:outputlabel value="Trading Address City" />
+                                                        <apex:outputfield value="{!acc.TradingAddressCity__c}" />
+                                                    </apex:pageblocksectionitem>
+                                                    <apex:pageblocksectionitem ></apex:pageblocksectionitem>
+
+                                                    <apex:pageblocksectionitem >
+                                                        <apex:outputlabel value="Trading Address Post Code" />
+                                                        <apex:outputfield value="{!acc.TradingPostCode__c}" />
+                                                    </apex:pageblocksectionitem>
+                                                    <apex:pageblocksectionitem ></apex:pageblocksectionitem>
+
+                                                    <apex:pageblocksectionitem >
+                                                        <apex:outputlabel value="Telephone" />
+                                                        <apex:inputfield value="{!acc.Home_Telephone_No__c}" />
+                                                    </apex:pageblocksectionitem>
+                                                    <apex:pageblocksectionitem ></apex:pageblocksectionitem>
+                                                </apex:pageblocksection>
+
+                                                <apex:pageblockbuttons location="bottom" id="page_block_buttons">
+                                                    <!--apex:commandButton onclick="ShowDocumentLoad()" oncomplete="HideDocumentLoad()"
+                                                         reRender="mainPageBlock" value="Instruct Valuation" action="{!instructValuation}" rendered="{!NOT(successfulCallout) && !NOT(IsCompleted)}" /-->
+                                                    <apex:commandbutton onclick="ShowDocumentLoad()" oncomplete="HideDocumentLoad()"
+                                                                        rerender="mainPageBlock" value="Instruct Valuation" action="{!instructValuation}" rendered="{! (NOT(IsCompleted) || !NOT(successfulCallout)) && exopp.Manual_valuation_instructed__c =null  }" />
+                                                    <apex:commandbutton value="Complete Event" action="{!complete}" rendered="{!successfulCallout && !IsCompleted}" />
+                                                    <apex:commandbutton value="Manual Valuation Instruction" action="{!complete}" />
+                                                </apex:pageblockbuttons>
+                                            </apex:pageblock>
+
+                                            <div style="text-align: center;">
+                                                <apex:outputpanel id="take_payment_response" style="text-align: center; font-weight: bold;">
+                                                    <apex:outputtext value="{!calloutResponse}" />
+                                                </apex:outputpanel>
+                                            </div>
+                                        </div>
+                                    </apex:outputpanel>
+                                </div>
+
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div id="fade"></div>
+            <div id="overlay">
+                Instruct Valuation...
+                <br />
+                <br />
+                This may take a few seconds.
+                <div style="padding-top: 50px;">
+                    <!--  CPDR01
+                    <img src="{!URLFOR($Resource.ibbstyle, 'images/269.gif')}"></img>
+                        -->
+                    <img src="{!URLFOR($Resource.ibbstyleexternal, 'graphics/logos/circular-timer.gif')}"></img>
+                </div>
+            </div>
+        </apex:form>
+    </body>
+</apex:page>

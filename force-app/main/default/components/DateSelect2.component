@@ -1,0 +1,66 @@
+<apex:component id="dd" controller="DateComponentController" >
+
+<apex:attribute name="date" description="This is the debt." type="Date"  required="true"/>
+<apex:attribute name="future" assignTo="{!FutureDates}"  description="This is the debt." type="Boolean"  required="false"/>
+
+
+  
+  <apex:selectList styleClass="DateDay" id="DateDay" size="1" style="width:60px;"> 
+  <apex:selectOption itemValue="01"></apex:selectOption>
+  <apex:selectOption itemValue="02"></apex:selectOption>
+  <apex:selectOption itemValue="03"></apex:selectOption>
+  <apex:selectOption itemValue="04"></apex:selectOption>
+  <apex:selectOption itemValue="05"></apex:selectOption>
+  <apex:selectOption itemValue="06"></apex:selectOption>
+  <apex:selectOption itemValue="07"></apex:selectOption>
+  <apex:selectOption itemValue="08"></apex:selectOption>
+  <apex:selectOption itemValue="09"></apex:selectOption>
+  <apex:selectOption itemValue="10"></apex:selectOption>
+  <apex:selectOption itemValue="11"></apex:selectOption>
+  <apex:selectOption itemValue="12"></apex:selectOption>
+  <apex:selectOption itemValue="13"></apex:selectOption>
+  <apex:selectOption itemValue="14"></apex:selectOption>
+  <apex:selectOption itemValue="15"></apex:selectOption>
+  <apex:selectOption itemValue="16"></apex:selectOption>
+  <apex:selectOption itemValue="17"></apex:selectOption>
+  <apex:selectOption itemValue="18"></apex:selectOption>
+  <apex:selectOption itemValue="19"></apex:selectOption>
+  <apex:selectOption itemValue="20"></apex:selectOption>
+  <apex:selectOption itemValue="21"></apex:selectOption>
+  <apex:selectOption itemValue="22"></apex:selectOption>
+  <apex:selectOption itemValue="23"></apex:selectOption>
+  <apex:selectOption itemValue="24"></apex:selectOption>
+  <apex:selectOption itemValue="25"></apex:selectOption>
+  <apex:selectOption itemValue="26"></apex:selectOption>
+  <apex:selectOption itemValue="27"></apex:selectOption>
+  <apex:selectOption itemValue="28"></apex:selectOption>
+  <apex:selectOption itemValue="29"></apex:selectOption>
+  <apex:selectOption itemValue="30"></apex:selectOption>
+  <apex:selectOption itemValue="31"></apex:selectOption>
+  
+          
+   </apex:selectList>
+   
+     <apex:selectList styleClass="DateMonth" id="DateMonth" size="1" style="width:60px;"> 
+
+  <apex:selectOption itemValue="01" itemLabel="Jan"></apex:selectOption>
+  <apex:selectOption itemValue="02" itemLabel="Feb"></apex:selectOption>
+  <apex:selectOption itemValue="03" itemLabel="Mar"></apex:selectOption>
+  <apex:selectOption itemValue="04" itemLabel="Apr"></apex:selectOption>
+  <apex:selectOption itemValue="05" itemLabel="May"></apex:selectOption>
+  <apex:selectOption itemValue="06" itemLabel="Jun"></apex:selectOption>
+  <apex:selectOption itemValue="07" itemLabel="Jul"></apex:selectOption>
+  <apex:selectOption itemValue="08" itemLabel="Aug"></apex:selectOption>
+  <apex:selectOption itemValue="09" itemLabel="Sep"></apex:selectOption>
+  <apex:selectOption itemValue="10" itemLabel="Oct"></apex:selectOption>
+  <apex:selectOption itemValue="11" itemLabel="Nov"></apex:selectOption>
+  <apex:selectOption itemValue="12" itemLabel="Dec"></apex:selectOption>          
+   </apex:selectList>
+   
+<apex:selectList styleClass="DateYear" id="DateYear" size="1" style="width:80px;"> 
+<apex:selectOptions value="{!Dates}"></apex:selectOptions>
+</apex:selectList>
+
+<apex:inputHidden id="DateValue"  value="{!Date}"/>
+
+</apex:component>

@@ -1,0 +1,268 @@
+<apex:page controller="DocugenP_Job_Controller" action="{!onLoad}" showHeader="false" sidebar="false" standardStylesheets="false">
+    <apex:composition template="Base_Template">
+        <apex:define name="body">
+            <script type="text/javascript">
+                docugenApp.controller('docugenController', ['$scope','docugenJobService','$uibModal','$http','$timeout',
+                    function($scope,docugenJobService,$uibModal,$http,$timeout){
+                        $scope.letterFilter="";
+                        
+                        /*$scope.$watch("job", function(){
+                            $scope.job=JSON.parse($('<textarea />').html($scope.job).text()); 
+                        });
+                        
+                        $scope.$watch("adocs", function(){
+                            $scope.adocs=JSON.parse($('<textarea />').html($scope.adocs).text());
+                        });
+                        
+                        $scope.$watch("combinedDoc", function(){
+                            $scope.combinedDoc=JSON.parse($('<textarea />').html($scope.combinedDoc).text());
+                        });
+                        
+                        $scope.$watch("docs", function(){
+                            $scope.docs=JSON.parse($('<textarea />').html($scope.docs).text());
+                        });*/
+                        
+                        $scope.$watch("docugenSettings", function(){   
+                             $scope.docugenSettings=JSON.parse($('<textarea />').html($scope.docugenSettings).text());
+                             window.letterService=$scope.docugenSettings.EBSLetterService;
+                             //alert(window.letterService);
+                         });
+                        
+                        $scope.RemoveJob=function(){
+                            docugenJobService.DeleteJob($scope.job.Id)
+                            .then(
+                                function(result){
+                                    window.close();
+                                },
+                                function(error){
+                                    //$scope.Updating = false;
+                                }
+                            );
+                        };
+                        
+                        $scope.search = function(item){
+                            if (!$scope.letterFilter || (item.Account__r.Name.toLowerCase().indexOf($scope.letterFilter.toLowerCase()) != -1) || (item.Account__r.EBS_ID__c.toLowerCase().indexOf($scope.letterFilter.toLowerCase()) != -1) ){
+                                return true;
+                            }
+                            return false;
+                        };
+                        
+
+                        
+                        $scope.DeleteLetter=function(d){
+                            if(confirm("Are your sure?")){
+                                d.Refreshing=true;
+                                docugenJobService.deleteAttachmentData(d.Id)
+                                .then(
+                                    function(result){
+                                        var indx=$scope.adocs.indexOf(d);
+                                        $scope.adocs.splice(indx,1);
+                                    },
+                                    function(error){
+                                        var indx=$scope.adocs.indexOf(d);
+                                        $scope.adocs.splice(indx,1);
+                                    }
+                                );
+                            }
+                        
+                        };
+                        
+                    }]
+                );
+                
+                
+                docugenApp.service('docugenJobService', ['$q','$http', function ($q, $http) {
+                  
+                    this.DeleteJob=function(JobId){
+                         var deferred = $q.defer();
+                         Visualforce.remoting.timeout = 120000;
+                         DocugenP_Job_Controller.DeleteJob(JobId,function(result, event){
+                             if(event.status){
+                                 deferred.resolve(result);
+                             }
+                             else {
+                                 deferred.reject(event);
+                             }
+                         });
+                         return deferred.promise;
+                     };
+                     
+                     this.deleteAttachmentData=function(attachmentDataId){
+                         var deferred = $q.defer();
+        
+                         $http({
+                            method: 'GET',
+                            url: window.letterService+'?action=deleteAttachmentData&id='+attachmentDataId,
+                         }).then(function successCallback(response) {
+                            deferred.resolve(response);
+                         }, function errorCallback(response) {
+                            deferred.reject(response);
+                         });
+                            
+                         return deferred.promise;
+                     };
+                }]);
+                
+                
+            </script>
+            
+            <style>
+                .no-border-top td{
+                    border-top:0 !important;
+                }
+                
+                .head-panel{
+                    background-color:#F2EDE9;
+                    padding-top:10px;
+                    position:fixed;
+                    /*height:40px;*/
+                    z-index:10;
+                    width:100%;
+                    top:0;
+                    left:0;
+                    -webkit-box-shadow: 1px 1px 1px 0px rgba(166,166,166,1);
+                    -moz-box-shadow: 1px 1px 1px 0px rgba(166,166,166,1);
+                    box-shadow: 1px 1px 1px 0px rgba(166,166,166,1);
+                }
+                
+                head-panel container{
+                    
+                }
+                
+                .head-panel span{
+                    font-weight:bold;
+                    
+                }
+                
+                .docugen{
+                    width:100% !important;
+                }
+                
+                .individual-letters{
+                    padding-top:100px !important;
+                }
+            </style>
+            <div ng-controller="docugenController" class="docugen col-sm-11" ng-init="job={!job};docs={!docs};adocs={!adocs};combinedDoc={!combinedDoc};docugenSettings='{!docugenSettings}'">
+                <!--<h3>
+                    <div class="col-sm-6">
+                        Job Details <span ng-show="templateLoaded">({{job.Name}})</span>
+                    </div>
+                    <div class="col-sm-6">
+                        <span class="pull-right" style="font-size:0.9em;" ng-click="test">Docugen<sup>+</sup></span>
+                    </div>
+                </h3>
+                <div style="clear:both">
+                    &nbsp;    
+                </div>-->
+                <div class="head-panel">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <span>Name:</span>
+                                {{job.Name}}<br/><br/>
+                                <input type="text" class="form-control" style="width:250px;" placeholder="Search" ng-model="letterFilter" />
+                            </div>
+                            <div class="col-md-3">
+                                <span>Records:</span>
+                                {{job.Records__c}}
+                            </div>
+                            <div class="col-md-3">
+                                <span>Status:</span>
+                                {{job.Status__c}}
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card-holder">
+                                    <a ng-href="/servlet/servlet.FileDownload?file={{combinedDoc.Id}}" target="_blank">
+                                    <div class="card">
+                                        
+                                        <table>
+                                            <tr>
+                                                <td rowspan="2" width="20"> <i class="fa fa-file-word-o" ng-show="combinedDoc.Name.toLowerCase().indexOf('pdf')<0" aria-hidden="true"></i>
+                                                    <i class="fa fa-file-pdf-o" ng-show="combinedDoc.Name.toLowerCase().indexOf('pdf')>=0" aria-hidden="true"></i></td>
+                                                <td>Combined Document</td>
+                                            </tr>
+                                            <tr>
+                                                <td>&nbsp;</td>
+                                            </tr>
+                                        </table>
+                                       
+                                    </div>
+                                    </a>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row individual-letters">
+                    <div class="col-md-6">
+                        <h4>
+                            Individual letters
+                        </h4>
+                    </div>
+                    <div class="col-md-6">
+                        
+                    </div>
+                </div>
+                <div style="clear:both;">
+                    &nbsp;
+                </div>
+                <style>
+                    .card-holder li{
+                        padding:0 !important;
+                    }
+                    
+                    .btn-dropdown{
+                       background:transparent !important;
+                    }
+                    
+                    
+                    
+                    
+                </style>
+                <div class="card-holder top-border" style="margin-top:-10px;">
+                    <a ng-href="/servlet/servlet.FileDownload?file={{docs[$index].Id}}" target="_blank" ng-repeat="d in adocs | filter:search | limitTo:48">
+                    <div class="card">
+                        <table>
+                            <tr>
+                                <td rowspan="2" width="20"> <i class="fa fa-file-word-o" ng-show="docs[$index].Name.toLowerCase().indexOf('pdf')<0" aria-hidden="true"></i>
+                                    <i class="fa fa-file-pdf-o" ng-show="docs[$index].Name.toLowerCase().indexOf('pdf')>=0" aria-hidden="true"></i>
+                                </td>
+                                <td>{{d.Account__r.Name}}</td>
+                                <td width="50">
+                                    <div class="btn-group" uib-dropdown="uib-dropdown" is-open="status.isopen">
+                                        <button id="single-button" type="button" class="btn btn-default btn-dropdown" uib-dropdown-toggle="uib-dropdown-toggle" ng-disabled="disabled">
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="uib-dropdown-menu pull-right"  role="menu" aria-labelledby="single-button">
+                                            <li role="menuitem">
+                                                <a target="_blank" href="/{{d.Account__r.Id}}">View Customer</a>
+                                            </li>
+                                            <!--<li role="menuitem">
+                                                <a ng-click="DeleteLetter(d)">Remove</a>
+                                            </li>-->
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>{{d.Account__r.EBS_ID__c}}</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    
+                                </td>
+                            </tr>
+                        </table>
+                       
+                    </div>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="clear:both"></div>
+            
+        </apex:define>
+    </apex:composition>
+</apex:page>

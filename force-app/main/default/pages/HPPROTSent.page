@@ -1,0 +1,72 @@
+<apex:page controller="HPPROTSentController"   sidebar="false" showHeader="false" title="Submit to decison engine">
+    <head>
+        <c:KendoResource ></c:KendoResource>
+    </head>
+    <body>
+      <!--  <apex:form >-->
+            <div id="formWrapper">
+                <div class="header">
+                    <h1>{!Opp.Name} </h1>
+                </div>
+                <c:HPPSummary objAcc="{!Accounts[0]}" objOpp="{!opp}" objExOpp="{!ExOpp}" Product="{!Prod}" />
+                <div id="container" >
+                    <table width="100%">
+                        <tr>
+                            <td valign="top" id="sidebar">
+                                <c:HPPBOMenu oppId="{!Opp.Id}"  DirectorId="{!Opp.ProductEventDirector__c}" />
+                            </td>
+                            <td valign="top" id="contenttd">
+                                <div id="content">
+                                    <h1>ROT sent by SGH Martineau</h1>
+                                   
+                                    <div style="padding:20px;">
+                                    <!-- content -->
+                                        <apex:form enctype="multipart/form-data">
+                                        <apex:pageMessages />                                        
+                                        
+                                        <table>
+                        
+                                        <tr><td></td><td><apex:inputFile value="{!attachment.body}" filename="{!attachment.name}" id="file"/></td></tr>
+                                        <tr><td></td><td><apex:commandButton value="Upload" action="{!upload}" /></td></tr>
+                                        </table>
+                                        
+                                        
+                                        
+                                        
+                                      </apex:form>
+                                    
+                                   <br/><br/><br/>
+                                    <table class="tableClass">
+                                    <thead class="rich-table-thead">
+                                    <tr><th>Filename</th><th>Uploaded</th></tr>
+                                    </thead>
+                                    <tbody>
+                                    <apex:repeat value="{!ROTS}" var="rot">
+                                    <tr><td>
+                                    <a target="_blank" href="/servlet/servlet.FileDownload?file={!rot.id}"><b>{!rot.name}</b></a>
+                                    
+                                    
+                                    </td><td>{!rot.createddate}</td></tr>
+                                    </apex:repeat>
+                                    </tbody>
+                                    </table>
+                                    <apex:form >
+                                 <apex:commandButton value="Complete" action="{!Complete}"/>
+                                 </apex:form>
+                                </div>
+                                    
+                                </div>
+                                
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            
+      <!--  </apex:form>-->
+
+
+
+        </body>
+</apex:page>

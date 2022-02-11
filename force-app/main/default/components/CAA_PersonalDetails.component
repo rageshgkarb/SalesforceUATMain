@@ -1,0 +1,1191 @@
+<apex:component >
+    <apex:attribute name="YPSA" type="Boolean" description="" />
+    <apex:attribute name="CurrentAccount" type="Boolean" description="" />
+    <apex:attribute name="FTD" type="Boolean" description="" />
+    <apex:attribute name="Model" type="String" description="" />
+    <apex:attribute name="IsGuest" type="Boolean" description="" />
+    <!--<form name="myform{{$index}}" novalidate="novalidate">-->
+    <div class="panel-heading" role="tab" id="heading{{$index}}">
+        <h4 class="panel-title">
+            <!--C0750: CAA Quick Wins Starts-->
+            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{$index}}" aria-expanded="false" aria-controls="collapse{{$index}}">
+                <apex:outputPanel rendered="{!YPSA}">
+                    {{$index === 0 ? "Young Person" : "Guardian " + ($index) }}
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{!Not(YPSA)}">
+                   <!-- Applicant {{serialNo[$index]}} -->
+                    <button class="btn btnArb" style="padding: 5px 12px;">
+                        <span>
+                            <strong>Applicant {{serialNo[$index]}}</strong>
+                            <span class="fa-stack fa">
+                                <i class="fa fa-circle-thin fa-stack-2x"></i>
+                                <i class="fa fa-chevron-right fa-stack-1x"></i>
+                            </span>
+                        </span>
+                    </button>
+                </apex:outputPanel>
+                <!--- {{app.FirstName}} , {{app.LastName}} -->
+                <!--
+                    <i class="fa fa-check" ng-show="app.Valid"></i>
+                    <i class="fa fa-close" ng-hide="app.Valid"></i>
+                    -->
+            </a>
+        <!--C0750: CAA Quick Wins Ends--> 
+        </h4>
+    </div>
+    <div id="collapse{{$index}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{{$index}}">
+        <div class="panel-body">
+            <!-- <ng-form name="sfIn">-->
+            <fieldset ng-if="!app.EBS_ID_c">
+
+                <apex:outputPanel layout="none" rendered="{!Not(IsGuest)}">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div>
+                                <label>Premier Status</label>
+                            </div>
+                            <div>
+                                <input type="text" ng-model="app.Premier_Status_c" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div>
+                                <label>Customer Type</label>
+                            </div>
+                            <div>
+                                <select class="form-control arbBox" ng-model="app.Customer_Type_c" name="Customer_Type_c{{$index}}" ng-options="option.Key as option.Value  for option in Data.CustomerType"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr/>
+
+
+                    <div class="row">
+                        <div class="col-sm-7">
+                            <div>
+                                <label>Required EBS Id -
+                                    <strong>(for use only following approval from COO)</strong>
+                                </label>
+                            </div>
+                            <div style="max-width:200px;">
+                                <input type="text" ng-model="app.required_ebs_id_c" class="form-control" maxlength="6" />
+                            </div>
+                        </div>
+                        <!-- Garnet - START  -->
+                        <div class="col-sm-5" ng-class="{ 'has-error':( myform.Face_to_face_Contact_c{{$index}}.$touched|| Submitted) && myform.Face_to_face_Contact_c{{$index}}.$invalid }">
+                            <div>
+                                <label class="control-label">Face-to-Face Contact</label>                                
+                            </div>
+                            <select class="form-control arbBox" ng-model="app.Face_to_face_Contact_c" name="Face_to_face_Contact_c{{$index}}" ng-required="!app.Face_to_face_Contact_c || $index!=0"
+                                ng-options="option.Key as option.Value  for option in Data.FaceToFaceContact">
+                            </select>
+                            <c:CAA_InputError field="Face_to_face_Contact_c" />
+                        </div>
+                        <!-- Garnet - END  -->
+                    </div>
+                    <hr/>
+
+                </apex:outputPanel>
+                <div class="row" ng-class="{ 'has-error': Submitted && myform.optTitle{{$index}}.$invalid }">
+                    <div class="col-sm-12">
+                        <div>
+                            <label class="control-label">Title</label>
+                            <span class="borderCircle pull-right" data-toggle="popover" data-placement="auto right"
+                                data-trigger="click" data-content="The title that you are most commonly known by.">?</span>
+                        </div>
+                        <div>
+                            <!--
+            <label ng-hide="{!YPSA} && $parent.$index==0" ng-repeat="title in Data.Title" class="radio-inline"><input  type="radio" ng-required="!app.Salutation && ({!Not(YPSA)} || $index!=0)" name="optTitle{{$parent.$index}}" ng-model="app.Salutation" value="{{title.Key}}"/>{{title.Value}}</label>
+            <label ng-show="{!YPSA} && $parent.$index==0" ng-repeat="title in Data.TitleYPSA" class="radio-inline"><input  type="radio" ng-required="!app.Salutation  && ({!YPSA} && $parent.$index==0)" name="optTitle{{$parent.$index}}" ng-model="app.Salutation" value="{{title.Key}}"/>{{title.Value}}</label>
+            -->
+
+
+
+                            <label ng-repeat="title in Data.Title" ng-hide="{!YPSA} && $parent.$index==0" class="radio-inline">
+                                <input type="radio" ng-required="!app.Salutation && (!{!YPSA} || $parent.$index!=0 )" name="optTitle1{{$parent.$index}}"
+                                    ng-model="app.Salutation" value="{{title.Key}}" />{{title.Value}}</label>
+
+
+
+                            <label ng-show="{!YPSA} && $parent.$index==0" ng-repeat="title in Data.TitleYPSA" class="radio-inline">
+                                <input type="radio" ng-required="!app.Salutation && {!YPSA} && $parent.$index==0" name="optTitle2{{$parent.$index}}"
+                                    ng-model="app.Salutation" value="{{title.Key}}" />{{title.Value}}</label>
+                        </div>
+                        <div>
+                            <c:CAA_InputError field="optTitle1" />
+                        </div>
+                        <div>
+                            <c:CAA_InputError field="optTitle2" />
+                        </div>
+                    </div>
+                </div>
+                <hr/>
+                <div class="row">
+                    <div class="col-sm-4" ng-class="{ 'has-error': (myform.FirstName{{$index}}.$touched || Submitted ) && myform.FirstName{{$index}}.$invalid }">
+                        <label class="control-label">First names(s)</label>
+                        <input class="form-control arbBox" ng-model="app.FirstName" name="FirstName{{$index}}" id="FirstName{{$index}}" ng-required="!app.EBS_ID_c"
+                        />
+                        <c:CAA_InputError field="FirstName" />
+                    </div>
+                    <div class="col-sm-4" ng-class="{ 'has-error': (myform.Middle_name_pc{{$index}}.$touched || Submitted )&& myform.Middle_name_pc{{$index}}.$invalid }">
+                        <label class="control-label">Middle name</label>
+                        <input class="form-control arbBox" ng-model="app.Middle_name_pc" name="Middle_name_pc{{$index}}" id="Middle_name_pc{{$index}}"
+                        />
+                        <c:CAA_InputError field="Middle_name_pc" />
+                    </div>
+                    <div class="col-sm-4" ng-class="{ 'has-error': (myform.LastName{{$index}}.$touched || Submitted) && myform.LastName{{$index}}.$invalid }">
+                        <label class="control-label">Surname</label>
+                        <input class="form-control arbBox" ng-model="app.LastName" name="LastName{{$index}}" id="LastName{{$index}}" ng-required="!app.EBS_ID_c"
+                        />
+                        <c:CAA_InputError field="LastName" />
+                    </div>
+                </div>
+                <hr/>
+                <div class="row" ng-class="{ 'has-error': Submitted && myform.optAnyOtherName{{$index}}.$invalid }">
+                    <div class="col-sm-12">
+                        <div>
+                            <label class="control-label">Are you known by any other name?</label>
+                            <span class="borderCircle pull-right" data-toggle="popover"
+                                data-placement="auto right" data-trigger="click" data-content="For example, maiden name.">?</span>
+                        </div>
+                        <div>
+                            <label class="radio-inline">
+                                <input ng-required="!app.Are_you_known_by_any_other_name_c && !app.EBS_ID_c" id="optAnyOtherName{{$index}}"
+                                    type="radio" name="optAnyOtherName{{$index}}" ng-model="app.Are_you_known_by_any_other_name_c"
+                                    value="Yes" />Yes</label>
+                            <label class="radio-inline">
+                                <input ng-required="!app.Are_you_known_by_any_other_name_c && !app.EBS_ID_c" type="radio" name="optAnyOtherName{{$index}}"
+                                    ng-model="app.Are_you_known_by_any_other_name_c" value="No" />No</label>
+                        </div>
+                        <c:CAA_InputError field="optAnyOtherName" />
+                    </div>
+                </div>
+                <div class="row" ng-show="app.Are_you_known_by_any_other_name_c == 'Yes'" ng-class="{ 'has-error':( !myform.othername{{$index}}.$pristine || Submitted) && myform.othername{{$index}}.$invalid }">
+                    <div class="col-sm-12">
+                        <div>
+                            <label class="control-label">Other name</label>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <input type="text" id="othername{{$index}}" name="othername{{$index}}" ng-required="app.Are_you_known_by_any_other_name_c == 'Yes'   && !app.EBS_ID_c"
+                                    class="form-control" ng-model="app.Any_other_name_known_by_past_present_c" />
+                            </div>
+                        </div>
+                        <c:CAA_InputError field="othername" />
+                    </div>
+                </div>
+                <hr/>
+                <div class="row" ng-hide="{!YPSA} && $index==0" ng-class="{ 'has-error':( myform.Marital_status_c{{$index}}.$touched|| Submitted) && myform.Marital_status_c{{$index}}.$invalid }">
+                    <div class="col-sm-12">
+                        <div>
+                            <label class="control-label">Marital Status</label>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <select class="form-control arbBox" ng-model="app.Marital_status_c" ng-required="!app.EBS_ID_c && ({!Not(YPSA)} || $index!=0)"
+                                    name="Marital_status_c{{$index}}" ng-options="option.Key as option.Value  for option in Data.MaritalStatus">
+                                    <!--<option ng-repeat="option in Data.MaritalStatus" value="{{option.Key}}">{{option.Value}}</option>-->
+                                </select>
+                                <c:CAA_InputError field="Marital_status_c" />
+                            </div>
+                        </div>
+                        <hr/>
+                    </div>
+                </div>
+                <div ng-class="{ 'has-error': (myform.mobile{{$index}}.$touched || myform.Home_Telephone_No_c{{$index}}.$touched || myform.Employer_s_Phone_c{{$index}}.$touched     || Submitted ) && myform.mobile{{$index}}.$invalid }">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label class="control-label">Phone number(s)</label>
+                            <input class="form-control arbBox" placeholder="Mobile" type="tel" ng-model="app.PersonMobilePhone" id="mobile{{$index}}"
+                                name="mobile{{$index}}" ng-required="!app.EBS_ID_c && (!app.PersonMobilePhone && !app.Home_Telephone_No_c && !app.Employer_s_Phone_c)"
+                            />
+                            <!--<c:CAA_InputError field="mobile"/>-->
+                        </div>
+                        <div class="col-sm-4">
+                            <label>&nbsp;</label>
+                            <input class="form-control arbBox" placeholder="Home" type="tel" name="Home_Telephone_No_c{{$index}}" ng-model="app.Home_Telephone_No_c"
+                                ng-required="!app.EBS_ID_c && (!app.PersonMobilePhone && !app.Home_Telephone_No_c && !app.Employer_s_Phone_c)"
+                            />
+                            <!--<c:CAA_InputError field="Home_Telephone_No_c"/>-->
+                        </div>
+                        <div class="col-sm-4" ng-hide="{!YPSA} && $index==0">
+                            <span class="borderCircle pull-right" data-toggle="popover" data-placement="auto right" data-trigger="click" data-content="We'll never use this for marketing purposes, unless you give us permission.">?</span>
+                            <input class="form-control arbBox" type="tel" placeholder="Work" name="Employer_s_Phone_c{{$index}}" ng-model="app.Employer_s_Phone_c"
+                                ng-required="!app.EBS_ID_c && (!app.PersonMobilePhone && !app.Home_Telephone_No_c && !app.Employer_s_Phone_c)"
+                            />
+                        </div>
+                    </div>
+                    <!-- row -->
+                </div>
+                <div class="input-validation" ng-messages="myform['mobile' + $index].$error" ng-show="(myform['mobile' + $index].$touched
+            || myform['Home_Telephone_No_c' + $index].$touched
+            || myform['Employer_s_Phone_c' + $index].$touched
+            ) || Submitted">
+                    <p class="alert alert-danger" ng-message="required">At least 1 contact number is required</p>
+                </div>
+                <hr/>
+                <div ng-hide="{!YPSA} && $index==0">
+                    <div class="row" ng-class="{ 'has-error': ( Submitted || !myform.email{{$index}}.$pristine) && myform.email{{$index}}.$invalid }">
+                        <div class="col-sm-12">
+                            <label class="control-label">Email address</label>
+                            <span class="borderCircle pull-right" data-toggle="popover" data-placement="auto right"
+                                data-trigger="click" data-html="true" data-content="We'll never use this for marketing purposes, unless you give us permission.<br/><br/>Your email address is needed for you to use online and mobile banking. ">?</span>
+                            <input id="email{{$index}}" name="email{{$index}}" type="email" class="form-control arbBox" ng-required="!app.EBS_ID_c && ({!Not(YPSA)} || $index!=0) && (app.Apply_for_Online_Banking_c == 'Yes' || app.Apply_for_Online_Banking_c == 'Y')"
+                                ng-model="app.PersonEmail" />
+                            <c:CAA_InputError field="email" />
+                        </div>
+                    </div>
+                    <hr/>
+                    <!--Data protection changes - commented the below code-->
+                    <!--<div class="row" ng-class="{ 'has-error':Submitted && myform.Preferred_contact_method_c{{$index}}.$invalid }">
+                <div class="col-sm-12">
+                    <div>
+                        <label class="control-label">From time to time we may need to contact you to discuss aspects of your account.  Which is the best method to contact you?</label>
+                        <span class="borderCircle pull-right" data-toggle="popover" data-placement="auto right" data-trigger="click" data-content="Your preferred method of contact. ">?</span> 
+                    </div>
+                    <div>
+                        <label class="radio-inline" ng-repeat="contact in Data.Contact"><input  type="radio" ng-required="({!Not(YPSA)} || $parent.$index != 0) && (!app.Preferred_contact_method_c) && (!app.EBS_ID_c)"
+                            name="Preferred_contact_method_c{{$parent.$index}}" ng-model="app.Preferred_contact_method_c" value="{{contact.Key}}"/>{{contact.Value}}</label>
+                            
+                    </div>
+                    <c:CAA_InputError field="Preferred_contact_method_c"/>
+                </div>
+            </div>
+            <hr />-->
+                    <!--Data protection changes end-->
+
+                    <div class="row">
+                        <div class="col-sm-6" ng-class="{ 'has-error':( myform.Home_Details_c{{$index}}.$touched|| Submitted) && myform.Home_Details_c{{$index}}.$invalid }">
+                            <div>
+                                <label class="control-label">Home Details</label>
+                                <span class="borderCircle pull-right" data-toggle="popover" data-placement="auto right"
+                                    data-trigger="click" data-content="Home details should be as of today (the date of application).">?</span>
+                            </div>
+                            <select class="form-control arbBox" ng-model="app.Home_Details_c" name="Home_Details_c{{$index}}" ng-required="!app.EBS_ID_c && ({!Not(YPSA)} || $index!=0)"
+                                ng-options="option.Key as option.Value  for option in Data.HomeDetails">
+                            </select>
+                            <c:CAA_InputError field="Home_Details_c" />
+                        </div>
+                        <div class="col-sm-6" ng-class="{ 'has-error':( myform.No_of_depenents_c{{$index}}.$touched|| Submitted) && myform.No_of_depenents_c{{$index}}.$invalid }">
+                            <label class="control-label">Number of dependants</label>
+                            <span class="borderCircle pull-right" data-toggle="popover" data-placement="auto right"
+                                data-trigger="click" data-content="The number of people that you're financially responsible for.">?</span>
+                            <input type="number" class="form-control arbBox" ng-model="app.No_of_depenents_c" ng-required="!app.EBS_ID_c && ({!Not(YPSA)} || $index!=0)"
+                                name="No_of_depenents_c{{$index}}" />
+                            <c:CAA_InputError field="No_of_depenents_c" />
+                        </div>
+                    </div>
+                    <hr/>
+                    <!-- commented for C0675
+            <div class="row">
+                <div class="col-sm-12">
+                    <label >Occasionally we may want to contact you to discuss other products and services provided by Al Rayan Bank.  Please indicate if you ?do not? wish us to contact you by any of the following:</label>
+                    <span class="borderCircle pull-right" data-toggle="popover" data-placement="auto right" data-trigger="click" data-content="The method of contact that you ?do not? wish us to contact you by.">?</span> 
+                </div>
+            </div>
+            
+            
+            <div class="marketing-pref">
+                <label><input type="checkbox" ng-model="app.HasEmail"/> Email</label>
+                <label><input type="checkbox"  ng-model="app.HasMail"/> Mail</label>
+                <label><input type="checkbox" ng-model="app.HasSMS"/> SMS</label>
+                <label><input type="checkbox" ng-model="app.HasPhone"/> Phone</label>
+            </div>            
+            end C0675-->
+                </div>
+                <div class="SectionBreak" />
+                <div class="SectionTitle">Background</div>
+                <div class="row" ng-class="{ 'has-error':myform.Gender{{$index}}.$invalid && Submitted}">
+                    <div class="col-sm-12">
+                        <div>
+                            <label class="control-label">Gender</label>
+                        </div>
+                        <div>
+                            <label class="radio-inline">
+                                <input type="radio" ng-required="!app.Gender_c && !app.EBS_ID_c" name="Gender{{$index}}" ng-model="app.Gender_c"
+                                    value="Male" />Male</label>
+                            <label class="radio-inline">
+                                <input type="radio" ng-required="!app.Gender_c && !app.EBS_ID_c" name="Gender{{$index}}" ng-model="app.Gender_c"
+                                    value="Female" />Female</label>
+                        </div>
+                        <c:CAA_InputError field="Gender" />
+                    </div>
+                </div>
+                <hr/>
+                <!-- My Date control -->
+                <c:CAA_Date title="Date of birth" model="app" field="Date_of_birth_c" NumYears="-120" req="true" />
+                <div>
+                    <div class="alert alert-danger" ng-show="DOBCheck($index) == 'tooold'">
+                        The maximum age to open this type of account is 16
+                    </div>
+                    <div class="alert alert-danger" ng-show="DOBCheck($index) == 'tooyoung'">
+                        The minimum age to open this type of account is 16
+                    </div>
+                </div>
+                <hr/>
+                <div ng-class="{ 'has-error':( myform.Country_of_birth_c{{$index}}.$touched|| Submitted) && myform.Country_of_birth_c{{$index}}.$invalid }">
+                    <div>
+                        <label class="control-label">Country of birth</label>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <select class="form-control arbBox" ng-model="app.Country_of_birth_c" ng-required="!app.EBS_ID_c" name="Country_of_birth_c{{$index}}"
+                                ng-options="option.Key as option.Value  for option in Data.CountriesOfBirth">
+                                <!--<option ng-repeat="option in Data.CountriesOfBirth" value="{{option.Key}}">{{option.Value}}</option>-->
+                            </select>
+                            <c:CAA_InputError field="Country_of_birth_c" />
+                        </div>
+                    </div>
+                </div>
+                <hr/>
+                <div ng-class="{ 'has-error':( myform.Country_of_nationality_c{{$index}}.$touched|| Submitted) && myform.Country_of_nationality_c{{$index}}.$invalid }">
+                    <div>
+                        <label class="control-label">Country of Nationality</label>
+                        <span class="borderCircle pull-right" data-toggle="popover" data-placement="auto right"
+                            data-trigger="click" data-content="The nationality stated on your primary passport.">?</span>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <select class="form-control arbBox" ng-model="app.Country_of_nationality_c" name="Country_of_nationality_c{{$index}}" ng-required="!app.EBS_ID_c"
+                                ng-options="option.Key as option.Value  for option in Data.Nationality">
+                                <!--<option ng-repeat="option in Data.Nationality" value="{{option.Key}}">{{option.Value}}</option>-->
+                            </select>
+                            <c:CAA_InputError field="Country_of_nationality_c" />
+                        </div>
+                    </div>
+                </div>
+                <hr/>
+                <!-- Garnet - START  -->
+                <div ng-class="{ 'has-error':( myform.Country_of_Residence_c{{$index}}.$touched|| Submitted) && myform.Country_of_Residence_c{{$index}}.$invalid }">
+                    <div>
+                        <label class="control-label">Country of Residence</label>
+                        <span class="borderCircle pull-right" data-toggle="popover" data-placement="auto right"
+                            data-trigger="click" data-content="The current residency.">?</span>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <select class="form-control arbBox" ng-model="app.Country_of_Residence_c" name="Country_of_Residence_c{{$index}}" ng-required="!app.EBS_ID_c"
+                                ng-options="option.Key as option.Value  for option in Data.Residency">
+                                <!--<option ng-repeat="option in Data.Residency" value="{{option.Key}}">{{option.Value}}</option>-->
+                            </select>
+                            <c:CAA_InputError field="Country_of_Residence_c" />
+                        </div>
+                    </div>
+                </div>
+                <hr/>
+                <!-- Garnet - END  -->
+                <div ng-show="InsideEU(app) == false">
+                    <div ng-hide="{!YPSA} && $index==0">
+                        <div>
+                            <label>What is your main source of income</label>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <select class="form-control" ng-model="app.Main_source_of_income_c" ng-options="option.Key as option.Value  for option in Data.SourceOfIncome">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end of outside EU -->
+                <div ng-hide="$index==0" ng-class="{ 'has-error':( myform.RelationshipToPrimary{{$index}}.$touched|| Submitted) && myform.RelationshipToPrimary{{$index}}.$invalid }">
+                    <div>
+                        <label class="control-label">Relationship to {{Data.Applicants[0].FirstName}} {{Data.Applicants[0].LastName}}</label>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <select ng-hide="{!YPSA}" class="form-control" ng-model="app.RelationshipToPrimary" name="RelationshipToPrimary{{$index}}"
+                                ng-required="$index != 0 && {!Not(YPSA)}" ng-options="option.Key as option.Value  for option in Data.RelationshipTo">
+                                <!--<option ng-repeat="option in Data.RelationshipTo" value="{{option.Key}}">{{option.Value}}</option>-->
+                            </select>
+                            <!-- YPSA -->
+                            <select ng-show="{!YPSA}" class="form-control" ng-model="app.RelationshipToPrimary" name="RelationshipToPrimary1{{$index}}"
+                                ng-required="$index != 0 && {!YPSA}" ng-options="option.Key as option.Value  for option in Data.RelationshipToYPSA">
+                                <!--<option ng-repeat="option in Data.RelationshipToYPSA" value="{{option.Key}}">{{option.Value}}</option>-->
+                            </select>
+                            <c:CAA_InputError field="RelationshipToPrimary" />
+                            <c:CAA_InputError field="RelationshipToPrimary1" />
+                        </div>
+                    </div>
+                </div>
+                <div class="SectionBreak" />
+                <!--<div ng-show="({!YPSA} && $index==1)  || ({!!YPSA} && $index!=0)">-->
+                <div ng-show="({!Not(YPSA)} && $index!=0)">
+                    <div>
+                        <label class="control-label">Address is the same as applicant 1</label>
+                    </div>
+                    <div>
+                        <label class="radio-inline">
+                            <input ng-required="!app.AddressSameAsPrimary && !app.EBS_ID_c && ({!Not(YPSA)} && $index!=0)" id="AddressSameAsPrimary{{$index}}"
+                                type="radio" name="AddressSameAsPrimary{{$index}}" ng-model="app.AddressSameAsPrimary" value="Yes"
+                            />Yes</label>
+                        <label class="radio-inline">
+                            <input ng-required="!app.AddressSameAsPrimary && !app.EBS_ID_c && ({!Not(YPSA)} && $index!=0)" type="radio"
+                                name="AddressSameAsPrimary{{$index}}" ng-model="app.AddressSameAsPrimary" value="No" />No</label>
+                    </div>
+                    <c:CAA_InputError field="AddressSameAsPrimary" />
+                    <div>
+                        {{Data.Applicants[0].BillingStreet}},{{Data.Applicants[0].Customer_Address_District_c}}
+                        <br/> {{Data.Applicants[0].BillingCity}},{{Data.Applicants[0].BillingState}}
+                        <br/> {{Data.Applicants[0].BillingPostalCode}}
+                        <br/> {{Data.Applicants[0].BillingCountry}}
+                    </div>
+                </div>
+                <!--<div ng-show="(app.AddressSameAsPrimary == 'No') || ( ({!YPSA} &&  $index == 2) || ({!!YPSA} && $index==0  ))">-->
+                <div ng-show="$index == 0 ||   (app.AddressSameAsPrimary == 'No') ||{!YPSA}">
+                    <div id="currentAddress{{$index}}">
+                        <!---->
+                        <c:CAA_Address title="Current Address" model="app" dateField="Date_moved_to_address_c" showCountryHelp="true" CountryHelp="The country that your primary address is located in."
+                            postcode="BillingPostalCode" country="BillingCountry" county="BillingState" line1="BillingStreet"
+                            line2="Customer_Address_District_c" town="BillingCity" cid="0" required="true" RequiredCondition="($index == 0 ||   SameAddress(app) ||{!YPSA})  && !app.EBS_ID_c"
+                        />
+                    </div>
+                    <div id="previousAddress{{$index}}" ng-show="ShowPrevAddress(app.Date_moved_to_address_c,app.Date_of_birth_c )">
+                        <c:CAA_Address title="Previous Address" model="app" dateField="Date_moved_to_previous_address_c" showCountryHelp="true" postcode="ShippingPostalCode"
+                            country="ShippingCountry" county="ShippingState" CountryHelp="The country that your previous primary address was located in."
+                            line1="ShippingStreet" line2="Customer_Previous_Address_District_c" town="ShippingCity" cid="1" Required="true"
+                            RequiredCondition="(($index == 0 ||   SameAddress(app) ||{!YPSA}) && ShowPrevAddress(app.Date_moved_to_address_c,app.Date_of_birth_c )) && !app.EBS_ID_c"
+                        />
+                    </div>
+                    <div id="previousPrevAddress{{$index}}" ng-show="ShowPrevAddress(app.Date_moved_to_previous_address_c,app.Date_of_birth_c)">
+                        {{ShowPreviousAddress(app)}}
+                        <c:CAA_Address title="Previous Previous Address" model="app" dateField="Date_moved_to_prev_previous_address_c" showCountryHelp="true"
+                            postcode="PersonMailingPostalCode" country="PersonMailingCountry" county="PersonMailingState" CountryHelp="The country that your primary address before last was located in."
+                            line1="PersonMailingStreet" line2="Customer_Prev_Previous_Address_District_c" town="PersonMailingCity"
+                            cid="2" Required="true" RequiredCondition="(($index == 0 ||   SameAddress(app) ||{!YPSA} ) && ShowPrevAddress(app.Date_moved_to_previous_address_c,app.Date_of_birth_c)) && !app.EBS_ID_c"
+                        />
+                    </div>
+                </div>
+                <div ng-hide="{!YPSA} && $index==0">
+                    <div class="SectionBreak" />
+                    <div class="SectionTitle">Employment</div>
+                    <div class="row">
+                        <div class="col-sm-12" ng-class="{ 'has-error':( myform.Employment_Type_c{{$index}}.$touched|| Submitted) && myform.Employment_Type_c{{$index}}.$invalid }">
+                            <label class="control-label">Type of employment</label>
+                            <span class="borderCircle pull-right" data-toggle="popover" data-placement="auto right"
+                                data-trigger="click" data-content="Select the type which best describes your current primary profession.">?</span>
+                            <select class="form-control arbBox" ng-model="app.Employment_Type_c" name="Employment_Type_c{{$index}}" ng-required="!app.EBS_ID_c && ({!Not(YPSA)} || $index!=0)"
+                                ng-options="option.Key as option.Value  for option in Data.EmploymentType" ng-change="app.Nature_of_Employers_Your_Business_c=''">
+                                <!--<option ng-repeat="option in Data.EmploymentType" value="{{option.Key}}">{{option.Value}}</option>-->
+                            </select>
+                            <c:CAA_InputError field="Employment_Type_c" />
+                        </div>
+                    </div>
+                    <div ng-show="app.Employment_Type_c &&  app.Employment_Type_c != 'Retired' && app.Employment_Type_c != 'Unemployed' && app.Employment_Type_c != 'Homemaker' 
+            && app.Employment_Type_c != 'Student'">
+                        <hr/>
+                        <div class="row" ng-class="{ 'has-error':( myform.Nature_of_Employers_Your_Business_c{{$index}}.$touched|| Submitted) && myform.Nature_of_Employers_Your_Business_c{{$index}}.$invalid }">
+                            <div class="col-sm-12">
+                                <label class="control-label">Nature of Employment/Your Business</label>
+                                <span class="borderCircle pull-right" data-toggle="popover" data-placement="auto right"
+                                    data-trigger="click" data-content="Select the role which best describes your current primary profession. ">?</span>
+                                <select class="form-control arbBox" ng-model="app.Nature_of_Employers_Your_Business_c" name="Nature_of_Employers_Your_Business_c{{$index}}"
+                                    ng-required="app.Employment_Type_c &&  app.Employment_Type_c != 'Retired' && app.Employment_Type_c != 'Unemployed' && app.Employment_Type_c != 'Homemaker' 
+                        && app.Employment_Type_c != 'Student' && ({!Not(YPSA)} || $index!=0)" ng-options="option.Key as option.Value  for option in Data.EmploymentSector">
+                                    <!--<option ng-repeat="option in Data.EmploymentSector" value="{{option.Key}}">{{option.Value}}</option>-->
+                                </select>
+                                <c:CAA_InputError field="Nature_of_Employers_Your_Business_c" />
+                            </div>
+                        </div>
+                        <!--  </div> end row -->
+                        <hr/>
+                        <div class="row" ng-class="{ 'has-error':( myform.Occupation_c{{$index}}.$touched|| Submitted) && myform.Occupation_c{{$index}}.$invalid }">
+                            <div class="col-sm-12">
+                                <label class="control-label">Job Title</label>
+                                <span class="borderCircle pull-right" data-toggle="popover" data-placement="auto right"
+                                    data-trigger="click" data-content="Job title of your current primary professions.">?</span>
+                                <input type="text" class="form-control" ng-model="app.Occupation_c" name="Occupation_c{{$index}}" ng-required="app.Employment_Type_c &&  app.Employment_Type_c != 'Retired' && app.Employment_Type_c != 'Unemployed' && app.Employment_Type_c != 'Homemaker' 
+                        && app.Employment_Type_c != 'Student'" />
+                                <c:CAA_InputError field="Occupation_c" />
+                            </div>
+                        </div>
+                        <apex:outputPanel layout="none" rendered="{!CurrentAccount}">
+                            <hr/>
+                            <div class="row" ng-class="{ 'has-error':( myform.Employer_Name_c{{$index}}.$touched|| Submitted) && myform.Employer_Name_c{{$index}}.$invalid }">
+                                <div class="col-sm-12">
+                                    <label class="control-label">Employer name</label>
+                                    <span class="borderCircle pull-right" data-toggle="popover" data-placement="auto right"
+                                        data-trigger="click" data-content="Name of your current primary employer.">?</span>
+                                    <input type="text" class="form-control" ng-model="app.Employer_Name_c" name="Employer_Name_c{{$index}}" ng-required="app.Employment_Type_c &&  app.Employment_Type_c != 'Retired' && app.Employment_Type_c != 'Unemployed' && app.Employment_Type_c != 'Homemaker' 
+                            && app.Employment_Type_c != 'Student'" />
+                                </div>
+                            </div>
+                            <c:CAA_InputError field="Employer_Name_c" />
+                            <hr/>
+                            <c:CAA_Address title="Employer Address" model="app" dateField="" postcode="Employer_Post_Code_c" country="Employer_Country_c"
+                                county="Employer_Address_Line_4_c" line1="Employer_Address_Line_1_c" line2="Employer_Address_Line_2_c"
+                                town="Employer_Address_Line_3_c" cid="3" />
+                            <c:CAA_Date title="Employment commenced" model="app" field="Date_Employment_Commenced_c" NumYears="-120" ShowHelp="true"
+                                HelpText="The date you began working for your current primary employer." />
+                        </apex:outputPanel>
+                        <hr/>
+                        <div ng-class="{ 'has-error':( myform.Gross_Annual_Income_c{{$index}}.$touched|| Submitted) && myform.Gross_Annual_Income_c{{$index}}.$invalid }">
+                            <div>
+                                <label class="control-label">Annual income before tax</label>
+                                <span class="borderCircle pull-right" data-toggle="popover"
+                                    data-placement="auto right" data-trigger="click" data-html="true" data-content="Enter your gross income before your tax is deducted.  <br/><br/>Your gross income includes salary, pensions, dividends, and any other sources of income.">?</span>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <input type="number" class="form-control" ng-model="app.Gross_Annual_Income_c" name="Gross_Annual_Income_c{{$index}}" ng-required="app.Employment_Type_c &&  app.Employment_Type_c != 'Retired' && app.Employment_Type_c != 'Unemployed' && app.Employment_Type_c != 'Homemaker' 
+                            && app.Employment_Type_c != 'Student'" />
+                                </div>
+                            </div>
+                            <c:CAA_InputError field="Gross_Annual_Income_c" />
+                        </div>
+                    </div>
+                    <div class="SectionBreak" />
+                    <div class="SectionTitle">Finance</div>
+
+                    <!-- SS: 09/03/2018 - AEol - Remove question
+                        <div ng-class="{ 'has-error':( myform.LiableNonUKTax_c{{$index}}.$touched|| Submitted) && myform.LiableNonUKTax_c{{$index}}.$invalid }">
+                            <div><label class="control-label">Are you liable to pay tax in any other country?</label> </div>
+                            <div>
+                                <label class="radio-inline"><input type="radio" ng-required="!app.LiableNonUKTax_c && ({!Not(YPSA)} || $index!=0) && !app.EBS_ID_c" name="LiableNonUKTax_c{{$index}}" ng-model="app.LiableNonUKTax_c" value="Yes"/>Yes</label>
+                                <label class="radio-inline"><input type="radio" ng-required="!app.LiableNonUKTax_c && ({!Not(YPSA)} || $index!=0) && !app.EBS_ID_c" name="LiableNonUKTax_c{{$index}}" ng-model="app.LiableNonUKTax_c" value="No"/>No</label>
+                            </div>
+                            <c:CAA_InputError field="LiableNonUKTax_c"/>
+                        </div>
+                        <div ng-show="app.LiableNonUKTax_c == 'Yes'" ng-class="{ 'has-error':( myform.CountryLiablePayTax_c{{$index}}.$touched|| Submitted) && myform.CountryLiablePayTax_c{{$index}}.$invalid }">
+                            <div><label>Please select the country</label> </div>
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <select class="form-control" ng-model="app.CountryLiablePayTax_c" name="CountryLiablePayTax_c{{$index}}" ng-required="app.LiableNonUKTax_c == 'Yes' && ({!Not(YPSA)} || $index!=0)"
+                                        ng-options="option.Key as option.Value  for option in Data.CountriesOfBirth">                        
+                                    </select>
+                                    <c:CAA_InputError field="CountryLiablePayTax_c"/>
+                                </div>
+                            </div>
+                        </div> 
+                        <hr/>        
+                    SS: 09/03/2018 - AEol -->
+
+                    <div ng-class="{ 'has-error':( myform.Have_you_ever_been_declared_bankrupt_c{{$index}}.$touched|| Submitted) && myform.Have_you_ever_been_declared_bankrupt_c{{$index}}.$invalid }">
+                        <div>
+                            <label class="control-label">Have you ever been declared bankrupt?</label>
+                        </div>
+                        <div>
+                            <label class="radio-inline">
+                                <input type="radio" ng-required="!app.Have_you_ever_been_declared_bankrupt_c && ({!Not(YPSA)} || $index!=0) && !app.EBS_ID_c"
+                                    name="Have_you_ever_been_declared_bankrupt_c{{$index}}" ng-model="app.Have_you_ever_been_declared_bankrupt_c"
+                                    value="Yes" />Yes</label>
+                            <label class="radio-inline">
+                                <input type="radio" ng-required="!app.Have_you_ever_been_declared_bankrupt_c && ({!Not(YPSA)} || $index!=0) && !app.EBS_ID_c"
+                                    name="Have_you_ever_been_declared_bankrupt_c{{$index}}" ng-model="app.Have_you_ever_been_declared_bankrupt_c"
+                                    value="No" />No</label>
+                        </div>
+                        <c:CAA_InputError field="Have_you_ever_been_declared_bankrupt_c" />
+                    </div>
+                    <hr/>
+
+                    <!-- C0592 Start -->
+                    <div ng-class="{ 'has-error':( myform.What_is_your_total_net_worth_c{{$index}}.$touched|| Submitted) && myform.What_is_your_total_net_worth_c{{$index}}.$invalid }">
+                        <div>
+                            <label class="control-label">What is your total net worth?</label>
+                            <span class="borderCircle pull-right" data-toggle="popover" data-placement="auto right" data-trigger="click" data-html="true"
+                                data-content="The value of your net assets should not include the value of your main property or pension. Where possible it should be based on recent valuations.">?</span>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <select ng-model="app.What_is_your_total_net_worth_c" class="form-control" name="What_is_your_total_net_worth_c{{$index}}" ng-required="!app.What_is_your_total_net_worth_c && ({!Not(YPSA)} || $index!=0) && !app.EBS_ID_c"
+                                    ng-options="option.Key as option.Value for option in Data.TotalNetWorth"></select>
+                                <c:CAA_InputError field="What_is_your_total_net_worth_c" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- C0592 End -->
+                     <!-- uncommented below code for C0690 > -->
+                    <div class="SectionBreak" />
+                    <div class="SectionTitle">Security</div>
+                    <div class="row">
+                        <div class="col-sm-4" ng-class="{ 'has-error':( myform.Mother_s_family_name_security_question_c{{$index}}.$touched|| Submitted) && myform.Mother_s_family_name_security_question_c{{$index}}.$invalid }">
+                            <div>
+                                <label class="control-label">Mother's maiden name</label>
+                            </div>
+                            <div>
+                                <input type="text" chars-only="chars-only" class="form-control" ng-required="!app.EBS_ID_c && ({!Not(YPSA)} || $index!=0)"
+                                    ng-model="app.Mother_s_family_name_security_question_c" name="Mother_s_family_name_security_question_c{{$index}}"
+                                />
+                            </div>
+                            <c:CAA_InputError field="Mother_s_family_name_security_question_c" />
+                        </div>
+                        <div class="col-sm-4" ng-class="{ 'has-error':( myform.Have_you_ever_been_declared_bankrupt_c{{$index}}.$touched|| Submitted) && myform.School_name_security_question_c{{$index}}.$invalid }">
+                            <div>
+                                <label class="control-label">School name</label>
+                            </div>
+                            <div>
+                                <input type="text" class="form-control" ng-model="app.School_name_security_question_c" ng-required="!app.EBS_ID_c && ({!Not(YPSA)} || $index!=0)"
+                                    name="School_name_security_question_c{{$index}}" />
+                            </div>
+                            <c:CAA_InputError field="School_name_security_question_c" />
+                        </div>
+                        <div class="col-sm-4" ng-class="{ 'has-error':( myform.Town_of_Birth_c{{$index}}.$touched|| Submitted) && myform.Town_of_Birth_c{{$index}}.$invalid }">
+                            <div>
+                                <label class="control-label">Town of birth</label>
+                            </div>
+                            <div>
+                                <input type="text" class="form-control" ng-model="app.Town_of_Birth_c" name="Town_of_Birth_c{{$index}}" ng-required="!app.EBS_ID_c && ({!Not(YPSA)} || $index!=0)"
+                                />
+                            </div>
+                            <c:CAA_InputError field="Town_of_Birth_c" />
+                        </div>
+                    </div>
+                    <hr/>
+                </div><!---->
+                 <!-- C0690 start 
+             <div class="SectionBreak"/>
+                <div class="SectionTitle">Security</div>
+                <div class="row">
+                    <div class="col-sm-4" ng-class="{ 'has-error':( myform.Mother_s_family_name_security_question_c{{$index}}.$touched|| Submitted) && myform.Mother_s_family_name_security_question_c{{$index}}.$invalid }">
+                        <div>
+                            <label class="control-label">Mother's maiden name</label>
+                        </div>
+                        <div>
+                            <input type="text" chars-only="chars-only" class="form-control" ng-required="!app.EBS_ID_c" ng-model="app.Mother_s_family_name_security_question_c" name="Mother_s_family_name_security_question_c{{$index}}"/>
+                        </div>
+                        <c:CAA_InputError field="Mother_s_family_name_security_question_c"/>
+                    </div>
+                    <div class="col-sm-4" ng-class="{ 'has-error':( myform.Have_you_ever_been_declared_bankrupt_c{{$index}}.$touched|| Submitted) && myform.School_name_security_question_c{{$index}}.$invalid }">
+                        <div>
+                            <label class="control-label">School name</label>
+                        </div>
+                        <div>
+                            <input type="text" class="form-control" ng-model="app.School_name_security_question_c" ng-required="!app.EBS_ID_c" name="School_name_security_question_c{{$index}}"/>
+                        </div>
+                        <c:CAA_InputError field="School_name_security_question_c"/>
+                    </div>
+                    <div class="col-sm-4" ng-class="{ 'has-error':( myform.Town_of_Birth_c{{$index}}.$touched|| Submitted) && myform.Town_of_Birth_c{{$index}}.$invalid }">
+                        <div>
+                            <label class="control-label">Town of birth</label>
+                        </div>
+                        <div>
+                            <input type="text" class="form-control" ng-model="app.Town_of_Birth_c" name="Town_of_Birth_c{{$index}}" ng-required="!app.EBS_ID_c"/>
+                        </div>
+                        <c:CAA_InputError field="Town_of_Birth_c"/>
+                    </div>
+                </div>
+             </div>
+                <hr/>
+            <!-- C0690 end -->
+                <div ng-show="({!Not(FTD)} && $index==0 ) || ($index ==0 && {!Not(IsGuest)}) || {!CurrentAccount} ||  ($index != 0  && {!Not(FTD)} )">
+                    <apex:outputPanel rendered="{!Not(FTD) || Not(IsGuest)}" layout="none">
+                        <div class="SectionBreak" />
+                        <div class="SectionTitle">Additional Information</div>
+                       <div ng-if="false"><!--  <div ng-hide="{!YPSA} && $index==0">-->
+                            <apex:outputPanel layout="none" rendered="{!Not(FTD)}">
+                                <div ng-class="{ 'has-error':( myform.Apply_for_Online_Banking_c{{$index}}.$touched|| Submitted) && myform.Apply_for_Online_Banking_c{{$index}}.$invalid }">
+                                    <div>
+                                        <label>Do you wish to use online banking</label>
+                                        <span class="borderCircle pull-right" data-toggle="popover"
+                                            data-placement="auto right" data-trigger="click" data-html="true" data-content="Online banking allows you to carry out your day-to-day banking online.  <br/><br/>Online banking customers also have access to our mobile banking app.">?</span>
+                                    </div>
+                                    <div>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="optOnlineBanking{{$index}}" ng-model="app.Apply_for_Online_Banking_c"
+                                                ng-checked="app.Apply_for_Online_Banking_c=='Yes'" value="Yes" />Yes</label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="optOnlineBanking{{$index}}" ng-model="app.Apply_for_Online_Banking_c"
+                                                ng-checked="app.Apply_for_Online_Banking_c=='No'" value="No" />No</label>
+                                    </div>
+                                </div>
+                                <hr/>
+                            </apex:outputPanel>
+                        </div>
+                        <!--</div>-->
+                        <apex:outputPanel rendered="false"> <!-- rendered="{!Not(FTD)}">-->
+                            <div ng-show="$index == 0" ng-class="{ 'has-error':( myform.optPaperStatements{{$index}}.$touched|| Submitted) && myform.optPaperStatements{{$index}}.$invalid }">
+                                <div>
+                                    <label class="control-label">Would you like paper statements</label>
+                                </div>
+                                <div>
+                                    <label class="radio-inline">
+                                        <input type="radio" ng-required="!Data.PaperStatements && !app.EBS_ID_c && $index == 0"
+                                            name="optPaperStatements{{$index}}" ng-model="Data.PaperStatements" ng-checked="Data.PaperStatements == 'Yes'"
+                                            value="Yes" />Yes</label>
+                                    <label class="radio-inline">
+                                        <input type="radio" ng-required="!Data.PaperStatements && !app.EBS_ID_c && $index == 0"
+                                            name="optPaperStatements{{$index}}" ng-model="Data.PaperStatements" ng-checked="Data.PaperStatements == 'No'"
+                                            value="No" />No</label>
+                                </div>
+                                <c:CAA_InputError field="optPaperStatements" />
+                                <hr/>
+                            </div>
+                        </apex:outputPanel>
+                        <!--
+                <div>
+                    <label>Primary Campaign Source</label>
+                </div>
+                <div>
+                    <select class="form-control" ng-model=""/>
+                </div>
+                -->
+                        <apex:outputPanel rendered="{!Not(IsGuest)}" layout="none">
+                            <div style="margin-top:5px;" ng-show="$index == 0" ng-class="{ 'has-error':( myform.Campaign.$touched|| Submitted) && myform.Campaign.$invalid }">
+                                <div>
+                                    <label class="control-label">Primary source campaign</label>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <select ng-model="$parent.Data.Campaign" class="form-control" name="Campaign{{$index}}" ng-required="$index == 0" ng-options="option.Key as option.Value  for option in Data.Campaigns">
+                                        </select>
+                                        <c:CAA_InputError field="Campaign" />
+                                    </div>
+                                </div>
+                            </div>
+                        </apex:outputPanel>
+                        <div ng-hide="{!YPSA} && $index==0">
+                            <apex:outputPanel layout="none" rendered="{!CurrentAccount}">
+                                <div class="SectionBreak" />
+                                <div class="SectionTitle">Current account information</div>
+                                <div class="row">
+                                    <div class="col-sm-6" ng-class="{ 'has-error':( myform.Card_Name_c{{$index}}.$touched|| Submitted) && myform.Card_Name_c{{$index}}.$invalid }">
+                                        <div>
+                                            <label class="control-label">Your name as you?d like it to appear on your card</label>
+                                            <span class="borderCircle pull-right"
+                                                data-toggle="popover" data-placement="auto right" data-trigger="click" data-content="Include your title if you?d like this to appear on the card with your name.">?</span>
+                                        </div>
+                                        <div>
+                                            <input type="text" class="form-control" ng-model="app.Card_Name_c" required="!app.EBS_ID_c" name="Card_Name_c{{$index}}"
+                                            />
+                                        </div>
+                                        <c:CAA_InputError field="Card_Name_c" />
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div>
+                                            <label>Would you like a cheque book?</label>
+                                        </div>
+                                        <div>
+                                            <label class="radio-inline">
+                                                <input type="radio" name="optChequeBook{{$index}}" ng-model="app.Cheque_book_required_c"
+                                                    ng-checked="app.Cheque_book_required_c == 'true'" value="true" />Yes</label>
+                                            <label class="radio-inline">
+                                                <input type="radio" name="optChequeBook{{$index}}" ng-model="app.Cheque_book_required_c"
+                                                    ng-checked="app.Cheque_book_required_c == 'false'" value="false" />No</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </apex:outputPanel>
+                        </div>
+                    </apex:outputPanel>
+                </div>
+            </fieldset>
+            <fieldset ng-if="app.EBS_ID_c">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label>Title</label>
+                        <br/> {{app.Salutation}}
+                    </div>
+                    <div class="col-sm-4">
+                        <label>First Name</label>
+                        <br/> {{app.FirstName}}
+                    </div>
+                    <div class="col-sm-4">
+                        <label>Last Name</label>
+                        <br/> {{app.LastName}}
+                    </div>
+                </div>
+                <div ng-show="app.Any_other_name_known_by_past_present_c">
+                    <label>Other Name</label>
+                    <br/> {{app.Any_other_name_known_by_past_present_c}}
+                </div>
+                <hr/>
+                <div class="row" ng-class="{ 'has-error': (myform.mobile1{{$index}}.$touched || myform.Home_Telephone_No_c1{{$index}}.$touched || myform.Employer_s_Phone_c1{{$index}}.$touched     || Submitted ) && myform.mobile1{{$index}}.$invalid }">
+                    <div class="col-sm-4">
+                        <label class="control-label">Phone number(s)</label>
+                        <span class="borderCircle pull-right" data-toggle="popover" data-placement="auto right"
+                            data-trigger="click" data-content="We'll never use this for marketing purposes, unless you give us permission.">?</span>
+                        <input class="form-control arbBox" placeholder="Mobile" id="mobile1{{$index}}" name="mobile1{{$index}}" ng-model="app.PersonMobilePhone"
+                            ng-required="app.EBS_ID_c && (!app.PersonMobilePhone && !app.Home_Telephone_No_c && !app.Employer_s_Phone_c)"
+                        />
+                    </div>
+                    <div class="col-sm-4">
+                        <label>&nbsp;</label>
+                        <input class="form-control arbBox" placeholder="Home" id="Home_Telephone_No_c1{{$index}}" name="Home_Telephone_No_c1{{$index}}"
+                            ng-model="app.Home_Telephone_No_c" ng-required="app.EBS_ID_c && (!app.PersonMobilePhone && !app.Home_Telephone_No_c && !app.Employer_s_Phone_c)"
+                        />
+                    </div>
+                    <div class="col-sm-4">
+                        <label>&nbsp;</label>
+                        <input class="form-control arbBox" placeholder="Work" id="Employer_s_Phone_c1{{$index}}" name="Employer_s_Phone_c1{{$index}}"
+                            ng-model="app.Employer_s_Phone_c" ng-required="app.EBS_ID_c && (!app.PersonMobilePhone && !app.Home_Telephone_No_c && !app.Employer_s_Phone_c)"
+                        />
+                    </div>
+                </div>
+                <div class="input-validation" ng-messages="myform['mobile1' + $index].$error" ng-show="(myform['mobile1' + $index].$touched
+            || myform['Home_Telephone_No_c1' + $index].$touched
+            || myform['Employer_s_Phone_c1' + $index].$touched
+            ) || Submitted">
+                    <p class="alert alert-danger" ng-message="required">Atleast 1 contact number is required</p>
+                </div>
+                <hr/>
+                <div class="row" ng-class="{ 'has-error': ( Submitted || !myform.email1{{$index}}.$pristine) && myform.emai1l{{$index}}.$invalid }">
+                    <div class="col-sm-12">
+                        <label class="control-label">Email address</label>
+                        <span class="borderCircle pull-right" data-toggle="popover" data-placement="auto right"
+                            data-trigger="click" data-html="true" data-content="We'll never use this for marketing purposes, unless you give us permission.<br/><br/>Your email address is needed for you to use online and mobile banking. ">?</span>
+                        <input type="email" id="email1{{$index}}" name="email1{{$index}}" class="form-control arbBox" ng-model="app.PersonEmail"
+                            ng-required="app.EBS_ID_c && ({!Not(YPSA)} || $index!=0) && (app.Apply_for_Online_Banking_c == 'Yes' ||  app.Apply_for_Online_Banking_c == 'Y')"
+                        />
+                        <c:CAA_InputError field="email1" />
+                    </div>
+                </div>
+                <hr/>
+                <!-- Garnet - START  -->                    
+                <div ng-hide="{!$user.Alias == 'guest'}" class="row" ng-class="{ 'has-error':( myform.Face_to_face_Contact_c{{$index}}.$touched|| Submitted) && myform.Face_to_face_Contact_c{{$index}}.$invalid }">
+                    <div class="col-sm-12">
+                        <label class="control-label">Face-to-Face Contact</label>
+                        <select class="form-control arbBox" ng-model="app.Face_to_face_Contact_c" name="Face_to_face_Contact_c{{$index}}" ng-required="{!$user.Alias != 'guest'} && (!app.Face_to_face_Contact_c || $index!=0)"
+                            ng-options="option.Key as option.Value  for option in Data.FaceToFaceContact">
+                        </select>
+                        <c:CAA_InputError field="Face_to_face_Contact_c" />                                
+                    </div>
+                </div>
+                <!-- Garnet - END  -->
+                    
+                <div class="SectionBreak"></div>
+                <div class="SectionTitle">Background</div>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <label>Gender</label>
+                        <div>
+                            {{app.Gender_c}}
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <label>Date of birth</label>
+                        <br/>
+                        <div>
+                            {{app.Date_of_birth_c.Day}}/{{app.Date_of_birth_c.Month}}/{{app.Date_of_birth_c.Year}}
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <label>Country of birth</label>
+                        <div>
+                            {{app.Country_of_birth_c}}
+                        </div>
+                    </div>
+
+
+                    <div class="col-sm-3">
+                        <!--
+                 <label>Nationality</label>
+                 <div>
+                     {{app.Country_of_nationality_c}}
+                 </div>   
+            -->
+
+
+
+                    </div>
+                </div>
+                <hr/>
+
+                <!-- Garnet - START  -->
+                <div  ng-class="{ 'has-error':( myform.Country_of_nationality_c{{$index}}.$touched|| Submitted) && myform.Country_of_nationality_c{{$index}}.$invalid }">
+                    <div><label class="control-label">Country of Nationality</label><span class="borderCircle pull-right" data-toggle="popover" data-placement="auto right" data-trigger="click" data-content="The nationality stated on your primary passport.">?</span> </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <select class="form-control arbBox"  ng-model="app.Country_of_nationality_c" name="Country_of_nationality_c{{$index}}" ng-required="app.EBS_ID_c"
+                                ng-options="option.Key as option.Value  for option in Data.Nationality"
+                                >
+                                
+                            </select>
+                            <c:CAA_InputError field="Country_of_nationality_c"/>
+                        </div>
+                    </div>
+                </div>
+                <hr/>
+                
+                <div ng-class="{ 'has-error':( myform.Country_of_Residence_c{{$index}}.$touched|| Submitted) && myform.Country_of_Residence_c{{$index}}.$invalid }">
+                    <div>
+                        <label class="control-label">Country of Residence</label>
+                        <span class="borderCircle pull-right" data-toggle="popover" data-placement="auto right"
+                            data-trigger="click" data-content="The current residency.">?</span>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <select class="form-control arbBox" ng-model="app.Country_of_Residence_c" name="Country_of_Residence_c{{$index}}" ng-required="app.EBS_ID_c"
+                                ng-options="option.Key as option.Value  for option in Data.Residency">
+                                <!--<option ng-repeat="option in Data.Residency" value="{{option.Key}}">{{option.Value}}</option>-->
+                            </select>
+                            <c:CAA_InputError field="Country_of_Residence_c" />
+                        </div>
+                    </div>
+                </div>
+                <hr/>
+                <!-- Garnet - END  -->
+                <div ng-hide="$index==0" ng-class="{ 'has-error':( myform.RelationshipToPrimary1{{$index}}.$touched|| Submitted) && myform.RelationshipToPrimary1{{$index}}.$invalid }">
+                    <div>
+                        <label class="control-label">Relationship to {{Data.Applicants[0].FirstName}} {{Data.Applicants[0].LastName}}</label>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <select ng-hide="{!YPSA}" class="form-control" ng-model="app.RelationshipToPrimary" name="RelationshipToPrimary1{{$index}}"
+                                ng-required="!app.RelationshipToPrimary && $index != 0" ng-options="option.Key as option.Value  for option in Data.RelationshipTo">
+                                <!--<option ng-repeat="option in Data.RelationshipTo" value="{{option.Key}}">{{option.Value}}</option>-->
+                            </select>
+                            <!-- YPSA -->
+                            <select ng-show="{!YPSA}" class="form-control" ng-model="app.RelationshipToPrimary" name="RelationshipToPrimary1{{$index}}"
+                                ng-required="!app.RelationshipToPrimary && $index != 0" ng-options="option.Key as option.Value  for option in Data.RelationshipToYPSA">
+                                <!--<option ng-repeat="option in Data.RelationshipToYPSA" value="{{option.Key}}">{{option.Value}}</option>-->
+                            </select>
+                        </div>
+                    </div>
+                    <c:CAA_InputError field="RelationshipToPrimary1" />
+                </div>
+                <div class="SectionBreak" />
+                <div class="SectionTitle">Addresses</div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label>Current Address</label>
+                        <div>
+                            {{app.BillingStreet}}
+                            <br/>
+                            <span ng-show="app.Customer_Address_District_c"> {{app.Customer_Address_District_c}}
+                                <br/>
+                            </span>
+                            <span ng-show="app.BillingCity">{{app.BillingCity}}
+                                <br/>
+                            </span>
+                            <span ng-show="app.BillingState"> {{app.BillingState}}
+                                <br/>
+                            </span>
+                            <span ng-show="app.BillingPostalCode"> {{app.BillingPostalCode}}
+                                <br/>
+                            </span>
+                            <span ng-show="app.BillingCountry"> {{app.BillingCountry}}</span>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- row -->
+                <!--- start -->
+                <div ng-hide="{!YPSA} && $index==0">
+                    <div class="SectionBreak" />
+                    <div class="SectionTitle">Employment</div>
+                    <div ng-class="{ 'has-error':( myform.Employment_Type_c1{{$index}}.$touched|| Submitted) && myform.Employment_Type_c1{{$index}}.$invalid }">
+                        <div>
+                            <label class="control-label">Type of employment</label>
+                            <span class="borderCircle pull-right" data-toggle="popover" data-placement="auto right"
+                                data-trigger="click" data-content="Select the type which best describes your current primary profession.">?</span>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <select class="form-control arbBox" ng-model="app.Employment_Type_c" name="Employment_Type_c1{{$index}}" ng-required="app.EBS_ID_c && ({!Not(YPSA)} || $index!=0)"
+                                    ng-options="option.Key as option.Value  for option in Data.EmploymentType">
+                                    <!--<option ng-repeat="option in Data.EmploymentType" value="{{option.Key}}">{{option.Value}}</option>-->
+                                </select>
+                            </div>
+                        </div>
+                        <c:CAA_InputError field="Employment_Type_c1" />
+                    </div>
+                    <div ng-show="app.Employment_Type_c &&  app.Employment_Type_c != 'Retired' && app.Employment_Type_c != 'Unemployed' && app.Employment_Type_c != 'Homemaker' 
+                && app.Employment_Type_c != 'Student'">
+                        <hr/>
+                        <div ng-class="{ 'has-error':( myform.Nature_of_Employers_Your_Business_c1{{$index}}.$touched|| Submitted) && myform.Nature_of_Employers_Your_Business_c1{{$index}}.$invalid }">
+                            <div>
+                                <label class="control-label">Nature of Employment/Your Business</label>
+                                <span class="borderCircle pull-right" data-toggle="popover" data-placement="auto right"
+                                    data-trigger="click" data-content="Select the role which best describes your current primary profession. ">?</span>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <select class="form-control arbBox" ng-model="app.Nature_of_Employers_Your_Business_c" name="Nature_of_Employers_Your_Business_c1{{$index}}"
+                                        ng-required="app.Employment_Type_c &&  app.Employment_Type_c != 'Retired' && app.Employment_Type_c != 'Unemployed' && app.Employment_Type_c != 'Homemaker' 
+                                && app.Employment_Type_c != 'Student' && ({!Not(YPSA)} || $index!=0)" ng-options="option.Key as option.Value  for option in Data.EmploymentSector">
+                                    </select>
+                                </div>
+                            </div>
+                            <c:CAA_InputError field="Nature_of_Employers_Your_Business_c1" />
+                        </div>
+                        <hr/>
+                        <div ng-class="{ 'has-error':( myform.Occupation_c1{{$index}}.$touched|| Submitted) && myform.Occupation_c1{{$index}}.$invalid }">
+                            <div>
+                                <label class="control-label">Job Title</label>
+                                <span class="borderCircle pull-right" data-toggle="popover" data-placement="auto right"
+                                    data-trigger="click" data-content="Job title of your current primary professions.">?</span>
+                            </div>
+                            <div>
+                                <input type="text" class="form-control" ng-model="app.Occupation_c" name="Occupation_c1{{$index}}" ng-required="app.Employment_Type_c &&  app.Employment_Type_c != 'Retired' && app.Employment_Type_c != 'Unemployed' && app.Employment_Type_c != 'Homemaker' 
+                            && app.Employment_Type_c != 'Student' && ({!Not(YPSA)} || $index!=0)" />
+                            </div>
+                            <c:CAA_InputError field="Occupation_c1" />
+                        </div>
+                        <apex:outputPanel layout="none" rendered="{!CurrentAccount}">
+                            <hr/>
+                            <div ng-class="{ 'has-error':( myform.Employer_Name_c1{{$index}}.$touched|| Submitted) && myform.Employer_Name_c1{{$index}}.$invalid }">
+                                <div>
+                                    <label class="control-label">Employer name</label>
+                                    <span class="borderCircle pull-right" data-toggle="popover" data-placement="auto right"
+                                        data-trigger="click" data-content="Name of your current primary employer.">?</span>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <input type="text" class="form-control" ng-model="app.Employer_Name_c" name="Employer_Name_c1{{$index}}" ng-required="app.Employment_Type_c &&  app.Employment_Type_c != 'Retired' && app.Employment_Type_c != 'Unemployed' && app.Employment_Type_c != 'Homemaker' 
+                                    && app.Employment_Type_c != 'Student' && ({!Not(YPSA)} || $index!=0)" />
+                                    </div>
+                                </div>
+                                <c:CAA_InputError field="Employer_Name_c1" />
+                            </div>
+                            <hr/>
+                            <c:CAA_Address title="Employer Address" model="app" dateField="" postcode="Employer_Post_Code_c" country="Employer_Country_c"
+                                county="Employer_Address_Line_4_c" line1="Employer_Address_Line_1_c" line2="Employer_Address_Line_2_c"
+                                town="Employer_Address_Line_3_c" cid="4" />
+                            <!--<span class="borderCircle pull-right" data-toggle="popover" data-placement="auto right" data-trigger="click" data-content="The date you began working for your current primary employer.">?</span>-->
+                            <c:CAA_Date title="Employment commenced" model="app" field="Date_Employment_Commenced_c" NumYears="-120" ShowHelp="true"
+                                HelpText="The date you began working for your current primary employer." />
+                        </apex:outputPanel>
+                        <hr/>
+                        <div ng-class="{ 'has-error':( myform.Gross_Annual_Income_c1{{$index}}.$touched|| Submitted) && myform.Gross_Annual_Income_c1{{$index}}.$invalid }">
+                            <div>
+                                <label class="control-label">Annual income before tax</label>
+                                <span class="borderCircle pull-right" data-toggle="popover"
+                                    data-placement="auto right" data-trigger="click" data-html="true" data-content="Enter your gross income before your tax is deducted.  <br/><br/>Your gross income includes salary, pensions, dividends, and any other sources of income.">?</span>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <input type="text" class="form-control" ng-model="app.Gross_Annual_Income_c" name="Gross_Annual_Income_c1{{$index}}" ng-required="app.Employment_Type_c &&  app.Employment_Type_c != 'Retired' && app.Employment_Type_c != 'Unemployed' && app.Employment_Type_c != 'Homemaker' 
+                                && app.Employment_Type_c != 'Student' && ({!Not(YPSA)} || $index!=0)" />
+                                </div>
+                            </div>
+                            <c:CAA_InputError field="Gross_Annual_Income_c1" />
+                        </div>
+                    </div>
+                </div>
+                <!-- end -->
+                <div class="SectionBreak" />
+
+                <div ng-hide="{!YPSA} && $index==0">
+                    <!-- ypsa -->
+                    <div class="SectionTitle">Finance</div>
+
+                    <!-- SS: 09/03/2018 - AEol - Start 
+                        <div ng-class="{ 'has-error':( myform.LiableNonUKTax_c1{{$index}}.$touched|| Submitted) && myform.LiableNonUKTax_c1{{$index}}.$invalid }">
+                        <div>
+                            <label class="control-label">Are you liable to pay tax in any other country?</label>
+                        </div>
+                        <div>
+                            <label class="radio-inline">
+                                <input type="radio" ng-required="!app.LiableNonUKTax_c && ({!Not(YPSA)} || $index!=0) && !app.EBS_ID_c"
+                                    name="LiableNonUKTax_c1{{$index}}" ng-model="app.LiableNonUKTax_c" value="Yes" />Yes</label>
+                            <label class="radio-inline">
+                                <input type="radio" ng-required="!app.LiableNonUKTax_c && ({!Not(YPSA)} || $index!=0) && !app.EBS_ID_c"
+                                    name="LiableNonUKTax_c1{{$index}}" ng-model="app.LiableNonUKTax_c" value="No" />No</label>
+                        </div>
+                        <c:CAA_InputError field="LiableNonUKTax_c1" />
+                    </div>
+
+
+                    <div ng-show="app.LiableNonUKTax_c == 'Yes'" ng-class="{ 'has-error':( myform.CountryLiablePayTax_c{{$index}}.$touched|| Submitted) && myform.CountryLiablePayTax_c{{$index}}.$invalid }">
+                        <div>
+                            <label>Please select the country</label>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <select class="form-control" ng-model="app.CountryLiablePayTax_c" name="CountryLiablePayTax_c{{$index}}" ng-required="app.LiableNonUKTax_c == 'Yes' && ({!Not(YPSA)} || $index!=0)"
+                                    ng-options="option.Key as option.Value  for option in Data.CountriesOfBirth">                                    
+                                </select>
+                                <c:CAA_InputError field="CountryLiablePayTax_c" />
+                            </div>
+                        </div>
+                    </div>
+                 SS: 09/03/2018 - AEol - End -->
+
+                    <!-- C0592 Start -->
+                    <hr/>
+                    <div ng-class="{ 'has-error':( myform.What_is_your_total_net_worth_c{{$index}}.$touched|| Submitted) && myform.What_is_your_total_net_worth_c{{$index}}.$invalid }">
+                        <div>
+                            <label class="control-label">What is your total net worth?</label>
+                            <span class="borderCircle pull-right" data-toggle="popover" data-placement="auto right" data-trigger="click" data-html="true"
+                                data-content="The value of your net assets should not include the value of your main property or pension. Where possible it should be based on recent valuations.">?</span>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <select ng-model="app.What_is_your_total_net_worth_c" class="form-control" name="What_is_your_total_net_worth_c{{$index}}" ng-required="!app.What_is_your_total_net_worth_c && ({!Not(YPSA)} || $index!=0) && app.EBS_ID_c"
+                                    ng-options="option.Key as option.Value for option in Data.TotalNetWorth"></select>
+                                <c:CAA_InputError field="What_is_your_total_net_worth_c" />
+                            </div>
+                        </div>
+                    </div>
+                    <!-- C0592 End -->
+                    <apex:outputPanel layout="none" rendered="{!CurrentAccount}">
+                        <div class="SectionBreak" />
+                        <div class="SectionTitle">Current account information</div>
+                        <div class="row">
+                            <div class="col-sm-6" ng-class="{ 'has-error':( myform.Card_Name_c1{{$index}}.$touched|| Submitted) && myform.Card_Name_c1{{$index}}.$invalid }">
+                                <div>
+                                    <label class="control-label">Card name</label>
+                                </div>
+                                <div>
+                                    <input type="text" class="form-control" ng-model="app.Card_Name_c" ng-required="app.EBS_ID_c" name="Card_Name_c1{{$index}}"
+                                    />
+                                </div>
+                                <c:CAA_InputError field="Card_Name_c1" />
+                            </div>
+                            <div class="col-sm-6">
+                                <div>
+                                    <label>Would you like a cheque book?</label>
+                                </div>
+                                <div>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="optChequeBook1{{$index}}" ng-model="app.Cheque_book_required_c"
+                                            ng-checked="app.Cheque_book_required_c == 'true'" value="true" />Yes</label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="optChequeBook1{{$index}}" ng-model="app.Cheque_book_required_c"
+                                            ng-checked="app.Cheque_book_required_c == 'false'" value="false" />No</label>
+                                </div>
+                            </div>
+                        </div>
+                    </apex:outputPanel>
+
+                </div>
+                <!-- ypsa -->
+
+
+                <apex:outputPanel rendered="{!Not(IsGuest)}" layout="none">
+                    <div style="margin-top:5px;" ng-show="$index == 0" ng-class="{ 'has-error':( myform.Campaign.$touched|| Submitted) && myform.Campaign.$invalid }">
+                        <div>
+                            <label class="control-label">Primary source campaign</label>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <select ng-model="$parent.Data.Campaign" class="form-control" name="Campaign" ng-required="$index == 0" ng-options="option.Key as option.Value  for option in Data.Campaigns">
+                                </select>
+                                <div class="input-validation" ng-messages="myform.Campaign.$error" ng-show="myform.Campaign.$touched || Submitted">
+                                    <p class="alert alert-danger" ng-message="required">This field is required</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+                <hr/>
+                <div ng-class="{ 'has-error': Submitted && myform.optCorrect{{$index}}.$invalid }">
+                    <div>
+                        <label class="control-label">
+                            Are these details correct?
+                        </label>
+                        <div>
+                            <label class="radio-inline">
+                                <input type="radio" ng-required="!app.Correct && app.EBS_ID_c" name="optCorrect{{$index}}" ng-model="app.Correct"
+                                    value="Yes" />Yes</label>
+                            <label class="radio-inline">
+                                <input type="radio" ng-required="!app.Correct && app.EBS_ID_c" name="optCorrect{{$index}}" ng-model="app.Correct"
+                                    value="No" />No</label>
+                        </div>
+                        <c:CAA_InputError field="optCorrect" />
+                    </div>
+                </div>
+                <div class="alert alert-danger" ng-show="app.Correct == 'No'">
+                    Due to your details not being up to date, we cannot proceed with your application. To update your details and continue your
+                    application, please visit your local branch or call us on 0800 6060 786.
+                </div>
+            </fieldset>
+            <!--</ng-form>-->
+        </div>
+    </div>
+    <!-- </form>-->
+</apex:component>

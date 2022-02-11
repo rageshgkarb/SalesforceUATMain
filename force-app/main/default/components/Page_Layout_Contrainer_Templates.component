@@ -1,0 +1,487 @@
+<apex:component >
+
+<!-- Markup for lists inside the dropzone. It's inside a seperate template
+     because it will be used recursively. The dnd-list directive enables
+     to drop elements into the referenced array. The dnd-draggable directive
+     makes an element draggable and will transfer the object that was
+     assigned to it. If an element was dragged away, you have to remove
+     it from the original list yourself using the dnd-moved attribute -->
+<script type="text/ng-template" id="list.html">
+    <ul dnd-list="list">
+    {{showJson?list : ''}}
+        <li ng-repeat="item in list"
+            dnd-draggable="item"
+            dnd-effect-allowed="move"
+            dnd-moved="list.splice($index, 1)"
+            dnd-selected="models.selected = item;GetRelatedFields()"
+            ng-class="{selected: models.selected === item}"
+            ng-include="item.type + '.html'">
+        </li>
+    </ul>
+</script>
+
+<script type="text/ng-template" id="zlist.html">
+    <ul dnd-list="list.items">
+    {{showJson?list : ''}}
+        <li ng-repeat="item in list.items"
+            dnd-draggable="item"
+            dnd-effect-allowed="move"
+            dnd-moved="list.items.splice($index, 1)"
+            dnd-selected="models.selected = item;GetRelatedFields()"
+            ng-class="{selected: models.selected === item}"
+            ng-include="item.type + '.html'">
+        </li>
+    </ul>
+</script>
+
+<script type="text/ng-template" id="blist.html">
+    <ul dnd-list="list.items">
+    {{showJson?list : ''}}
+        <li ng-repeat="item in list.items" style="display: inline;"
+            dnd-draggable="item"
+            dnd-effect-allowed="move"
+            dnd-moved="list.items.splice($index, 1)"
+            dnd-selected="models.selected = item;"
+            ng-class="{selected: models.selected === item}"
+            ng-include="item.type + '.html'">
+        </li>
+    </ul>
+</script>
+
+<!-- This template is responsible for rendering a container element. It uses
+     the above list template to render each container column -->
+<script type="text/ng-template" id="container.html">
+    <div class="container-element box box-blue" ng-hide="$eval(item.hide)">
+        <h3>Container - <input type="text" ng-model="item.title"/></h3>{{item.hide}}
+        <div class="gridcolumn col-sm-12" ng-repeat="list in item.columns" ng-include="'list.html'"></div>
+        <div class="clearfix"></div>
+    </div>
+</script>
+
+
+<script type="text/ng-template" id="colapse.html">
+    <div class="container-element box box-blue" ng-hide="$eval(item.hide)">
+        <h3>Container {{item.id}}</h3>{{item.hide}}
+        <div class="gridcolumn col-sm-12" ng-repeat="list in item.columns" ng-include="'list.html'"></div>
+        <div class="clearfix"></div>
+    </div>
+</script>
+
+
+
+<script type="text/ng-template" id="tab.html">
+    <div class="container-element box box-blue">
+    
+    <!--
+    <div id="tab{{item.id}}" kendo-tab-strip="tabstrip" k-on-select="onSelect(kendoEvent)">
+            
+            <ul>
+              <li id="{{$index}}" ng-repeat="list in item.columns">{{$index}}</li>
+            </ul>
+    
+            <div ng-repeat="list in item.columns">
+                {{$index}}
+            </div>
+    </div>
+    -->
+    
+    <ul class="nav nav-tabs" id="tab{{item.id}}">
+        <li ng-repeat="list in item.columns" ng-class="{'active' : $index == item.selected}">
+            <a ng-click="item.selected=$index">Tab{{$index}} - {{item.col[$index].label}}</a>
+            <!--<button ng-click="removeTab(item, $index)">R</button>-->
+        </li>
+    </ul>
+    
+    <div class="tab-content">
+        <div ng-repeat="list in item.columns" id="tab{{item.id}}{{$index}}" class="tab-pane" ng-class="{'active' : $index == item.selected}" ng-include="'list.html'">
+           
+        </div>
+    </div>
+
+    <span class="goldButton sm" ng-click="addTab(item)">Add tab</span>
+
+    </div>
+</script>
+
+
+
+<!-- This template is responsible for rendering a container element. It uses
+     the above list template to render each container column -->
+<script type="text/ng-template" id="container3.html">
+    <div class="container-element box box-blue">
+        <h3>Container - <input type="text" ng-model="item.title"/></h3>
+        <div class="col-sm-4 gridcolumn "  ng-repeat="list in item.columns" ng-include="'list.html'"></div>
+        <div class="clearfix"></div>
+    </div>
+</script>
+
+<script type="text/ng-template" id="container4.html">
+    <div class="container-element box box-blue">
+        <h3>Container - <input type="text" ng-model="item.title"/>}</h3>
+        <div class="col-sm-4 gridcolumn "  ng-repeat="list in item.columns" ng-include="'list.html'"></div>
+        <div class="clearfix"></div>
+    </div>
+</script>
+
+
+<!-- This template is responsible for rendering a container element. It uses
+     the above list template to render each container column -->
+<script type="text/ng-template" id="container2.html">
+    <div class="container-element box box-blue">
+        <h3>Container - <input type="text" ng-model="item.title"/></h3>
+        <div class="col-sm-6 gridcolumn " ng-repeat="list in item.columns" ng-include="'list.html'"></div>
+        <div class="clearfix"></div>
+    </div>
+</script>
+
+<script type="text/ng-template" id="buttonlist.html">
+<div style="min-height:50px;">
+    {{item}}
+
+    <div ng-include="'blist.html'" valign="top" ng-repeat="list in item.columns"> 
+    </div>
+</div>
+</script>
+
+<script type="text/ng-template" id="grid2.html">
+    <div class="container-element box box-blue">
+        <h3>Container - <input type="text" ng-model="item.title"/></h3>
+        
+        
+        <button ng-click="AddGridRow(item)">Add Row</button>
+        <button ng-click="AddColumnRow(item)">Add Column</button>
+        
+        <!--{{item.rows}}--{{item.rows.length}}-->
+        <table width="100%" border="1">
+       
+        <tr ng-repeat="row in item.rows">
+        
+            
+            <td ng-repeat="list in row.columns" ng-include="'list.html'" valign="top"> 
+               
+            </td> 
+        </tr>
+        </table>        
+     
+    </div>
+</script>
+
+
+<!-- Related List -->
+<script type="text/ng-template" id="related.html">
+    <div class="container-element box box-blue">
+        <h3>Related List - <strong>{{item.Name}}</strong> on field <strong>{{item.Field}}</strong></h3>
+        <div class="col-sm-12" style="padding-left:10px;padding-right:10px;font-size:18px;">
+            {{item.Title}}
+        </div>
+        <div class="col-sm-12 gridcolumn" ng-repeat="list in item.columns" ng-include="'list.html'"></div>
+        <div class="clearfix"></div>
+    </div>
+</script>
+
+<script type="text/ng-template" id="attachment.html">
+    <h1>Attachment</h1>
+</script>
+
+<script type="text/ng-template" id="attachmentq.html">
+    <h1>Attachment Quotes</h1>
+</script>
+
+<script type="text/ng-template" id="attachmentval.html">
+    <h1>Attachment Valuation</h1>
+</script>
+
+<script type="text/ng-template" id="note.html">
+    <h1>Notes</h1>
+</script>
+
+<script type="text/ng-template" id="button.html">
+    <button>Button - {{item.Label}}</button>
+</script>
+
+<script type="text/ng-template" id="activity.html">
+    <h1>Activity History (OPP)</h1>
+</script>
+
+<!-- Template for a normal list item -->
+<script type="text/ng-template" id="item.html">
+
+<div ng-hide="item.label2">
+    <div class="item col-sm-4"><label>{{item.label}}</label></div>
+    <div class="item col-sm-8">{{item.apiname}} <span ng-show="item.helptext" class="pull-right" class="glyphicon glyphicon-info-sign">i</span></div>   
+</div>    
+    
+<div ng-show="item.label2">
+    <div class="item col-sm-2"><label>{{item.label}}</label></div>
+    <div class="item col-sm-10">{{item.apiname}} <span ng-show="item.helptext" class="pull-right" class="glyphicon glyphicon-info-sign">i</span></div>   
+</div>      
+     
+    <div class="clearfix"></div>
+   
+</script>
+
+
+<!-- Template for a normal list item -->
+<script type="text/ng-template" id="relateditem.html">
+
+
+<div ng-hide="item.label2">
+    <div class="item col-sm-4"><label>{{item.label}}</label></div>
+    <div class="item col-sm-8">{{item.apiname}} <span ng-show="item.helptext" class="pull-right" class="glyphicon glyphicon-info-sign">i</span></div>    
+</div>    
+
+<div ng-show="item.label2">
+    <div class="item col-sm-2"><label>{{item.label}}</label></div>
+    <div class="item col-sm-10">{{item.apiname}} <span ng-show="item.helptext" class="pull-right" class="glyphicon glyphicon-info-sign">i</span></div>    
+</div>
+    
+    <div class="clearfix"></div>
+</script>
+
+<!-- Template for a normal list item -->
+<script type="text/ng-template" id="label.html">
+    <div ng-class="item.class" ng-show="!item.apiname">Label:{{item.label}}</div>
+    <div ng-class="item.class" ng-show="item.apiname">Field:{{item.apiname}}</div>    
+</script>
+
+
+
+
+
+<!-- Template for a normal list item -->
+<script type="text/ng-template" id="item_setting.html">
+    <div class="editItem">
+        <label class="smallTextTitle">SObject</label>
+        <div>{{models.selected.objectname}}</div>
+    </div>
+    
+    <div class="editItem">
+        <label class="smallTextTitle">Api Name</label>
+        <div>{{models.selected.apiname}}</div>
+    </div>
+    
+    <div class="editItem">
+        <label class="smallTextTitle">Label</label>
+        <div><input type="text" class="form-control" ng-model="models.selected.label"/></div>
+    </div>
+    
+    <div class="editItem">
+        <label class="smallTextTitle">Help Text</label>
+        <div><input type="text" class="form-control" ng-model="models.selected.helptext"/></div>
+    </div>
+    
+    <div class="editItem">
+        <label class="smallTextTitle">Label width 2</label>
+        <div><input type="checkbox" ng-model="models.selected.label2"/></div>
+    </div>
+    
+    <div class="editItem">
+        <label class="smallTextTitle">LookupField</label>
+        <div><input type="text" ng-model="models.selected.lookupId"/></div>
+    </div>
+    
+    
+    
+    
+<!--
+  <input type="text" ng-model="models.selected.label" class="form-control" style="margin-top: 5px" />
+            <input type="text" ng-model="models.selected.apiname" class="form-control" style="margin-top: 5px" />
+            <input type="text" ng-model="models.selected.helptext" class="form-control" style="margin-top: 5px" />        
+            <input type="text" ng-model="models.selected.objectname" class="form-control" style="margin-top: 5px" />
+-->
+</script>
+
+
+<script type="text/ng-template" id="tab_setting.html">
+
+  Len:{{models.selected.col.length}}-- Index:{{models.selected.selected}}
+  
+    <div ng-show="models.selected.selected >= 0 && models.selected.selected <= models.selected.col.length">  
+        <div class="editItem" >
+            <label class="smallTextTitle">Tab Name</label>
+            <div><input type="text" ng-model="models.selected.col[models.selected.selected].label" /></div>
+        </div>  
+        
+        <div class="editItem" >
+            <span class="goldButton sm" ng-click="removeTab(models.selected,models.selected.selected)">Remove tab</span>        
+        </div>
+        
+    </div>
+  
+</script>
+
+<script type="text/ng-template" id="button_setting.html">
+       <div class="editItem" >
+            <label class="smallTextTitle">Label</label>
+            <div><input type="text" ng-model="models.selected.Label" /></div>
+        </div>  
+        <div class="editItem" >
+            <label class="smallTextTitle">Link</label>
+            <div><input type="text" ng-model="models.selected.Link" /></div>
+        </div>
+        <div class="editItem" >
+            <label class="smallTextTitle">Merge Fields</label>
+            <div><input type="text" ng-model="models.selected.Fields" /></div>
+        </div>
+</script>
+
+<script type="text/ng-template" id="note_setting.html">
+  
+</script>
+
+<script type="text/ng-template" id="collapse_setting.html">
+  
+</script>
+
+<script type="text/ng-template" id="label_setting.html">
+  
+</script>
+
+<script type="text/ng-template" id="container_setting.html">
+  
+</script>
+
+<script type="text/ng-template" id="container2_setting.html">
+  
+</script>
+
+<script type="text/ng-template" id="container3_setting.html">
+  
+</script>
+
+<script type="text/ng-template" id="container4_setting.html">
+  
+</script>
+
+<script type="text/ng-template" id="grid_setting.html">
+  
+</script>
+
+<script type="text/ng-template" id="attachment_setting.html">
+  
+</script>
+
+<script type="text/ng-template" id="attachmentq_setting.html">
+  
+</script>
+
+<script type="text/ng-template" id="attachmentval_setting.html">
+  
+</script>
+
+<script type="text/ng-template" id="relateditem_setting.html">
+
+     <div class="editItem">
+        <label class="smallTextTitle">SObject</label>
+        <div>{{models.selected.objectname}}</div>
+    </div>
+    
+   
+    
+    <div class="editItem">
+        <label class="smallTextTitle">Api Name</label>
+        <div>{{models.selected.apiname}}</div>
+    </div>
+    
+    <div class="editItem">
+        <label class="smallTextTitle">Label</label>
+        <div><input type="text" class="form-control" ng-model="models.selected.label"/></div>
+    </div>
+    
+    <div class="editItem">
+        <label class="smallTextTitle">Help Text</label>
+        <div><input type="text" class="form-control" ng-model="models.selected.helptext"/></div>
+    </div>
+    
+    <div class="editItem">
+        <label class="smallTextTitle">Hide</label>
+        <div><input type="checkbox"  ng-model="models.selected.hide"/></div>
+    </div>
+    <div class="editItem">
+        <label class="smallTextTitle">Show as HTML</label>
+        <div><input type="checkbox"  ng-model="models.selected.ShowHtml"/></div>
+    </div>
+    
+    <div class="editItem">
+        <label class="smallTextTitle">Label width 2</label>
+        <div><input type="checkbox"  ng-model="models.selected.label2"/></div>
+    </div>
+    
+    <div class="editItem">
+        <label class="smallTextTitle">LookupField</label>
+        <div><input type="text" ng-model="models.selected.lookupId"/></div>
+    </div>
+    
+</script>
+
+<script type="text/ng-template" id="related_setting.html">
+  
+  <div class="expanderHeaderSelected" ng-init="apiornameRelated = 'api';relatedlimitval = 25;" style="padding-left:15px;padding-right:15px;">
+ 
+                         <div class="row">
+                             <div class="col-sm-12">
+                                 <input placeholder="Title" ng-model="models.selected.Title" class="form-control"/>
+                             </div>
+                         </div>
+  <div class="row">
+        <label class="smallTextTitle">Display as tabs</label>
+        <input type="checkbox" ng-model="models.selected.asTab"/>
+    </div>
+    <div class="row">
+                             <div class="col-sm-12">
+                                 <input placeholder="Tab Layout Field" ng-model="models.selected.tabLabelField " class="form-control"/>
+                             </div>
+                         </div>
+    
+    
+                         
+ 
+                          <div class="row">
+                              <div class="col-sm-12">
+                                  <!--<select class="form-control" ng-options="rf.fieldname for rf in RelatedFields" />-->
+                                  <select class="form-control" ng-model="SelectedRelated">
+                                      <option ng-repeat="rr in RelatedFields" value="{{rr.fieldname}}">{{rr.objectname}} - {{rr.fieldname}}</option>
+                                  </select>
+                              </div>
+                          </div>
+                          
+  
+                          <div class="row">
+                                <div class="col-sm-8">                                    
+                                    <input placeholder="Filter" type="text" class="form-control ng-pristine ng-valid ng-touched" ng-model="relatedfieldFilter"/>
+                                    
+                                
+                                </div>
+                                <div class="col-sm-4">
+                                
+                                    <label class="goldButton" ng-click="ToggleFilterRelated(apiornameRelated)">
+                                        <span ng-show="apiornameRelated== 'name'">Label</span>
+                                        <span ng-show="apiornameRelated== 'api'">Api Name</span>
+                                    </label>                               
+                                
+                                    
+                                </div>
+                                
+                            </div> 
+                         </div>
+  
+
+                        <div style="padding-left:5px;">
+                            <span class="smallTextTitle ng-binding ng-hide" ng-show="relatedlimitval  > FilteredFields().length">Showing {{RelatedFieldsFilter(relatedfieldFilter,apiornameRelated, SelectedRelated).length}} of {{RelatedFieldsFilter(relatedfieldFilter,apiornameRelated, SelectedRelated).length}}</span>
+                            <span class="smallTextTitle ng-binding" ng-show="relatedlimitval  < FilteredFields().length">Showing {{relatedlimitval}} of {{RelatedFieldsFilter(relatedfieldFilter,apiornameRelated, SelectedRelated).length}}</span>
+                        </div>
+
+<div style="overflow-y:auto;overflow-x:auto;height:calc(100% - 106px);padding-left:5px;">
+      <div ng-repeat="item in RelatedFieldsFilter(relatedfieldFilter,apiornameRelated, SelectedRelated) | limitTo:relatedlimitval">
+          <span class="smallText" dnd-copied="Drop(item )" dnd-draggable="item " dnd-effect-allowed="copy" ng-show="apiornameRelated=='name'">{{item.label}}</span>
+          <span class="smallText" dnd-copied="Drop(item )" dnd-draggable="item " dnd-effect-allowed="copy" ng-show="apiornameRelated=='api'">{{item.apiname}}</span>
+      </div>
+      
+      <span class="goldButton sm" ng-click="relatedlimitval=relatedlimitval + 25" ng-show="relatedlimitval < RelatedFieldsFilter(relatedfieldFilter,apiornameRelated, SelectedRelated).length">Show more...</span>
+      
+</div>
+
+  
+</script>
+
+</apex:component>

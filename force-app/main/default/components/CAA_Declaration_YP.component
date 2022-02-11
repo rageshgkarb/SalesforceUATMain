@@ -1,0 +1,80 @@
+<apex:component controller="CAA_DeclarationText_Controller" allowDML="true" layout="none" >
+<apex:attribute name="prod" description="" type="String" assignTo="{!IbbProductName}"/>
+
+<ul>
+    <li>
+        <strong>I/we are applying to Al Rayan Bank PLC for Banking Services.</strong>
+    </li>
+    <li>
+        <strong>I/we request you to open an Al Rayan Bank Account in the name of the young person(s).  </strong>
+        I/we agree that the account is bound and governed by the Al Rayan Bank Consumer Banking Terms and Conditions, and applicable Special Conditions for savings accounts, and I/we have received copies of these.
+    </li>
+    <li>
+        <strong>We may ask you to provide original identity documents  </strong>
+        when you open your account, and we may also use credit reference and fraud prevention agencies when assessing your application.
+    </li>
+    <li>
+        <strong>By applying in joint names you will create a financial association with that person. </strong>
+        You declare that you are entitled to provide information about your joint applicant.
+    </li>
+    <li>
+        <strong>Information held about you by the credit reference agencies and fraud prevention agencies </strong>
+        may already be linked to records relating to one or more of your partners. During this application you may be treated as financially linked and your application will be assessed with reference to any “associated” records.
+    </li>
+    <li>
+        <strong>I/we have read the information from the link entitled Data Protection Statement and Marketing Consent  </strong>
+        and I/we consent to the use of our data being added to Al Rayan Bank database and that we have given our preference for marketing purposes.
+    </li>
+    <li>
+        <strong>I/we declare that if my/our application is accepted:</strong>
+        <ul>
+            <li>
+                <strong>I/we will only use my/our Al Rayan Bank Account for personal use and in the best interest of the young person(s).</strong>
+            </li>
+            <li>
+                <strong>I/we will not use it as a club, charity, trust, sole trader, company, partnership </strong>
+                or other kind of business account.
+            </li>
+            <li>
+                <strong>I/we confirm that I am/we are opening this account, and investing this sum of money on behalf of the young person, in my/our capacity as Trustee(s).</strong>                
+            </li>
+            <li>
+                <strong>I am/we are aware of the identity of the beneficiary, and the source of funds to be invested in this account.</strong>
+            </li>
+        </ul>
+    </li>
+    <li>
+        <strong>Under the Al Rayan Bank Consumer Banking Terms and Conditions and Special Conditions,  </strong>
+        you may at any time require me/us to pay you any administrative fees and charges (in line with our tariffs) which I/we owe you on my/our account).
+    </li>
+    <li>
+        <strong>This is our application agreement upon which we intend to rely. </strong>
+        For your own benefit and protection, you should read all the terms and conditions that apply to this account carefully before agreeing to this declaration. If you do not understand any point, please ask for further information or if you are in any doubt about agreeing to the terms then you may want to seek independent advice.
+        <strong>The following information will be provided to you in the welcome pack:</strong>
+        <ul>
+            <li>
+                <apex:outputLink value="{!$Resource.ConsumerBankingTC}" rendered="true" target="_blank">Consumer Banking Terms and Conditions</apex:outputLink>
+            </li>
+            <li>
+                <apex:outputPanel rendered="{!showYPSATC}" layout="none">
+                    <apex:outputLink value="{!$Resource.YPSATC}" target="_blank">Special conditions for the product you have selected</apex:outputLink>
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{!showYPNATC}" layout="none">
+                    <apex:outputLink value="{!$Resource.AYPNATC}" target="_blank">Special conditions for the product you have selected</apex:outputLink>
+                </apex:outputPanel>
+            </li>
+            <li><apex:outputLink value="{!$Resource.TariffList}" target="_blank">Fee Information Document</apex:outputLink></li>
+        </ul>
+    </li>
+    <li>
+        <strong>If you are in any doubt about agreeing to the terms, then you may want to seek independent advice.</strong>
+    </li>
+    <li>
+        <strong>I/we confirm that the information given is accurate and true to the best of my/our knowledge, and no information has been withheld that would affect the outcome of this application.</strong>
+    </li>
+    <li>
+        <strong>On behalf of all applicants I/we confirm that I/we have read and agree to the Consumer Banking Terms and Conditions and the Special Conditions applicable to this application. </strong>
+        I/we also confirm that they have been downloaded and stored safely for future reference.
+    </li>
+</ul>
+</apex:component>

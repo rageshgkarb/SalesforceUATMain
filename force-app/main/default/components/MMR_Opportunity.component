@@ -1,0 +1,105 @@
+<apex:component >
+    <apex:attribute name="Applicant" type="Account" description=""/>
+    <apex:attribute name="title" type="String" description=""/>
+
+<div class="panel panel-primary">
+            <div class="panel-heading">
+                {!title}
+            </div>
+            <div class="panel-body"> 
+                <div class="col-sm-12">
+                <div class="row">  
+                                 
+                              <div class="form-group">   
+                                  <div class="col-sm-6">
+                                      <label class="form-label">Date of birth</label>
+                                  </div>
+                                  <div class="col-sm-6">
+                                      <apex:inputField styleClass="form-control"  value="{!Applicant.Date_of_Birth__c}"  required="true" />
+                                  </div>
+                              </div>
+                  
+                 </div>
+                 <div class="row">               
+                                <div class="form-group">   
+                                  <div class="col-sm-6">
+                                      <label>Employment type</label>
+                                  </div>
+                                  <div class="col-sm-6">
+                                      <apex:inputField styleClass="form-control" value="{!Applicant.Employment_Type__c}"  required="true"/>
+                                  </div>
+                             
+                                </div>
+                </div>
+                
+                
+                <div class="row">  
+                                 
+                              <div class="form-group">   
+                                  <div class="col-sm-6">
+                                      <label class="form-label">Have you had 6 months continuous employment or 3 years self-employment?</label>
+                                  </div>
+                                  <div class="col-sm-6">
+                                      <apex:inputField styleClass="form-control"  value="{!Applicant.X6_months_employment__c}"  required="true" />
+                                  </div>
+                              </div>
+                  
+                 </div>
+                 <div class="row">               
+                                <div class="form-group">   
+                                  <div class="col-sm-6">
+                                      <label>Gross Annual Income</label>
+                                  </div>
+                                  <div class="col-sm-6">
+                                      <apex:inputField styleClass="form-control" value="{!Applicant.Gross_Annual_Income__c}"  required="true"/>
+                                  </div>
+                             
+                                </div>
+                </div>
+                
+                
+                <div class="row">  
+                                 
+                              <div class="form-group">   
+                                  <div class="col-sm-6">
+                                      <label class="form-label">Do you have 3 years of accounts</label>
+                                  </div>
+                                  <div class="col-sm-6">
+                                      <apex:inputField styleClass="form-control"  value="{!Applicant.Do_you_have_2_years_of_accounts__c}"  required="false" />
+                                  </div>
+                              </div>
+                  
+                 </div>
+                 <div class="row">               
+                                <div class="form-group">   
+                                  <div class="col-sm-6">
+                                      <label>Net Monthly Income</label>
+                                  </div>
+                                  <div class="col-sm-6">
+                                      <apex:inputField styleClass="form-control" value="{!Applicant.Net_Monthly_Income__c}"  required="true"/>
+                                  </div>
+                             
+                                </div>
+                </div>
+                
+                <div class="row">               
+                                <div class="form-group">   
+                                  <div class="col-sm-6">
+                                      <label>Total monthly financial commitments</label>
+                                  </div>
+                                  <div class="col-sm-6">
+                                      <apex:inputField styleClass="form-control" value="{!Applicant.Total_monthly_financial_commitments__c }"  required="true"/>
+                                  </div>
+                             
+                                </div>
+                </div>
+                
+                
+                
+                
+                
+                </div>
+            </div>
+  </div>
+
+</apex:component>

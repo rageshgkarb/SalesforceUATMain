@@ -1,0 +1,8 @@
+<apex:component controller="HPPFooterController" allowDML="true">
+<div class="hppfooter" >
+ <apex:attribute name="DirectorId" description="This is the opportunity id." type="String" assignTo="{!DirectorId}" required="true"/>
+<apex:attribute name="oppId" description="This is the opportunity id." type="String" assignTo="{!OppId}" required="true"/>
+ 
+ </div>
+ 
+</apex:component>

@@ -1,0 +1,402 @@
+<apex:page applyBodyTag="false" showHeader="false" sidebar="false" docType="html-5.0" standardStylesheets="false" controller="CAA_Core_Controller">
+  <apex:stylesheet value="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+<apex:stylesheet value="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/spacelab/bootstrap.min.css"/>
+<apex:stylesheet value="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"/>
+
+<apex:includeScript value="//code.jquery.com/jquery-1.11.3.min.js"/>
+<apex:includeScript value="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"/>
+
+
+<!-- Angular -->
+<!-- <apex:includeScript value="{!URLFOR($Resource.AngularJS, '/AngularJS/angular-1.3.11/angular.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.AngularJS, '/AngularJS/angular-1.3.11/angular-animate.min.js')}"/> -->
+<apex:includeScript value="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular.min.js"/>
+<apex:includeScript value="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular-animate.min.js"/>
+<apex:includeScript value="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular-sanitize.js"/>
+<apex:includeScript value="{!URLFOR($Resource.AngularJS, '/AngularJS/angular-ui-router/angular-ui-router.js')}"/>
+<c:CAA_js ></c:CAA_js>
+  <style>
+      .progressCol{
+          background-color:#fff;
+          padding: 18px;
+      
+      
+      }
+      
+      .PanelContainer{
+      
+      }
+      
+      .PanelContents{
+          margin-bottom:30px;
+          padding:20px;
+          background-color:#fff;
+      }
+      
+      .LoginContainer{
+          background-color: rgb(30,30,30);
+          color:#fff;
+          padding:15px;
+      }
+      
+      html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  background-color: #f5f5f5;
+  font-size:15px;
+}
+
+
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+body > .container {
+  padding: 60px 15px 0;
+}
+.container .text-muted {
+  margin: 20px 0;
+}
+
+.footer > .container {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+code {
+  font-size: 80%;
+}
+
+    input[type="radio"]:checked+label{ font-weight: bold; }
+      
+      body{
+          font-family:Arial;
+      }
+      
+      @media (min-width: 768px)
+    .container {
+        width: 100%;
+    }
+      
+     @media (min-width: 1200px)
+        .container{
+        max-width: 992px;
+        }
+
+    
+    .SectionHeader{
+        padding: 15px;
+        background-color: rgb(179,153,93);
+        color: rgb(255,255,255);
+        font-size: 18px;
+    }
+    
+    .SectionContainer{
+        padding-left: 20px;
+        padding-right: 20px;
+        background-color: rgb(243,243,243);
+        padding-top:15px;
+        padding-bottom:10px;
+        margin-top: 10px;
+    }
+    
+    .SectionTitle{
+        color: rgb(179,153,93);
+        font-size: 20px;
+        font-weight: bold;
+        padding-bottom: 10px;
+    }
+    
+    .SectionBreak{
+        margin-left: -15px;
+        margin-right: -15px;
+        border: 2px solid rgb(243,243,243);  
+        margin-top:10px;
+        margin-bottom:10px;      
+    }
+    
+    .arrow_box{
+        padding-top: 18px;
+        padding-bottom: 18px;
+        padding-left:10px;
+        background-color: rgb(255,255,255);
+        margin:10px;
+        margin-right:0px;
+        font-size: 14px;
+        color: rgb(179,153,93);
+        font-weight: bold;
+        height: 100%;
+    }
+    
+    .arrow_box:after {
+        left: calc(100% - 15px);
+        top: 50%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+        border-color: rgba(255, 255, 255, 0);
+        border-left-color: #fff;
+        border-width: 14px;
+        margin-top: -14px;
+    }
+    
+    .SectionSubHeader{
+        background-color: rgb(165,165,165);
+        padding:20px;
+        color: #fff;
+        font-weight:bold;
+        font-size: 18px;
+    }
+    
+    .ProductSelectionContainer{
+        background-color: #fff;
+        padding:20px;
+    }
+    
+    .darkGreyColor{
+        color: rgb(165,165,165);
+    }
+    .darkGreyBack{
+        color: rgb(165,165,165);
+    }
+    
+    .brightGreyBack{
+        background-color: rgb(237,237,237);
+    }
+    
+    .panel-heading.active{
+        background-color: rgb(165,165,165);
+        color: #fff;
+        font-weight: bold;
+    }
+    
+    .goldColor{
+        color: rgb(179,153,93);
+    }
+    
+    .arbBox{
+        /*border: solid 1px rgb(237,237,237); */
+        background-color: rgb(243,243,243);
+    }
+    
+    hr{
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    
+    
+    .borderCircle{
+        border-radius: 50%;
+        behavior: url(PIE.htc); /* remove if you don't care about IE8 */
+        float: left;
+        width: 25px;
+        height: 25px;
+        padding-top: -2px;
+        margin-right:7px;    
+        color: rgb(179,153,93);
+        text-align: center;
+        font-weight: bold;
+        border: 2px solid rgb(179,153,93);
+        font-size: 18px ;
+    
+    }
+    
+    .borderCircleBtn{
+        border-radius: 50%;
+        behavior: url(PIE.htc); /* remove if you don't care about IE8 */
+        float: left;
+        width: 20px;
+        height: 20px;
+        padding-top: -2px;
+        margin-right:7px;    
+        color: #fff;
+        text-align: center;
+        font-weight: bold;
+        border: 2px solid #fff;
+        font-size: 14px ;
+    
+    }
+    
+    .DPAText{
+        color:#fff;
+        padding:20px;
+        background-color: rgb(165,165,165);
+    }
+    
+    .btnArb{
+        text-shadow:none;
+        background-color: rgb(179,153,93);
+        color: #fff;        
+    }
+    
+  .numberCircle {
+    border-radius: 50%;
+    behavior: url(PIE.htc); /* remove if you don't care about IE8 */
+    float: left;
+    width: 25px;
+    height: 25px;
+    padding: 1px;
+    margin-right:7px;    
+    background: rgb(179,153,93);
+    color: #fff;
+    text-align: center;
+
+    font: 18px ;
+    }
+    
+    .numberCircleReverse {
+    border-radius: 50%;
+    behavior: url(PIE.htc); /* remove if you don't care about IE8 */
+    float: left;
+    width: 25px;
+    height: 25px;
+    padding: 0px;
+    margin-right:7px;    
+    background: #fff;
+    color: rgb(179,153,93);
+    text-align: center;
+    font-weight: bold;
+    padding-top: 1px;
+    font-size: 18px ;
+    }
+
+        
+        
+        
+  </style>
+  
+  <body ng-app="caaApp" class="brightGreyBack" >
+    <div class="container" style="min-height:600px;">
+        <div class="row">
+        <div class="col-md-9 col-sm-12">
+        
+        <div style="background-color:#fff;padding:20px;margin-bottom:20px;">
+            <div class="SectionHeader">
+                You can complete this application within about <strong>15 minutes</strong>
+            </div>
+            <div class="SectionContainer">
+                <div>
+                    <strong>This form has 4 sections:</strong>
+                </div>
+                <div class="row" >
+                    <div class="col-sm-3">
+                        <div class="arrow_box">
+                            <span>
+                            <span class="numberCircle">1</span>
+                            <span>Account details</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="arrow_box">
+                            <div class="numberCircle">2</div>
+                        <div>
+                            Personal details
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="arrow_box">
+                        <div class="numberCircle">3</div>
+                            Declaration
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="arrow_box">
+                        <div class="numberCircle">4</div>
+                            Next steps
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        
+        
+            <div class="SectionContainer">
+                <div>
+                    <strong>You will need:</strong>
+                </div>
+                <div>
+                    Move in dates for each applicant's home address <span class="darkGreyColor">(covering the past three years)</span>
+                </div>
+                <div>
+                    Your Al Rayan Bank or external current account details <span class="darkGreyColor">(to set up profit for fixed term savings applications)</span>
+                </div>
+            
+            </div>
+        
+        
+        </div>
+        
+        
+        
+        </div>
+        <div class="col-md-3 col-sm-12 progressCol">
+        
+            <div class="LoginContainer">
+                <div>
+                    <strong>Existing Al Rayan Bank customers</strong> should apply through online banking
+                </div>
+                <div>
+                    <button>Login</button>
+                </div>
+            </div>
+        
+        </div>
+        </div>
+        
+        
+        <div class="row">
+        <div class="col-md-9 col-sm-12">
+            <apex:include pageName="CAA_Product_Screen"/>
+        </div>
+        <div class="col-md-3 col-sm-12 progressCol">
+        your progress
+        </div>
+        </div>
+        
+        
+        <!--
+        <div class="row">
+            <div class="col-md-9 col-sm-12">
+                <apex:include pageName="CAA_PersonalDetails"/>
+            </div>
+            <div class="col-md-3 col-sm-12 progressCol">
+            Applicants
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-9 col-sm-12">
+                <apex:include pageName="CAA_Declaration"/>
+            </div>
+            <div class="col-md-3 col-sm-12 progressCol">
+            Your application is <strong>90% complete</strong>
+            </div>
+        </div>
+        -->
+        
+    </div>  
+  
+  <footer class="footer">
+      <div class="container">
+        <!--C0697-->
+         <c:Standard_Footer_Copyright_Links />
+      </div>
+    </footer>
+    </body>
+</apex:page>

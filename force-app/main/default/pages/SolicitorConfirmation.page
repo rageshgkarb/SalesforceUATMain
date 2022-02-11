@@ -1,0 +1,43 @@
+<apex:page controller="HPPPostCompletionController"  sidebar="false" showHeader="false" title="Submit to decison engine">
+    <head>
+        <c:KendoResource ></c:KendoResource>
+    </head>
+    <body>
+        <apex:form >
+            <div id="formWrapper">
+                <div class="header">
+                    <h1>{!Opp.Name} </h1>
+                </div>
+                <c:HPPSummary objAcc="{!Accounts[0]}" objOpp="{!opp}" objExOpp="{!ExOpp}" Product="{!Prod}" />
+                <div id="container" >
+                    <table width="100%">
+                        <tr>
+                            <td valign="top" id="sidebar">
+                                <c:HPPBOMenu oppId="{!Opp.Id}"  DirectorId="{!Opp.ProductEventDirector__c}" />
+                            </td>
+                            <td valign="top" id="contenttd">
+                                <div id="content">
+                                    <h1>Solicitor Confirmation</h1>
+                                    <!-- content -->
+                                    <apex:messages ></apex:messages>
+                                    <table>
+                                    <tr><td>TR1 Recieved</td><td>
+                                    <apex:commandButton value="Recieved" action="{!TR}" rendered="{!exopp.TR1_received__c == null}"/>
+                                    <apex:outputField value="{!exopp.TR1_received__c}"/>
+                                    
+                                    </td></tr>
+                                    <tr><td>SDLT Recieved</td><td><apex:commandButton value="Recieved" action="{!SDLT}" rendered="{!exopp.SDLT_received__c == null}"/>
+                                    <apex:outputField value="{!exopp.SDLT_received__c}"/></td></tr>                                    
+                                    </table>
+                              
+                <td class="labelCol">Property type</td><td class="dataCol"><apex:inputField styleClass="PropType" value="{!ExOpp.Property_Type__c}"/></td>
+                                </div>
+                                <apex:commandButton styleClass="redBtn" value="Complete Event" action="{!Complete}" rendered="{!ShowCompleteButton}"/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </apex:form>
+    </body>
+</apex:page>

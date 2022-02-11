@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>My Page</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/angular-material.css">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Muli" />
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="css/normal.css">
+
+    <link rel="stylesheet" type="text/css" href="css/button.css">
+    <script src="lib/angular.js"></script>
+    <script src="lib/angular-router.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.10/webfont.js"></script>
+    <script>
+        WebFont.load({
+            custom: {
+                families: ['Montserrat', 'muli']
+            }
+        });
+        WebFont.load({
+            custom: {
+                families: ['muli']
+            }
+        });
+    </script>
+
+    <style type="text/css">
+        @font-face {
+            font-family: "Montserrat";
+            src: url('montserrat/Montserrat-Bold.otf');
+        }
+        
+        @font-face {
+            font-family: 'muli';
+            src: url('muli/Muli-Light.ttf');
+        }
+    </style>
+</head>
+
+<body ng-app="caseApp">
+    <ui-view></ui-view>
+</body>
+<script src="lib/angular-sanitize.js"></script>
+<script src="lib/angular-animate.js"></script>
+<script src="lib/angular-aria.js"></script>
+<script src="lib/angular-material.js"></script>
+<script src="app.js"></script>
+<script src="Case_Category/questionCtrl.js"></script>
+<script src="Case_Category/questionFactory.js"></script>
+<script src="Case_Category/categoryDirective.js"></script>
+
+</html>

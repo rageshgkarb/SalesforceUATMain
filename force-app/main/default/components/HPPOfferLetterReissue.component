@@ -1,0 +1,60 @@
+<apex:component >
+
+<apex:attribute description="Opp" name="Opp" type="Opportunity" required="true"/>
+<apex:attribute description="ExOpp" name="ExOpp" type="HPP_extended_opportunity__c" required="true"/>
+<apex:attribute description="ErrorMessage" name="ErrMsg" type="string" />
+<apex:attribute description="ValidOpp" name="IsValid" type="boolean" />
+<apex:attribute description="ProcessedOK" name="ProcessedOK" type="boolean" />
+<apex:attribute description="Reason Given" name="theReason" type="string" />
+<apex:attribute description="Comments" name="theComments" type="string"/>
+
+    <div id="content">
+        <h1>
+            Offer Letter Re-Issue
+        </h1>
+        <apex:outputpanel id="mainPageBlock">
+            <div style="padding:10px;">
+                <apex:pagemessages >
+                </apex:pagemessages>
+                <apex:pageblock >
+                
+                    <apex:pageblocksection rendered="{!IsValid && NOT(ProcessedOK)}" >
+                        <apex:pageblocksectionitem >
+                            <apex:outputlabel value="Reason for Re-Issue" />
+                            <apex:inputField value="{!ExOpp.Reason_for_offer_reissue__c}" required="true" />
+                        </apex:pageblocksectionitem>
+                        <apex:pageblocksectionitem >
+                            <apex:outputlabel value="Re-Issue Comments" />
+                            <apex:inputfield value="{!ExOpp.Comments_for_re_issue__c}" required="true" />
+                        </apex:pageblocksectionitem>
+                    </apex:pageblocksection>
+                    <apex:pageblocksection rendered="{!IsValid && ProcessedOK}" >
+                        <apex:pageblocksectionitem >
+                            <apex:outputlabel value="Reason for Re-Issue" />
+                            <!--apex:inputtext value="{!ExOpp.Reason_for_offer_reissue__c}" /-->
+                            <apex:outputText value="{!theReason}"  />
+                        </apex:pageblocksectionitem>
+                        <apex:pageblocksectionitem >
+                            <apex:outputlabel value="Re-Issue Comments" />
+                            <apex:outputText value="{!theComments}"  />
+                        </apex:pageblocksectionitem>
+                    </apex:pageblocksection>
+                   
+                    <apex:pageblockbuttons location="bottom">
+                        <apex:pageblocksection >
+                            <apex:pageblocksectionitem >
+                                <apex:commandbutton value="Generate Offer Letter" onclick="GenOffer(); return false;" rendered="{!IsValid && NOT(ProcessedOK)}" />
+                            </apex:pageblocksectionitem>
+                            <apex:pageblocksectionitem >
+                            </apex:pageblocksectionitem>
+                            <apex:pageblocksectionitem >
+                                <apex:commandbutton value="Complete Event" onclick="CompleteEvent(); return false;" rendered="{!IsValid && ProcessedOK}" />
+                            </apex:pageblocksectionitem>
+                        </apex:pageblocksection>
+                    </apex:pageblockbuttons>
+                    
+                </apex:pageblock>
+            </div>
+        </apex:outputpanel>
+    </div>
+</apex:component>

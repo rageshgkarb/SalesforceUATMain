@@ -1,0 +1,127 @@
+<apex:page showheader="false" sidebar="false" controller="MMR_FF_BTLLC_BudgetPlanner" action="{!Setup}"><!-- C0644 -->
+    <head>
+        <c:MMR_PageHeader ></c:MMR_PageHeader>
+    </head>
+    <body>
+        <c:MMR_Header title="Service Charges" numapps="{!NumApplying }" opp="{!bopp}" hide="{!IsCredit}" />
+        <div class="container">
+            <c:MMR_FF_BTLLC_Nav eventid="{!eventid}" active="7" activesection="B" rendered="{!!IsCredit && !IsCompleted}" />
+            <c:MMR_FF_BTLLC_Nav_Links eventid="{!eventid}" active="7" activesection="B" rendered="{!!IsCredit && IsCompleted}" />
+
+            <c:MMR_FF_BTLLC_Credit_Nav eventid="{!eventid}" active="7" activesection="B" rendered="{!IsCredit}" />
+
+            <apex:form id="aForm" styleclass="form-horizontal">
+
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h2>Service Charges</h2>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-sm-12">
+                            <apex:variable id="alt1" value="{!0}" var="i" />
+                            <apex:repeat value="{!AllItems}" var="bp">
+
+                                <div class="row">
+                                    <!-- style="{! IF((mod(i,2)) == 0, 'background-color:#CCCCCC;padding-top:5px;padding-bottom:5px', 'background-color:#EEEEEE;padding-top:5px;padding-bottom:5px')}">-->
+
+                                    <div class="col-sm-4">
+                                        <label>
+                                            <apex:outputtext value="{!bp.BudgetPlannerConfig__r.name}" />
+                                        </label>
+                                    </div>
+
+
+                                    <div class="col-sm-2">
+                                        <div class="pull-right">
+                                            <apex:inputfield required="true" styleclass="form-control budgetItem" value="{!bp.Applicant_Total__c}"  />
+                                            
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-5">
+                                        <apex:inputtextarea rows="3" styleclass="form-control" value="{!bp.BDM_Comments__c}" />
+                                    </div>
+
+                                    <apex:variable var="i" value="{!i+1}" />
+                                </div>
+                            </apex:repeat>
+
+                            <div class="row">
+                                <div class="col-sm-4 budgetrow2">
+                                    <label>
+                                        Total
+                                    </label>
+                                </div>
+
+                                <div class="col-sm-1 budgetrow2">
+                                    <span id="total"></span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row" style="padding-bottom:20px;">
+                    <apex:commandbutton styleclass="btn btn-danger" value="Previous" action="{!Prev}" rendered="{!!IsCredit && !IsCompleted}" />
+                    <apex:commandbutton styleclass="btn btn-danger" value="Save" action="{!Save}" rendered="{!!IsCompleted || IsCredit }" />
+                    <apex:commandbutton styleclass="btn btn-danger" value="Complete" action="{!Complete}" rendered="{!!IsCredit && !IsCompleted}" />
+                </div>
+
+
+            </apex:form>
+        </div>
+        <c:MMR_PageFooter ></c:MMR_PageFooter>
+
+        <script>
+        $(function(){
+            $('.budgetItem').change(function(){
+                var total =0;
+
+                $('.budgetItem').each(function(){
+                    var v = $(this).val();
+
+                    /* CPDR hack */
+                    v = v.replace(",", "");
+                    /* CPDR hack end */
+
+
+                    var nan = isNaN(v);
+
+                    if(!nan  && v!='')
+                    {
+                        total += parseFloat(v);
+                    }
+                });
+
+                $('#total').text(total.toFixed(2));
+            });
+
+
+
+             var totall =0;
+            $('.budgetItem').each(function(){
+                    var v = $(this).val();
+
+                    /* CPDR hack */
+                    v = v.replace(",", "");
+                    /* CPDR hack end */
+
+                    var nan = isNaN(v);
+
+                    if(!nan  && v!='')
+                    {
+                        totall += parseFloat(v);
+                    }
+                });
+
+                $('#total').text(totall.toFixed(2));
+
+        });
+
+        </script>
+
+
+    </body>
+</apex:page>

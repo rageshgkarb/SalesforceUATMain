@@ -1,0 +1,163 @@
+<apex:component >
+    <div class="row">
+        <div class="panel panel-primary">
+            <div class="panel-body">
+                <div class="col-sm-12">
+                    Her Majesty’s Revenue and Customs (HMRC) require Al Rayan Bank PLC to collect and report certain information about an account holders tax residency. Each Jurisdiction has its own rules for defining tax residence, and jurisdictions have provided information on how to determine  whether you are resident in the jurisdiction on the following website: www.oecd.org/tax/automatic-exchange/. If you are completing this form on behalf of an Entity Account Holder, please fill in their details. In certain circumstances we may be required to share this information with the relevant tax authorities.
+
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">Section 1 - Account Holder Details</div>
+            <div class="panel-body">
+                <form name="formSection1" novalidate="novalidate">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-sm-6">                                    
+                                    <label>Legal name of entity or organisation</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input class="form-control" ng-model="Data.Applicant.Name_c" ng-required="true" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-sm-6">
+                                    <label>Country of incorporation</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <select class="form-control" ng-model="Data.Applicant.Organisation_Domicile_c" ng-required="true" ng-options="option for option in Data.OrganisationDomiciles"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr/>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-sm-6">
+                                    <label>Registered Address Street</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input class="form-control" id="streetTrading" ng-model="Data.Applicant.TradingAddressStreet_c" ng-required="true" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-sm-6">
+                                    <label>Registered Address City</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input class="form-control" id="cityTrading" ng-model="Data.Applicant.TradingAddressCity_c" ng-required="true" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-sm-6">
+                                    <label>Registered Address Postcode</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input autocomplete="pca" id="postcodeTrading" class="form-control" ng-model="Data.Applicant.TradingPostCode_c" ng-required="true" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6"> 
+                            <div class="form-group">
+                                <div class="col-sm-6">
+                                    <label>Registered Address Country</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input class="form-control" id="countryTrading" ng-model="Data.Applicant.TradingAddressCountry_c" ng-required="true" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" ng-if="false">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-sm-6">
+                                    <label>Country Code</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <select class="form-control" ng-model="CountryCode" ng-required="true" ng-options="option.Key for option in Data.CountryCodes track by option.Key"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr/>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-sm-6">
+                                    <label>Correspondence Address Street</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input class="form-control" id="streetCsp" ng-model="Data.Applicant.CorrespondenceAddressStreet_c" ng-required="true" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-sm-6">
+                                    <label>Correspondence Address City</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input class="form-control" id="cityCsp" ng-model="Data.Applicant.CorrespondenceAddressCity_c" ng-required="true" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-sm-6">
+                                    <label>Correspondence Address Postcode</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input class="form-control" id="postcodeCsp" ng-model="Data.Applicant.CorrespondenceAddressPostCode_c" ng-required="true" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-sm-6">
+                                    <label>Correspondence Address Country</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input class="form-control" id="countryCsp" ng-model="Data.Applicant.CorrespondenceAddressCountry_c" ng-required="true" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" ng-if="false"><!--LB - hidden by request -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-sm-6">
+                                    <label>Country Code</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <select class="form-control" ng-model="CountryCode" ng-required="true" ng-options="option.Key for option in Data.CountryCodes track by option.Key"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</apex:component>

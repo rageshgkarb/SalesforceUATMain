@@ -1,0 +1,29 @@
+<apex:page standardController="Opportunity" extensions="OpportunityEmailExtension" sidebar="false" showHeader="false">
+<apex:form >
+
+
+<style>
+
+#navlist li
+{
+display: inline;
+list-style-type: none;
+margin-left:0;
+}
+</style>
+
+ <h2></h2>
+ <div id="navlist">
+ <ul>
+ <li>Email : <apex:inputCheckbox value="{!HasEmail}" title="Email"/></li>
+  <li>Mail : <apex:inputCheckbox value="{!HasMail}" title="Mail"/></li>
+   <li>Phone : <apex:inputCheckbox value="{!HasPhone}" title="Phone"/></li>
+    <li>SMS : <apex:inputCheckbox value="{!HasSMS}" title="SMS"/></li>
+  
+<li> <apex:commandButton action="{!save}" value="Save"/></li>
+ 
+ </ul>
+ </div>
+
+ </apex:form> 
+</apex:page>

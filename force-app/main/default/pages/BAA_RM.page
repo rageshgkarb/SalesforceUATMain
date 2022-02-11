@@ -1,0 +1,146 @@
+<!-- C0592  -->
+<apex:page showheader="false" sidebar="false" doctype="html-5.0" controller="BAA_RM_Controller" action="{!RM_Init}">
+    <head>
+        <c:BAA_Resource ></c:BAA_Resource>
+
+        <apex:includescript value="{!URLFOR($Resource.BAA_Includes, '/js/app/app.js')}" />
+
+        <apex:stylesheet value="{!URLFOR($Resource.BAA_Includes, '/css/css.css')}" />
+        <apex:stylesheet value="{!URLFOR($Resource.BAA_Includes, '/css/wait.css')}" />
+        <apex:stylesheet value="{!URLFOR($Resource.BAA_Includes, '/css/structure.css')}" />
+
+        <apex:includescript value="{!URLFOR($Resource.BAA_Includes, '/js/service/service_application.js')}" />
+        <apex:includescript value="{!URLFOR($Resource.BAA_Includes, '/js/service/service_messagebroker.js')}" />
+        <apex:includescript value="{!URLFOR($Resource.BAA_Includes, '/js/controller/controller_core.js')}" />
+        <apex:includescript value="{!URLFOR($Resource.BAA_Includes, '/js/service/service_parameters.js')}" />
+    </head>
+    <body ng-app="baaApp" ng-controller="controllerCore">
+        <c:BAA_Header objopp="{!BaseOpportunity}" title="Risk Management Details"></c:BAA_Header>
+        <c:BAA_RM_Scripts ></c:BAA_RM_Scripts>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-lg-3">
+                    <apex:form >
+                        <c:BAA_Menu oppid="{!BaseOpportunity.Id}" directorid="{!BaseOpportunity.ProductEventDirector__c}" />
+                    </apex:form>
+                </div>
+                <div ng-controller="controllerRMDetails" ng-init="EventLogId= '{!EventId}';SessionId='';isRMT=false;isABranch={!IsABranch};isEDD=false;canEDD=false;DisableControl={!IsCompleted};isVerified=false">
+                    <!--form name="myform" novalidate="novalidate"--> <!-- Commented for Garnet -->
+                    <apex:form id="myform"> <!-- Added for Garnet -->
+                        <div class="col-md-8 col-lg-9">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                 <!--   <c:BAA_Applicants_Nav eventid="{!EventId}" applicants="{!AppAccs}" page="R" accountid="{!BaseOpportunity.AccountId}" /> -->
+                                </div>
+                            </div>
+                            <div>
+                                <h4>
+                                    Applicant - {{Data.Applicants[0].ContactName}}
+                                </h4>
+                            </div>
+                            
+                            <c:BAA_RM_BranchOverride model="AppAccs[0]" isabranch="{!IsABranch}" />
+                            
+                         <!--   <div ng-show="!isVerified"><c:BAA_RM_BasicInformation model="AppAccs[0]" /></div>--> <!-- Commented for Garnet -->
+                            
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <span ng-show="Data && (!isRMT || isBranch)">Further Information</span>
+                                    <span ng-show="(isRMT && !isFCU) || isEDD">Customer Application - Further Information<br/>
+                                        In order for us to complete your application we just require a few more details
+                                    </span>
+                                </div>
+                                <!-- Garnet Start -->
+                                <div class="panel-body">
+                                    <div ng-show = "{!RMStatus == 'Upload Required'}"> 
+                                        <h1> PLEASE COMPLETE THE NON PERSONAL CUSTOMER RISK ASSESSMENT CALCULATOR AND UPLOAD THE COMPLETED CALCULATOR USING THE UPLOAD FUNCTION BELOW </h1>
+                                        <apex:pageBlock >                                          
+                                            <apex:pageBlockSection >
+                                            <apex:pageBlockSectionItem >
+                                                <apex:inputfile accept=".xlsm" value="{!attachToCustomer.body}" filename="{!attachToCustomer.name}" ></apex:inputfile>                
+                                            </apex:pageBlockSectionItem>
+                                            <apex:pageBlockSectionItem >
+                                                <apex:commandButton value="Upload" action="{!addAttachment}" />   
+                                            </apex:pageBlockSectionItem>             
+                                            </apex:pageBlockSection>
+                                        </apex:pageBlock>
+                                    </div>
+                                    <div ng-show = "{!RMStatus == 'Upload Successfully'}">
+                                        <h1> RISK CALCULATOR UPLOADED SUCCESSFULLY. PLEASE CONTINUE THE APPLICATION </h1>
+                                    </div>
+                                    <div ng-show = "{!RMStatus == 'In Progress'}">
+                                        <h1> A risk assessment is currently being undertaken and will be processed shortly - for any questions please refer to the KYC team </h1>
+                                    </div>  
+                                    <div ng-show = "{!RMStatus == 'Rejected'}">
+                                        <h1> Application cannot progress - for more details please speak to the KYC Team </h1>
+                                    </div>
+                                </div>
+                                <!-- Garnet End -->
+                            </div>
+                            <div ng-show = "{!(RMStatus == 'Upload Successfully' || RMStatus == 'Accepted')}"> <!-- Added ng-show for Garnet -->
+                                <div class="alert alert-danger visible-xs" ng-show="myform.$invalid">
+                                    There is missing required information
+                                </div>
+                                <button class="btn btn-success" ng-click="Submitted = true;Complete($event)" ng-hide="HideComplete()">
+                                    <span>
+                                        <strong>Continue</strong>
+                                        <span class="fa-stack fa">
+                                            <i class="fa fa-circle-thin fa-stack-2x"></i>
+                                            <i class="fa fa-chevron-right fa-stack-1x"></i>
+                                        </span>
+                                    </span>
+                                </button>
+                              <!-- Commented for Garnet
+                              &nbsp;
+                                <button class="btn btn-danger" ng-click="isEDD=true;canEDD=false;" ng-show="!isRMT && canEDD">
+                                    <span>
+                                        <strong>Adhoc EDD</strong>
+                                        <span class="fa-stack fa">
+                                            <i class="fa fa-circle-thin fa-stack-2x"></i>
+                                            <i class="fa fa-chevron-right fa-stack-1x"></i>
+                                        </span>
+                                    </span>
+                                </button> -->
+                            </div>
+                            <div class="alert alert-warning" ng-show="RMAlertText">
+                                <span class="fa fa-thumbs-tack" aria-hidden="true"></span>
+                                {{RMAlertText}}
+                            </div>
+                            <div class="alert alert-danger" ng-show="ErrorAlertText">
+                                <span class="fa fa-thumbs-down" aria-hidden="true"></span>
+                                {{ErrorAlertText}}
+                            </div>
+                            <div style="display:none">
+                                {{ShowErrors()}}
+                            </div>
+                        </div>
+                    <!-- Garnet Start -->
+                    </apex:form> 
+                    <style>                        
+                        h1{
+                          color: rgb(179,153,93);
+                          font-weight: 500;
+                          font-size: 12px;
+                          font-weight: bold;
+                          margin: 40px 0px 20px;
+                        }
+                    </style>
+                    <!-- Garnet End -->
+                    <!--/form--> <!-- Commented for Garnet -->
+                </div>
+            </div>
+        </div>
+        <!-- Load Screen -->
+        <div class="regionLoad" ng-cloak="ng-cloak" ng-show="Load" style="box-sizing: content-box !important; -webkit-box-sizing: content-box !important;">
+            <div class="regionWaitBackground" style="box-sizing: content-box !important; -webkit-box-sizing: content-box !important;"></div>
+            <div class="regionWaitMessage text-center" style="box-sizing: content-box !important; -webkit-box-sizing: content-box !important;">
+                <div class="regionSpinner">
+                </div>
+                <div class="regionTitle">
+                    Please wait
+                    <br />{{PleaseWaitAddOn}}
+                </div>
+            </div>
+        </div>
+    </body>
+</apex:page>

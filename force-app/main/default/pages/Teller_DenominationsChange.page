@@ -1,0 +1,83 @@
+<apex:page applyBodyTag="false" showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false">
+
+        <div class="verticalScroller" ng-controller="controllerTillManagement" ng-init="DenominationsChange_Init()" style="overflow: auto; height: 100%; margin-top: 15px;">
+            <div id="header">Denomination Change</div>
+
+                <table class="table table-striped" id="DenominationsTable" style="margin-top:0px;">
+                    <thead>
+                        <tr>
+                            <th>Denominations Received</th>
+                            <th>Denominations Given</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>
+                                <table class="table table-striped" id="DenominationsReceived" style="margin-top:0px;" >
+                                    <thead>
+                                        <tr>
+                                            <th class="col-sm-4">
+                                            </th>
+                                            <th class="col-sm-4">
+                                                Number of Notes/Coins
+                                            </th>
+                                            <th class="col-sm-4">
+                                                Total Selected Value
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="itemRow" ng-repeat="item in DenominationsReceived.TransactionDenonminations track by item.DenominationValue" ng-class-Even="'BranchItemOdd'" style="padding:5px;margin:0px;">
+                                            <td class="col-sm-4">
+                                                {{item.FormattedDenominationValue}}
+                                            </td>
+                                            <td class="col-sm-4">
+                                                <input type="number" name="item.NumberSelected" ng-model="item.NumberSelected" min="0" />
+                                            </td>
+                                            <td class="col-sm-4">
+                                                {{item.DenominationValue * item.NumberSelected | number : 2}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </th>
+                            <th>
+                                <table class="table table-striped" id="DenominationsGiven" style="margin-top:0px;" >
+                                    <thead>
+                                        <tr>
+                                            <th class="col-sm-4">
+                                            </th>
+                                            <th class="col-sm-4">
+                                                Number of Notes/Coins
+                                            </th>
+                                            <th class="col-sm-4">
+                                                Total Selected Value
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="itemRow" ng-repeat="item in DenominationsGiven.TransactionDenonminations track by item.DenominationValue" ng-class-Even="'BranchItemOdd'" style="padding:5px;margin:0px;">
+                                            <td class="col-sm-4">
+                                                {{item.FormattedDenominationValue}}
+                                            </td>
+                                            <td class="col-sm-4">
+                                                <input type="number" name="item.NumberSelected" ng-model="item.NumberSelected" min="0" />
+                                            </td>
+                                            <td class="col-sm-4">
+                                                {{item.DenominationValue * item.NumberSelected | number : 2}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </th>
+                        </tr>
+                    </tbody>
+                </table>
+
+            <div style="background: #F4F4F4; margin: 0; width: calc(100% - 5px); padding: 20px; height: 172px;">
+                <div style="float: left; margin-left: 10px; margin-top: 5px;" align="center" ng-show="Response_Success==false">{{Response_StatusDescription}}</div>
+                <button id="DenominationExchange" class="goldButton" style="float: right; padding-left:30px !important; padding-right:30px !important; padding-top:17px !important; padding-bottom:17px !important;" ng-click="DenominationsChange_Execute()" ng-disabled="working==true" >Denomination Exchange</button>
+            </div>
+        </div>
+
+</apex:page>

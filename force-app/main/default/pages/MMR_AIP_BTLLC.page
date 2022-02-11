@@ -1,0 +1,422 @@
+<apex:page showheader="false" sidebar="false" controller="MMR_AIP_BTLLC_Controller" doctype="html-5.0" action="{!Setup}"><!-- C0644 -->
+<head title="">
+    <c:MMR_PageHeader ></c:MMR_PageHeader>
+    <style>
+        .nav-pills > li > a {
+            font-size: 14px;
+        }
+    </style>
+</head>
+    <body>
+
+        <c:MMR_Header title="AIP" numapps="{!numapplying}" opp="{!bopp}" />
+        <apex:form id="aForm2" styleclass="form-horizontal">
+            <apex:outputpanel id="panelDocument">
+                <div class="container">
+                    <div class="row">
+                        <h2>Manage Directors</h2>
+                    </div>
+                    <div class="row">
+                        <apex:pagemessages ></apex:pagemessages>
+                    </div>
+                    <div class="row">
+                        <table class="table">
+                            <tr style="background-color:#000;color:#FFF;">
+                                <th>No.</th>
+                                <th>EBS ID</th>
+                                <th>Business Name</th>
+                                <th>Business Email Address</th>
+                                <th style="text-align:center;">Total Directors Shareholding %</th>
+                            </tr>
+                            <tr>
+                                <td><b>{!Applicants[0].Applicant_Number__c}</b></td>
+                                <td><b>{!Applicants[0].Prospect_Customer__r.EBS_ID__c}</b></td>
+                                <td><b>{!Applicants[0].Prospect_Customer__r.Name}</b></td>
+                                <td><b>{!Applicants[0].Prospect_Customer__r.Business_email_address__c}</b></td>
+                                <td align="center"><b>{!TotalShareholding}</b></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <apex:datatable value="{!Applicants}" var="item" id="criteriaTable" styleclass="table" first="1">
+
+                            <apex:column >
+                                <apex:facet name="header">No.</apex:facet>
+                                <apex:outputlabel value="{!item.Applicant_Number__c}"> </apex:outputlabel>
+                            </apex:column>
+                            <apex:column >
+                                <apex:facet name="header">EBS ID</apex:facet>
+                                <apex:outputlabel value="{!item.Prospect_Customer__r.EBS_ID__c}"> </apex:outputlabel>
+                            </apex:column>
+                            <apex:column >
+                                <apex:facet name="header">Title</apex:facet>
+                                <apex:outputlabel value="{!item.Prospect_Customer__r.Salutation}"> </apex:outputlabel>
+                            </apex:column>
+                            <apex:column >
+                                <apex:facet name="header">First Name</apex:facet>
+                                <apex:outputlabel value="{!item.Prospect_Customer__r.FirstName}"> </apex:outputlabel>
+                            </apex:column>
+                            <apex:column >
+                                <apex:facet name="header">Last Name</apex:facet>
+                                <apex:outputlabel value="{!item.Prospect_Customer__r.LastName}"> </apex:outputlabel>
+                            </apex:column>
+                            <apex:column >
+                                <apex:facet name="header">% Shareholding</apex:facet>
+                                <apex:outputlabel value="{!item.Shareholder_Percentage__c}"></apex:outputlabel>
+                            </apex:column>
+                            <apex:column >
+                                <apex:facet name="header">Date of Birth</apex:facet>
+
+                                <apex:outputtext value="{0,date,dd'/'MM'/'yyyy}">
+                                    <apex:param value="{!item.Prospect_Customer__r.Date_of_Birth__c}" />
+                                </apex:outputtext>
+
+                            </apex:column>
+                            <apex:column >
+                                <apex:facet name="header">Remove</apex:facet>
+                                <apex:outputlabel value="Primary Applicant" rendered="{!item.Applicant_Number__c  == 1}"></apex:outputlabel>
+                                <apex:commandlink styleclass="redBtn" action="{!delItem}" value="Del" immediate="true" rendered="{!(!IsCompleted) && item.Applicant_Number__c != 1}">
+                                    <apex:param name="whichLine" value="{!item.Applicant_Number__c}" assignto="{!whichLine}" />
+                                </apex:commandlink>
+                            </apex:column>
+
+                        </apex:datatable>
+                    </div>
+
+                    <!--Case:1832636 BTLLC Bug fix start-->  
+                    <div class="row">
+                        <table class="table">
+                            <tr style="background-color:#000;color:#FFF;">
+                                <th>AIP</th>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                     
+                      <apex:outputpanel id="panelDocument1">
+                       <div class="row">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Purchase price/market value</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="requiredInput">
+                                    <apex:inputtext styleclass="form-control" value="{!Opp.Purchase_price_market_value__c}" required="true" />
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="row">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Finance required</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="requiredInput">
+                                    <apex:inputtext styleclass="form-control" value="{!Opp.Finance_Required__c}" required="true" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Term of Finance</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="requiredInput">
+                                    <apex:inputtext styleclass="form-control" value="{!Opp.Term_of_Finance__c}" required="true" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>                   
+                     
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-sm-6">
+                                    <label>Joint budgetary purposes?</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="requiredInput">
+                                        <apex:inputfield styleclass="form-control" value="{!Opp.Is_Joint_Application__c}" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                   
+                    
+                      </apex:outputpanel>
+                       
+                                        
+                     <!--Case:1832636 BTLLC Bug fix end -->
+
+
+                    <apex:outputpanel rendered="{!(TotalShareholding<MinShareholding)}">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        Look up existing customer
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="col-sm-12">
+                                            <div class="row">
+                                                <apex:inputfield styleclass="form-control" value="{!ap.AccountLookup__c}" />
+                                            </div>
+                                            <div class="row">
+                                                Please enter the full name of the customer
+                                            </div><br />
+                                            <div class="row">
+                                                <div class="form-group">
+                                                    <div class="col-sm-6">
+                                                        <label>Is Director a Signatory</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="requiredInput">
+                                                            <div class="requiredBlock"></div>
+                                                            <apex:inputfield styleclass="form-control" value="{!tempRel.Is_Signatory__c}" label="Signatory" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group">
+                                                    <div class="col-sm-6">
+                                                        <label>Is Director a Shareholder</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="requiredInput">
+                                                            <div class="requiredBlock"></div>
+                                                            <apex:inputfield styleclass="form-control" value="{!tempRel.Is_Shareholder__c}" label="Shareholder" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group">
+                                                    <div class="col-sm-6">
+                                                        <label>Shareholder percentage</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="requiredInput">
+                                                            <div class="requiredBlock"></div>
+                                                            <apex:inputfield styleclass="form-control" required="{!tempRel.Is_Shareholder__c}" value="{!tempRel.Shareholder_Percentage__c}" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <apex:commandbutton styleclass="btn-primary" value="Add existing customer" action="{!LookupApplicant}" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        Add new director
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="col-sm-12">
+                                            <div class="row">
+                                                <div class="form-group">
+                                                    <div class="col-sm-6">
+                                                        <label>Title</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <apex:selectlist styleclass="form-control" value="{!TempTitle}" size="1">
+                                                            <apex:selectoptions value="{!Titles}"></apex:selectoptions>
+                                                        </apex:selectlist>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group">
+                                                    <div class="col-sm-6">
+                                                        <label>First Name</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="requiredInput">
+                                                            <div class="requiredBlock"></div>
+                                                            <apex:inputtext styleclass="form-control" value="{!TempFirstName}" label="First Name" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group">
+                                                    <div class="col-sm-6">
+                                                        <label>Last Name</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="requiredInput">
+                                                            <div class="requiredBlock"></div>
+                                                            <apex:inputtext styleclass="form-control" value="{!TempLastName}" label="Last Name" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group">
+                                                    <div class="col-sm-6">
+                                                        <label>Date of birth</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="requiredInput">
+                                                            <div class="requiredBlock"></div>
+                                                            <apex:inputfield styleclass="form-control" value="{!TempAccount.Date_of_Birth__c}" label="Date of birth" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group">
+                                                    <div class="col-sm-6">
+                                                        <label for="">Gross Annual Income</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="requiredInput">
+                                                            <div class="requiredBlock"></div>
+                                                            <apex:inputfield value="{!TempAccount.Gross_Annual_Income__c}" styleclass="form-control" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group">
+                                                    <div class="col-sm-6">
+                                                        <label for="">Net Monthly Income</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="requiredInput">
+                                                            <div class="requiredBlock"></div>
+                                                            <apex:inputfield value="{!TempAccount.Net_Monthly_Income__c}" styleclass="form-control" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group">
+                                                    <div class="col-sm-6">
+                                                        <label for="">Marital Status</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="requiredInput">
+                                                            <div class="requiredBlock"></div>
+                                                            <apex:inputfield value="{!TempAccount.Marital_Status__c}" styleclass="form-control"  />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="form-group">
+                                                    <div class="col-sm-6">
+                                                        <label>Is Director a Signatory</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="requiredInput">
+                                                            <div class="requiredBlock"></div>
+                                                            <apex:inputfield styleclass="form-control" value="{!Relationship.Is_Signatory__c}" label="Signatory" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group">
+                                                    <div class="col-sm-6">
+                                                        <label>Is Director a Shareholder</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="requiredInput">
+                                                            <div class="requiredBlock"></div>
+                                                            <apex:inputfield styleclass="form-control" value="{!Relationship.Is_Shareholder__c}" label="Shareholder" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group">
+                                                    <div class="col-sm-6">
+                                                        <label>Shareholder percentage</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="requiredInput">
+                                                            <div class="requiredBlock"></div>
+                                                            <apex:inputfield styleclass="form-control" value="{!Relationship.Shareholder_Percentage__c}" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-offset-1">
+                                                    <apex:commandbutton styleclass="btn-primary" value="Add new director" action="{!AddApplicant}" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </apex:outputpanel>
+                        <apex:outputpanel rendered="{!(TotalShareholding>=MinShareholding)}">
+                            <div class="row">
+                                <apex:outputpanel id="sectionAfford">
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">Affordability</div>
+                                        <div class="panel-body">
+                                            <apex:commandbutton id="btnAfford" value="Run Affordability" styleclass="{!if(PassedAffordability,'btn-primary','btn-danger')}" action="{!Afford}" onclick="PleaseWait(this);sfActionAfford();" />
+                                            <apex:outputpanel rendered="{!diff != null}">
+                                                <div>
+                                                    Affordability Result: <strong> {!if(diff >= 0 || Opp.Income_Assisted_Application__c == true,if(Opp.Income_Assisted_Application__c == true,'PASS - Income Assisted','PASS'),'FAIL')}</strong> <!-- C0586 -->
+                                                </div>
+                                                <div>
+                                                    <strong>{!if(diff >=0 ,'Surplus','Deficit')} :{!diff}</strong>
+                                                </div>
+                                                <apex:outputpanel rendered="{!diff < 0  && Opp.Income_Assisted_Application__c == false}">
+                                                    <apex:commandbutton value="Close Opportunity" styleclass="btn-primary" />
+                                                </apex:outputpanel>
+                                            </apex:outputpanel>
+                                        </div>
+                                    </div>
+                                </apex:outputpanel>
+                            </div>
+                            <div class="row">
+                                <apex:outputpanel rendered="{!PassedAffordability}">
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">AIP Document</div>
+                                        <div class="panel-body">
+                                            <div class="col-sm-6">
+                                                <apex:commandbutton styleclass="{!if(DocumentCreated,'btn-primary','btn-danger')}" rerender="panelDocument" value="Create AIP Document" oncomplete="HideDocumentLoad();" onclick="ShowDocumentLoad('Generating AIP Letter','This may take a few seconds...');" action="{!CreateDoc}" rendered="{!PassedAffordability  }" />
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <apex:outputpanel rendered="{!DocumentCreated}">
+                                                    <a target="_blank" href="/servlet/servlet.FileDownload?file={!FileId}">View Document</a>
+                                                </apex:outputpanel>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </apex:outputpanel>
+                            </div>
+                            <div class="row">
+                                <div class="pull-right">
+                                    <apex:commandbutton styleclass="btn-danger" rerender="panelDocument" value="Complete AIP" action="{!Complete}" rendered="{!DocumentCreated }" onclick="PleaseWait(this);sfActionComplete();" />
+                                </div>
+                            </div>
+                        </apex:outputpanel>
+</div>
+                <c:MMR_PopupLoad />
+                <script type="text/javascript">
+                function PleaseWait(btn)
+                {
+                    btn.value='Please Wait';
+                    btn.disabled=true;
+                }
+                </script>
+                <apex:actionfunction name="sfActionComplete" action="{!Complete}"></apex:actionfunction>
+                <apex:actionfunction name="sfActionAfford" action="{!Afford}"></apex:actionfunction>
+        </apex:outputpanel>
+</apex:form>
+</body>
+</apex:page>

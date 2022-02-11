@@ -1,0 +1,30 @@
+<apex:page showheader="false" sidebar="false" controller="MMR_APP_BTLLC_Applicant" doctype="html-5.0" action="{!Setup}"><!-- C0644 -->
+    <head>
+        <c:MMR_PageHeader ></c:MMR_PageHeader>
+    </head>
+    <body>
+
+        <c:MMR_Header title="Application - Additional Director Information" numapps="{!numapplying}" opp="{!bopp}" hide="{!IsCredit}" />
+        <div class="container">
+            <c:MMR_App_BTLLC_Nav active="1" eventid="{!EventId}" rendered="{!!IsCredit && !IsCompleted}" />
+            <c:MMR_App_BTLLC_Nav_Links active="1" eventid="{!EventId}" rendered="{!!IsCredit && IsCompleted}" />
+
+            <c:MMR_FF_BTLLC_Credit_Nav eventid="{!eventid}" activesection="D" active="0" rendered="{!IsCredit}" />
+
+            <apex:form id="aForm" styleclass="form-horizontal">
+                <div class="row">
+                    <c:MMR_App_Applicant acc="{!Accs[1]}" applicantno="1" rendered="{!numapplying > 1}" type="Director" name="{!Applicants[1].ApplicantName__c}" />
+                    <c:MMR_App_Applicant acc="{!Accs[2]}" applicantno="2" rendered="{!numapplying > 2}" type="Director" name="{!Applicants[2].ApplicantName__c}" />
+                    <div class="clearfix" />
+                    <c:MMR_App_Applicant acc="{!Accs[3]}" applicantno="3" rendered="{!numapplying > 3}" type="Director" name="{!Applicants[3].ApplicantName__c}" />
+                    <c:MMR_App_Applicant acc="{!Accs[4]}" applicantno="4" rendered="{!numapplying > 4}" type="Director" name="{!Applicants[4].ApplicantName__c}" />
+                </div>
+                <div class="row" style="padding-bottom:20px;">
+                    <apex:commandbutton value="Previous" styleclass="btn-danger" action="{!Prev}" rendered="{!!IsCredit && !IsCompleted}" />
+                    <apex:commandbutton value="Save" styleclass="btn-danger" action="{!Save}" rendered="{!!IsCompleted || IsCredit }" />
+                    <apex:commandbutton value="Next" styleclass="btn-danger" action="{!GoAdditional}" rendered="{!!IsCredit && !IsCompleted}" />
+                </div>
+            </apex:form>
+        </div>
+    </body>
+</apex:page>

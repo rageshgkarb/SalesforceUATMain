@@ -1,0 +1,30 @@
+<apex:component ><!-- C0644 -->
+    <apex:attribute type="String" description="" name="ActiveSection" required="true" />
+    <apex:attribute type="String" description="" name="Active" required="true" />
+    <apex:attribute type="String" description="" name="EventId" required="true" />
+
+    <div style="padding-bottom:10px;">
+        <ul class="nav nav-pills nav-justified">
+            <li class="{!IF((ActiveSection=='A')," active","") }"><a href="{!IF((ActiveSection=='A')," #","mmr_ff_btllc_propertydetails?credit=true&id=" + EventId ) }">Property Details</a></li>
+            <li class="{!IF((ActiveSection=='F')," active","") }"><a href="{!IF((ActiveSection=='F')," #","mmr_ff_btllc_companydetails?credit=true&id=" + EventId ) }">Limited Company Details</a></li>
+            <li class="{!IF((ActiveSection=='B')," active","") }"><a href="{!IF((ActiveSection=='B')," #","mmr_ff_btllc_personaldetails?credit=true&id=" + EventId ) }">Directors</a></li>
+            <li class="{!IF((ActiveSection=='C')," active","") }"><a href="{!IF((ActiveSection=='C')," #","mmr_app_btllc_details?credit=true&id=" + EventId ) }">Application Details</a></li>
+            <li class="{!IF((ActiveSection=='D')," active","") }"><a href="{!IF((ActiveSection=='D')," #","mmr_app_btllc_applicant?credit=true&id=" + EventId ) }">Additional Director Information</a></li>
+            <li class="{!IF((ActiveSection=='E')," active","") }"><a href="{!IF((ActiveSection=='E')," #","mmr_app_btllc_additional?credit=true&id=" + EventId ) }">Additional Information</a></li>
+        </ul>
+    </div>
+
+    <apex:outputpanel rendered="{!ActiveSection=='B'}">
+        <div style="padding-bottom:10px;">
+            <ul class="nav nav-tabs nav-justified">
+                <li class="{!IF((Active=='1')," active","") }"><a href="{!IF((Active!='1'),"/apex/MMR_FF_BTLLC_PersonalDetails?credit=true&id="+ EventId,"#") }">Director's Details</a></li>
+                <li class="{!IF((Active=='2')," active","") }"><a href="{!IF((Active!='2'),"/apex/MMR_FF_BTLLC_Addresses?credit=true&id="+ EventId,"#") }">Director's Addresses</a></li>
+                <li class="{!IF((Active=='3')," active","") }"><a href="{!IF((Active!='3'),"/apex/MMR_FF_BTLLC_Ownership?credit=true&id="+ EventId,"#") }">Current Ownership</a></li>
+                <li class="{!IF((Active=='4')," active","") }"><a href="{!IF((Active!='4'),"/apex/MMR_FF_BTLLC_Income?credit=true&id="+ EventId,"#") }">Employment &amp; Income</a></li>
+                <li class="{!IF((Active=='5')," active","") }"><a href="{!IF((Active!='5'),"/apex/MMR_FF_BTLLC_Financial?credit=true&id="+ EventId,"#") }">Financial Information</a></li>
+                <li class="{!IF((Active=='6')," active","") }"><a href="{!IF((Active!='6'),"/apex/MMR_FF_BTLLC_Credit?credit=true&id="+ EventId,"#") }">Credit History</a></li>
+                <li class="{!IF((Active=='7')," active","") }"><a href="{!IF((Active!='7'),"/apex/MMR_FF_BTLLC_BudgetPlanner?credit=true&id="+ EventId,"#") }">Service Charges</a></li>
+            </ul>
+        </div>
+    </apex:outputpanel>
+</apex:component>

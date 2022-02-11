@@ -1,0 +1,112 @@
+<apex:page applyBodyTag="false" showHeader="false" sidebar="false" docType="html-5.0" standardStylesheets="false">
+
+    <style>
+        td {
+            border-collapse: collapse;
+        }
+        
+        .ccyHeader {
+            min-height: 60px;
+            border: lightgrey solid 1px;
+            box-shadow: 1px 1px 5px lightgray;
+            /*width: 100%;*/
+            height: 100%;
+            margin: 1px;
+        }
+        
+        .fxCard {
+            margin-left: 0px !important;
+            width: 100%;
+            height: 90px;
+            border: lightgrey solid 1px;
+            padding: 0px !important;
+            box-shadow: 1px 1px 2px lightgray;
+        }
+        
+        th {
+            min-width: 110px;
+        }
+        
+        .CalcCcySelect> span> .md_group> span> span> .k-select {
+            background: rgb(244, 244, 244);
+            padding: 1.5px;
+        }
+        
+        .flagImage {
+            float: left;
+            margin-top: 14px;
+            margin-left: 14px;
+            height: 30px;
+            width: 30px;
+            opacity: 0.9;
+        }
+        
+        .fxRatesTableItem {
+            border-bottom: solid 1px rgb(244, 244, 244);
+        }
+        
+        .CcyAmount> span> .md_group> input {
+            text-align: right;
+        }
+    </style>
+
+
+    <div ng-controller="controllerTillManagement" ng-init="ReconcileBranch_Execute()" style="height:100%;">
+
+        <div class="horizontalScrollContainer">
+            <div style="margin-bottom: 10px;">
+                <label class="hidden-xs pageSubTitleGray" style="margin-left: 5px;">Reconcile Branch Cash</label>
+            </div>
+            <div class="verticalScroller verticalScrollSection" style="position:relative; height: calc(100% - 50px);">
+                <table style="width: calc(100% - 50px); margin: 20px;">
+                    <thead>
+                        <tr>
+                            <th class="sectionTitleSmallGray" style="width:108px;">
+                                <div class="ccyHeader" style="text-align:center; padding-top:18px;">Currency</div>
+                            </th>
+                            <th class="sectionTitleSmallGray">
+                                <div class="ccyHeader" style="text-align:center; padding-top:18px;">Engage</div>
+                            </th>
+                            <th class="sectionTitleSmallGray">
+                                <div class="ccyHeader" style="text-align:center; padding-top:18px;">EBS</div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="ebsItem in EBSBranchCurrencyTotals track by ebsItem.FXCurrency">
+                            <td style="position:relative;">
+                                <div class="ccyHeader" style="position: absolute; top: 0; width: 98%; height: 60px;">
+                                    <img class="flagImage" ng-src="{{getCurrencyThumbnail(ebsItem.FXCurrency)}}"></img>
+                                    <div class="textBlack" style="float:left; margin-top:20px; margin-left:10px;">{{ebsItem.FXCurrency}}</div>
+                                </div>
+                            </td>
+                            <td class="fxRatesTableItem">
+                                <div class="textBlack" ng-repeat="engageItem in BranchCurrencyTotals track by engageItem.FXCurrency" ng-if="engageItem.FXCurrency == ebsItem.FXCurrency" style="text-align:center;">
+                                    <div style="position:relative;" ng-init="showCcyDepositorySummary = false">
+                                        <div style="min-height:60px; padding-top:20px;">{{engageItem.FormattedCurrencyAmount}}</div>
+                                        <div style="position: absolute; top:20px; right: 20px;" ng-click="showCcyDepositorySummary = !showCcyDepositorySummary">
+                                            <img ng-class="{sortIconAscending : showCcyDepositorySummary == true}" src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/down.png')}" style="height: 15px; width:15px;"></img>
+                                        </div>
+                                        <div style="margin-bottom: 10px;" ng-show="showCcyDepositorySummary === true">
+                                            <div class="textSmallestDarkGray" style="font-size: 12px !important; position:relative;" ng-repeat="btill in engageItem.BranchTills">
+                                                <div>{{btill.TotalCashValue | number : 2}}</div>
+                                                <div style="position: absolute; right: 10px; top:0;">{{btill.TillName}}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="fxRatesTableItem" style="vertical-align: top;">
+                                <div class="textBlack" style="text-align:center; min-height:60px; padding-top:20px;">{{ebsItem.FormattedCurrencyAmount}}</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="ccyHeader textSmallerWhiteBold" ng-init="showBRNotification = true" ng-show="Response_Success==false && showBRNotification === true" style="background: #d4d4d4; height: 50px; min-height: 50px; padding: 15px; position: absolute; bottom: 15px; width: calc(100% - 30px);">
+                <span style="float:left;">NOTIFICATION: {{Response_StatusDescription}}</span>
+                <span style="float:right;" ng-click="showBRNotification = false">X</span>
+            </div>
+        </div>
+    </div>
+</apex:page>

@@ -1,0 +1,8 @@
+<apex:component >
+ 
+<apex:actionStatus id="status">
+<apex:facet name="start">
+<c:enhancedActionStatus BackColor="#efefef" borderColor="#efefef" borderSize="0" height="50px" width="120px" ImageUrl="/img/loading.gif" Message="Processing..." messageStyle="font-color:#808080;font-size:10pt;font-weight:bold;"/>
+</apex:facet>
+</apex:actionStatus>
+</apex:component>

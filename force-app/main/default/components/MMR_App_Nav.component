@@ -1,0 +1,29 @@
+<apex:component >
+<apex:attribute type="String" description="" name="Active" required="true"/>
+
+
+<apex:attribute type="String" description="" name="EventId" required="true"/>
+    <!-- C0644 Added in Tab Text Decoration items -->
+    <style>
+        .nav-pills > li.active {
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        .nav-tabs > li.active {
+            font-weight: bold;
+            text-decoration: underline;
+        }
+    </style>
+
+<div style="padding-bottom:10px;">
+<ul class="nav nav-pills nav-justified">
+    <li class="{!IF((Active=='0'),"active","") }">Application Details</li>
+    <li class="{!IF((Active=='1'),"active","") }">Additional Applicant Information</li>
+    <li class="{!IF((Active=='2'),"active","") }">Additional Information</li>
+    <li class="{!IF((Active=='3'),"active","") }">Valuation Information</li>
+    <li class="{!IF((Active=='4'),"active","") }">Payment Details</li>
+    <li class="{!IF((Active=='5'),"active","") }">Application Confirmation</li>
+</ul>
+</div>
+</apex:component>

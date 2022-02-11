@@ -1,0 +1,103 @@
+<apex:page controller="HPPEventController" sidebar="false" showHeader="false" title="Back Office" contentType="" action="{!Setup}"> 
+<head>
+<apex:includeScript value="{!$Resource.pca__LookupComponent}"/>
+<apex:includeScript value="{!$Resource.pca__EditPageLauncher}"/>
+<apex:includeScript value="{!$Page.pca__EditPageSettings}"/>
+
+
+
+<script>
+                 $(document).ready(function() {
+                $("#panelbar").kendoPanelBar({
+                        expandMode: "single"
+                    });
+                $("input:text").addClass("k-textbox");
+                 $("textarea").addClass("k-textbox");
+                     $("select").kendoDropDownList();
+                 $("input:submit").removeClass("btn");
+                 $("input:submit").addClass("k-button");
+    
+          $("input").hover(function () {
+         $(this).parent().next("td").children().css('display','inline');
+    });
+    
+       $("input").mouseout(function () {
+        $(this).parent().next("td").children().css('display','none');
+    });
+                        
+                $("#tabstrip").kendoTabStrip({
+                        animation:  {
+                            open: {
+                                effects: "fadeIn"
+                            }
+                        }
+                    
+                    });
+                
+                });
+            </script>
+
+
+</head>
+<body>
+
+
+
+
+            
+
+<apex:form >
+<apex:pageBlock >
+
+<c:KendoResource />
+<br/>
+<div id="formWrapper" style="margin: 15px;">
+<!-- C00095--> 
+
+<c:HPPSummary objAcc="{!Acc}" objOpp="{!opp}" objExOpp="{!ExtOpp}" Product="{!Prod}" />
+
+<div id="container" >
+<table width="100%">
+<tr>
+<td valign="top" id="sidebar">
+
+    <c:HPPBOMenu oppId="{!Opp.Id}"  DirectorId="{!Opp.ProductEventDirector__c}" />
+
+
+
+
+</td>
+<td valign="top" id="contenttd">
+
+
+<h2>{!Event.name}</h2>
+ <apex:pageMessages />
+ 
+  <apex:outputPanel rendered="{!!IsCompleted }">
+        <apex:commandButton value="Save Data" action="{!Save}" />
+        <apex:commandButton value="Complete Event" action="{!Complete}" /> 
+        </apex:outputPanel>   
+</td>
+</tr>
+</table>
+
+    <c:HPPFooter oppId="{!Opp.Id}" DirectorId="{!Opp.ProductEventDirector__c}"></c:HPPFooter>
+          </div>
+      
+        </div>
+</apex:pageBlock>
+  </apex:form>
+   <script>
+
+$(".title:contains('Error')").each(function(index) {
+ 
+$('#' + this.id.replace("d","t")).css("border-top","4px solid red");
+
+
+});
+</script>
+
+
+  
+  </body>
+</apex:page>

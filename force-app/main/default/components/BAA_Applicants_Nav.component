@@ -1,0 +1,46 @@
+<apex:component >
+<apex:attribute name="Applicants" type="Applicant__c[]" description="Applicants" />
+<apex:attribute name="EventId" type="string" description="Event log id" />
+<apex:attribute name="Page" type="string" description="which page is showing"/>
+<apex:attribute name="AccountId" type="string" description="which account is being displayed"/>
+<div style="padding-bottom:20px">
+
+
+
+
+<ul class="nav nav-pills">
+
+    <apex:outputPanel layout="none" rendered="{!Page == 'A'}">    
+        <li class="active"><a href="#">Applicants</a></li>
+    </apex:outputPanel>    
+    <apex:outputPanel layout="none" rendered="{!Page != 'A'}">    
+        <li><a href="/apex/BAA_Applicants?id={!EventId}">Applicants</a></li>
+    </apex:outputPanel>
+  
+  
+  
+  <apex:repeat value="{!Applicants}" var="a">  
+      <apex:outputPanel rendered="{!a.Is_Director__c = 'Yes' || a.Is_Signatory__c = 'Yes'}" layout="none">
+          <li class="{!IF((AccountId==a.Prospect_Customer__c),"active","") }"><a href="/apex/BAA_Director_Details?id={!EventId}&accId={!a.Prospect_Customer__c}">{!a.Prospect_customer__r.name}</a></li>
+      </apex:outputPanel>
+      <apex:outputPanel rendered="{!a.Is_Director__c!='Yes' && a.Is_Signatory__c != 'Yes' && a.Is_Shareholder__c ='Yes' }" layout="none" >
+          <li class="{!IF((AccountId==a.Prospect_Customer__c),"active","") }"><a href="/apex/BAA_Shareholder_Details?id={!EventId}&accId={!a.Prospect_Customer__c}">{!a.Prospect_customer__r.name}</a></li>
+      </apex:outputPanel>
+      
+     
+      
+          
+  </apex:repeat>
+  
+  
+  <apex:outputPanel layout="none" rendered="{!Page == 'Z'}">    
+        <li class="active"><a href="#">Additional Information</a></li>
+    </apex:outputPanel>    
+    <apex:outputPanel layout="none" rendered="{!Page != 'Z'}">    
+        <li><a href="/apex/BAA_Applicant_Complete?id={!EventId}">Additional Information</a></li>
+    </apex:outputPanel>
+
+</ul>
+</div>
+
+</apex:component>

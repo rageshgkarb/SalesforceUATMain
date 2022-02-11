@@ -1,0 +1,53 @@
+<apex:page showHeader="false" sidebar="false" docType="html-5.0" controller="BAA_Applicant_Complete_Controller" action="{!Setup}">
+    <head>
+       
+        <c:BAA_Resource ></c:BAA_Resource>
+        
+    </head>
+     
+    <body>
+    
+        <c:BAA_Header objOpp="{!BaseOpportunity}" title="Additional Information"></c:BAA_Header>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-lg-3">
+                    <apex:form >
+                    <c:BAA_Menu oppId="{!BaseOpportunity.Id}"  DirectorId="{!BaseOpportunity.ProductEventDirector__c}" />
+                    </apex:form>
+                </div>            
+                <div class="col-md-8 col-lg-9">
+        
+        
+            <apex:form >
+            <div class="row">
+                <div class="col-xs-12">
+                    <c:BAA_Applicants_Nav eventId="{!EventId}" Applicants="{!AppAccs}" Page="Z"  />
+                </div>
+            </div>
+            
+            
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        
+                    </div>
+                    <div class="panel-body"> 
+                    <div class="row">
+                            <div class="col-sm-6">
+                                Additional Information
+                            </div>
+                            <div class="col-sm-6">
+                                <apex:inputField styleClass="form-control" value="{!opp.General_comments_box__c}"/>
+                            </div>
+                        </div>                       
+                        <div class="row">
+                            <apex:commandButton action="{!Complete}" value="Complete" styleClass="btn-danger" rendered="{!!IsCompleted}"/>
+                        </div>
+                    </div>
+                </div>
+           </apex:form>
+           </div>
+           </div>
+           </div>
+           </body>
+           
+</apex:page>

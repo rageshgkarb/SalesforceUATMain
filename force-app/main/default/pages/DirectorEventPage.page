@@ -1,0 +1,237 @@
+<apex:page standardController="ProductEventDirector__c" extensions="HPPDirectorView"  showHeader="false" sidebar="false" action="{!Setup}">
+<c:KendoResource rendered="true" ></c:KendoResource>
+<h1>Director {!Director.Name}</h1>
+
+<h2>Events</h2>
+<apex:form >
+
+<table width="100%">
+<tr><td valign="top" width="200px">
+
+ <div id="organizer">
+<ul id="panelbar">
+   <li>
+   Flow Events
+   <ul>
+   <apex:repeat value="{!FlowEvents}" var="fe">
+<li>
+<a href="/apex/directorevent?id={!fe.EventId}&d={!directorId}">{!fe.Description}</a>
+</li>
+   </apex:repeat>
+   </ul>
+</li>
+
+<li>
+    Rewind Events
+     <ul>
+   <apex:repeat value="{!RewindEvents}" var="fe">
+<li>
+<a href="/apex/directorevent?id={!fe.EventId}&d={!directorId}">{!fe.Description}</a>
+</li>
+   </apex:repeat>
+   </ul>
+</li>
+<li>
+    Adhoc Events
+     <ul>
+   <apex:repeat value="{!AdhocEvents}" var="fe">
+<li>
+<a href="/apex/directorevent?id={!fe.EventId}&d={!directorId}">{!fe.Description}</a>
+</li>
+   </apex:repeat>
+   </ul>
+</li>
+
+</ul>
+</div>
+</td>
+<td valign="top">
+
+ <div id="tabstrip">
+                    <ul>
+                    <li class="k-state-active">
+                        Flow Events
+                    </li>
+                    <li>
+                        Rewind Events
+                    </li>
+                    <li>
+                        Adhoc Events
+                    </li>
+</ul>
+
+
+<div><!-- start of tab 1-->
+<apex:selectList value="{!SelectedEvent}" style="width:300px;" size="1">
+<apex:selectOptions value="{!FlowEventList}"></apex:selectOptions>
+</apex:selectList>
+
+
+<apex:commandButton reRender="flowEventList" value="Add Event" action="{!AddEvent}">
+
+</apex:commandButton>
+
+<br/><br/><br/>
+
+<apex:outputPanel id="flowEventList">
+
+<table>
+<tr>
+    <td>Event Name</td>
+    <td>Sequence</td>  
+    <td>Display Name</td> 
+    <td>Event Log Name</td>
+    <td>Stage</td>
+    <td>Status</td>    
+</tr>
+<apex:variable value="{!0}" var="rowNum"/>
+   <apex:repeat value="{!FlowEvents}" var="fe">
+   <tr>
+       <td><apex:outputLabel value="{!fe.EventName}"/></td>
+       <td><apex:inputText value="{!fe.Sequence}" style="width:60px;"/></td>
+       <td><apex:inputText value="{!fe.Description}"/></td>
+       <td><apex:inputText value="{!fe.EventLogName}"/></td>
+       <td><apex:inputText value="{!fe.Stage}"/></td>
+       <td><apex:inputText value="{!fe.Status}"/></td>
+       <td>
+       <apex:commandButton value="Remove" action="{!Remove}" reRender="flowEventList"   >
+      <apex:param name="nickName"
+                value="{!rowNum}"
+                assignTo="{!rowDelete}"/> 
+                
+                </apex:commandButton> 
+                </td>
+   </tr>
+   
+   <apex:variable var="rowNum" value="{!rowNum + 1}"/>
+   </apex:repeat>
+</table>
+</apex:outputPanel>
+
+ </div><!--end of tab 1-->
+ 
+ 
+ 
+ <div><!-- start of tab 2-->
+<apex:selectList value="{!SelectedRewindEvent}" style="width:300px;" size="1">
+<apex:selectOptions value="{!RewindEventList}"></apex:selectOptions>
+</apex:selectList>
+
+
+<apex:commandButton reRender="rewindEventList" value="Add Event" action="{!AddRewindEvent}">
+
+</apex:commandButton>
+
+<br/><br/><br/>
+
+<apex:outputPanel id="rewindEventList">
+
+<table>
+<tr>
+    <td>Event Name</td>
+     <td>Description</td>
+     <td>Action</td>
+</tr>
+<apex:variable value="{!0}" var="rowNumr"/>
+   <apex:repeat value="{!RewindEvents}" var="fe">
+   <tr>
+       <td><apex:outputLabel value="{!fe.EventName}"/></td>
+  
+       <td><apex:inputText value="{!fe.Description}"/></td>
+       <td>
+       <apex:commandButton value="Remove" action="{!RemoveRewind}" reRender="rewindEventList"   >
+      <apex:param name="nickName"
+                value="{!rowNumr}"
+                assignTo="{!rowRewindDelete}"/> 
+                
+                </apex:commandButton> 
+                </td>
+   </tr>
+   
+   <apex:variable var="rowNumr" value="{!rowNumr + 1}"/>
+   </apex:repeat>
+</table>
+</apex:outputPanel>
+
+ </div><!--end of tab 2-->
+ 
+ 
+ 
+ 
+ 
+ 
+  <div><!-- start of tab 3-->
+<apex:selectList value="{!SelectedAdhocEvent}" style="width:300px;" size="1">
+<apex:selectOptions value="{!AdhocEventList}"></apex:selectOptions>
+</apex:selectList>
+<apex:commandButton reRender="AdhocEventList" value="Add Event" action="{!AddAdhocEvent}">
+</apex:commandButton>
+<br/><br/><br/>
+<apex:outputPanel id="AdhocEventList">
+
+<table>
+<tr>
+    <td>Event Name</td>
+     <td>Description</td>
+     <td>Action</td>
+</tr>
+<apex:variable value="{!0}" var="rowNuma"/>
+   <apex:repeat value="{!AdhocEvents}" var="fe">
+   <tr>
+       <td><apex:outputLabel value="{!fe.EventName}"/></td>
+  
+       <td><apex:inputText value="{!fe.Description}"/></td>
+       <td>
+       <apex:commandButton value="Remove" action="{!RemoveAdhoc}" reRender="AdhocEventList"   >
+      <apex:param name="nickName"
+                value="{!rowNuma}"
+                assignTo="{!rowAdhocDelete}"/> 
+                
+                </apex:commandButton> 
+                </td>
+   </tr>
+   
+   <apex:variable var="rowNuma" value="{!rowNuma + 1}"/>
+   </apex:repeat>
+</table>
+</apex:outputPanel>
+
+</div><!--end of tab 3-->
+ 
+ 
+</div><!-- close tab strip-->
+ 
+<apex:commandButton action="{!Save}" value="Save" >
+
+</apex:commandButton>
+</td>
+
+
+</tr>
+</table>
+
+</apex:form>
+ <script>
+                $(document).ready(function() {
+                    $("#panelbar").kendoPanelBar({
+                        expandMode: "single"
+                    });
+                    
+                    $(".tabb").kendoTabStrip({
+                        animation:  {
+                            open: {
+                                effects: "fadeIn"
+                            }
+                        }                    
+                    });
+                    
+                   
+                    $(".grid").kendoGrid({
+                       
+                    });
+               
+                    
+                });
+            </script>
+
+</apex:page>

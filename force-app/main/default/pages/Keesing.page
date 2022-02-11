@@ -1,0 +1,17 @@
+<apex:page >
+  <!-- Begin Default Content REMOVE THIS -->
+  <br></br>
+  <br></br>
+  <b>Details for Keesing/Prado for document checking</b>
+  <br> </br>
+  <div>
+  Account: islamic bank</div> 
+  <div>Username: user1 </div>
+  <div>Password: user5087 </div>
+  <br> </br>
+  <a href="http://documentchecker.com" target="_blank">Link to Document CheckerWebsite</a> 
+  <br> </br>
+  <a href="http://prado.consilium.europa.eu/en/searchbyissuingcountry.html" target="_blank">Link to PRADO Website</a>
+  
+  <!-- End Default Content REMOVE THIS -->
+</apex:page>

@@ -1,0 +1,55 @@
+<apex:page controller="CustomerImageLoad" standardStylesheets="false" sidebar="false" docType="html-5.0" showHeader="false">
+
+<!-- JQuery -->
+    <apex:includeScript value="https://code.jquery.com/jquery-1.11.3.min.js"/>
+<!-- Angular Resources -->
+   <apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.11/angular.min.js"/>
+<apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.11/angular-animate.min.js"/>
+<apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.11/angular-sanitize.js"/>
+<apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular-messages.js"/>
+
+
+<div ng-app="caaApp" ng-controller="controllerANC">
+
+<h1>Process Customer Images</h1>
+
+Num to Get <input ng-model="numAccounts"/><br/>
+Last Digit EBS Id <input ng-model="LastDigit"/><br/>
+
+<button ng-click="GetAccountsToProcess()" ng-show="numAccounts && LastDigit">Get Accounts</button>
+
+<br/>
+<br/>
+
+Accounts : {{Accounts.length}}
+
+
+<br/>
+<br/>
+
+<div ng-show="Accounts">
+    <button ng-click="Stop = false;ProcessAccount()" ng-show="!Running && Accounts.length > 0">Start</button>
+    <button ng-click="Stop = true" ng-show="Running">Stop</button>
+    <!--
+<br/>    Running - {{Running}}
+<br/>    Stop - {{Stop}}
+-->
+</div>
+<br/>
+<br/>
+
+<div>
+Success : {{Success}}<br/>
+Error : {{Error}}
+
+</div>
+
+
+</div>
+
+
+<c:ImageLoadJs />
+
+
+
+</apex:page>

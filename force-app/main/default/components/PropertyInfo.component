@@ -1,0 +1,29 @@
+<apex:component >
+<apex:attribute name="propertyinfo" description="This is the debt." type="Property_information__c"  required="true"/>
+
+<table class="detailList">
+<tbody>
+<tr>
+    <td class="labelCol">First line of address </td><td><apex:inputField value="{!propertyinfo.First_line_of_address__c}" id="prop1"  /></td>
+    <td class="labelCol">Estimated value</td><td><apex:inputField value="{!propertyinfo.Estimated_value__c}" id="prop2"  /></td>
+</tr>
+<tr>
+    <td class="labelCol">Date purchased</td><td><apex:inputField value="{!propertyinfo.Date_purchased__c}" id="prop3"  /></td>
+    <td colspan="2"/>
+    
+</tr>
+<tr>
+<td class="labelCol">Existing mortgage or HPP Lender</td><td><apex:inputField styleClass="outBal" value="{!propertyinfo.ExisitingMortgageHPPLender__c}" id="prop4"  /></td>
+    <td class="labelCol">Amount of monthly repayment</td><td><apex:inputField value="{!propertyinfo.Amount_of_monthly_repayment__c}" id="prop5"  /></td>
+    
+</tr>
+<tr>
+    <td class="labelCol">Do you let the property out</td><td><apex:inputField value="{!propertyinfo.IsBTLProperty__c}" id="prop7"  /></td>
+    <td class="labelCol">Amount of monthly rent received</td><td><apex:inputField value="{!propertyinfo.Amount_of_monthly_rent_received__c}" id="prop6"  /></td>
+</tr>
+</tbody>
+</table>
+
+
+
+</apex:component>

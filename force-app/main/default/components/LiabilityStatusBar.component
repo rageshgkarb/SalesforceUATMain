@@ -1,0 +1,39 @@
+<apex:component >
+
+<a name="main"/>
+<apex:attribute name="showBar1" description="This is the value for the component." type="Boolean" required="false"/>
+<apex:attribute name="showBar2" description="This is the value for the component." type="Boolean" required="false"/>
+<apex:attribute name="showBar3" description="This is the value for the component." type="Boolean" required="false"/>
+<apex:attribute name="showBar4" description="This is the value for the component." type="Boolean" required="false"/>
+<apex:attribute name="showBar5" description="This is the value for the component." type="Boolean" required="false"/>
+<apex:attribute name="showBar6" description="This is the value for the component." type="Boolean" required="false"/>
+<apex:attribute name="showBar7" description="This is the value for the component." type="Boolean" required="false"/>
+<apex:attribute name="showBar8" description="This is the value for the component." type="Boolean" required="false"/>
+
+
+<div id='navBar' style="padding-bottom:15px;">
+<!-- <c:DynamicImage /> -->
+
+
+
+<div style="text-align:center;">
+<apex:image width="958" height="48" value="{!URLFOR($Resource.NavImages, 'nav_bar1.gif')}" rendered="{!showBar1}"/>
+<apex:image width="958" height="48" value="{!URLFOR($Resource.NavImages, 'nav_bar2.gif')}" rendered="{!showBar2}"/>
+<apex:image width="958" height="48" value="{!URLFOR($Resource.NavImages, 'nav_bar3.gif')}" rendered="{!showBar3}"/>
+<apex:image width="958" height="48" value="{!URLFOR($Resource.NavImages, 'nav_bar4.gif')}" rendered="{!showBar4}"/>
+<apex:image width="958" height="48" value="{!URLFOR($Resource.NavImages, 'nav_bar5.gif')}" rendered="{!showBar5}"/>
+<apex:image width="958" height="48" value="{!URLFOR($Resource.NavImages, 'nav_bar6.gif')}" rendered="{!showBar6}"/>
+<apex:image width="958" height="48" value="{!URLFOR($Resource.NavImages, 'nav_bar7.gif')}" rendered="{!showBar7}"/>
+<apex:image width="958" height="48" value="{!URLFOR($Resource.NavImages, 'nav_bar8.gif')}" rendered="{!showBar8}"/>
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+</apex:component>

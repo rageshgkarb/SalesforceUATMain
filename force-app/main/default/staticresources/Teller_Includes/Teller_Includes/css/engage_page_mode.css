@@ -1,0 +1,64 @@
+
+.regionContent
+{
+	padding-left:10px;
+	height: 100%;
+}
+
+.pageTitleContainer
+{
+	margin-left: 0px;
+}
+
+.pageTitleContainer > div > img
+{
+	display: none;
+}
+
+.pageStructure > .pageContentContainer > .pageContentLeft
+{
+	height: calc(100% - 70px);
+}
+
+.pageStructure > .pageContentContainer > .pageContentRight
+{
+	left: 390px; 
+	height: calc(100% - 70px);
+}
+
+.regionModalBackground
+{
+	height: 100%;
+  	width: 100%;
+  	margin-left: 0px;
+  	margin-top: 0px;
+}
+
+.regionLoad > .regionWaitBackground
+{
+	height: 100%;
+  	width: 100%;
+  	margin-left: 0px;
+  	margin-top: 0px;;
+}
+
+.regionLoad > .regionWaitMessage
+{
+	width: 100%;
+	margin-left: 0px;
+}
+
+.nav
+{
+	display: none;
+}
+
+.footerBar
+{
+	display: none;
+}
+
+.headerBar
+{
+	display: none;
+}

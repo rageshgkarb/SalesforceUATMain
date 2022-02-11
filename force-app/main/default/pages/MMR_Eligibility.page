@@ -1,0 +1,239 @@
+<apex:page showHeader="false" sidebar="false" controller="MMR_EligibilityController" docType="html-5.0" action="{!Setup}">
+<head>
+    <c:MMR_PageHeader ></c:MMR_PageHeader>
+    <!--
+    <apex:includeScript value="{!$Resource.pca__LookupComponent}"/>
+    <apex:includeScript value="{!$Resource.pca__EditPageLauncher}"/>
+    <apex:includeScript value="{!$Page.pca__EditPageSettings}"/>
+    -->
+    
+</head>
+<body>
+<apex:include pageName="pca__Component"/>
+<script>
+        pca_Settings.DisableFieldRearrange = true;
+        //C0785: HPP - Automatic Valuation Model start
+         function funcTest(varA){
+            if(varA){
+                alert('Please note this opportunity will not be eligible for an AVM because either the FTV or the Purchase price means a physical valuation is required.');
+            }
+            redirectToDetailPage();
+        }
+       //C0785: HPP - Automatic Valuation Model end
+        
+</script>    
+
+<style>
+.nav-tabs>li>a {
+    font-size:14px;
+}
+</style>
+
+<!--<c:MMR_Header title="Eligibility" numapps="{!numapplying}"/>-->
+<c:MMR_Header title="Pre-Appointment Screening" numapps="{!numapplying}"/> 
+
+<apex:outputPanel rendered="{!IsFirstPage}">
+    <apex:form id="aForm" styleClass="form-horizontal" >
+        <apex:inputhidden id="existingSFDCCustomerId" value="{!existingSFDCCustomerId}" />
+    <div class="container">
+        <div class="row">
+            <apex:pagemessages ></apex:pagemessages>
+        </div>
+    </div>
+    <div class="row" >
+        <div class="form-group">
+        <div class="col-sm-6">
+            <div class="pull-right" style="font-size:1.5em;">        
+                <label>Product Type</label>        
+            </div>    
+        </div>
+        <div class="col-sm-6 pull-left">        
+            <div class="pull-left">
+             <div class="requiredInput">
+                <!--<apex:inputField value="{!Opp.Interested_in__c}" id="addInterest" required="true" label="Interested In" styleClass="BTLSelect" style="font-size:1.5em;"  /> C0782 REAC Changes -->
+             <apex:selectlist styleclass="form-control" required="true" value="{!Opp.Interested_in__c }" id="Interest" size="1" style="font-size:1.5em;"> <!-- add for REAC-->
+                                <apex:selectOptions value="{!items}"/> 
+                            </apex:selectlist>
+                  </div>          
+            </div>     
+        </div>
+        </div>
+    </div>   
+    
+        <div class="row">
+            <div class="form-group">
+                <div class="col-sm-6">
+                    <div class="pull-right" style="font-size:1.5em;">
+                        <label>Number of Applicants / Directors</label><!-- C0644 -->
+                    </div>
+                </div>
+                <div class="col-sm-6 pull-left">
+                    <div class="pull-left">
+                        <div class="requiredInput">
+                            <apex:selectlist styleclass="form-control" required="true" value="{!Opp.Number_of_People_Applying__c }" id="recent" size="1" style="font-size:1.5em;">
+                                <apex:selectoption itemlabel="1" itemvalue="1"></apex:selectoption>
+                                <apex:selectoption itemlabel="2" itemvalue="2"></apex:selectoption>
+                                <apex:selectoption itemlabel="3" itemvalue="3"></apex:selectoption>
+                                <apex:selectoption itemlabel="4" itemvalue="4"></apex:selectoption>
+                            </apex:selectlist>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    
+    
+    
+    
+ 
+    
+    
+    <div class="row col-sm-offset-1 col-sm-10" >
+    <div>
+    <!--<h3>Disclaimer for eligibility stage</h3>-->
+     <h3>Disclaimer for Pre-Appointment Screening stage</h3> 
+    </div>
+<p>Al Rayan Bank offers advice on our own range of Sharia compliant Home Purchase Plans.  </p>
+<p>The first stage of this process is our Pre-Appointment Screening assessment where we determine whether you meet the basic requirements of our Home Purchase Plan. Upon successful completion of the Pre-Appointment Screening we will book an appointment for you with an advisor, we will ask some additional questions to check whether you can afford the finance you have requested and assuming that the finance is affordable, we will provide you with an Agreement in Principle (AIP).</p>
+<p>Following the Agreement in Principle, we will then conduct a Fact Find where we collect the information that allows us to assess your needs and subsequently make a recommendation to you. </p>
+<p>In the unlikely event that you subsequently experience any problems with our Home Purchase Plan based on the advice and recommendation that we have given you, should you be unable to resolve any issues directly with Al Rayan Bank, you will be eligible to make use of the Financial Ombudsman Service. </p>
+<p>Should you experience any issues or concerns with the advice and recommendation that we make to you, you should first contact Al Rayan Bank where we will be more than happy to help resolve any issues you may have.</p>
+
+    </div>
+    
+    
+    <div class="row">
+        <div class="col-sm-offset-6">
+            <apex:commandButton styleClass="btn-danger" value="Next" action="{!changeNumApps}"    />
+        </div>
+    </div>
+    
+    </apex:form>
+</apex:outputpanel>
+
+<apex:outputPanel rendered="{!!IsFirstPage}">
+    <apex:form id="aForm2" styleClass="form-horizontal">
+        <apex:inputhidden id="existingSFDCCustomerId" value="{!existingSFDCCustomerId}" />
+        <div class="container">
+            <div class="row">
+                <apex:pagemessages ></apex:pagemessages>
+            </div>
+            <c:MMR_Eligibility_Details rendered="{!!IsBTL_LTD}"
+                                       opp="{!Opp}" title="{!Title}" applicant1="{!Applicant1}" applicant2="{!Applicant2}" applicant3="{!Applicant3}" applicant4="{!Applicant4}"
+                                       firstname="{!FirstName}" surname="{!Surname}" hasemail="{!HasEmail}" hasmail="{!HasMail}" hassms="{!HasSMS}" hasphone="{!HasPhone}" isbtl="{!IsBTL}"
+                                       completed="{!Completed}" hasnewsletter="{!HasNewsletter}" hasnone="{!HasNone}" IsPrefSelected="{!IsPrefSelected}" PurposeOfFinace="{!ItemsFinance}" PropertyType="{!PropertyType}"/><!-- C0697 --><!-- C0737 --><!--C0782 REAC changes PurposeOfFinace="{!ItemsFinance}" --><!-- Case:01931533 ; Added attribute property type -->
+            <c:MMR_Eligibility_Details_BTLLC rendered="{!IsBTL_LTD}"
+                                             opp="{!Opp}" title="{!Title}" applicant1="{!Applicant1}" applicant2="{!Applicant2}" applicant3="{!Applicant3}" applicant4="{!Applicant4}" applicant5="{!Applicant5}"
+                                             name="{!Applicant1.name}" hasemail="{!HasEmail}" hasmail="{!HasMail}" hassms="{!HasSMS}" hasphone="{!HasPhone}" isbtl="{!IsBTL}"
+                                             completed="{!Completed}" hasnewsletter="{!HasNewsletter}" hasnone="{!HasNone}" PurposeOfFinance="{!ItemsFinance}"/><!-- C0697 -->
+
+            <div class="row">
+                <div class="pull-left">
+                   <!-- <apex:commandbutton styleclass="btn-danger" value="Check Eligibility" action="{!check}" id="but" rendered="{!!Completed}" onclick="PleaseWait(this);sfActionCheck();" oncomplete="funcTest('{!isChanged}'); "/>--><!-- oncomplete="funcTest('{!isChanged}'); " code as part of avm-->
+                    <!--C0785: HPP - Automatic Valuation Model End-->
+                   <apex:commandbutton styleclass="btn-danger" value="Check Eligibility" action="{!check}" id="but" rendered="{!!Completed}" onclick="checkEligibilityForAVM();PleaseWait(this);sfActionCheck();"/>
+                <apex:actionFunction name="checkEligibilityForAVM" action="{!checkEligibilityForAVM}" oncomplete="funcTest({!isChanged});"/>
+                  <!--C0785: HPP - Automatic Valuation Model End-->
+                </div>
+                <div class="pull-right">
+                    <input class="btn btn-default" type="button" name="backButton" value="Close"
+                           onclick="window.close();" />
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <apex:outputpanel rendered="{!Opp.StageName == 'HPP -Eligible Opportunity'}">
+                        ELIGIBLE
+                    </apex:outputpanel>
+                    <apex:outputpanel rendered="{!Opp.StageName == 'Not Eligible - HPP'}">
+                        NOT ELIGIBLE
+                    </apex:outputpanel>
+                </div>
+                <div class="col-sm-6">
+                    <apex:outputtext value="{!EligibleOutput}" escape="false" />
+                </div>
+            </div>
+
+
+            <div class="row">
+                <apex:outputpanel rendered="{!Opp.StageName == 'HPP -Eligible Opportunity' && !Completed   }">
+                    <apex:commandbutton styleclass="btn-primary" value="Complete Eligibility" action="{!CompleteAIP}" onclick="PleaseWait(this);sfActionComplete();" />
+                </apex:outputpanel>
+                <apex:outputpanel rendered="{!Opp.StageName == 'HPP -Eligible Opportunity' && AllowAIP  && !Completed  }">
+                    <apex:commandbutton styleclass="btn-primary" value="Start AIP" action="{!AIP}" />
+                </apex:outputpanel>
+                <apex:outputpanel rendered="{!Opp.StageName == 'Not Eligible - HPP' && !Completed   }">
+                    <apex:commandbutton styleclass="btn-primary" value="Complete Eligibility" action="{!CompleteAIP}" onclick="PleaseWait(this);sfActionComplete();" />
+                </apex:outputpanel>
+            </div>
+            <div class="row">
+                <apex:outputpanel id="MeetingPanel" rendered="{!Opp.StageName == 'HPP -Eligible Opportunity'}">
+                    <h1>Book Appointment</h1>
+                    <div>
+                        <a target="_blank" href="{!BdmLink}">Book Appointment for {!BdmName} </a>
+                    </div>
+                </apex:outputpanel>
+            </div>
+        </div>
+        <apex:actionfunction name="sfActionCheck" action="{!check}"></apex:actionfunction>
+        <apex:actionfunction name="sfActionComplete" action="{!CompleteAIP}"></apex:actionfunction>
+    </apex:form>
+</apex:outputPanel>
+
+
+
+<script type="text/javascript">
+
+
+function TitleOther()
+{
+
+                var sal = $("select.salutation").val();
+
+                 if(sal == 'Other')
+                {
+                    $(".titleOther").show();
+                }
+                else
+                {
+                $(".titleOther").hide();
+                }
+}
+
+function PleaseWait(btn)
+{
+    btn.value='Please Wait';
+    btn.disabled=true;
+}
+
+    $(function(){
+        $(".tab-pane:contains('Error')").each(function(index){
+            $('#' + this.id + 'Tab').css('border-bottom','4px solid #c00');
+
+
+        });
+
+        $('select.salutation').change(function() {
+            TitleOther();
+        });
+        TitleOther();
+
+
+    });
+
+
+
+
+
+
+
+
+
+
+</script>
+
+</body>
+</apex:page>

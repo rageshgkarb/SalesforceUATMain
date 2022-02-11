@@ -1,0 +1,13 @@
+<apex:page controller="RedirectController" showHeader="false" sidebar="false">
+<script type="text/javascript">
+// <![CDATA[
+    if ("{!ProfileName}" != "External Flow & IFM Partner User")
+    {
+        window.location= "../a0h/o?nooverride=1" ;
+    }
+    
+// ]]>
+</script>
+
+  IBB_Product_Set__c Redirect page: {!ProfileName}
+</apex:page>

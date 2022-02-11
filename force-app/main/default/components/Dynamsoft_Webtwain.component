@@ -1,0 +1,73 @@
+<apex:component >
+    
+
+	<!--<apex:includeScript value="{!URLFOR($Resource.Dynamsoft_Web_TWAIN, '/Dynamsoft_WebTWAIN/10_2/dynamsoft.webtwain.initiate.js')}"/>
+        
+    <script>
+
+		// Dynamsoft JavaScript Library for Basic Initiation of Dynamic Web TWAIN
+		// More info on DWT: http://www.dynamsoft.com/Products/WebTWAIN_Overview.aspx
+		//
+		// Copyright 2014, Dynamsoft Corporation 
+		// Author: Dynamsoft Team
+		// Version: 10.2.0.324
+		//
+		/// <reference path="dynamsoft.webtwain.initiate.js" />
+		var Dynamsoft = Dynamsoft || { WebTwainEnv: {} };
+
+		Dynamsoft.WebTwainEnv.AutoLoad = false;
+		///
+		Dynamsoft.WebTwainEnv.Containers = [{ContainerId:'dwtcontrolContainer', Width:658, Height:497}];
+		///
+		Dynamsoft.WebTwainEnv.ProductKey = '797F54BD42916EDFD3EB7BA169EE1C9AEB690E71F24232E5E250F79E04E4AD7310000000';
+		///
+		Dynamsoft.WebTwainEnv.Trial = false;
+		///
+		Dynamsoft.WebTwainEnv.Debug = true; // only for debugger output
+		///
+		Dynamsoft.WebTwainEnv.ResourcesPath = '{!URLFOR($Resource.Dynamsoft_Web_TWAIN, '/Dynamsoft_WebTWAIN/10_2')}';
+
+		/// All callbacks are defined in the dynamsoft.webtwain.install.js file, you can customize them.
+
+		// Dynamsoft.WebTwainEnv.RegisterEvent('OnWebTwainReady', function(){
+		// 		// webtwain has been inited
+		// });
+        
+    </script> -->
+
+  <apex:includescript value="{!URLFOR($Resource.Dynamsoft_Web_TWAIN, '/Dynamsoft_WebTWAIN/12_3_1/dynamsoft.webtwain.initiate.js')}" />
+
+    <script>
+
+        //
+        // Dynamsoft JavaScript Library for Basic Initiation of Dynamic Web TWAIN
+        // More info on DWT: http://www.dynamsoft.com/Products/WebTWAIN_Overview.aspx
+        //
+        // Copyright 2017, Dynamsoft Corporation
+        // Author: Dynamsoft Team
+        // Version: 12.3
+        //
+        /// <reference path="dynamsoft.webtwain.initiate.js" />
+		var Dynamsoft = Dynamsoft || { WebTwainEnv: {} };
+
+		Dynamsoft.WebTwainEnv.AutoLoad = false;
+		///
+		Dynamsoft.WebTwainEnv.Containers = [{ContainerId:'dwtcontrolContainer', Width:658, Height:497}];
+		///
+		Dynamsoft.WebTwainEnv.ProductKey = '909B5145481D7F66CAD2B12E28D64AF7A079AD025FC91AD75CDFAFDCF26C4A72B27956458CB8E19CF76CDC0DCACF3C4C4EBAF58359DB245BD8EEE2267F9E2EA9E31AB5AE79C9791FA55BC80FC2C109ADE2B741E1B6FCDC1FF6B9310DCE9C98612AD0673E2DBF7ED7BDD1AE730380485B2D';
+		///
+		Dynamsoft.WebTwainEnv.Trial = false;
+		///
+		Dynamsoft.WebTwainEnv.Debug = true; // only for debugger output
+		///
+		Dynamsoft.WebTwainEnv.ResourcesPath = '{!URLFOR($Resource.Dynamsoft_Web_TWAIN, '/Dynamsoft_WebTWAIN/12_3_1')}';
+
+		/// All callbacks are defined in the dynamsoft.webtwain.install.js file, you can customize them.
+
+		// Dynamsoft.WebTwainEnv.RegisterEvent('OnWebTwainReady', function(){
+		// 		// webtwain has been inited
+		// });
+
+    </script>
+    
+</apex:component>

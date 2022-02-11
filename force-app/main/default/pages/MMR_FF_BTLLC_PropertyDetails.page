@@ -1,0 +1,204 @@
+<apex:page showheader="false" sidebar="false" controller="MMR_FF_PropertyAddress" action="{!Setup}"><!-- C0644 -->
+    <head>
+        <c:MMR_PageHeader ></c:MMR_PageHeader>
+        <apex:include pagename="pca__Component" />
+        <script>
+        pca_Settings.DisableFieldRearrange = true;
+        </script>
+    </head>
+    <body style="background-color:#ededed;">
+        <style>
+            .q1show {
+                display: none;
+            }
+
+            .q2show {
+                display: none;
+            }
+
+            .popover {
+                max-width: 500px;
+            }
+
+            .statement {
+                font-weight: bold;
+                text-decoration: underline;
+            }
+
+            .modal {
+                text-align: center;
+            }
+
+            @media screen and (min-width: 768px) {
+                .modal:before {
+                    display: inline-block;
+                    vertical-align: middle;
+                    content: " ";
+                    height: 100%;
+                }
+            }
+
+            .modal-dialog {
+                display: inline-block;
+                text-align: left;
+                vertical-align: middle;
+            }
+        </style>
+        <c:MMR_Header title="Property Details" numapps="{!numapplying}" opp="{!bopp}" hide="{!IsCredit}" />
+        <div class="container">
+            <c:MMR_FF_BTLLC_Nav eventid="{!eventid}" active="0" activesection="A" rendered="{!!IsCredit && !IsCompleted}" />
+            <c:MMR_FF_BTLLC_Nav_Links eventid="{!eventid}" active="0" activesection="A" rendered="{!!IsCredit && IsCompleted}" />
+            <c:MMR_FF_BTLLC_Credit_Nav eventid="{!eventid}" active="0" activesection="A" rendered="{!IsCredit}" />
+            <apex:form id="aForm" styleclass="form-horizontal">
+                <div class="form-group">
+                    <label for="q1" class="col-sm-6 control-label">Purchase Price/Market Value</label>
+                    <div class="col-sm-3">
+                        <apex:inputfield value="{!Opp.Purchase_price_market_value__c}" required="true" styleclass="form-control" />
+                    </div>
+                </div>
+                 <!--C0760;offer - letter checklist;start-->
+                <div class="form-group">
+                    <label for="q2" class="col-sm-6 control-label">Market value of Property</label>
+                    <div class="col-sm-3">
+                        <apex:inputfield value="{!Opp.Market_value_of_Property__c}" styleclass="form-control" />
+                    </div>
+                </div>
+                 <!--C0760;offer - letter checklist;End-->
+                <div class="form-group" id="mortgage_professional">
+                    <label for="q1" class="col-sm-6 control-label">Finance Required</label>
+                    <div class="col-sm-3">
+                        <apex:inputfield value="{!Opp.Finance_Required__c}" required="true" styleclass="form-control" />
+                    </div>
+                </div>
+               <div class="form-group">
+                    <label for="q2" class="col-sm-6 control-label">Term of Finance</label>
+                    <div class="col-sm-3">
+                        <apex:inputfield value="{!Opp.Term_of_Finance__c}" required="true" styleclass="form-control" />
+                    </div>
+                </div>
+               <!-- <div class="form-group" id="income_exceed">
+                    <label for="q1" class="col-sm-6 control-label">Purpose of Finance</label>
+                    <div class="col-sm-3">
+                        <apex:inputfield value="{!Opp.Purpose_of_Finance__c}" required="true" styleclass="form-control q2" />
+                    </div>
+                </div>--> 
+                 <!-- REAC changes ; START -->
+                    <div class="form-group">
+                        <label for="q1" class="col-sm-6 control-label">Purpose of Finance</label> <!-- REAC changes ; removed style="font-size:1.5em;" -->
+                        <div class="col-sm-3">
+                           <div class="requiredInput">
+                            <apex:selectlist styleclass="form-control" required="true" value="{!Opp.Purpose_of_Finance__c }" id="Interest" size="1"> <!-- REAC changes ; removed style="font-size:1.5em;" -->
+                                        <apex:selectOptions value="{!ItemsFinance}"/> 
+                            </apex:selectlist>
+                          </div>                    
+                        </div>
+                    </div> 
+            <!-- REAC changes ; END --> 
+                <div class="form-group">
+                    <label for="q1" class="col-sm-6 control-label">Is the primary applicant a first time buyer?</label>
+                    <div class="col-sm-3">
+                        <apex:inputfield value="{!Opp.First_time_buyer__c}" required="true" styleclass="form-control" />
+                    </div>
+                </div>
+                <div class="panel panel-primary">
+                    <div class="panel-heading">Security Property Address</div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="q1" class="col-sm-6 control-label">Country</label>
+                            <div class="col-sm-3">
+                                <apex:inputfield id="acc17country" required="true" value="{!Opp.New_property_country__c}" styleclass="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="q1" class="col-sm-6 control-label">Postcode</label>
+                            <div class="col-sm-3">
+                                <apex:inputfield id="acc17zip" required="true" value="{!Opp.New_property_postcode__c}" styleclass="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="q1" class="col-sm-6 control-label">Street</label>
+                            <div class="col-sm-3">
+                                <apex:inputfield id="acc17street" required="true" value="{!Opp.New_property_street__c}" styleclass="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="q1" class="col-sm-6 control-label">City</label>
+                            <div class="col-sm-3">
+                                <apex:inputfield id="acc17city" required="true" value="{!Opp.New_property_city__c}" styleclass="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="q1" class="col-sm-6 control-label">Is the property located in England, Wales or Mainland Scotland?</label>
+                            <div class="col-sm-3">
+                                <apex:inputfield value="{!ExOpp.Mainland__c}" required="true" styleclass="form-control" />
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row" style="margin-top:30px;">
+                    <!-- CPDR01apex:commandButton styleClass="btn btn-success" value="Save" action="{!Save}" rendered="{!!IsCompleted || IsCredit }"/-->
+                    <apex:commandbutton styleclass="btn btn-danger" value="Save" action="{!Save}" rendered="{!!IsCompleted || IsCredit }" />
+                    <apex:commandbutton id="btnNext" styleclass=" btn btn-danger" value="Next" action="{!NextBTLLC}" rendered="{!!IsCredit && !IsCompleted}" />
+                </div>
+            </apex:form>
+        </div>
+        <c:MMR_PageFooter ></c:MMR_PageFooter>
+        <!-- Modal -->
+        <div class="modal fade" id="BTLModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        By answering yes to the question you are aware <br /><br />
+                        You will not have the benefit of the protection and remedies that would be available if the agreement were a consumer buy-to-let finance contract.<br /><br />
+                        If you are in any doubt as to the consequences of the agreement not being regulated then you should seek independent legal advice
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <apex:outputpanel >
+            <script>
+        $("#hoverid").popover({
+                trigger: 'hover',
+                content: 'What this means is:<br/><ul><li>You Intend to use the finance to purchase the property with the intention for letting out and there is no intention of occupying the property as a dwelling either by yourself or a relative</li><li>If you have previously purchased the property, it was with the intention of letting it out and neither you or a relative have inhabited it </li></ul>or<br/><ul><li>You own another BTL property </li></ul>',
+                container: 'body',
+                placement: 'top',
+        html : 'true'
+            });
+
+        $("[id$='ConfirmBTL']").change(ConfirmBTL);
+           function  ConfirmBTL()
+           {
+               var val = $("[id$='ConfirmBTL']").val();
+               $("[id$='btnNext']").show();
+                if(val == 'Yes')
+                {
+                   $('#ConfirmBTLItem').show();
+                   $('#ConfirmBTLItemNo').hide();
+                }
+                else if(val == 'No')
+                {
+                    $('#ConfirmBTLItem').hide();
+                    $('#ConfirmBTLItemNo').show();
+                    $("[id$='btnNext']").hide();
+                }
+                else
+                {
+                     $('#ConfirmBTLItem').hide();
+                     $('#ConfirmBTLItemNo').hide();
+                }
+           }
+
+           ConfirmBTL();
+
+            </script>
+        </apex:outputpanel>
+        <span id="pca_status" style="display:none;" />
+    </body>
+</apex:page>

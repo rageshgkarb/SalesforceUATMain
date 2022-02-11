@@ -1,0 +1,5 @@
+<apex:page standardController="opportunity" sidebar="false" title="false" showHeader="false">
+  
+  <h1>Marketing Question</h1>
+  
+</apex:page>

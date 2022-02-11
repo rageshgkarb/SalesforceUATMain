@@ -1,0 +1,299 @@
+<apex:component >
+    <apex:attribute name="Model" type="String" description="" />
+    <apex:attribute name="ApplicantNo" type="String" description="" />
+    <apex:attribute name="FirstName" type="String" description="" />
+    <apex:attribute name="LastName" type="String" description="" />
+    <!-- C0592 -->
+    <div class="col-md-8" ng-show="!RMAlertText">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 ng-show="Data && Data.Applicants[{!ApplicantNo}]">{!FirstName}&nbsp;{!LastName}</h3>
+            </div>
+            <div class="panel-body">
+                <!-- Garnet - Start
+                <div ng-show="Data && ((!isRMT && !isEDD) || isBranch)">
+                    <div class="col-md-12" style="margin-bottom:10px;">
+                        As a fully regulated UK bank, we are required to identify any customers who fulfil a prominent public function; these people are referred to as '<strong>politically exposed people</strong>'. We are also required to identify the close family members of the 'politically exposed people'.<br/><br/>
+                        Please answer the below questions to proceed to the next stage of the account application.
+                    </div>
+                    <div class="col-md-12 col-sm-12">
+                        <div ng-class="{ 'has-error':( myform.optPEP{!ApplicantNo}.$touched|| Submitted) && myform.optPEP{!ApplicantNo}.$invalid }">
+                            <div>
+                                <label rel="popover" data-placement="right" data-trigger="hover" data-html="true"
+                                       data-content="The term 'politically exposed persons' (PEPs) refers to people who hold high public office.">
+                                    <span class="control-label">Are you a politically exposed person?</span>
+                                    <span style="font-size:16px;color:#162f61;" class="glyphicon glyphicon-info-sign"></span>
+                                </label>
+                            </div>
+                            <div>
+                                <label class="radio-inline"><input type="radio" ng-disabled="DisableControl" ng-required="!Data.Applicants[{!ApplicantNo}].PEP_c" name="optPEP{!ApplicantNo}" ng-model="Data.Applicants[{!ApplicantNo}].PEP_c" ng-checked="Data.Applicants[{!ApplicantNo}].PEP_c == 'true'" value="true" />Yes</label>
+                                <label class="radio-inline"><input type="radio" ng-disabled="DisableControl" ng-required="!Data.Applicants[{!ApplicantNo}].PEP_c" name="optPEP{!ApplicantNo}" ng-model="Data.Applicants[{!ApplicantNo}].PEP_c" ng-checked="Data.Applicants[{!ApplicantNo}].PEP_c == 'false'" value="false" />No</label>
+                            </div>
+                            <hr />
+                        </div>
+                        <div ng-class="{ 'has-error':( myform.optPEPAssociate{!ApplicantNo}.$touched|| Submitted) && myform.optPEPAssociate{!ApplicantNo}.$invalid }">
+                            <div>
+                                <label rel="popover" data-placement="right" data-trigger="hover" data-html="true"
+                                       data-content="A person that is linked to a PEP.<br/><br />Closely related family members include:<br/>&bull;&nbsp;A spouse;<br/>&bull;&nbsp;A partner (including a person who is considered by their national las as
+    equivalent to a spouse);<br/>&bull;&nbsp;Children and their spouses or partners; and<br/>&bull;&nbsp;Parents<br/><br/>Persons known to be close associates include:<br/>&bull;&nbsp;Any individual who is known to have joint beneficial ownership of a legal entity or legal arrangement, or any other close business relationship, with a person who is a PEP;<br/>&bull;&nbsp;Any individual who has sole beneficial ownership of a legal entity or legal arrangement which is known to have been set up for the benefit of a person who is a PEP;<br/>">
+                            <span class="control-label">Are you a close family member of a politically exposed person?</span>
+                            <span style="font-size:16px;color:#162f61;" class="glyphicon glyphicon-info-sign"></span>
+                        </label>
+                            </div>
+                            <div>
+                                <label class="radio-inline"><input type="radio" ng-disabled="DisableControl" ng-required="!Data.Applicants[{!ApplicantNo}].PEP_Associate_c" name="optPEPAssociate{!ApplicantNo}" ng-model="Data.Applicants[{!ApplicantNo}].PEP_Associate_c" ng-checked="Data.Applicants[{!ApplicantNo}].PEP_Associate_c == 'Yes'" value="Yes" />Yes</label>
+                                <label class="radio-inline"><input type="radio" ng-disabled="DisableControl" ng-required="!Data.Applicants[{!ApplicantNo}].PEP_Associate_c" name="optPEPAssociate{!ApplicantNo}" ng-model="Data.Applicants[{!ApplicantNo}].PEP_Associate_c" ng-checked="Data.Applicants[{!ApplicantNo}].PEP_Associate_c == 'No'" value="No" />No</label>
+                            </div>
+                            <hr />
+                        </div>
+                        <div ng-class="{ 'has-error':( myform.optTotalNetWorth{!ApplicantNo}.$touched|| Submitted) && myform.optTotalNetWorth{!ApplicantNo}.$invalid }">
+                            <div>
+                                <label rel="popover" data-placement="right" data-trigger="hover" data-html="true" 
+                                       data-content="The value of your net assets should not include the value of your main property or pension. Where possible it should be based on recent valuations.">
+                                    <span class="control-label">What is your total net worth?</span>
+                                    <span style="font-size:16px;color:#162f61;" class="glyphicon glyphicon-info-sign"></span>
+                                </label>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <select id="noKendo" ng-model="Data.Applicants[{!ApplicantNo}].What_is_your_total_net_worth_c" class="form-control" name="optTotalNetWorth{!ApplicantNo}" ng-disabled="DisableControl" ng-required="(isRMT  || isEDD) && !Data.Applicants[{!ApplicantNo}].What_is_your_total_net_worth_c"
+                                            ng-options="option.Key as option.Value for option in Data.TotalNetWorth"></select>
+                                </div>
+                            </div>
+                            <hr />
+                        </div>
+                    </div>
+                </div>
+                <div ng-show="((isRMT && !isFCU) || isEDD) || (DisableControl && Data.Applicants[{!ApplicantNo}].What_is_your_total_net_worth_c)">
+                Garnet END -->
+                <div ng-show="Data.Applicants[{!ApplicantNo}].EDD_Data_Missing" >
+                    <div class="col-md-12 col-sm-12">                        
+                        <!-- Garnet - Start  -->                            
+                        <div style="margin-top:5px;" ng-class="{ 'has-error':( myform.optCountryOfExpCredits{!ApplicantNo}.$touched|| Submitted) && myform.optCountryOfExpCredits{!ApplicantNo}.$invalid }">
+                            <div>
+                                <label rel="popover" data-placement="right" data-trigger="hover" data-html="true" data-content="">
+                                    <label class="control-label">Countries of Expected Transaction Activity (Credits)?</label>                                    
+                                </label>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <select id="noKendo" ng-model="Data.Applicants[{!ApplicantNo}].Country_of_Expected_Transactions_Credits_c" class="form-control" name="optCountryOfExpCredits{!ApplicantNo}y" ng-disabled="DisableControl" ng-required="Data.Applicants[{!ApplicantNo}].EDD_Data_Missing && !Data.Applicants[{!ApplicantNo}].Country_of_Expected_Transactions_Credits_c"
+                                            ng-options="option.Key as option.Value  for option in Data.CountryOfExpCredits"></select>
+                                    <c:CAA_InputError field="optCountryOfExpCredits" />
+                                </div>
+                            </div>
+                            <hr />
+                        </div>
+                        
+                        <div style="margin-top:5px;" ng-class="{ 'has-error':( myform.optCountryOfExpDebits{!ApplicantNo}.$touched|| Submitted) && myform.optCountryOfExpDebits{!ApplicantNo}.$invalid }">
+                            <div>
+                                <label rel="popover" data-placement="right" data-trigger="hover" data-html="true" data-content="">
+                                    <label class="control-label">Countries of Expected Transaction Activity (Debits)?</label>                                    
+                                </label>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <select id="noKendo" ng-model="Data.Applicants[{!ApplicantNo}].Country_of_Expected_Transactions_Debits_c" class="form-control" name="optSourceOfFundsCountr{!ApplicantNo}y" ng-disabled="DisableControl" ng-required="Data.Applicants[{!ApplicantNo}].EDD_Data_Missing && !Data.Applicants[{!ApplicantNo}].Country_of_Expected_Transactions_Debits_c"
+                                            ng-options="option.Key as option.Value  for option in Data.CountryOfExpDebits"></select>
+                                    <c:CAA_InputError field="optCountryOfExpDebits" />
+                                </div>
+                            </div>
+                            <hr />
+                        </div>
+                        
+                        <div style="margin-top:5px;" ng-class="{ 'has-error':( myform.optCurrenciesOfExpDenomination{!ApplicantNo}.$touched|| Submitted) && myform.optCurrenciesOfExpDenomination{!ApplicantNo}.$invalid }">
+                            <div>
+                                <label rel="popover" data-placement="right" data-trigger="hover" data-html="true" data-content="">
+                                    <label class="control-label">Currencies of Expected Transaction Activity (Denominations)?</label>                                    
+                                </label>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <select id="noKendo" ng-model="Data.Applicants[{!ApplicantNo}].Currencies_of_Expected_Transactions_c" class="form-control" name="optSourceOfFundsCountr{!ApplicantNo}y" ng-disabled="DisableControl" ng-required="Data.Applicants[{!ApplicantNo}].EDD_Data_Missing && !Data.Applicants[{!ApplicantNo}].Currencies_of_Expected_Transactions_c"
+                                            ng-options="option.Key as option.Value  for option in Data.CurrenciesOfExpDenomination"></select>
+                                    <c:CAA_InputError field="optCurrenciesOfExpDenomination" />
+                                </div>
+                            </div>
+                            <hr />
+                        </div>                                                
+                        <!-- Garnet - END -->
+                        
+                        <div style="margin-top:5px;" ng-class="{ 'has-error':( myform.optSourceOfWealth{!ApplicantNo}.$touched|| Submitted) && myform.optSourceOfWealth{!ApplicantNo}.$invalid }">
+                            <div>
+                                <label rel="popover" data-placement="right" data-trigger="hover" data-html="true" data-content="">
+                                    <label class="control-label">How did you generate or acquire your wealth?</label>
+                                </label>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <select id="noKendo" ng-model="Data.Applicants[{!ApplicantNo}].Source_of_Wealth_c" class="form-control" name="optSourceOfWealth{!ApplicantNo}" ng-disabled="DisableControl" ng-required="Data.Applicants[{!ApplicantNo}].EDD_Data_Missing && !Data.Applicants[{!ApplicantNo}].Source_of_Wealth_c"
+                                            ng-options="option.Key as option.Value  for option in Data.SourceOfWealth"></select>
+                                    <c:CAA_InputError field="optSourceOfWealth" />        
+                                </div>
+                            </div>
+                            <hr />
+                        </div>
+                        <!-- Garnet START
+                        <div style="margin-top:5px;" ng-class="{ 'has-error':( myform.optSourceOfFunds{!ApplicantNo}.$touched|| Submitted) && myform.optSourceOfFunds{!ApplicantNo}.$invalid }">
+                            <div>
+                                <label rel="popover" data-placement="right" data-trigger="hover" data-html="true" data-content="">
+                                    <label class="control-label">From where did the funds originate?</label>                                    
+                                </label>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <select id="noKendo" ng-model="Data.Applicants[{!ApplicantNo}].Source_of_Funds_c" class="form-control" name="optSourceOfFunds{!ApplicantNo}" ng-disabled="DisableControl" ng-required="(isRMT  || isEDD) && !Data.Applicants[{!ApplicantNo}].Source_of_Funds_c"
+                                            ng-options="option.Key as option.Value  for option in Data.SourceOfFunds"></select>
+                                </div>
+                            </div>
+                            <hr />
+                        </div>
+                        <div style="margin-top:5px;" ng-class="{ 'has-error':( myform.optSourceOfFundsCountry{!ApplicantNo}.$touched|| Submitted) && myform.optSourceOfFundsCountry{!ApplicantNo}.$invalid }">
+                            <div>
+                                <label rel="popover" data-placement="right" data-trigger="hover" data-html="true" data-content="">
+                                    <label class="control-label">From which country did the funds originate?</label>                                    
+                                </label>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <select id="noKendo" ng-model="Data.Applicants[{!ApplicantNo}].Source_of_Funds_Country_c" class="form-control" name="optSourceOfFundsCountr{!ApplicantNo}y" ng-disabled="DisableControl" ng-required="(isRMT  || isEDD) && !Data.Applicants[{!ApplicantNo}].Source_of_Funds_Country_c"
+                                            ng-options="option.Key as option.Value  for option in Data.SourceOfFundsCountry"></select>
+                                </div>
+                            </div>
+                            <hr />
+                        </div>
+                        <div style="margin-top:5px;" ng-class="{ 'has-error':( myform.optIntFundTxFreq{!ApplicantNo}.$touched|| Submitted) && myform.optIntFundTxFreq{!ApplicantNo}.$invalid }">
+                            <div>
+                                <label rel="popover" data-placement="right" data-trigger="hover" data-html="true" data-content="">
+                                    <label class="control-label">Approximately how many transfers will be made internationally?</label>                                    
+                                </label>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <select id="noKendo" ng-model="Data.Applicants[{!ApplicantNo}].International_Fund_Transfer_Frequency_c" class="form-control" name="optIntFundTxFreq{!ApplicantNo}" ng-disabled="DisableControl" ng-required="(isRMT  || isEDD) && !Data.Applicants[{!ApplicantNo}].International_Fund_Transfer_Frequency_c"
+                                            ng-options="option.Key as option.Value  for option in Data.IntFundsFrequency"></select>
+                                </div>
+                            </div>
+                            <hr />
+                        </div>
+                        <div style="margin-top:5px;" ng-class="{ 'has-error':( myform.optIntFundTxSource{!ApplicantNo}.$touched|| Submitted) && myform.optIntFundTxSource{!ApplicantNo}.$invalid }" ng-show="Data.Applicants[{!ApplicantNo}].International_Fund_Transfer_Frequency_c!='Never'">
+                            <div>
+                                <label rel="popover" data-placement="right" data-trigger="hover" data-html="true" data-content="">
+                                    <label class="control-label">From where did the funds being transferred internationally originate?</label>                                    
+                                </label>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <select id="noKendo" ng-model="Data.Applicants[{!ApplicantNo}].International_Fund_Transfer_Source_c" class="form-control" name="optIntFundTxSource{!ApplicantNo}" ng-disabled="DisableControl" ng-required="(isRMT  || isEDD) && !Data.Applicants[{!ApplicantNo}].International_Fund_Transfer_Source_c && Data.Applicants[{!ApplicantNo}].International_Fund_Transfer_Frequency_c!='Never'"
+                                            ng-options="option.Key as option.Value  for option in Data.SourceOfFundsCountry"></select>
+                                </div>
+                            </div>
+                            <hr />
+                        </div>
+                        <div style="margin-top:5px;" ng-class="{ 'has-error':( myform.optIntFundTxDest{!ApplicantNo}.$touched|| Submitted) && myform.optIntFundTxDest{!ApplicantNo}.$invalid }" ng-show="Data.Applicants[{!ApplicantNo}].International_Fund_Transfer_Frequency_c!='Never'">
+                            <div>
+                                <label rel="popover" data-placement="right" data-trigger="hover" data-html="true" data-content="">
+                                    <label class="control-label">To which country are the funds being transferred?</label>                                    
+                                </label>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <select id="noKendo" ng-model="Data.Applicants[{!ApplicantNo}].International_Fund_Transfer_Destination_c" class="form-control" name="optIntFundTxDest{!ApplicantNo}" ng-disabled="DisableControl" ng-required="(isRMT  || isEDD) && !Data.Applicants[{!ApplicantNo}].International_Fund_Transfer_Destination_c && Data.Applicants[{!ApplicantNo}].International_Fund_Transfer_Frequency_c!='Never'"
+                                            ng-options="option.Key as option.Value  for option in Data.SourceOfFundsCountry"></select>
+                                </div>
+                            </div>
+                            <hr />
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-sm-12">
+                        <div style="margin-top:5px;" ng-class="{ 'has-error':( myform.optEstMnthlyVolIn{!ApplicantNo}.$touched|| Submitted) && myform.optEstMnthlyVolIn{!ApplicantNo}.$invalid }">
+                            <div>
+                                <label rel="popover" data-placement="right" data-trigger="hover" data-html="true" data-content="">
+                                    <label class="control-label">Approximately how much will you transfer into the account per month (in &pound;s)?</label>                                    
+                                </label>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <select id="noKendo" ng-model="Data.Applicants[{!ApplicantNo}].Estimated_Monthly_Volume_Inward_c" class="form-control" name="optEstMnthlyVolIn{!ApplicantNo}" ng-disabled="DisableControl" ng-required="(isRMT  || isEDD) && !Data.Applicants[{!ApplicantNo}].Estimated_Monthly_Volume_Inward_c"
+                                            ng-options="option.Key as option.Value  for option in Data.EstMnthlyVolIn"></select>
+                                </div>
+                            </div>
+                            <hr />
+                        </div>
+                        <div style="margin-top:5px;" ng-class="{ 'has-error':( myform.optEstMnthlyTxIn{!ApplicantNo}.$touched|| Submitted) && myform.optEstMnthlyTxIn{!ApplicantNo}.$invalid }">
+                            <div>
+                                <label rel="popover" data-placement="right" data-trigger="hover" data-html="true" data-content="">
+                                    <label class="control-label">Approximately how many transactions will you make into the account per month?</label>                                    
+                                </label>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <select id="noKendo" ng-model="Data.Applicants[{!ApplicantNo}].Est_Monthly_Num_of_Transactions_Inward_c" class="form-control" name="optEstMnthlyTxIn{!ApplicantNo}" ng-disabled="DisableControl" ng-required="(isRMT  || isEDD) && !Data.Applicants[{!ApplicantNo}].Est_Monthly_Num_of_Transactions_Inward_c"
+                                            ng-options="option.Key as option.Value  for option in Data.EstMnthlyNumTxIn"></select>
+                                </div>
+                            </div>
+                            <hr />
+                        </div>
+                        <div style="margin-top:5px;" ng-class="{ 'has-error':( myform.optEstMnthlyVolOut{!ApplicantNo}.$touched|| Submitted) && myform.optEstMnthlyVolOut{!ApplicantNo}.$invalid }">
+                            <div>
+                                <label rel="popover" data-placement="right" data-trigger="hover" data-html="true" data-content="">
+                                    <label class="control-label">Approximately how much will you transfer out of the account per month (in &pound;s)?</label>                                    
+                                </label>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <select id="noKendo" ng-model="Data.Applicants[{!ApplicantNo}].Estimated_Monthly_Volume_Outward_c" class="form-control" name="optEstMnthlyVolOut{!ApplicantNo}" ng-disabled="DisableControl" ng-required="(isRMT  || isEDD) && !Data.Applicants[{!ApplicantNo}].Estimated_Monthly_Volume_Outward_c"
+                                            ng-options="option.Key as option.Value  for option in Data.EstMnthlyVolOut"></select>
+                                </div>
+                            </div>
+                            <hr />
+                        </div>
+                        <div style="margin-top:5px;" ng-class="{ 'has-error':( myform.optEstMnthlyTxOut{!ApplicantNo}.$touched|| Submitted) && myform.optEstMnthlyTxOut{!ApplicantNo}.$invalid }">
+                            <div>
+                                <label rel="popover" data-placement="right" data-trigger="hover" data-html="true" data-content="">
+                                    <label class="control-label">Approximately how many transactions will you make out of the account per month?</label>                                    
+                                </label>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <select id="noKendo" ng-model="Data.Applicants[{!ApplicantNo}].Est_Monthly_Num_of_Transactions_Outward_c" class="form-control" name="optEstMnthlyTxOut{!ApplicantNo}" ng-disabled="DisableControl" ng-required="(isRMT  || isEDD) && !Data.Applicants[{!ApplicantNo}].Est_Monthly_Num_of_Transactions_Outward_c"
+                                            ng-options="option.Key as option.Value  for option in Data.EstMnthlyNumTxOut"></select>
+                                </div>
+                            </div>
+                            <hr />
+                        </div>
+                        <div style="margin-top:5px;" ng-class="{ 'has-error':( myform.optEstCashWthdrwlFreq{!ApplicantNo}.$touched|| Submitted) && myform.optEstCashWthdrwlFreq{!ApplicantNo}.$invalid }">
+                            <div>
+                                <label rel="popover" data-placement="right" data-trigger="hover" data-html="true" data-content="">
+                                    <label class="control-label">Approximately how many cash withdrawals will you make out of the account per month?</label>                                    
+                                </label>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <select id="noKendo" ng-model="Data.Applicants[{!ApplicantNo}].Estimated_Cash_Withdrawal_Frequency_c" class="form-control" name="optEstCashWthdrwlFreq{!ApplicantNo}" ng-disabled="DisableControl" ng-required="(isRMT  || isEDD) && !Data.Applicants[{!ApplicantNo}].Estimated_Cash_Withdrawal_Frequency_c"
+                                            ng-options="option.Key as option.Value  for option in Data.EstCashWthdrwlFreq"></select>
+                                </div>
+                            </div>
+                            <hr />
+                        </div>
+                        <div style="margin-top:5px;" ng-class="{ 'has-error':( myform.optEstCashDepositFreq{!ApplicantNo}.$touched|| Submitted) && myform.optEstCashDepositFreq{!ApplicantNo}.$invalid }">
+                            <div>
+                                <label rel="popover" data-placement="right" data-trigger="hover" data-html="true" data-content="">
+                                    <label class="control-label">Approximately how many cash deposits will you make into the account per month?</label>                                    
+                                </label>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <select id="noKendo" ng-model="Data.Applicants[{!ApplicantNo}].Estimated_Cash_Deposit_frequency_c" class="form-control" name="optEstCashDepositFreq{!ApplicantNo}" ng-disabled="DisableControl" ng-required="(isRMT  || isEDD) && !Data.Applicants[{!ApplicantNo}].Estimated_Cash_Deposit_frequency_c"
+                                            ng-options="option.Key as option.Value  for option in Data.EstCashDepositFreq"></select>
+                                </div>
+                            </div>
+                            <hr />
+                        </div>
+                        Garnet END -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</apex:component>

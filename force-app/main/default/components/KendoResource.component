@@ -1,0 +1,103 @@
+<apex:component >
+<apex:attribute type="boolean" name="IgnoreKendoDropDown" description="" default="false"/>
+
+
+<apex:stylesheet value="{!URLFOR($Resource.ibbstyle, '/kendo/kendo.common.min.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.ibbstyle, '/kendo/kendoibb.css')}"/>
+
+
+<!--<apex:stylesheet value="{!URLFOR($Resource.ibbstyle, 'default.css')}"/>-->
+<apex:stylesheet value="{!URLFOR($Resource.ibbstyle, 'bpi-additional.css')}"/>
+
+<apex:includeScript value="{!URLFOR($Resource.ibbstyle,'/kendo/jquery.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.ibbstyle, 'jquery.hoverIntent.minified.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.ibbstyle, 'ibb.js')}"/>
+<!--C0760 Process Optimization 2.0 start-->
+<apex:includeScript value="{!URLFOR($Resource.ibbstyle, '/kendo/kendo.all.min.2014.js')}"/>
+<!--C0760 Process Optimization 2.0 end-->
+<apex:includeScript value="{!URLFOR($Resource.ibbstyle, '/kendo/kendo.all.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.ibbstyle, '/jquery.validate.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.ibbstyle, '/additional-methods.min.js')}"/>
+
+<apex:includeScript value="{!URLFOR($Resource.ibbstyle, '/autosize/jquery.autosize-min.js')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.ibbstyle, '/toaster/toastr.min.css')}"/>
+<apex:includeScript value="{!URLFOR($Resource.ibbstyle, '/toaster/toastr.min.js')}"/>
+<!--C0760 Process Optimization 2.0 start-->
+<apex:includeScript value="{!URLFOR($Resource.ibbstyle,'/kendo/dropDownListMultiSelect.js')}"/>
+<!--C0760 Process Optimization 2.0 end-->
+
+<script>
+
+    function SetupKendo()
+    {
+        $("#panelbar").kendoPanelBar({
+                        expandMode: "single"
+                    });
+                    
+                    
+                <apex:outputPanel rendered="{!Not(IgnoreKendoDropDown)}" layout="none">
+                $('input:text').addClass("k-textbox");
+                 $("textarea").addClass("k-textbox"); 
+                 
+                  $("input:submit").removeClass("btn");
+                 $("input:button").removeClass("btn");
+                 $("input:submit").addClass("k-button");
+                 $("input:button").addClass("k-button");
+                </apex:outputPanel>    
+                          
+             
+          
+             
+                     $('select').not('select[id*="addrCountryList"]').not('select[id*="calYearPicker"]')
+                     .not('select[id*="calMonthPicker"]').not('select[id*="noKendo"]')
+                     .not('select[id*="acc17country"]')
+                     .not('select[id*="empCountry"]')
+                     .kendoDropDownList();                     
+                     
+                     
+                     
+                     $('select').not('select[id*="addrCountryList"]').not('select[id*="calYearPicker"]')
+                     .not('select[id*="calMonthPicker"]').not('select[id*="noKendo"]')
+                     .not('select[id*="acc17country"]')
+                     .not('select[id*="empCountry"]')
+                     .each(function(index) {
+                            
+                            var f = $(this).data("kendoDropDownList");                            
+                            f.list.width(250);
+                        });
+
+
+                      
+
+                    $("#panelBar").kendoPanelBar({
+                        expandMode: "single"
+                    });
+            
+                     
+                     
+                
+                
+                $("#tabstrip").kendoTabStrip({
+                        animation:  {
+                            open: {
+                                effects: "fadeIn"
+                            }
+                        }
+                    
+                    });
+    
+    }
+
+
+
+                 $(document).ready(function() {
+                    SetupKendo();
+                
+                });
+            </script>
+
+
+
+
+
+</apex:component>

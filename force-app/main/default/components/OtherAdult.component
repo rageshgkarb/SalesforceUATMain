@@ -1,0 +1,20 @@
+<apex:component >
+<apex:attribute name="otherAdult" description="This is the debt." type="Other_adults_in_the_property__c"  required="true"/>
+
+<table class="detailList">
+<tbody>
+<tr>
+    <td class="labelCol">First name</td><td><apex:inputField value="{!otherAdult.First_name__c}" id="debtName"  /></td>
+</tr>
+<tr>    
+    <td class="labelCol">Last name</td><td><apex:inputField value="{!otherAdult.Last_name__c}" id="debtStart"  /></td>
+</tr>
+<tr>
+    <td class="labelCol">Date of birth</td><td><apex:inputField value="{!otherAdult.Date_of_birth__c}" id="debtMonthly"  /></td>
+</tr>
+<tr>
+    <td class="labelCol">Relationship to primary applicant</td><td><apex:inputField value="{!otherAdult.Relationship_to_primary_applicant__c}" id="debtBalance"  /></td>
+</tr>
+</tbody>
+</table>
+</apex:component>

@@ -1,0 +1,172 @@
+<apex:page controller="HPPEventApplicationController" sidebar="false" showHeader="false" title="Applicant Details">
+<head>
+
+
+</head>
+<body>
+<c:KendoResource ></c:KendoResource>
+<apex:form >
+
+
+<div id="formWrapper">
+<!-- C00095--> 
+<c:HPPSummary objAcc="{!Acc}" objOpp="{!opp}" objExOpp="{!ExOpp}" Product="{!Prod}" rendered="false"/>
+
+<div id="container" >
+
+<table width="100%">
+<tr>
+<td valign="top" id="sidebar" style="display: none;">
+    <c:HPPBOMenu oppId="{!Opp.Id}"  DirectorId="{!Opp.ProductEventDirector__c}" />
+</td>
+<td valign="top" id="contenttd">
+<div  id="topNav">
+<ul>
+<li><apex:commandLink action="{!PageApplication1}" value="Property Details" id="theCommandLink"/></li>
+<li><apex:commandLink rendered="{!Opp.Number_of_People_Applying__c> 0}" action="{!PageApplicant1}" value="Applicant 1" id="appLink1"/></li>
+<li><apex:commandLink rendered="{!Opp.Number_of_People_Applying__c> 1}" action="{!PageApplicant2}" value="Applicant 2" id="appLink2"/></li>
+<li><apex:commandLink rendered="{!Opp.Number_of_People_Applying__c> 2}" action="{!PageApplicant3}" value="Applicant 3" id="appLink3"/></li>
+<li><apex:commandLink rendered="{!Opp.Number_of_People_Applying__c> 3}" action="{!PageApplicant4}" value="Applicant 4" id="appLink4"/></li>
+<li><apex:commandLink action="{!PageApplication3}" value="Additional Information" id="link3"/></li>
+<li><apex:commandLink action="{!PageApplication4}" value="Valuation Information" id="link4"/></li>
+<li><apex:commandLink action="{!PageApplication6}" value="Payment Details" id="link6"/></li>
+
+<li class="active"><apex:commandLink action="{!PageApplication7}" value="Application Confirmation" id="link7"/></li>
+
+</ul>
+</div>
+<div style="padding: 20px;">
+
+<h1 style="font-size: 20pt;padding-bottom:30px;"></h1>
+
+<apex:pageBlock >
+  <apex:Messages ></apex:Messages>
+  
+  
+  <div id="content">
+                                   
+                                
+                                    <apex:outputPanel id="mainPageBlock">
+                                    
+                                  
+                                    <div style="padding:20px;">
+                                    <!-- content -->
+                                    
+                                    
+                                    <div>
+                                        <apex:commandButton value="Create Application Form" action="{!CreateDoc}" 
+                                            reRender="mainPageBlock" onclick="ShowDocumentLoad()" 
+                                            oncomplete="HideDocumentLoad()" rendered="{!!IsCompleted}"/>                                    
+                                    </div>
+                                    <div>
+                                        <apex:outputtext escape="false" value="{!DocLink}" rendered="{!DocLinkCreated}"></apex:outputtext>
+                                        <br/><br/>
+                                        <apex:outputtext escape="false" value="{!FISDocLink}" ></apex:outputtext><br/><br/>
+<apex:outputLink value="{!KeyFactsLink}" rendered="true" target="_blank"><b>Risk and Features Document</b></apex:outputLink><br/><br/>
+<apex:outputLink value="{!IDDLink}" rendered="true" target="_blank"><b>Initial Disclosure Document</b></apex:outputLink>
+<br/>
+                                    </div>
+                                    
+                                    <br/><br/>
+                                <apex:commandButton styleClass="redBtn" value="Complete Event" action="{!Complete}" rendered="{!!IsCompleted}"/>    
+                                <apex:commandButton value="Go To Next Event" action="{!NextEvent}" rendered="{!IsCompleted}"/>
+                                </div>
+                                    </apex:outputPanel>
+                                </div>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+   <div id="fade"></div>
+<div id="overlay">
+Generating document...
+<br/>
+<br/>
+This may take a few seconds.
+
+<div style="padding-top: 50px;" >
+<img src="{!URLFOR($Resource.ibbstyle, 'images/269.gif')}"></img>
+</div>
+
+
+</div>
+            
+        
+        <style type="text/css">
+#overlay {
+    display: none; /* ensures it’s invisible until it’s called */
+    position: absolute; /* makes the div go into a position that’s absolute to the browser viewing area */
+    left: 25%; /* positions the div half way horizontally */
+    top: 25%; /* positions the div half way vertically */
+    padding: 25px; 
+    border: 2px solid black;
+    background-color: #ffffff;
+    width: 50%;
+    height: 50%;
+    z-index: 100; /* makes the div the top layer, so it’ll lay on top of the other content */
+    text-align: center;
+    font-size: 18px;
+}
+#fade {
+    display: none;  /* ensures it’s invisible until it’s called */
+    position: absolute;  /* makes the div go into a position that’s absolute to the browser viewing area */
+    left: 0%; /* makes the div span all the way across the viewing area */
+    top: 0%; /* makes the div span all the way across the viewing area */
+    background-color: #ccc;
+    -moz-opacity: 0.7; /* makes the div transparent, so you have a cool overlay effect */
+    opacity: .70;
+    filter: alpha(opacity=70);
+    width: 100%;
+    height: 100%;
+    z-index: 90; /* makes the div the second most top layer, so it’ll lay on top of everything else EXCEPT for divs with a higher z-index (meaning the #overlay ruleset) */
+}
+</style>
+
+<script>
+function ShowDocumentLoad()
+{
+    $('#overlay').show('slow');
+    $('#fade').show('slow');
+}
+
+function HideDocumentLoad()
+{
+    $('#overlay').hide('slow');
+    $('#fade').hide('slow');
+}
+
+
+
+</script>
+  
+  
+  
+
+         <apex:commandButton styleClass="redBtn" value="Previous" action="{!PageApplication6}" />
+         <apex:commandButton styleClass="redBtn" value="Save" action="{!Save}"/>
+          <apex:commandButton styleClass="redBtn" value="Generate Application Form" action="{!SaveValidate}" rendered="{false}"/>
+       
+
+        
+         
+       
+</apex:pageBlock>
+</div>
+</td></tr></table>
+</div>
+</div>
+<apex:outputPanel rendered="{!IsCompleted}">
+<script>
+SetReadOnly();
+</script>
+</apex:outputPanel>
+  </apex:form>
+  </body>
+
+</apex:page>

@@ -1,0 +1,49 @@
+@charset "UTF-8";
+/* CSS Document */
+
+/* promos */
+.promo,
+.promoRow,
+.promoLink {
+	width:99%;
+	display:block;
+	margin-bottom:1em;
+}
+#contents .promo.inContent  { margin-bottom:2em;  }
+.promoRow { clear:both; }
+/* 2 column layout */
+
+#contents .promo p,
+#contents .promoLink p { 
+	margin:0 0 .3em 0;
+	padding:0 0 0 0;
+}
+#contents .promoText .clear { 
+	margin-top:1em;
+	clear:both;
+}
+.promoImage { 
+	margin:0 5px 0 5px;
+}
+#contents .promo .promoImage img { 
+	margin:0 0 10px 0;
+	width:70px;
+	height:70px;
+}
+#contents .promoImage a img { border:1px solid;  }
+
+#contents .promoText .promoTitle { 
+	margin:0 0 0 0; 
+	padding:0 0 0 0; 
+	font-size:1.385em;
+}
+#contents .promo.inContent .promoText .promoTitle {}
+#contents p.date {
+	margin-bottom:1em;}
+#contents .promo p.date { 
+	color:#666666; 
+	font-weight:bold; 
+	font-size:.7em; 
+	border-bottom:0;
+	
+}

@@ -1,0 +1,415 @@
+<!-- C00170 new page -->
+
+<apex:page controller="HPPEventAdHocPaymentController" sidebar="false" showHeader="false" title="Take Payment" >
+  <head>
+     
+      <c:KendoResource ></c:KendoResource>
+
+      <apex:stylesheet value="{!URLFOR($Resource.HPP_Includes, '/css/css.css')}" />
+      <apex:stylesheet value="{!URLFOR($Resource.HPP_Includes, '/css/wait.css')}" />
+      <apex:stylesheet value="{!URLFOR($Resource.HPP_Includes, '/css/structure.css')}" />
+      <apex:stylesheet value="{!URLFOR($Resource.HPP_Includes, '/css/modal.css')}" />
+
+       <script type="text/javascript">
+            jQuery(document).ready(function() 
+            {
+                var selectedCardDetailsPageBlock = jQuery("#selected_card_page_block");
+                var newCardDetailsPageBlock = jQuery("#new_card_entry_page_block");
+                var selectACardPageBlock = jQuery("#select_a_card_page_block");
+
+            });
+
+            function selectCard(cardID) 
+            {
+                Visualforce.remoting.Manager.invokeAction
+                (
+                    '{!$RemoteAction.HPPEventAdHocPaymentController.selectEncryptedCard}', 
+                    cardID, 
+                    function(result, event)
+                    {
+                        var selectedCardIDInput = jQuery("[id$='selected_card_id']");
+                        var selectedCardNameSpan = jQuery("[id$='selected_card_name']");
+                        var selectedCardTypeSpan = jQuery("[id$='selected_card_type']");
+                        var selectedCardExpiryDateSpan = jQuery("[id$='selected_card_expiry_date']");
+                        
+                        selectedCardIDInput.val(result.cardID);
+                        selectedCardNameSpan.html(result.cardNumber);
+                        selectedCardTypeSpan.html(result.cardType);
+                        selectedCardExpiryDateSpan.html(result.expiryDate);
+                    }
+                );
+            }
+            
+            function newCard() 
+            {
+                var paymentDetailsPageBlock = jQuery("#payment_details_page_block");
+                var selectedCardPageBlock = jQuery("#selected_card_page_block");
+                var newCardEntryPageBlock = jQuery("#new_card_entry_page_block");
+                var selectACardPageBlock = jQuery("#select_a_card_page_block");
+                
+                paymentDetailsPageBlock.hide(400);
+                selectedCardPageBlock.hide(400);
+                selectACardPageBlock.hide(400);
+                newCardEntryPageBlock.show(400);
+            }
+            
+            function cancelNewCard(showSelectCardPageBlock) 
+            {
+                //console.log ("Here I am");
+                var paymentDetailsPageBlock = jQuery("#payment_details_page_block");
+                var selectedCardPageBlock = jQuery("#selected_card_page_block");
+                var newCardEntryPageBlock = jQuery("#new_card_entry_page_block");
+                var selectACardPageBlock = jQuery("#select_a_card_page_block");
+                
+                newCardEntryPageBlock.hide(400);
+                //console.log ("Here I am 2");
+                if (showSelectCardPageBlock) 
+                {
+                    console.log ("Here I am 3");
+                    //paymentDetailsPageBlock.show(400, function()
+                    //{
+                        //console.log ("Here I am 4");
+                        selectedCardPageBlock.show(400, function() 
+                        {
+                            //console.log ("Here I am 5");
+                            selectACardPageBlock.show(400);
+                            //console.log ("Here I am 6");
+                        });
+                    //});
+                }
+            }
+            
+            function takePaymentCheck() 
+            {
+                //  Checks a card has been selected
+                var selectedCardIDInput = jQuery("[id$='selected_card_id']");
+                var selectedCardID = selectedCardIDInput.val();
+                
+                if (selectedCardID != null && selectedCardID != "") 
+                {
+                    ShowDocumentLoad();
+                    return true;
+                }
+                else 
+                {
+                    alert("Please select a card before trying to take a payment.");
+                    return false;
+                }
+            }
+            
+           
+        </script>
+    </head>
+    <body>
+        <apex:form >
+            <div id="formWrapper">
+                <c:HPPSummary objAcc="{!Accounts[0]}" objOpp="{!opp}" objExOpp="{!ExOpp}" Product="{!Prod}" />
+                <div id="container" >
+                    <table width="100%">
+                        <tr>
+                            <td valign="top" id="sidebar">
+                                <c:HPPBOMenu oppId="{!Opp.Id}"  DirectorId="{!Opp.ProductEventDirector__c}" />
+                            </td>
+                            <td valign="top" id="contenttd">
+                                <div id="content">
+                                    <h1>
+                                        Ad-hoc Payment
+                                    </h1>
+                                    
+                                    <apex:pageMessages escape="false" />
+                                    
+                                    <apex:outputPanel id="mainPageBlock" >
+
+                                        <!--C0638-->
+                                            <apex:outputPanel rendered="{!(paymentstatusforcasetype)}">
+                                                <apex:pagemessage severity="warning" strength="2" escape="false" 
+                                                                  summary="The card payment attempt has been suspended and a case will now be raised for payments. 
+                                                                  Please ensure case is completed.">
+                                                    <div Style="padding-left:5px">
+                                                        Please select the type of case you would like to generate (suspend cancel/suspend release)&nbsp;
+                                                        <apex:selectlist id="CaseType" value="{!CaseTypeSelected}" size="1">
+                                                            <apex:selectoption itemlabel="Suspended-Cancel" itemvalue="Suspended-Cancel" />
+                                                            <apex:selectoption itemlabel="Suspended-Release" itemvalue="Suspended-Release" />
+                                                        </apex:selectlist>
+                                                    </div>
+                                                    <div style="text-align:center;">
+                                                        <apex:commandbutton style="width:100px;display:inline;font-weight:normal" styleclass="k-button" value="Create Case" action="{!CreateCase}"></apex:commandbutton>
+                                                    </div>
+                                                </apex:pagemessage>
+                                            </apex:outputPanel>
+                                        
+                                        <!--C0638 end-->
+                                        
+                                    <!-- PAYMENT TYPE -->
+
+                                    <div style="padding:10px;" >
+                                        <apex:pagemessages >
+                                        </apex:pagemessages>
+                                        
+                                        
+                                        <apex:pageBlock >
+                                        
+                                            <apex:pageBlockButtons location="top" >
+                                                    <apex:pageblocksection >
+                                                        <apex:pageBlockSectionItem >
+                                                            <apex:commandButton value="Resend to Host"  onclick="ShowDocumentLoad();" action="{!ResendAJE}" rendered="{!AJEFailed}" rerender="mainPageBlock" oncomplete="HideDocumentLoad();"/>
+                                                 
+                                                        </apex:pageBlockSectionItem>
+                                                        
+                                                    </apex:pageblocksection>
+                                                </apex:pageBlockButtons>
+                                        
+                                        
+                                            <apex:pageBlockSection >
+                                                <apex:pageBlocksectionItem rendered="{!NOT(showPaymentMethodSection)}">
+                                                    <apex:outputLabel value="Payment Type" />
+                                                    <apex:selectList style="width:200px;" value="{!PaymentTypeId }" size="1" required="true"  >
+                                                        <apex:selectOptions value="{!sltPaymentTypes}"> </apex:selectOptions>
+                                                        <apex:actionSupport event="onchange" action="{!GetPaymentType}" />
+                                                    </apex:selectList>
+                                                 </apex:pageBlocksectionItem>
+                                                 <apex:pageBlockSectionItem rendered="{!showPaymentMethodSection}">
+                                                     <apex:outputLabel value="Payment Type" />
+                                                     <apex:outputText value="{!PaymentTypeId}" />
+                                                 </apex:pageBlockSectionItem>
+                                               </apex:pageBlockSection>
+                                            <apex:pageBlockSection >
+                                            </apex:pageBlockSection>
+                                        </apex:pageBlock>
+                                     </div>
+                                     
+                                     <!-- PAYMENT METHOD -->
+                                     <div id="payment_method_section" style="{!IF(showPaymentMethodSection, 'display: block; padding:10px;', 'display: none;')}">
+                                        <apex:pageBlock >
+                                            <apex:pageBlockSection >
+                                                <apex:pageBlockSectionItem rendered="{!NOT(showPaymentAmountSection)}" >
+                                                    <apex:outputLabel value="Comments" />
+                                                    <apex:inputTextarea value="{!OppPayment.PaymentComments}"  />
+                                                </apex:pageBlockSectionItem>
+                                                <apex:pageBlockSectionItem rendered="{!showPaymentAmountSection}" >
+                                                    <apex:outputLabel value="Comments" />
+                                                    <apex:outputText value="{!OppPayment.PaymentComments}" />
+                                                </apex:pageBlockSectionItem>
+                                                <apex:pageblockSectionItem >
+                                                </apex:pageblockSectionItem>
+                                                <apex:pageBlocksectionItem rendered="{!NOT(showPaymentAmountSection)}">
+                                                    <apex:outputLabel value="Payment Method" />
+                                                    <apex:selectList style="width:200px;" value="{!Method}" size="1" required="true" rendered="{!NOT(IsCompleted)}" >
+                                                        <apex:selectOptions value="{!Methods}"> </apex:selectOptions>
+                                                        <apex:actionSupport event="onchange" action="{!GetThePaymentType3}" />
+                                                    </apex:selectList>
+                                                </apex:pageBlocksectionItem>
+                                                <apex:pageBlockSectionItem rendered="{!showPaymentAmountSection}">
+                                                    <apex:outputLabel value="Payment Method" />
+                                                    <apex:outputText value="{!Method}"  />
+                                                </apex:pageBlockSectionItem>
+                                            </apex:pageBlockSection>
+                                        </apex:pageBlock>
+                                    </div>
+                                    
+                                    <!-- PAYMENT AMOUNT -->
+                                    <div id="payment_amount_section" style="{!IF(showPaymentAmountSection, 'display: block; padding:10px;', 'display: none;')}">
+                                        <apex:pageBlock >
+                                             <apex:pageBlockSection >
+                                                <apex:pageBlocksectionItem rendered="{!NOT(paymentInProgress)}" >
+                                                    <apex:outputLabel value="Payment Amount  £" />
+                                                    <apex:inputText value="{!OppPayment.PaymentAmount}" />
+                                                </apex:pageBlocksectionItem>
+                                                <apex:pageBlocksectionItem rendered="{!paymentInProgress}" >
+                                                    <apex:outputLabel value="Payment Amount" />
+                                                    <apex:outputText value="£{0, number, ###,###.00}" >
+                                                        <apex:param value="{!OppPayment.PaymentAmount}" />
+                                                    </apex:outputText>
+                                                </apex:pageBlocksectionItem>
+                                                 <apex:pageBlocksectionItem >
+                                                    <apex:outputLabel value="Type Amount" />
+                                                    <apex:outputText value="£{0, number, ###,###.00}" >
+                                                        <apex:param value="{!OppPayment.PaymentTypeAmount}" />
+                                                    </apex:outputText>
+                                                </apex:pageBlocksectionItem>
+                                            </apex:pageBlockSection>
+                                        </apex:pageBlock>
+                                    </div>
+                                        <!-- CARD BITS -->
+                                        
+                                        <div id="selected_card_page_block" style="{!IF(showCardSections, IF(saveNewCardError, 'display: none;', 'display: block;'), 'display: none;')}">
+                                            <apex:pageBlock title="Selected Card Details">
+                                                <apex:pageBlockSection columns="1">
+                                                    <apex:outputField value="{!selectedCard.Name}" id="selected_card_name" />
+                                                    <apex:outputField value="{!selectedCard.Card_Type__c}" id="selected_card_type" />
+
+                                                    <apex:pageBlockSectionItem >
+                                                        <apex:outputLabel value="Expiry Date" />
+                                                        <apex:outputPanel >
+                                                            <apex:outputField value="{!selectedCard.Expiry_Date_Encrypted__c}" id="selected_card_expiry_date" />
+                                                            <apex:inputHidden value="{!selectedCard.Id}" id="selected_card_id" />
+                                                        </apex:outputPanel>
+                                                    </apex:pageBlockSectionItem>
+                                                    <apex:pageBlockSectionItem rendered="{!requireManualSecurityCodeEntry}">
+                                                        <apex:outputLabel value="Security Code" />
+                                                        <apex:inputText value="{!manualSecurityCode}" />
+                                                    </apex:pageBlockSectionItem>
+                                                </apex:pageBlockSection>
+                                                
+                                                <apex:pageBlockButtons location="bottom" >
+                                                    <apex:pageblocksection >
+                                                        <apex:pageBlockSectionItem >
+                                                            <apex:commandbutton value="Take Payment" onclick="ShowDocumentLoad();" action="{!saveThePayment}" rendered="{!NOT(paymentInProgress)}" rerender="mainPageBlock" oncomplete="takeTheCardPayment();" />
+                                                            <apex:actionfunction name="takeTheCardPayment" action="{!takePayment}" oncomplete="HideDocumentLoad();" rerender="mainPageBlock" />
+                                                        </apex:pageBlockSectionItem>
+                                                        <apex:pageBlockSectionItem >
+                                                        </apex:pageBlockSectionItem>
+                                                        <apex:pageBlockSectionItem >    
+                                                             <apex:commandButton value="Complete Event" action="{!completeTheEvent}" rendered="{!paymentPerformed}"/>
+                                                        </apex:pageBlockSectionItem>
+                                                    </apex:pageblocksection>
+                                                </apex:pageBlockButtons>
+                                                
+                                            </apex:pageBlock>
+                                        </div>
+
+                                        <div id="new_card_entry_page_block" style="{!IF(showCardSections, IF(saveNewCardError, 'display: block;', 'display: none;'), 'display: none;')}">
+                                            <apex:pageBlock title="New Card Details" rendered="{!NOT(IsCompleted)}">
+                                                <apex:outputPanel id="payment_method_card_section">
+                                                    <apex:inputHidden value="{!selectedCard.Id}" id="selected_card_id" />
+                                                    <apex:pageBlockSection >
+                                                        <apex:pageBlockSectionItem >
+                                                            <apex:outputLabel value="Billing Street" />
+                                                            <apex:outputPanel >
+                                                                <apex:inputField value="{!selectedCard.Billing_Street__c}" id="selected_card_street" />
+                                                            </apex:outputPanel>
+                                                        </apex:pageBlockSectionItem>
+                                                        <apex:pageBlockSectionItem >
+                                                            <apex:outputLabel value="Card Currency" />
+                                                            <apex:outputPanel >
+                                                                <apex:inputField value="{!selectedCard.Card_Currency__c}" id="selected_card_currency" />
+                                                            </apex:outputPanel>
+                                                        </apex:pageBlockSectionItem>
+                                                        <apex:pageBlockSectionItem >
+                                                            <apex:outputLabel value="Billing City" />
+                                                            <apex:outputPanel >
+                                                                <apex:inputField value="{!selectedCard.Billing_City__c}" id="selected_card_city" />
+                                                            </apex:outputPanel>
+                                                        </apex:pageBlockSectionItem>
+                                                        <apex:pageBlockSectionItem >
+                                                            <apex:outputLabel value="Card Type" />
+                                                            <apex:outputPanel >
+                                                                <apex:inputField value="{!selectedCard.Card_Type__c}" id="selected_card_type" />
+                                                            </apex:outputPanel>
+                                                        </apex:pageBlockSectionItem>
+                                                        <apex:pageBlockSectionItem >
+                                                            <apex:outputLabel value="Billing County" />
+                                                            <apex:outputPanel >
+                                                                <apex:inputField value="{!selectedCard.Billing_County_State__c}" id="selected_card_county" />
+                                                            </apex:outputPanel>
+                                                        </apex:pageBlockSectionItem>
+                                                        <apex:pageBlockSectionItem >
+                                                            <apex:outputLabel value="Issue Number" />
+                                                            <apex:outputPanel >
+                                                                <apex:inputField value="{!selectedCard.Issue_Number__c}" id="selected_card_issue_number" />
+                                                            </apex:outputPanel>
+                                                        </apex:pageBlockSectionItem>
+                                                        <apex:pageBlockSectionItem >
+                                                            <apex:outputLabel value="Billing Country" />
+                                                            <apex:outputPanel >
+                                                                <apex:inputField value="{!selectedCard.Billing_Country__c}" id="selected_card_country" />
+                                                            </apex:outputPanel>
+                                                        </apex:pageBlockSectionItem>
+                                                        <apex:pageBlockSectionItem >
+                                                            <apex:outputLabel value="Card Number" />
+                                                            <apex:outputPanel >
+                                                                <apex:inputField value="{!selectedCard.Card_Number_Encrypted__c}" id="selected_card_number" />
+                                                            </apex:outputPanel>
+                                                        </apex:pageBlockSectionItem>
+                                                        <apex:pageBlockSectionItem >
+                                                            <apex:outputLabel value="Billing Post Code" />
+                                                            <apex:outputPanel >
+                                                                <apex:inputField value="{!selectedCard.Billing_Post_Code__c}" id="selected_card_post_code" />
+                                                            </apex:outputPanel>
+                                                        </apex:pageBlockSectionItem>
+                                                        <apex:pageBlockSectionItem >
+                                                            <apex:outputLabel value="Security Code" rendered="{!NOT(requireManualSecurityCodeEntry)}" />
+                                                            <apex:outputPanel rendered="{!NOT(requireManualSecurityCodeEntry)}">
+                                                                <apex:inputField value="{!selectedCard.Security_Code_Encrypted__c}" id="selected_card_security_code" />
+                                                            </apex:outputPanel>
+                                                        </apex:pageBlockSectionItem>
+                                                        <apex:pageBlockSectionItem >
+                                                        </apex:pageBlockSectionItem>
+                                                        <apex:pageBlockSectionItem >
+                                                            <apex:outputLabel value="Expiry Date" />
+                                                            <apex:outputPanel >
+                                                                <apex:inputField value="{!selectedCard.Expiry_Month__c}" style="width: 70px;" id="selected_card_expiry_month" />
+                                                                <apex:outputText value=" / " />
+                                                                <apex:inputField value="{!selectedCard.Expiry_Year_Text__c}" style="width: 70px;" id="selected_card_expiry_year" />
+                                                            </apex:outputPanel>
+                                                        </apex:pageBlockSectionItem>
+                                                        <apex:pageBlockSectionItem >
+                                                        </apex:pageBlockSectionItem>
+                                                        <apex:pageBlockSectionItem >
+                                                            <apex:outputLabel value="Valid From" />
+                                                            <apex:outputPanel >
+                                                                <apex:inputField value="{!selectedCard.Valid_From_Month__c}" style="width: 70px;" id="selected_card_valid_from_month" />
+                                                                <apex:outputText value=" / " />
+                                                                <apex:inputField value="{!selectedCard.Valid_From_Year_Text__c}" style="width: 70px;" id="selected_card_valid_from_year" />
+                                                            </apex:outputPanel>
+                                                        </apex:pageBlockSectionItem>
+                                                    </apex:pageBlockSection>
+                                                </apex:outputPanel>
+                                                
+                                                <apex:pageBlockButtons location="bottom">
+                                                    <apex:commandButton value="Save" action="{!saveNewCard}" />
+                                                    <apex:outputText value=" " />
+                                                    <apex:commandButton value="Cancel" onclick="cancelNewCard(true); return false;" />
+                                                </apex:pageBlockButtons>
+                                                
+                                                
+                                                
+                                                
+                                            </apex:pageBlock>
+                                        </div>
+                                            
+                                        <div id="select_a_card_page_block" style="{!IF(showCardSections, IF(saveNewCardError, 'display: none;', 'display: block;'), 'display: none;')}">
+                                            <apex:pageBlock title="Select a Card" rendered="{!NOT(IsCompleted)}">
+                                                <apex:pageBlockButtons location="top">
+                                                    <apex:commandButton value="New Card" onclick="newCard(); return false;" rendered="{!NOT(paymentInProgress)}" />
+                                                </apex:pageBlockButtons>
+                                                <apex:outputPanel id="all_cards_section">
+                                                    <apex:pageBlockSection columns="1">
+                                                        <apex:outputPanel rendered="{!allCards.size > 0}" style="width: 100%; padding: 0; margin: 0;">
+                                                            <apex:pageBlockTable value="{!allCards}" var="card">
+                                                                <apex:column headerValue="Action" styleClass="actionColumn">
+                                                                    <apex:outputLink value="#" onclick="selectCard('{!card.Id}');" styleClass="actionLink">Select</apex:outputLink>
+                                                                </apex:column>
+                                                                <apex:column value="{!card.Name}" />
+                                                                <apex:column value="{!card.Card_Type__c}" />
+                                                                <apex:column value="{!card.Expiry_Date_Encrypted__c}" headerValue="Expiry Date" />
+                                                            </apex:pageBlockTable>
+                                                        </apex:outputPanel>
+                                                    </apex:pageBlockSection>
+                                                </apex:outputPanel>
+                                            </apex:pageBlock>
+                                        </div>
+                                    </apex:outputPanel>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            <div id="fade"></div>
+            <div id="overlay">
+                Taking payment...
+                <br/>
+                <br/>
+                This may take a few seconds.
+                <div style="padding-top: 50px;" >
+                    <img src="{!URLFOR($Resource.ibbstyle, 'images/269.gif')}"></img>
+                </div>
+            </div>      
+            
+            
+                         
+        </apex:form>
+    </body>
+</apex:page>

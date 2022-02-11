@@ -1,0 +1,76 @@
+<apex:component >
+    <apex:attribute name="TinAddButtonLabel" type="String" required="false" default="Add more Tax Residency details" description="" />
+    <apex:attribute name="modellist" type="String" required="false" description="" />
+
+    <div class="row">
+        <div class="panel panel-primary">
+            <div class="panel-body">
+                <div class="col-sm-12">
+                    Please state where the Account Holder is tax resident and the Account Holder’s Tax Identification Number (TIN)
+                    (or a functional equivalent) for each reportable jurisdiction, which for UK entities is the Unique Taxpayer Reference
+                    (UTR). Jurisdictions adopting the wider approach may require that the self-certification includes a tax identifying
+                    number for each jurisdiction of residence (rather than for each reportable jurisdiction). If the Account Holder is not
+                    tax resident in any jurisdiction (for example, it is fiscally transparent), please provide its place of effective
+                    management or country in which its principal office is located.
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">Section 2 - Tax Residency</div>
+            <div class="panel-body" ng-init="InitControllingPersons()">
+                <form name="formSection2" novalidate="novalidate">
+
+                    <div  ng-controller="controllerControllingPerson">
+                        <span ng-if="Initialised" ng-init="InitPersonPCA(Data.Applicant, 1)"></span>
+
+
+                    <c:BAA_Self_Cert_cTin model="Data.Applicant" hideUSQuestion="true" form="formSection2" TinIndex="1" identifier="1" CountryTaxResidencyPropertyName="TIN1_Country_Tax_Residence_c"
+                                          HasTinPropertyName="TIN_1_Check_c" TinReasonCodePropertyName="TIN_1_reason_code_c" TinReasonBPropertyName="TIN_1_reason_B_explanation_c"
+                                          TinPropertyName="TIN_1_c" RequiredRuleCtryTaxRes="true"></c:BAA_Self_Cert_cTin>
+
+
+                    <div ng-if="CPTinCount >= 1">
+                        <c:BAA_Self_Cert_cTin model="Data.Applicant" form="formSection2" TinIndex="2" identifier="1" CountryTaxResidencyPropertyName="TIN2_Country_Tax_Residence_c"
+                                              HasTinPropertyName="TIN_2_Check_c" TinReasonCodePropertyName="TIN_2_reason_code_c" TinReasonBPropertyName="TIN_2_reason_B_explanation_c"
+                                              TinPropertyName="TIN_2_c" RequiredRuleCtryTaxRes="true"></c:BAA_Self_Cert_cTin>
+                    </div>
+                    <div ng-if="CPTinCount >= 2">
+                        <c:BAA_Self_Cert_cTin model="Data.Applicant" form="formSection2" TinIndex="3" identifier="1" CountryTaxResidencyPropertyName="TIN3_Country_Tax_Residence_c"
+                                              HasTinPropertyName="TIN_3_Check_c" TinReasonCodePropertyName="TIN_3_reason_code_c" TinReasonBPropertyName="TIN_3_reason_B_explanation_c"
+                                              TinPropertyName="TIN_3_c" RequiredRuleCtryTaxRes="true"></c:BAA_Self_Cert_cTin>
+                    </div>
+                    <div ng-if="CPTinCount >= 3">
+                        <c:BAA_Self_Cert_cTin model="Data.Applicant" form="formSection2" TinIndex="4" identifier="1" CountryTaxResidencyPropertyName="TIN4_Country_Tax_Residence_c"
+                                              HasTinPropertyName="TIN_4_Check_c" TinReasonCodePropertyName="TIN_4_reason_code_c" TinReasonBPropertyName="TIN_4_reason_B_explanation_c"
+                                              TinPropertyName="TIN_4_c" RequiredRuleCtryTaxRes="true"></c:BAA_Self_Cert_cTin>
+                    </div>
+                    <div ng-if="CPTinCount >= 4">
+                        <c:BAA_Self_Cert_cTin model="Data.Applicant" form="formSection2" TinIndex="5" identifier="1" CountryTaxResidencyPropertyName="TIN5_Country_Tax_Residence_c"
+                                              HasTinPropertyName="TIN_5_Check_c" TinReasonCodePropertyName="TIN_5_reason_code_c" TinReasonBPropertyName="TIN_5_reason_B_explanation_c"
+                                              TinPropertyName="TIN_5_c" RequiredRuleCtryTaxRes="true"></c:BAA_Self_Cert_cTin>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <button class="btn btn-info" style="padding:5px;" ng-click="CPTinCount = CPTinCount + 1">{!TinAddButtonLabel}</button>
+                            <button class="btn btn-info" style="padding:5px;" ng-click="removeTin(null,CPTinCount,$index);CPTinCount = CPTinCount - 1;" ng-show="CPTinCount > 0 || Data.Applicant.TIN_2_Check_c">
+                            <span>
+                                Remove Tax Residency details
+                            </span>
+                            </button>
+                        </div>
+
+                    </div>
+                    </div>
+                    <!--
+                    <div>
+                        <div ng-repeat="person in ControllingPersonsData track by person.Applicant_Number_c">
+                            <c:BAA_Self_Cert_cPerson model="person" modellist="ControllingPersonsData" form="formSection2" ShowPersonDetails="true" TinAddButtonLabel="Add more Tax Residency details" ControllingPersonHeader="Applicant"></c:BAA_Self_Cert_cPerson>
+                        </div>
+                    </div-->
+                </form>
+            </div>
+        </div>
+    </div>
+</apex:component>

@@ -1,0 +1,536 @@
+<!--  C0307 -->
+
+<apex:page showHeader="false" sidebar="false" docType="html-5.0" controller="BAA_Applicants_Controller" action="{!Setup}">
+    <head>       
+        <c:BAA_Resource ></c:BAA_Resource>        
+    </head>     
+    <body>    
+        <c:BAA_Header objOpp="{!BaseOpportunity}" title="Applicants"></c:BAA_Header>
+        <div class="container">
+            
+            
+            <div class="row">
+                <div class="col-md-4 col-lg-3">
+                    <apex:form >
+                    <c:BAA_Menu oppId="{!BaseOpportunity.Id}"  DirectorId="{!BaseOpportunity.ProductEventDirector__c}" />
+                    </apex:form>
+                </div>            
+                <div class="col-md-8 col-lg-9">
+            
+            <apex:form >
+
+
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <c:BAA_Applicants_Nav eventId="{!EventId}" Applicants="{!AppAccs}" Page="A" />
+                </div>
+            </div>
+
+<apex:outputPanel layout="none" rendered="{!!IsCompleted}">
+
+                <div class="panel panel-primary">
+                    <div class="panel-heading"></div>
+                    <div class="panel-body">
+                            <apex:outputPanel rendered="{!showPopup}">
+                                    <script>
+                                        $(function () {
+                                                                                    
+                                            EditAccount(null);
+                                        });
+                                        
+                                    </script>
+                                </apex:outputPanel>
+                                
+                                
+                        <div class="row" style="border-bottom:1px solid black;">
+                            <div class="col-xs-6">
+                                <apex:inputfield value="{!tempRel.Child_Account__c}" />
+                                <apex:commandButton styleClass="btn-default" value="Add Existing" action="{!AddExisting}"/>
+                            </div>
+                            <div class="col-xs-6">
+                                Add an existing prospect account, who is not currently linked to this business
+                                <p>
+                                    This will create a Non Personal Relationship, Applicant
+                                </p>
+                                
+                            </div>
+                        </div>
+                        <div class="row" style="border-bottom:1px solid black;">    
+                            <div class="col-xs-6">
+                                <apex:commandButton styleClass="btn-default" action="{!AddNew}" value="Add New"/>
+                            </div>
+                            <div class="col-xs-6">
+                                <p>
+                                    This will create an Account, Non Personal Relationship, Applicant
+                                </p> 
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">        
+                                <apex:selectList styleClass="form-control" size="1" value="{!ExistingRel}">
+                                    <apex:selectOptions value="{!RelatedAccounts}"></apex:selectOptions>
+                                </apex:selectList>
+                                <apex:commandButton styleClass="btn-default" action="{!AddExistingRel}" value="Add Existing"/>
+                            </div>
+                            <div class="col-xs-6">    
+                                Add an existing prospect account, which is already linked to this business, but is not currently an applicant on this opportunity
+                                <p>
+                                    This will add a new applicant record
+                                </p>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                 </apex:outputPanel>
+                <div class="row">
+                    <p>
+                        Deleting will remove the applicant record, and remove the link from the account to the opportunity.  The Non Personal relationship record will still exist.
+                        When you delete someone, they will then appear on the drop down as an account who is linked to the business, but not an applicant.
+                        <br/>
+                        
+                        <br/>
+                        Editing a record will update the account details, the director/shareholder fields will be updated on both the Non Personal record and the applicant record
+                        
+                        
+                    </p>
+                
+                </div>
+               
+                
+                
+                <div>
+                    <apex:inputHidden id="hiddenRel" value="{!RemoveEditRelationship}"/>
+                    <apex:actionFunction name="editRel" action="{!Edit}"/>
+                    <apex:actionFunction name="delRel" action="{!DeleteRelationship}"/>
+                    
+                    <apex:repeat value="{!AppAccs}" var="a">
+                    <div style="border:1px solid #aaaaaa">
+                    <div class="row">
+                        <div class="col-sm-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Title</label>
+                            </div>
+                            <div class="col-sm-6">
+                                {!a.Prospect_Customer__r.Salutation}
+                            </div>
+                        </div>
+                        </div>
+                        <div class="col-sm-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>First Name</label>
+                            </div>
+                            <div class="col-sm-6">
+                                {!a.Prospect_Customer__r.FirstName}
+                            </div>
+                        </div>
+                        </div>                        
+                    </div>
+                    <!-- row -->
+                    <div class="row">
+                        <div class="col-sm-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Middle Name</label>
+                            </div>
+                            <div class="col-sm-6">
+                                {!a.Prospect_Customer__r.Middle_Name__pc}
+                            </div>
+                        </div>
+                        </div>
+                        <div class="col-sm-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Last Name</label>
+                            </div>
+                            <div class="col-sm-6">
+                                {!a.Prospect_Customer__r.LastName}
+                            </div>
+                        </div>
+                        </div>                        
+                    </div>
+                    <!-- row -->
+                    <div class="row">
+                        <div class="col-sm-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Director/Proprietor/Partner</label>
+                            </div>
+                            <div class="col-sm-6">
+                                {!a.CPF_Relationship__r.Is_Director__c}
+                            </div>
+                        </div>
+                        </div>
+                        <div class="col-sm-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Shareholder</label>
+                            </div>
+                            <div class="col-sm-6">
+                                {!a.CPF_Relationship__r.Is_Shareholder__c}
+                            </div>
+                        </div>
+                        </div>                        
+                    </div>
+                    <!-- row -->
+                    <div class="row">
+                        <div class="col-sm-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Signatory</label>
+                            </div>
+                            <div class="col-sm-6">
+                                {!a.CPF_Relationship__r.Is_Signatory__c}
+                            </div>
+                        </div>
+                        </div>
+                        <div class="col-sm-6">
+                        
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Position Held</label>
+                            </div>
+                            <div class="col-sm-6">
+                                {!a.CPF_Relationship__r.Position_Held__c}
+                            </div>
+                        </div>
+                        </div>
+                                                
+                    </div>
+					
+					<!--  C0307 -->
+					<div class="row">
+                        <div class="col-sm-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Trustee</label>
+                            </div>
+                            <div class="col-sm-6">
+                                {!a.CPF_Relationship__r.Is_Trustee__c}
+                            </div>
+                        </div>
+                        </div>
+                        <div class="col-sm-6">
+                        
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Beneficial Owner</label>
+                            </div>
+                            <div class="col-sm-6">
+                                {!a.CPF_Relationship__r.Is_Beneficialowner__c}
+                            </div>
+                        </div>
+                        </div>
+                                                
+                    </div>
+					
+					<div class="row">
+                        <div class="col-sm-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Settlor</label>
+                            </div>
+                            <div class="col-sm-6">
+                                {!a.CPF_Relationship__r.Is_Settlor__c}
+                            </div>
+                        </div>
+                        </div>
+						<!--
+                        <div class="col-sm-6">
+                        
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Beneficial Owner</label>
+                            </div>
+                            <div class="col-sm-6">
+                                {!a.CPF_Relationship__r.Benficialowner__c}
+                            </div>
+                        </div>
+                        </div>
+                        -->                       
+                    </div>
+					
+					<!--  C0307 end  -->
+                    
+                    <!-- row -->
+                    <div class="row">
+                        
+                        <div class="col-sm-6">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                            <apex:outputPanel layout="none" rendered="{!!IsCompleted}">
+                                <input class="relId" type="hidden" value="{!a.id}"/>
+                                <span class="accEdit btn btn-primary">Edit</span>
+                                <span class="accDelete btn btn-danger">Delete</span>
+                                </apex:outputPanel>
+                            </div>  
+                        </div>
+                        </div>
+                        
+                                                                    
+                    </div>
+                    <!-- row -->
+                    </div>
+                    <!-- row -->
+                    
+                    <!-- row -->
+                    </apex:repeat>
+                
+                </div>
+                
+                
+                <!-- Modal -->
+<div class="modal fade" id="accModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Contact Detail</h4>
+      </div>
+      <div class="modal-body bodyccj">
+       
+       <div class="row">
+       
+           
+           <apex:inputHidden id="accId" value="{!EditAcc.id}"/>
+       
+           <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Title</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:selectList size="1" value="{!Title }" styleClass="form-control">
+                        <apex:selectOptions value="{!salutationList }"></apex:selectOptions>
+                    </apex:selectList>
+                </div>
+            </div>
+       
+                <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >First Name</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:inputText id="accFirst" value="{!EditAcc.FirstName}" styleClass="form-control" />
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Middle Name</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:inputField id="accMiddle" value="{!EditAcc.Middle_Name__pc}" styleClass="form-control" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Last Name</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:inputText id="accLast" value="{!EditAcc.LastName}" styleClass="form-control" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Is a Director/Proprietor/Partner</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:inputField id="accIsDir" value="{!Relationship.Is_Director__c}" styleClass="form-control" />
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Is a Shareholder</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:inputField id="accIsShare" value="{!Relationship.Is_Shareholder__c}" styleClass="form-control" />
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="">Is a Signatory</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:inputField id="accIsSig" value="{!Relationship.Is_Signatory__c}" styleClass="form-control" />
+                </div>
+            </div>
+			
+			<!--  C0307 -->
+			<div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="">Is a Trustee</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:inputField id="accIsTrs" value="{!Relationship.Is_Trustee__c}" styleClass="form-control" />
+                </div>
+            </div>
+			
+			<div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="">Is a Beneficial Owner</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:inputField id="accIsBO" value="{!Relationship.Is_Beneficialowner__c}"  styleClass="form-control" />
+                </div>
+            </div> 
+			
+			<div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="">Is a Settlor</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:inputField id="accIsSet" value="{!Relationship.Is_Settlor__c}" styleClass="form-control" />
+                </div>
+            </div>
+			
+			<!--  C0307 end -->
+            
+            
+            <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Share Ownership %</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:inputField id="accShare" value="{!Relationship.Shareholder_Percentage__c }" styleClass="form-control" />                
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Position Held</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:inputField id="accHeld" value="{!Relationship.Position_Held__c}" styleClass="form-control" />
+                </div>
+            </div>
+            
+            
+            
+            
+       </div>
+       
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <apex:commandButton value="Save" action="{!SaveAccount}" styleclass="btn btn-success">  </apex:commandButton>
+        
+        
+ 
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+                
+                
+            </apex:form>
+            </div>
+            </div>
+        </div>
+        
+        
+        
+        <script>
+        function EditAccount(sender)
+        {
+            window.scrollTo(0, 0);
+            $('#accModal').modal(
+			{
+                backdrop: 'static'
+            });
+        }
+			
+		/* C0307 */
+		function CheckBeneficialOwner()
+        {
+            var isSig = $("[id$='accIsSig").val();
+            var isTrs = $("[id$='accIsTrs").val();
+			var isSet = $("[id$='accIsSet").val();
+         
+            
+            if(isSig == 'Yes' || isTrs == 'Yes' || isSet == 'Yes')
+            {
+                $("[id$='accIsBO").val('No');
+            }
+            
+        }
+		/* C0307 */
+        
+        $(function ()
+		{
+            $('#addAccount').click(function()
+			{
+                EditAccount($(this));
+            });   
+            
+			
+            
+            $('.accEdit').click(function()
+			{
+                var rel = $(this).parent().find('.relId').val();
+                
+                $("[id$='hiddenRel']").val(rel);
+                
+                editRel();
+                
+                
+            });
+            
+            $('.accDelete').click(function()
+			{
+                var rel = $(this).parent().find('.relId').val();
+                
+                $("[id$='hiddenRel']").val(rel);
+                
+                delRel();
+                
+                
+            });
+            
+            
+            $('#addFindAccount').click(function()
+			{
+                window.scrollTo(0, 0);
+                $('#accFindModal').modal(
+				{
+                    backdrop: 'static'
+                });
+            });  
+			
+			/* C0307 */
+			$("[id$='accIsTrs").change(function()
+			{
+				CheckBeneficialOwner();
+			});
+			
+			$("[id$='accIsSig").change(function()
+			{
+				CheckBeneficialOwner();
+			});
+			
+			$("[id$='accIsSet").change(function()
+			{
+				CheckBeneficialOwner();
+			});
+			
+			$("[id$='accIsBO").change(function()
+			{
+				CheckBeneficialOwner();
+			});
+			
+			/* C0307 */
+        });
+        
+        
+        
+        
+    </script>
+    </body>
+</apex:page>

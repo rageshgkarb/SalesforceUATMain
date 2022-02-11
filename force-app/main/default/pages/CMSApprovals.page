@@ -1,0 +1,94 @@
+<apex:page controller="CMSApprovalsController" >
+	
+	<style type="text/css">
+		.overlayBackground {
+		    position: fixed;
+		    top: 0;
+		    left: 0;
+		    width: 100%;
+		    height: 100%;
+		    background-color: #000;
+		    filter:alpha(opacity=70);
+		    opacity: 0.70;
+		    z-index: 10000;
+		    display: block;
+		}
+		.contentCustPopUp {
+			padding: 10px;
+			background-color: #fff;
+		    height: 20%;
+		    left: 30%;
+		    position: fixed;
+		    top: 40%;
+		    width: 45%;
+		    z-index: 20000;
+		    -moz-border-radius: 15px; 
+		    border-radius: 15px;
+		    display: block;
+		}
+
+	</style> 
+	
+	<apex:SectionHeader title="Cash Order Approvals" />
+	
+	<apex:form >
+		<apex:pageBlock id="approvalBlock">
+		
+			<apex:pageBlockSection columns="1">
+				<apex:pageBlockTable value="{!approvals}" var="approval" >
+					<apex:column >
+						<apex:facet name="header">Cash Order Record</apex:facet>
+						<apex:commandLink action="{!goToCashOrderRecord}" value="{!approval.cashOrder.Name}" rendered="{!approval.hasCashOrder}" >
+							<apex:param name="cashOrderId" value="{!approval.cashOrder.Id}" />
+						</apex:commandLink>
+					</apex:column>
+					<apex:column >
+						<apex:facet name="header">Branch</apex:facet>
+						<apex:outputField value="{!approval.branch.Name}" />
+					</apex:column>
+					<apex:column >
+						<apex:facet name="header">Total Amount</apex:facet>
+						<apex:outputField value="{!approval.cashOrder.Total_Cash_Amount__c}" rendered="{!approval.hasCashOrder}" />
+					</apex:column>
+					<apex:column >
+						<apex:facet name="header">Requested Delivery Date</apex:facet>
+						<apex:outputText value="{!approval.deliveryDateFormatted}" rendered="{!approval.hasCashOrder}" />
+					</apex:column>
+					<apex:column >
+						<apex:facet name="header">Status</apex:facet>
+						<apex:selectList value="{!approval.approvalStatus}" multiselect="false" size="1" rendered="{!approval.hasCashOrder && approval.approvalStatus == 'Submitted for Approval'}">
+				            <apex:selectOptions value="{!approval.approvalStatusOptions}"/>
+				        </apex:selectList>
+				        <apex:outputText value="{!approval.approvalStatus}" rendered="{!approval.hasCashOrder && approval.approvalStatus != 'Submitted for Approval'}" />
+						<apex:outputText value="No cash order record" rendered="{!NOT(approval.hasCashOrder)}" style="color: #c90000;" />
+					</apex:column>
+				</apex:pageBlockTable>
+				
+				<apex:outputPanel layout="block" rendered="{!allOrdersApproved && rmOrder.Status__c == 'Sent'}" >
+				
+					<apex:image value="/img/msg_icons/confirm32.png" />
+					Order Sent &nbsp;
+					<apex:outputText value="{!rmOrder.Order_Sent__c}" />
+					
+				</apex:outputPanel>
+				
+				<apex:actionStatus id="processingSubmit">
+					<apex:facet name="start">
+						<apex:outputPanel layout="block" style="text-align: center;">
+							<apex:image url="/img/loading32.gif" />
+						</apex:outputPanel>	
+					</apex:facet>
+					<apex:facet name="stop">
+						<apex:outputPanel layout="block" style="text-align: center;">
+							<apex:commandButton value="Cancel" action="{!cancel}" onclick="return confirm('Please confirm you wish to cancel out of this screen?');" rendered="{!rmOrder.Status__c == 'New'}" immediate="true" />
+							<apex:commandButton value="Submit" action="{!updateApprovals}" rendered="{!NOT(allOrdersApproved)}" rerender="approvalBlock" status="processingSubmit" />
+							<apex:commandButton value="Submit Order To Royal Mail" action="{!submit}" rendered="{!allOrdersApproved && rmOrder.Status__c == 'New'}" rerender="approvalBlock" status="processingSubmit" />
+						</apex:outputPanel>
+					</apex:facet>
+				</apex:actionStatus>
+				
+			</apex:pageBlockSection>
+		</apex:pageBlock>
+	</apex:form>
+	
+</apex:page>

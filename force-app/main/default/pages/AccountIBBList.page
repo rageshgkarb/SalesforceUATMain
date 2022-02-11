@@ -1,0 +1,5 @@
+<apex:page standardController="Account_with_IBB__c" recordsetVar="Account_with_IBB__cs" extensions="RedirectCE" id="thePage" action="{!redirectAccountIBBListPage}" showHeader="false" sidebar="false">
+
+  Account Redirect page: {!ProfileName}
+  
+</apex:page>

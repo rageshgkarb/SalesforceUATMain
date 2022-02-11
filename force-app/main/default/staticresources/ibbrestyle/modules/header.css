@@ -1,0 +1,185 @@
+@charset "UTF-8";
+/* CSS Document */
+.accessMenu,
+.otherSearch { 
+	display:block; 
+	float:right; 
+	width:800px;
+	position:absolute;
+	z-index:10;
+}
+
+
+
+.otherSearch  { font-size:1.077em; }
+
+.accessMenu,
+.otherSearch { left:200px; }
+.accessMenu { top:10px; /*background-color:#33FF99;*/ }
+.otherSearch { top:68px; /* background-color:#CC9900;*/ }
+	.quickSearch,
+	.otherNav,
+	.accessOptions,
+	.contrast { 
+		float:right; 
+		display:block;
+		margin-left:5px;
+	}
+	.otherNav { margin-right:250px;}
+		.otherNav ul,
+		.accessOptions ul {
+			margin: 0;
+			padding: 0;
+			float: left;
+			list-style:none;
+		}
+		.otherNav li,
+		.accessOptions li { 
+			display: inline;
+			list-style:none;
+			margin:0 0 0 0;
+			padding:0 0 0 0;
+		}
+
+.headerLogo { display:block; float:left; width:25%; }
+.headerLogo {
+	background-image: url(../graphics/logos/Islamic-bank-logo.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+
+/* search field */
+#header .quickSearch { 
+	position:absolute; 
+	/*background-color:#CC9900; */
+	height:24px; 
+	display:block; 
+	width:235px;
+	top:-3px;
+	right:0;
+}
+
+
+#SMcontent .quickSearch { 
+	position:absolute; 
+	/*background-color:#CC9900; */
+	height:24px; 
+	display:block; 
+	width:235px;
+	top:7px;
+	right:80px;
+}
+
+
+
+#header .quickSearch label,
+#SMcontent .quickSearch label { 
+	position: absolute ;
+	top:0;
+	left:0;
+	height:24px;
+	line-height: 24px;
+}
+#header .search_wrapper {
+	position: absolute ;
+	height: 24px;
+	padding: 0;
+	margin:  0;
+	top: 0px;
+	left:50px;
+	width: 143px;
+	/*background-color:#CCFF33;*/
+}
+
+
+
+#SMcontent .search_wrapper {
+	position: absolute ;
+	height: 24px;
+	padding: 0;
+	margin:  0;
+	top: 0px;
+	left:50px;
+	width: 200px;
+	/*+57px*/
+}
+
+#header input.searchField,
+#SMcontent input.searchField  { 
+	position:  absolute ;
+	line-height: 16px;
+	height:  20px;
+	top: 0;
+	left: 21px;
+	right: 20px;
+	width: 108px;
+	background:  url(../../graphics/modules/IBB-eye-candy.png) repeat-x right -786px ;
+	border: none ;
+	outline: none ;
+	padding: 2px;
+	margin: 0;
+	color: #000000;
+	font-size: 13px;
+	text-shadow: #323232 0px 1px 1px;
+    -webkit-box-shadow: none ! important;
+}
+
+#SMcontent input.searchField { width: 165px; }
+/*#header input.searchField:focus { 
+	color: #f0f0f0;
+	background-color:#CC3300;
+	text-shadow: #323232 0px 1px 1px;
+}*/
+
+#header .search_wrapper .search-left,
+#SMcontent .search_wrapper .search-left {
+	left:  0;
+	top:  0;
+	width: 22px;
+	height: 24px;
+	background-image: url(../../graphics/modules/IBB-eye-candy.png);
+	background-repeat: no-repeat;
+	background-position: left -762px;
+	/*background-color:#00CC33;*/
+	position:  absolute ;
+}
+
+#header .search_wrapper .search-right,
+#SMcontent .search_wrapper .search-right {
+	position:  absolute;
+	right:  0;
+	top:  0;
+	width: 10px;
+	height: 24px;
+	background-image: url(graphics/modules/IBB-eye-candy.png);
+	background-repeat: no-repeat;
+	background-position: left -810px;
+	/*background-color:#FF9900;*/
+}
+
+#header .quickSearch input.button.submitSearch {
+	position: absolute;
+	top:0;
+	height:22px;
+	left:195px;
+	font-size:1em;
+	padding-top:0px;
+	margin-left:2px;
+}
+
+
+#SMcontent .quickSearch input.button.submitSearch {
+	position: absolute;
+	top:0;
+	height:22px;
+	left:255px;
+	font-size:1em;
+	padding-top:0px;
+	margin-left:2px;
+}
+
+#header .quickSearch input.button.submitSearch[class],
+#SMcontent  .quickSearch input.button.submitSearch[class]
+ {
+	width:37px !important;
+}

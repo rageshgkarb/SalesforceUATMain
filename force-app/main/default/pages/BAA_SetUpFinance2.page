@@ -1,0 +1,116 @@
+<!-- C00233 new page -->
+
+<apex:page showHeader="false" sidebar="false" docType="html-5.0" controller="BAA_SetUpFinanceController" applyBodyTag="" action="{!SetUp2}">
+    <head>       
+        <c:BAA_Resource ></c:BAA_Resource>        
+    </head>
+    <c:BAA_PopupLoad />
+     <body>    
+        <c:BAA_Header objOpp="{!BaseOpportunity}" title="Set Up on EBS"></c:BAA_Header>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-lg-3">
+                    <apex:form >
+                        <c:BAA_Menu oppId="{!BaseOpportunity.Id}"  DirectorId="{!BaseOpportunity.ProductEventDirector__c}" />
+                    </apex:form>
+                </div>            
+                <div class="col-md-8 col-lg-9">
+                    <apex:form id="aForm">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <apex:pagemessages ></apex:pagemessages>
+                            </div>
+                        </div>
+                        
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">Set Up of Customer </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div>
+                                            Application Form Signed
+                                        </div>
+                                        <table class="table" width="50%">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="labelCol">•  Has the signed application form been received?</td>
+                                                    <td class="dataCol"><apex:outputField value="{!thisOpp.NPAA_Application_Signed__c}"/></td> 
+                                                </tr>
+                                                <tr>
+                                                    <td class="labelCol">•  Have the supporting documents been received?</td>
+                                                    <td class="dataCol"><apex:outputField value="{!thisOpp.NPAA_Documents_Received__c}"/></td> 
+                                                </tr>
+                                                <tr>
+                                                    <td class="labelCol">•  Date Received?</td>
+                                                    <td class="dataCol"><apex:outputField value="{!thisOpp.Date_Application_Received__c}"/></td> 
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <apex:variable value="{!thePrimaryApplicant}" var="thePrimeApp"/> 
+                        
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">{!thePrimeApp.Prospect_Customer__r.Name}</div>
+                            <div class="panel-body">
+                                <table class="table" width="50%">
+                                    <tbody>
+                                        <apex:repeat value="{!theSecondaryAccountHolders}" var="theJAR">
+                                            <tr class="dataRow">
+                                                <td>
+                                                    {!theJAR.Prospect_Customer__r.Name} Relationship to {!thePrimeApp.Prospect_Customer__r.Name} :
+                                                </td>
+                                                <td>
+                                                    <apex:outputText value="{!theJAR.Relationship_To_Primary_Applicant1__c}" />
+                                                       
+                                                </td>
+                                            </tr>
+                                        </apex:repeat> 
+                                        
+                                        <tr>
+                                            <td>
+                                                <!--apex:commandButton value="Set Up On EBS" rerender="aForm" action="{!SetUpOnEBS}" styleclass="btn-danger" /-->
+                                                <apex:commandButton value="Set Up On EBS" rerender="aForm" action="{!SetUpOnEBS}" styleclass="btn-danger" onclick="ShowDocumentLoad('Communicating with EBS ','This may take a few seconds...');" oncomplete="HideDocumentLoad();" rendered="{!NOT(SetupOK)}"/>
+                                                <apex:commandButton value="Complete" rerender="aForm" action="{!Complete}" styleclass="btn-danger" rendered="{!SetupOK}"/>
+                                            </td>
+                                        </tr>  
+                                    </tbody>
+                                </table>
+                             </div>
+                        </div>
+                       
+                       
+                        <apex:outputPanel layout="none" rendered="{!SetUpCalled}">   
+                            <apex:variable value="{!args}" var="theArg"/> 
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">Response :- {!theArg.ReturnValue} </div>
+                                <div class="panel-body">
+                                    <table class="table" width="50%">
+                                         <thead>
+                                            <tr class="headerRow"><th>Reference</th><th>Type</th><th>Response</th><th>The Response Message</th></tr>
+                                            </thead>
+                                        <tbody>
+                                            <apex:repeat value="{!args.ANCetalResponse.Responses}" var="theArgs">
+                                                <tr class="dataRow">
+                                                    <td>{!theArgs.TheReference}</td>
+                                                    <td>{!theArgs.TheType}</td>
+                                                    <td>{!theArgs.TheResponse}</td>
+                                                    <td>{!theArgs.TheResponseMessage}</td>
+                                                </tr>
+                                            
+                                            </apex:repeat>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </apex:outputPanel>
+                     </apex:form>
+                </div>
+             </div>
+         </div>
+      </body>
+</apex:page>

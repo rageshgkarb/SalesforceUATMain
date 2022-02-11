@@ -1,0 +1,63 @@
+<apex:page controller="HPPEventOfferDocsReturnedController" sidebar="false" showHeader="false" title="Offer Documents Returned">
+    <head>
+        <c:KendoResource ></c:KendoResource>
+    </head>
+    <body>
+        <apex:form >
+            <div id="formWrapper">
+                <!-- C00095-->  
+                <c:HPPSummary objAcc="{!Accounts[0]}" objOpp="{!opp}" objExOpp="{!ExOpp}" Product="{!Prod}" />
+                <div id="container" >
+                    <table width="100%">
+                        <tr>
+                            <td valign="top" id="sidebar">
+                                <c:HPPBOMenu oppId="{!Opp.Id}"  DirectorId="{!Opp.ProductEventDirector__c}" />
+                            </td>
+                            <td valign="top" id="contenttd">
+                                <div id="content">
+                                    <h1>Offer Documents Returned</h1>
+                                
+                                    <apex:outputPanel id="mainPageBlock">
+                                    <div style="padding:20px;">
+                                        <!-- content -->
+                                        
+                                        <apex:pageBlock >
+                                            <apex:pageBlockSection >
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="Date signed offer letter returned" />
+                                                    <apex:inputField value="{!exOpp.Offer_returned_field__c}" required="true" />
+                                                </apex:pageBlockSectionItem>
+                                            </apex:pageBlockSection>
+                                            <apex:pageBlockSection rendered="{!ProductSwitch}">
+                                       
+                                      
+                                      
+                                       <apex:pageBlockSectionItem >
+                                           <apex:outputLabel value="Product Switch Date" />
+                                               <apex:outputPanel >
+                                                   <apex:inputField required="true" value="{!Opp.Product_Switch_Date__c }" />  
+                                               </apex:outputPanel>
+                                       </apex:pageBlockSectionItem>
+                                       <apex:pageBlockSectionItem >
+                                       </apex:pageBlockSectionItem>
+                                       <apex:pageBlockSectionItem >
+                                       </apex:pageBlockSectionItem>
+                                    </apex:pageBlockSection>
+                                            
+                                            <apex:pageBlockButtons location="bottom">
+                                                <apex:commandButton value="Offer Letter Returned" action="{!complete}"  />
+                                            </apex:pageBlockButtons>
+                                        </apex:pageBlock>
+                                    </div>
+                                    </apex:outputPanel>
+                                </div>
+                                
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+                        
+        </apex:form>
+    </body>
+</apex:page>

@@ -1,0 +1,279 @@
+<apex:page showHeader="false" sidebar="false" controller="MMR_ExecutionOnly_Product" docType="html-5.0" action="{!Setup}">
+<head>
+    <c:MMR_PageHeader ></c:MMR_PageHeader>   
+</head>
+<body>
+
+  
+  <c:MMR_Header title="Product Selection" numapps="{!numapplying}" opp="{!bopp}"/>
+
+      <div class="container">
+              
+    
+        <apex:form id="aForm" styleClass="form-horizontal">
+        <apex:pagemessages ></apex:pagemessages>
+    
+        
+         <div class="row">
+             <div class="form-group">
+                 <div class="col-sm-4">
+                     <label>Purchase Price / Market Value</label>
+                 </div>
+                 <div class="col-sm-8">
+                     <apex:inputField required="true" styleClass="form-control" value="{!Opp.Purchase_price_market_value__c}"/>
+                 </div>
+             </div>         
+         </div>   
+         <div class="row">
+             <div class="form-group">
+                 <div class="col-sm-4">
+                     <label>Finance Required </label>
+                 </div>
+                 <div class="col-sm-8">
+                     <apex:inputField required="true" styleClass="form-control" value="{!Opp.Finance_Required__c}"/>
+                     
+                 </div>
+             </div>         
+         </div>
+         <div class="row">
+             <div class="form-group">
+                 <div class="col-sm-4">
+                     <label>Term Required </label>
+                 </div>
+                 <div class="col-sm-8">
+                     <apex:inputField required="true" styleClass="form-control" value="{!Opp.Term_of_Finance__c}"/>
+                     
+                 </div>
+             </div>         
+         </div>
+         
+         <!--case: 01931533; HPP premier onboarding SBC; Start -->
+         <apex:outputPanel rendered="{!Opp.Interested_in__c == 'Home Purchase Plan Premier'}">
+         <div class="row">
+             <div class="form-group">
+                 <div class="col-sm-4">
+                     <label>HPP Premier Rate</label>
+                 </div>
+                 <div class="col-sm-8">
+                     <apex:inputField styleClass="form-control" required="true" value="{!Opp.HPP_Premier_Rate__c}" rendered="{!Opp.Interested_in__c == 'Home Purchase Plan Premier'}"/>       
+                
+                 </div>
+             </div>         
+         </div>  
+         
+         
+         
+         <div class="row">
+             <div class="form-group">
+                 <div class="col-sm-4">
+                     <label>Property Type</label>
+                 </div>
+                 <div class="col-sm-8">
+                     <apex:outputField styleClass="form-control" value="{!Opp.Property_type__c}"/>       
+                 </div>
+             </div>         
+         </div>    
+         
+         <div class="row">
+             <div class="form-group">
+                 <div class="col-sm-4">
+                     <label>Admin Fee Rate</label>
+                 </div>
+                 <div class="col-sm-8">
+                     <apex:inputField styleClass="form-control" required="true" value="{!Opp.Premier_Admin_Fee_Rate__c}"/>       
+                 </div>
+             </div>         
+         </div> 
+         
+         
+         <div class="row">
+             <div class="form-group">
+                 <div class="col-sm-4">
+                     <label>Intermediary Procuration Fee Rate</label>
+                 </div>
+                 <div class="col-sm-8">     
+                     <apex:inputField styleClass="form-control" required="true" value="{!Opp.Premier_Procuration_Fee_Rate__c}" /> 
+                 </div>  
+             </div>         
+         </div> 
+         
+         <!-- case: 01931533; HPP premier onboarding SBC; End -->
+                            
+         <apex:outputPanel id="FeeSection">
+         <div class="row">
+             <div class="form-group">
+                 <div class="col-sm-4">
+                     <label>Procuration Fee </label>
+                 </div>
+                 <div class="col-sm-8">     
+                     £<apex:outputField styleClass="form-control" value="{!Opp.Intermediary_Proc_Fee__c}" /> 
+                 </div>  
+             </div>         
+         </div> 
+         
+         <div class="row">
+             <div class="form-group">
+                 <div class="col-sm-4">
+                     <label>Total Admin Fee</label>
+                 </div>
+                 <div class="col-sm-8">     
+                     <apex:outputField styleClass="form-control" value="{!Opp.AdminFeeFull__c}" /> 
+                 </div>  
+             </div>         
+         </div>  
+         </apex:outputPanel>
+         
+         <div class="row" >
+            <div class="form-group">
+             <div class="col-sm-4">
+                 <label>Product Selection</label>
+             </div>
+             <div class="col-sm-8">
+                 <apex:actionFunction name="changeProduct" action="{!SelectProduct}"  />
+                 <apex:selectList required="true" size="1" styleClass="form-control" value="{!Opp.Alternate_product__c}" onchange="DisplaySaveButton();changeProduct();">
+                <apex:selectOptions value="{!ProductItems}"  />
+            </apex:selectList>
+             </div>
+            </div>         
+         </div>     
+         
+         <div id="saveButton" class="row">
+             <div class="form-group">
+                 <div class="col-sm-12">
+                     <apex:commandButton styleClass="btn-primary" value="Save" onclick="loadPageContent()" reRender="FeeSection"/>
+                     <apex:actionFunction name="loadPageContent" action="{!SaveData}" status="counterStatus" reRender="aForm"/>
+                     <apex:actionStatus id="counterStatus">
+                        <apex:facet name="start">                        
+                        <img src="/img/loading32.gif" />
+                        </apex:facet>
+                        </apex:actionStatus>     
+                 </div>
+                
+             </div>         
+         </div>
+         
+         </apex:outputpanel>
+         
+         <apex:outputPanel rendered="{!Opp.Interested_in__c != 'Home Purchase Plan Premier'}">
+         <div class="row" >
+            <div class="form-group">
+             <div class="col-sm-4">
+                 <label>Product Selection</label>
+             </div>
+             <div class="col-sm-8">
+                 <apex:actionFunction name="changeProduct" action="{!SelectProduct}"  />
+                 <apex:selectList required="true" size="1" styleClass="form-control" value="{!Opp.Alternate_product__c}" onchange="changeProduct();">
+                <apex:selectOptions value="{!ProductItems}"  />
+            </apex:selectList>
+             </div>
+            </div>         
+         </div>
+        </apex:outputpanel>
+        <!-- case: 01931533; HPP premier onboarding SBC; End -->
+        
+         <apex:outputPanel rendered="{!Opp.Alternate_product__c != null}">
+         <div class="row">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    Documents
+                </div>
+                <div class="panel-body">
+                <div class="col-sm-12">
+               
+                 <!-- <div class="row">
+                       <a class="btn btn-primary" target="_blank" href="{!URLFOR($Resource[RiskDoc])}">Risk and Features Document</a>
+                    </div> --> 
+                   
+                    
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <apex:commandButton styleClass="{!IF(FISCreated,'btn-info','btn-danger')}" value="Create FIS/FQS" reRender="aForm" onclick="ShowDocumentLoad('Calling RCE','This may take a few seconds...');" oncomplete="RceResult();" action="{!CallRCE}" />                           
+                        </div>
+                        <div class="col-sm-8">
+                            <apex:outputPanel rendered="{!FISCreated}">
+                                <a target="_blank" href="/servlet/servlet.FileDownload?file={!FisId}" >View Document</a>
+                            </apex:outputPanel>
+                        </div>
+                    </div>
+                    
+                    
+                    </div>
+                </div>
+            </div>        
+        </div>
+         </apex:outputPanel>
+                    
+      
+         <div class="row">
+             <div class="form-group">
+                 <div class="col-sm-12">
+                     <apex:commandButton styleClass="btn-primary" value="Previous" action="{!Previous}" rendered="false"/>
+                     <apex:commandButton styleClass="btn-danger" value="Next" action="{!Next}" rendered="{!FISCreated}"/>
+                 </div>
+                
+             </div>         
+         </div> 
+                    
+       <apex:actionFunction oncomplete="HideDocumentLoad()" name="offerletter" action="{!CreateDoc}" rerender="aForm"/>             
+     <apex:outputPanel rendered="{!!RCEFailed}">
+    <script>
+        /* case: 01931533; HPP premier onboarding SBC */
+        function DisplaySaveButton()
+        {
+            var divVal = document.getElementById('saveButton');
+            divVal.style= 'display:none';
+        }
+        
+        function RceResult()
+        {
+            HideDocumentLoad();
+            ShowDocumentLoad('Generating document','This may take a few seconds...');
+            offerletter();
+        }        
+    </script>
+</apex:outputPanel>
+<apex:outputPanel rendered="{!RCEFailed}">
+    <script> 
+            
+        function RceResult()
+        {
+            HideDocumentLoad1();
+            
+            var errwindow = $("#errWindow");
+            
+             if (!errwindow .data("kendoWindow")) {
+                        errwindow .kendoWindow({
+                            width: "400px",                            
+                            title: "RCE Failed",
+                            modal: true
+                            });                        
+                        }
+                        errwindow .data("kendoWindow").open();                   
+                        errwindow .data("kendoWindow").center(); 
+                        
+        }        
+    </script>
+</apex:outputPanel>                    
+                    
+
+ 
+ 
+   
+        
+ 
+    
+
+
+     
+     
+     
+        </apex:form>        
+    </div>
+    
+    <c:MMR_PageFooter ></c:MMR_PageFooter>
+
+
+      <c:MMR_PopupLoad />
+</body>
+
+</apex:page>

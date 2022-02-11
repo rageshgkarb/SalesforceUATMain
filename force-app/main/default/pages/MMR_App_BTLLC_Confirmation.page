@@ -1,0 +1,73 @@
+<apex:page showheader="false" sidebar="false" controller="MMR_App_BTLLC_Confirmation" doctype="html-5.0" action="{!Setup}"><!-- C0644 -->
+    <head>
+        <c:MMR_PageHeader ></c:MMR_PageHeader>
+    </head>
+    <body>
+        <c:MMR_Header title="Application - Confirmation" numapps="{!numapplying}" opp="{!bopp}" />
+        <div class="container">
+            <c:MMR_App_BTLLC_Nav active="5" eventid="{!EventId}" rendered="{!!IsCompleted}" />
+            <c:MMR_App_BTLLC_Nav_Links active="5" eventid="{!EventId}" rendered="{!IsCompleted}" />
+
+            <apex:form id="aForm" styleclass="form-horizontal">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h2>Documents</h2>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-sm-12">
+
+
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-sm-3">
+                                        <a href="/{!Opp.id}" target="_blank">{!Opp.Name}</a>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-sm-3">
+                                        <apex:commandbutton styleclass="btn-danger" value="Create Application Form" action="{!CreateDoc}" rendered="{!!IsCompleted}"
+                                                            rerender="aForm" onclick="ShowDocumentLoad('Generating Application Form','This may take a few seconds...')"
+                                                            oncomplete="HideDocumentLoad()" />
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:outputpanel rendered="{!DocLinkCreated}">
+                                            <a target="_blank" href="/servlet/servlet.FileDownload?file={!AppFormId}">View Document</a>
+                                        </apex:outputpanel>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-sm-3">
+                                        Risk and Features Document
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:outputlink value="{!KeyFactsLink}" target="_blank">View Document</apex:outputlink>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-sm-3">
+                                        Initial Disclosure Document
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:outputlink value="{!IDDLink}" target="_blank">View Document</apex:outputlink>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <apex:commandbutton styleclass="btn-danger" value="Previous" action="{!Previous}" rendered="{!!IsCompleted}" />
+                <apex:commandbutton styleclass="btn-danger" value="Complete Event" action="{!Complete}" rendered="{!!IsCompleted}" />
+                <apex:commandbutton styleclass="btn-danger" value="Go To Next Event" action="{!NextEvent}" rendered="{!IsCompleted}" />
+                <c:MMR_PopupLoad />
+            </apex:form>
+        </div>
+    </body>
+</apex:page>

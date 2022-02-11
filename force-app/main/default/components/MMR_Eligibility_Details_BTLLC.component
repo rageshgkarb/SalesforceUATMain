@@ -1,0 +1,584 @@
+<!-- C0644 BTL LTD Co. -->
+<apex:component >
+    <apex:attribute name="Opp" description="This is the opportunity" type="Opportunity" required="true" />
+    <apex:attribute name="Title" description="Title" type="String" required="true" />
+    <apex:attribute name="Name" description="Name" type="String" required="true" />
+    <apex:attribute name="Applicant1" description="Applicant1" type="Account" required="true" />
+    <apex:attribute name="Applicant2" description="Applicant2" type="Account" required="true" />
+    <apex:attribute name="Applicant3" description="Applicant3" type="Account" required="true" />
+    <apex:attribute name="Applicant4" description="Applicant4" type="Account" required="true" />
+    <apex:attribute name="Applicant5" description="Applicant5" type="Account" required="true" />
+    <apex:attribute name="IsBTL" description="IsBTL" type="Boolean" required="true" />
+    <apex:attribute name="Completed" description="Completed" type="Boolean" required="true" />
+    <apex:attribute name="HasEmail" description="HasEmail" type="Boolean" required="true" />
+    <apex:attribute name="HasMail" description="HasMail" type="Boolean" required="true" />
+    <apex:attribute name="HasSMS" description="HasSMS" type="Boolean" required="true" />
+    <apex:attribute name="HasPhone" description="HasPhone" type="Boolean" required="true" />
+    <apex:attribute name="HasNone" description="HasNone" type="Boolean" required="true" />
+    <apex:attribute name="HasNewsletter" description="HasNewsletter" type="Boolean" required="true" />
+    <apex:attribute name="PurposeOfFinance" description="PurposeOfFinance" type="selectOption" required="true" /><!--C0782-->
+
+    <!-- C0737 Start -->
+    <script type="text/javascript">
+        function onPrefClick(){
+            if($(".HasNewsletter").attr('checked')=="checked" || $(".HasEmail").attr('checked')=="checked" || $(".HasMail").attr('checked')=="checked" || $(".HasSMS").attr('checked')=="checked" || $(".HasPhone").attr('checked')=="checked"){
+                $(".HasNone").prop('checked', false);
+            }
+        }
+        function onNonPrefClick(){
+            if($(".HasNone").attr('checked')=="checked"){
+                $(".HasNewsletter").prop('checked', false);
+                $(".HasEmail").prop('checked', false);
+                $(".HasMail").prop('checked', false);
+                $(".HasSMS").prop('checked', false);
+                $(".HasPhone").prop('checked', false);
+            }
+        }
+    </script>
+    <!-- C0737 End -->
+
+    <div class="row">
+        <ul class="nav nav-tabs">
+            <li id="homeTab" class="active"><a href="#home" data-toggle="tab">Limited Company Details</a></li>
+            <li id="profileTab"><a href="#profile" data-toggle="tab">Directors</a></li>
+            <li id="messagesTab"><a href="#messages" data-toggle="tab">Marketing Information</a></li>
+            <li id="settingsTab"><a href="#settings" data-toggle="tab">Finance Required</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div class="tab-pane active" id="home">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Company Name</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="requiredInput">
+                                                <apex:inputtext styleclass="form-control" value="{!Name}" required="true" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Registered Address Post Code</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield id="addrPostCode" styleclass="form-control" value="{!Applicant1.RegisteredAddressPostCode__c}" required="true" />
+                                        </div>
+                                    </div>
+                                </div>
+                               
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Registered Address Country</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield id="addrCountry" styleclass="form-control" value="{!Applicant1.RegisteredAddressCountry__c}" required="true" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Registered Address City</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield id="addrCity" styleclass="form-control" value="{!Applicant1.RegisteredAddressCity__c}" required="true" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Registered Address</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield id="addrStreet" styleclass="form-control" value="{!Applicant1.RegisteredAddressStreet__c}" required="true" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Business Email</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant1.Business_email_address__c}" required="true" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Business Phone</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant1.Home_Telephone_No__c}" required="true" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Contact Name</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="requiredInput">
+                                                <apex:inputtext styleclass="form-control" value="{!Applicant1.Contact_Name__c}" required="true" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Contact Phone</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield id="sms" styleclass="form-control" value="{!Applicant1.Contact_s_telephone_number__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Organisation Type</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant1.Organisation_type__c}" required="true" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Organisation Sub-Type</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant1.Organisation_sub_type__c}" required="true" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Business Type</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant1.Business_Type__c}" required="true" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Nature of Business</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant1.Nature_of_Business_NPAA__c}" required="true" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Would you like to receive updates on the progress of your application by email?</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield value="{!Opp.CustomerEmailRequired__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Overseas number</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield value="{!Applicant1.International_number__c}" required="{!Opp.SMS_Updates__c==True}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Would you be interested in our free text alert service, which keeps you updated with the progress of your Home Purchase Plan application?</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield value="{!Opp.SMS_Updates__c}">
+                                                <apex:actionsupport event="onchange" rerender="sms" />
+                                            </apex:inputfield>
+                                            <a href="{!URLFOR($Resource.SMSDisclaimer)}" target="_blank">SMS Disclaimer</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            
+                                        </div>
+                                        <div class="col-sm-6">
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="profile">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <c:MMR_Opportunity applicant="{!Applicant2}" title="First Director" rendered="{!Opp.Number_of_People_Applying__c > 0}" />
+                            </div>
+                            <div class="col-sm-6">
+                                <c:MMR_Opportunity applicant="{!Applicant3}" title="Second Director" rendered="{!Opp.Number_of_People_Applying__c > 1}" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <c:MMR_Opportunity applicant="{!Applicant4}" title="Third Director" rendered="{!Opp.Number_of_People_Applying__c > 2}" />
+                            </div>
+                            <div class="col-sm-6">
+                                <c:MMR_Opportunity applicant="{!Applicant5}" title="Fourth Director" rendered="{!Opp.Number_of_People_Applying__c > 3}" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="messages">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Campaign</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputfield styleclass="form-control" value="{!Opp.CampaignId}" id="addhowHear6" required="true" label="How did you hear about Al Rayan Bank?" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Are you happy for Al Rayan Bank to hold your data?</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputfield styleclass="form-control" value="{!Applicant1.Are_you_happy_for_IBB_to_hold_your_data__c}" id="addhowHear7" required="true" label="How did you hear about Al Rayan Bank?" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div>
+                                    <a target="_blank" href="/resource/1337159017000/MarketingConsent">Please click here to review how your data will be held and used by Al Rayan Bank</a>
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="form-group">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group">
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Seller</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputfield styleclass="form-control" value="{!Opp.Seller__c }" id="addhowHear1" label="Seller" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Intermediary Contact</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputfield styleclass="form-control" value="{!Opp.Intermediary_Contact__c }" id="addhowHear4" required="false" label="Intermediary Contact" />
+                                    </div>
+                                </div>
+                            </div>
+                            <apex:outputPanel rendered="{!Opp.Intermediary_Contact__c!=null}"><!-- C0694 -->
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Were you aware that the intermediary will receive a procuration fee if this deal completes?</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" id="procfee" value="{!Opp.Were_you_aware_of_the_procuration_fee__c}" required="true"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                </apex:outputPanel>
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Location of lead provider</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputfield styleclass="form-control" value="{!Opp.Location_of_Lead_Provider__c }" id="addhowHear2" required="true" label="Intermediary Contact" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Team for seller</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputfield styleclass="form-control" value="{!Opp.Seller_s_Team__c }" id="addhowHear3" required="true" label="Intermediary Contact" />
+                                    </div>
+                                </div>
+                            </div>
+                            <br/>
+                            <div class="row"><!-- C0697 -->
+                                <div class="col-sm-6">
+                                    <label>From time to time we’d also love to tell you about our Islamic financial services, products and any new offers that we think you’d be interested in based on the information we hold about you. If you would like to hear from us about these please tick the appropriate box(es) so we know how you would prefer us to contact you.</label>
+                                </div>
+                                <div class="col-sm-6 inputlabel">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <!-- C0737 Start -->
+                                                    <apex:inputcheckbox value="{!HasNewsletter}" styleClass="HasNewsletter" onclick="onPrefClick()" /> E-Newsletter
+                                                    <!-- C0737 End -->
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <!-- C0737 Start -->
+                                                    <apex:inputcheckbox value="{!HasEmail}" styleClass="HasEmail" onclick="onPrefClick()" /> Email
+                                                    <!-- C0737 End -->
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <!-- C0737 Start -->
+                                                    <apex:inputcheckbox value="{!HasMail}" styleClass="HasMail" onclick="onPrefClick()" /> Post
+                                                    <!-- C0737 End -->
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <!-- C0737 Start -->
+                                                    <apex:inputcheckbox value="{!HasSMS}" styleClass="HasSMS" onclick="onPrefClick()" /> SMS
+                                                    <!-- C0737 End -->
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <!-- C0737 Start -->
+                                                    <apex:inputcheckbox value="{!HasPhone}" styleClass="HasPhone" onclick="onPrefClick()" /> Phone
+                                                    <!-- C0737 End -->
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4"></div>
+                                    </div>
+                                </div>
+                            </div><br/>
+                             <div class="row">
+                                    <div class="col-sm-6">
+                                        <label>If you would prefer not to hear from us with Al Rayan Bank marketing information and offers, please tick here:&nbsp;<!-- C0737 Start --><apex:inputcheckbox value="{!HasNone}" styleClass="HasNone" onclick="onNonPrefClick()" /><!-- C0737 End --> </label>
+                                        <label>You can change your preferences at any time, by writing to us at Al Rayan Bank, 24a Calthorpe Road, Edgbaston, Birmingham, B15 1RP.</label>
+                                        <label>If you would like more information about how we use your information please click <a href="https://www.alrayanbank.co.uk/privacy" target="_blank">here</a></label>
+                                    </div>
+                                </div>
+                            <!--<div class="row">
+                                <div class="col-sm-6">
+                                    <label>Please indicate if you 'Do not' wish to be contacted by Al Rayan Bank by any of the following</label>
+                                </div>
+                                <div class="col-sm-6 inputlabel">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <apex:inputcheckbox value="{!HasEmail}" /> Email
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <apex:inputcheckbox value="{!HasMail}" /> Mail
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="checkbox">
+                                                <label>
+                                                    SMS<apex:inputcheckbox value="{!HasSMS}" />
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <apex:inputcheckbox value="{!HasPhone}" /> Phone
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>-->
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="settings">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Property Type</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputfield styleclass="form-control" value="{!Opp.Property_type__c}" required="true" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Purpose of Finance</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <!-- <apex:inputfield styleclass="form-control" value="{!Opp.Purpose_of_Finance__c}" required="true" />REAC changes start C0782 --> 
+                                       <div class="requiredInput">
+                                           <apex:selectlist styleclass="form-control" required="false" value="{!Opp.Purpose_of_Finance__c }" id="purposeOfFinance" size="1"> 
+                                                <apex:selectOptions value="{!PurposeOfFinance}"/> 
+                                            </apex:selectlist>
+                                        </div>   
+                                        <!--REAC changes end C0782 -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Purchase price/market value</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputfield styleclass="form-control" value="{!Opp.Purchase_price_market_value__c}" required="true" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Finance required</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputfield styleclass="form-control" value="{!Opp.Finance_Required__c}" required="true" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Term of Finance</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputfield styleclass="form-control" value="{!Opp.Term_of_Finance__c}" required="true" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Please tick if the company has a CCJ or any defaults</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputfield styleclass="form-control" value="{!Opp.Have_you_ever_had_a_CCJ_or_been_bankrupt__c}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Is the primary applicant a first time buyer?</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputfield styleclass="form-control" rendered="true" id="v3" value="{!Opp.First_time_buyer__c}" required="true" />
+                                    </div>
+                                </div>
+                            </div>
+
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Estimated/actual monthly rental income?</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" id="v1" value="{!Opp.Estimated_actual_monthly_rental_income__c}" required="true" />
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</apex:component>

@@ -1,0 +1,33 @@
+<apex:component >
+<apex:stylesheet value="{!URLFOR($Resource.ibbstyle, '/kendo/kendo.common.min.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.ibbstyle, '/kendo/kendoibb.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.ibbstyleexternal, 'bpi-additional.css')}"/>
+<apex:includeScript value="{!URLFOR($Resource.ibbstyle,'/kendo/jquery.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.ibbstyle, 'jquery.hoverIntent.minified.js')}"/>
+
+<apex:includeScript value="{!URLFOR($Resource.ibbstyle, '/kendo/kendo.all.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.ibbstyle, '/jquery.validate.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.ibbstyle, '/additional-methods.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.ibbstyle, '/date.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.ibbstyle, '/autosize/jquery.autosize-min.js')}"/>
+
+
+
+<script>
+            $(document).ready(function() {
+				RemoveStyle(); 
+			});
+             
+             function RemoveStyle()
+             {
+	             $("input:submit").removeClass("btn");
+	             $("input:button").removeClass("btn");             	
+             }
+             </script>
+             
+
+
+
+
+
+</apex:component>

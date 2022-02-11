@@ -1,0 +1,1595 @@
+<apex:page showheader="false" sidebar="false" doctype="html-5.0" standardstylesheets="false" controller="HPP_ProductSwitch_FF">
+    <apex:composition template="HPPProductSwitchTemplate">
+        <apex:define name="include">
+        <link rel="stylesheet" type="text/css" href="//services.postcodeanywhere.co.uk/css/address-3.40.css" />
+        <script type="text/javascript" src="//services.postcodeanywhere.co.uk/js/address-3.40.js"></script>
+        <apex:includeScript value="//cdnjs.cloudflare.com/ajax/libs/datejs/1.0/date.min.js"/>
+        
+        
+        
+            <script>
+            
+            hppApp.controller('AddressController', ['$scope', '$timeout',
+            function($scope, $timeout) {
+
+                $scope.init = function(applicant, a, i, PCA_key) {
+                    $scope.applicant = applicant;
+                    $scope.PCA_key = PCA_key;
+                    $scope.a = a;
+                    $scope.i = i;
+
+                    $timeout(function() {
+                        $scope.initPCA();
+                    }, 1000); //};
+                }
+
+
+                $scope.initPCA = function() {
+                    var g = $scope.$parent.controls;
+
+
+                    var options = {
+                        key: $scope.PCA_key
+                    }
+
+                    var fields = [{
+                        element: "line1" + $scope.a + $scope.i,
+                        field: "Line1"
+                    }, {
+                        element: "line2" + $scope.a + $scope.i,
+                        field: "Line2",
+                        mode: pca.fieldMode.POPULATE
+                    }, {
+                        element: "city" + $scope.a + $scope.i,
+                        field: "City",
+                        mode: pca.fieldMode.POPULATE
+                    }, {
+                        element: "county" + $scope.a + $scope.i,
+                        field: "ProvinceName",
+                        mode: pca.fieldMode.POPULATE
+                    }, {
+                        element: "postcode" + $scope.a + $scope.i,
+                        field: "PostalCode"
+                    }, {
+                        element: "country" + $scope.a + $scope.i,
+                        field: "CountryName",
+                        mode: pca.fieldMode.COUNTRY
+                    }];
+
+                    //var control = new pca.Address(fields, options);
+                    //controls.push(control);
+
+                    $scope.addressControl = new pca.Address(fields, options);
+            
+            $scope.addressControl.listen("country", function(address) {
+                var country = address;
+
+            if($scope.i == 0)
+            {
+                $scope.applicant.BillingCountry = address.name;
+            }
+            if($scope.i == 1)
+            {
+                $scope.applicant.ShippingCountry = address.name;
+            }
+            if($scope.i == 2)
+            {
+                $scope.applicant.PersonMailingCountry = address.name;
+            }
+            if($scope.i == 3)
+            {
+                $scope.applicant.Employer_Country_c = address.name;
+            }
+            
+            if($scope.i == 7)
+            {
+                $scope.applicant.PrimaryEmployment .Employer_Country_c = address.name;
+            }
+            if($scope.i == 8)
+            {
+                $scope.applicant.SecondaryEmployment.Employer_Country_c = address.name;
+            }
+
+            });
+
+
+                    $scope.addressControl.listen("populate", function(address, variations) {
+
+                        //Current address
+                        if ($scope.i == 0) {
+                            $scope.applicant.BillingCity = address.City;
+                            $scope.applicant.BillingPostalCode = address.PostalCode;
+                            $scope.applicant.BillingState = address.Province;
+                            $scope.applicant.BillingStreet = address.Line1;
+                            $scope.applicant.Customer_Address_District_c = address.Line2;
+               $scope.applicant.BillingCountry = address.CountryName;
+                            //return;
+                        }
+
+                        //Previous address
+                        if ($scope.i == 1) {
+                            $scope.applicant.ShippingCity = address.City;
+                            $scope.applicant.ShippingPostalCode = address.PostalCode;
+                            $scope.applicant.ShippingState = address.Province;
+                            $scope.applicant.ShippingStreet = address.Line1;
+                            $scope.applicant.Customer_Previous_Address_District_c = address.Line2;
+                $scope.applicant.ShippingCountry = address.CountryName;
+                            //return;
+                        }
+
+                        //Previous Previous address
+                        if ($scope.i == 2) {
+                            $scope.applicant.PersonMailingCity = address.City;
+                            $scope.applicant.PersonMailingPostalCode = address.PostalCode;
+                            $scope.applicant.PersonMailingState = address.Province;
+                            $scope.applicant.PersonMailingStreet = address.Line1;
+                            $scope.applicant.Customer_Prev_Previous_Address_District_c = address.Line2;
+                $scope.applicant.PersonMailingCountry = address.CountryName;
+                            //return;
+                        }
+
+            //Employer address
+                        if ($scope.i == 3 || $scope.i == 4) {
+                            $scope.applicant.Employer_Address_Line_3_c = address.City;
+                            $scope.applicant.Employer_Post_Code_c = address.PostalCode;
+                            $scope.applicant.Employer_Address_Line_4_c = address.Province;
+                            $scope.applicant.Employer_Address_Line_1_c = address.Line1;
+                            $scope.applicant.Employer_Address_Line_2_c = address.Line2;
+                $scope.applicant.Employer_Country_c = address.CountryName;
+                            //return;
+                        }
+                        
+                        if ($scope.i == 7) {
+                            $scope.applicant.PrimaryEmployment.Employer_Address_Line_3_c = address.City;
+                            $scope.applicant.PrimaryEmployment.Employer_Post_Code_c = address.PostalCode;
+                            $scope.applicant.PrimaryEmployment.Employer_Address_Line_4_c = address.Province;
+                            $scope.applicant.PrimaryEmployment.Employer_Address_Line_1_c = address.Line1;
+                            $scope.applicant.PrimaryEmployment.Employer_Address_Line_2_c = address.Line2;
+                            $scope.applicant.PrimaryEmployment.Employer_Country_c = address.CountryName;
+                            //return;
+                        }
+                        
+                        if ($scope.i == 8) {
+                            $scope.applicant.SecondaryEmployment.Employer_Address_Line_3_c = address.City;
+                            $scope.applicant.SecondaryEmployment.Employer_Post_Code_c = address.PostalCode;
+                            $scope.applicant.SecondaryEmployment.Employer_Address_Line_4_c = address.Province;
+                            $scope.applicant.SecondaryEmployment.Employer_Address_Line_1_c = address.Line1;
+                            $scope.applicant.SecondaryEmployment.Employer_Address_Line_2_c = address.Line2;
+                            $scope.applicant.SecondaryEmployment.Employer_Country_c = address.CountryName;
+                            //return;
+                        }
+                        
+                        
+            $scope.$apply();
+                    });
+                };
+
+
+
+            }]);
+            
+            
+            hppApp.controller('DateController', ['$scope',
+        function($scope)
+        {
+            $scope.init = function (scop,field, required,years) {
+                $scope.sc = scop;
+                $scope.field = field;                                
+        $scope.required = required;
+                $scope.day= $scope.sc[$scope.field].Day;
+                $scope.month = $scope.sc[$scope.field].Month ;
+                $scope.year= $scope.sc[$scope.field].Year;   
+
+
+        $scope.days = [];
+        $scope.days.push({"key":"", "value":"Please select"});
+        for(var i = 1 ; i <= 31; i++)
+            $scope.days.push({"key":i.toString(), "value":i.toString()});
+
+
+        $scope.daysSM=[];
+        $scope.daysSM.push({"key":"", "value":"DD"});
+        for(var i = 1 ; i <= 31; i++)
+            $scope.daysSM.push({"key":i.toString(), "value":i.toString()});
+
+
+        $scope.months = [
+                    {"key":"", "value":"Please select"},
+                    {"key":"1", "value":"January"},
+                    {"key":"2", "value":"February"},
+                    {"key":"3", "value":"March"},
+                    {"key":"4", "value":"April"},
+                    {"key":"5", "value":"May"},
+                    {"key":"6", "value":"June"},
+                    {"key":"7", "value":"July"},
+                    {"key":"8", "value":"August"},
+                    {"key":"9", "value":"September"},
+                    {"key":"10", "value":"October"},
+                    {"key":"11", "value":"November"},
+                    {"key":"12", "value":"December"}                    
+                ];
+        $scope.monthsSM = [
+                    {"key":"", "value":"MM"},
+                    {"key":"1", "value":"Jan"},
+                    {"key":"2", "value":"Feb"},
+                    {"key":"3", "value":"Mar"},
+                    {"key":"4", "value":"Apr"},
+                    {"key":"5", "value":"May"},
+                    {"key":"6", "value":"Jun"},
+                    {"key":"7", "value":"Jul"},
+                    {"key":"8", "value":"Aug"},
+                    {"key":"9", "value":"Sep"},
+                    {"key":"10", "value":"Oct"},
+                    {"key":"11", "value":"Nov"},
+                    {"key":"12", "value":"Dec"}                 
+                ];
+
+        $scope.years = [];
+        $scope.years.push({"key":"", "value":"Please select"});
+        var currentYear = new Date().getFullYear();     
+        
+        if(years > 0)
+        {
+            for(var i = currentYear; i < currentYear + years; i++)
+                $scope.years.push({"key":i.toString(), "value":i.toString()});
+            
+        }
+        else
+        {
+            for(var i = currentYear; i > currentYear + years; i--)
+                $scope.years.push({"key":i.toString(), "value":i.toString()});
+        }
+
+
+        $scope.yearsSM = [];
+        $scope.yearsSM.push({"key":"", "value":"YY"});
+        var currentYear = new Date().getFullYear();     
+        
+        if(years > 0)
+        {
+            for(var i = currentYear; i < currentYear + years; i++)
+                $scope.yearsSM.push({"key":i.toString(), "value":i.toString()});
+            
+        }
+        else
+        {
+            for(var i = currentYear; i > currentYear + years; i--)
+                $scope.yearsSM.push({"key":i.toString(), "value":i.toString()});
+        }
+
+             
+            };              
+            
+            $scope.IsInValid = function(){
+            
+                if(!$scope.year || !$scope.month || !$scope.day || $scope.day == 0 || $scope.month == 0 || $scope.year == 0)
+            return false;
+
+
+
+        
+                   
+                var m = parseInt($scope.month, 10);
+                var d = parseInt($scope.day, 10);
+                var y = parseInt($scope.year, 10);    
+                    
+                var date = new Date(y,m-1,d);
+                if (date.getFullYear() == y && date.getMonth() + 1 == m && date.getDate() == d) {
+                    return false;
+                } else {
+                    return true;
+                }      
+            }
+        
+        
+            $scope.$watch('day',function(){
+
+        var f = $scope.sc[$scope.field];
+        var ff = $scope.sc[$scope.field].Day;
+
+               $scope.sc[$scope.field].Day = $scope.day;              
+            });
+            
+            $scope.$watch('month',function(){
+               $scope.sc[$scope.field].Month= $scope.month;
+            });
+            
+            $scope.$watch('year',function(){
+                $scope.sc[$scope.field].Year = $scope.year;               
+            });
+           
+            
+        }    
+    
+      ]);
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+                hppApp.controller('controllerFF', ['$scope', '$location', '$timeout','serviceFF','$window','serviceApplication',
+                                    function ($scope, $location, $timeout, serviceFF,$window,serviceApplication)
+                {
+                
+                    $scope.ToggleApplicantFullscreen = false; 
+                
+                    $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
+            //var f = $('#collapse0');
+            //f.collapse('show');
+
+
+                var options = {
+                    key: $scope.PCA_key
+                }
+
+
+                $scope.controls=[];
+
+
+
+                for (var a=0; a<4; a++) {        
+                    for (var i=0; i<3; i++) {            
+                        var fields = [
+                        { element: "line1" + a + i, field: "Line1" },
+                        { element: "line2" + a + i, field: "Line2", mode: pca.fieldMode.POPULATE },
+                        { element: "city" + a + i, field: "City", mode: pca.fieldMode.POPULATE },
+                        { element: "county" + a + i, field: "ProvinceName", mode: pca.fieldMode.POPULATE },
+                        { element: "postcode" + a + i, field: "PostalCode" },
+                        { element: "country" + a + i, field: "CountryName", mode: pca.fieldMode.COUNTRY }
+                        ];
+        }
+    }
+});
+                
+                $scope.WideInputClass = function()
+                {
+                    if($scope.Data.Applicants.length == 1) return 'col-md-6';
+                    return $scope.ToggleApplicantFullscreen ? 'col-md-6' : 'col-sm-12';
+                    
+                }
+                
+                $scope.ApplicantClass = function()
+                {
+                    if($scope.Data.Applicants.length == 1) return 'col-sm-12';
+                    
+                    return $scope.ToggleApplicantFullscreen ? 'col-sm-12' : 'col-lg-6'; 
+                }
+                
+                $scope.ShowPrevAddress = function(address1, dob){
+    if(!address1 || !address1.Day || !address1.Month || !address1.Year ||address1.Day == 0 || address1.Month == 0 || address1.Year == 0 )
+        return false;
+                /*  
+                if(!IsValidDate(address1.Day,address1.Month,address1.Year) )        
+                    return false;    
+                */    
+                var m = parseInt(address1.Month, 10);
+                var d = parseInt(address1.Day, 10);
+                var y = parseInt(address1.Year, 10);    
+
+                var date = new Date   (y,m-1,d);
+
+                var valid = Date.validateDay(d, y, m -1);   
+                if(!valid) return false; 
+
+                var today = new Date().addYears(-3);
+
+                var dobDate = new Date().addYears(-3);
+                if(dob && dob.Day && dob.Month && dob.Year)
+                {
+                 var dm = parseInt(dob.Month, 10);
+                 var dd = parseInt(dob.Day, 10);
+                 var dy = parseInt(dob.Year, 10);
+                 dobDate = new Date   (dy,dm-1,dd);
+
+                 if(dobDate > today)
+                    today = dobDate;
+            }
+
+
+
+
+
+            return date > today;
+
+        }
+                
+                
+                
+                
+                    $scope.GetBudgetTotal = function()
+                    {
+                        if(!$scope.Data) return 0.00;
+                    
+                        var total = 0;
+                        for(var i =0 ; i < $scope.Data.BudgetItems.length; i++)
+                        {
+                            if($scope.Data.BudgetItems[i])
+                            {
+                                total += $scope.Data.BudgetItems[i].Value;
+                            }
+                        }
+                        return total;
+                    }
+                    
+                    $scope.TotalMonthlyPayment = function(app)
+                    {
+                        var total = 0;
+                        
+                        for(var i = 0; i< app.Debts.length; i++)
+                        {
+                            if(app.Debts[i].Monthly_repayment_c)
+                            {
+                                total += app.Debts[i].Monthly_repayment_c;
+                            }
+                        }
+                        return total;
+                    }
+                    
+                    $scope.TotalDebt = function(app)
+                    {
+                        var total = 0;
+                        
+                        for(var i = 0; i< app.Debts.length; i++)
+                        {
+                            if(app.Debts[i].Outstanding_balance_c)
+                            {
+                                total += app.Debts[i].Outstanding_balance_c;
+                            }
+                        }
+                        return total;
+                    }
+                    
+                    $scope.GetDepList = function(master, child,status)
+                    {
+                        if(!child || !master) return [];
+                        var dep = child[master];
+                        
+                        //check that the current value is valid
+                        for(var i =0; i < dep.length; i++)
+                        {
+                            if(dep[i] == status) return dep;
+                        }
+                        
+                        //the current value was not in the valid list, reset the dependant value
+                        status = null;
+                        
+                        return dep;
+                    }
+                    
+                    $scope.AddDebt = function(app)
+                    {
+                        app.Debts.push({'Start_date_c' : {}, 'PaidOffDebt_c':{}});
+                    }
+                    
+                    $scope.RemoveDebt = function(app, index)
+                    {
+                        app.Debts.splice(index, 1);
+                    }                
+                
+                    $scope.GetSuggestedBudgetValue = function(item)
+                    {
+                        if(!$scope.Data.BudgetPurpose) return 0.00;
+                        
+                        var returnValue;
+                        
+                        switch($scope.Data.BudgetPurpose)
+                        {
+                            case 'Single App':
+                                returnValue = item.SingleValue;
+                            break;
+                            case 'Joint App':
+                                returnValue = item.JointValue ;
+                            break;
+                            case 'Joint App + 1 dependent':
+                                returnValue = item.JointPlus1Value ;
+                            break;
+                            case 'Joint App + 2 dependent':
+                                returnValue = item.JointPlus2Value ;
+                            break;
+                            case 'Joint App 3 or more dependents':
+                                returnValue = item.JointPlus3Value ;
+                            break;
+                        }
+                        
+                        
+                        if(!returnValue) returnValue = 0.00;
+                        
+                        if(item.IsCar &&  $scope.Data.NumCars)
+                        {
+                            returnValue = returnValue * $scope.Data.NumCars;
+                        }
+                        
+                        return returnValue;
+                    }
+                
+                
+                    $scope.Complete= function(){
+                        if(!$scope.OppId || !$scope.EventLogId) return null;
+                        serviceApplication.LoadShow('test');
+                        serviceFF.Complete($scope.OppId,angular.copy($scope.Data), $scope.EventLogId)
+                        .then(
+                            function(result){
+                                if(result.Success)
+                                {
+                                    if(result.URL)
+                                    {
+                                        $window.location.href = result.URL.FormatURL();
+                                    }
+                                    else
+                                    {
+                        serviceApplication.LoadHide(false);
+                                    }
+                                }
+                                else
+                                {
+                        serviceApplication.LoadHide(false);
+                        $scope.ErrorMessage = result.Error;
+                                }
+                            },
+                            function(error){
+                    serviceApplication.LoadHide(false);
+                                $scope.ErrorMessage = error;
+                            }
+                           );
+                    }
+
+
+                      
+                 
+                 $scope.ProcessError = function(result)
+                 {
+                     
+                 }
+                 
+                 
+                 $scope.Save= function(){
+                        if(!$scope.OppId || !$scope.EventLogId) return null;
+                        serviceApplication.LoadShow('test');
+                        serviceFF.Save($scope.OppId, angular.copy($scope.Data))
+                        .then(
+                            function(result){
+                                if(result.Success)
+                                {
+                                    $scope.Data = result.Data;
+                                
+                                    if(result.URL)
+                                    {
+                                        $window.location.href = result.URL.FormatURL();
+                                    }
+                                    else
+                                    {
+                        serviceApplication.LoadHide(false);
+                                    }
+                                }
+                                else
+                                {
+                        serviceApplication.LoadHide(false);
+                        $scope.ErrorMessage = result.Error;
+                                }
+                            },
+                            function(error){
+                    serviceApplication.LoadHide(false);
+                                $scope.ErrorMessage = error;
+                            }
+                           );
+                   }                    
+                
+
+                    $scope.GetData= function(){
+                        if(!$scope.OppId) return null;
+                        serviceApplication.LoadShow('Processing...');
+                        serviceFF.GetData($scope.OppId)
+                        .then(
+                            function(result){
+                                if(result.Success)
+                                {
+                        $scope.SuccessMessage = 'Completed';
+                        $scope.Data = result.Data;
+
+                                    if(result.URL)
+                                    {
+                                        $window.location.href = result.URL.FormatURL();
+                                    }
+                                    else
+                                    {
+                        serviceApplication.LoadHide(false);
+                                    }
+                                }
+                                else
+                                {
+                        serviceApplication.LoadHide(false);
+                        $scope.ErrorMessage = result.Error;
+                                }
+                            },
+                            function(error){
+                    serviceApplication.LoadHide(false);
+                                $scope.ErrorMessage = error;
+                            }
+                           );
+                    }
+
+
+                 }]);
+
+
+                hppApp.service('serviceFF', ['$q', '$rootScope', function ($q, $rootScope) {
+                       this.GetData= function(id)
+                        {
+                            var deferred = $q.defer();
+                        Visualforce.remoting.timeout = 120000;
+                            HPP_ProductSwitch_FF.GetApplicationData(id,function(result, event){
+                                if(event.status){
+                                    deferred.resolve(result);
+                                }
+                                else {
+                                    deferred.reject(event);
+                                }
+                            },{ buffer: false, escape: false, timeout: 120000});
+                            return deferred.promise;
+                        }
+                        
+                        this.Complete= function(id,data,eventId)
+                        {
+                            var deferred = $q.defer();
+                        Visualforce.remoting.timeout = 120000;
+                            HPP_ProductSwitch_FF.Complete(id,data,eventId,function(result, event){
+                                if(event.status){
+                                    deferred.resolve(result);
+                                }
+                                else {
+                                    deferred.reject(event);
+                                }
+                            },{ buffer: false, escape: false, timeout: 120000});
+                            return deferred.promise;
+                        }
+                        this.Save= function(id,data)
+                        {
+                            var deferred = $q.defer();
+                        Visualforce.remoting.timeout = 120000;
+                            HPP_ProductSwitch_FF.Save(id,data,function(result, event){
+                                if(event.status){
+                                    deferred.resolve(result);
+                                }
+                                else {
+                                    deferred.reject(event);
+                                }
+                            },{ buffer: false, escape: false, timeout: 120000});
+                            return deferred.promise;
+                        }
+
+                   }]);
+
+
+            </script>
+            <style>
+            
+                
+            
+                ul#tab-headers li {
+                    display: inline;
+                    border: 1px solid #aaa;
+                    padding: 5px;
+                    padding-left:10px;
+                    padding-right:10px;
+                    background-color: #808080;
+                    color: #fff;
+                }
+                
+                ul#tab-headers li.active {
+                    background-color:rgb(179,153,93);                    
+                }
+                
+                ul#applicant-headers li {
+                    display: inline;
+                    border: 1px solid #aaa;
+                    padding: 5px;
+                    padding-left:10px;
+                    padding-right:10px;
+                    background-color: #808080;
+                    font-size:16px;
+                    color: #fff;
+                }
+                
+                ul#applicant-headers li.active{
+                    background-color:rgb(179,153,93);                 
+                }
+                
+                
+                #tab-headers2{
+                    padding-left:0px;
+                }
+                
+                
+                ul#tab-headers2 li {
+                   
+                    border: 1px solid #aaa;
+                    padding: 5px;
+                    background-color: #808080;
+                    color: #fff;
+                }
+                
+                #myScrollspy.affix{
+                    position:fixed;
+                    top:0px;
+                    z-index:999;
+                }
+                
+                
+                .budget-item-query{
+                    background-color: #f2dede;
+                }
+                
+                .budget-item-okk{
+                    background-color: #dff0d8;
+                }                
+                
+                .arbInputBox.form-control {
+                    background-color: rgb(243,243,243);
+                    padding-top: 8px;
+                    padding-bottom: 8px;
+                    padding-left: 12px;
+                    padding-right: 12px;
+                    height: inherit;
+                }
+                
+                .budgetItem{
+                    border: 1px solid #aaa;
+                }
+                
+                .panel{
+                    padding:0px;
+                }
+                
+                .panel-default>.panel-heading {                
+                     background-color: rgb(179,153,93);
+                     color: rgb(255,255,255);
+                     font-size: 18px;
+                }
+                
+                .panel-default>.panel-heading a:hover {
+                    color:#fff;
+                }
+                
+                .panel-emp .panel-title > a{
+                    text-decoration: underline;
+                }
+                
+                .panel-emp .panel-default>.panel-heading a:hover{
+                    color: #eeeeee;
+                }
+                
+                .SectionHeader {
+                    padding: 10px;
+                    background-color: rgb(179,153,93);
+                    color: rgb(255,255,255);
+                    font-size: 18px;
+                    margin-bottom: 3px;
+                }
+                
+                .function-item{
+                    float:left;
+                    padding-left:15px;
+                    padding-right:15px;
+                    padding-top: 5px;
+                    padding-bottom:5px;
+                    background-color: #808080;
+                    font-size:14px;
+                    color: #fff;
+                }
+                
+                .function-item.active{
+                    background-color: rgb(179,153,93);
+                }
+                
+                
+               
+                
+                
+        
+                
+            </style>
+        </apex:define>
+        <apex:define name="header">
+           <c:HPP_Header title="Product Switch" numapps="1" opp="{!Opp}" />
+        </apex:define>
+        <apex:define name="menu">
+            <c:HPP_Angular_Menu oppid="{!Opp.Id}" directorid="{!DirectorID}">
+            </c:HPP_Angular_Menu>
+        </apex:define>
+        <apex:define name="body">
+            <div ng-controller="controllerFF" style="height:100%;" ng-init="EventLogId='{!eventId }'; OppId='{!Opp.ID}';GetData();
+                                                            PCA_key='{!$Setup.pca__PostcodeAnywhereSettings__c.pca__Key__c}';SelectedAccount =0;Tab =1;"
+            >
+                <div style="height:100%;">
+                   <div class="row" style="height:100%;">
+                    <div class="col-md-12" style="height:100%;">
+                        
+                        
+                        
+                        <div class="PanelContents" style="height:100%">
+                            <div  style="width:100%;margin-right:15px;padding-bottom:10px;">
+                                 
+                            
+                            <div>
+                                <div id="tab-headers">
+                                    <div class="function-item" ng-click="Tab=1" ng-class="{'active' : Tab==1}">Property details</div>
+                                    <div class="function-item" ng-click="Tab=2" ng-class="{'active' : Tab==2}">Personal details</div>
+                                    <div class="function-item" ng-click="Tab=3" ng-class="{'active' : Tab==3}">Applicant addresses</div>
+                                    <div class="function-item" ng-show="false" ng-click="Tab=4" ng-class="{'active' : Tab==4}">Current ownership</div>
+                                    <div class="function-item" ng-click="Tab=5" ng-class="{'active' : Tab==5}">Employment &amp; Income</div>
+                                    <div class="function-item" ng-click="Tab=6" ng-class="{'active' : Tab==6}">Financial information</div>
+                                    <div class="function-item" ng-click="Tab=7" ng-class="{'active' : Tab==7}">Budget planner</div>
+                                    <div class="text-center" style="padding:5px;font-size:14px;margin-left:5px;float:left;
+                                                        background-color:rgb(179,153,93);color:#fff;width:40px;" ng-click="ToggleApplicantFullscreen = !ToggleApplicantFullscreen"
+                                            ng-show="(Tab==6 || Tab==5 || Tab==3 || Tab==2) && Data.Applicants.length > 1">
+                                        <span class="glyphicon glyphicon-resize-full" ng-hide="ToggleApplicantFullscreen"></span>
+                                        <span class="glyphicon glyphicon-resize-small" ng-show="ToggleApplicantFullscreen"></span>
+                                    </div>
+                                </div>
+                            </div> 
+                            <div class="clearfix"/>                             
+                            
+                                
+                            </div>
+                            
+                            
+                            
+                            <div class="verticalScrollSection" style="height:calc(100% - 50px);" ng-show="Data">
+                            <div style="background-color: #fff;padding:10px;">
+                            <div ng-show="Tab==1" >
+                                <!--Property Details-->
+                               
+                                
+                                
+                                <div>
+                                    <div class="row">
+                                        <div class="col-md-6 col-lg-4">
+                                            <label>Purchase Price/Market Value</label>
+                                            <div>£{{Data.Purchase_price_market_value_c |number:2}}</div>
+                                        </div>
+                                        <div class="col-md-6 col-lg-4">
+                                            <label>Finance required</label>
+                                            <div>£{{Data.Finance_Required_c | number:2}}</div>
+                                        </div>
+                                       
+                                        <div class="col-md-6 col-lg-4">
+                                            <label>Term of finance</label>
+                                            <div>{{Data.Term_of_Finance_c }}</div>
+                                        </div>  
+                                    </div>
+                                    <hr/>
+                                    <div class="row">   
+                                   
+                                        <div class="col-md-6 col-lg-4">
+                                            <label>Purpose of finance</label>
+                                            <div>{{Data.Purpose_of_Finance_c}}</div>
+                                        </div>                                        
+                                       <!-- <div class="col-md-6 col-lg-4">
+                                            <label>Is the primary applicant a first time buyer</label>
+                                            <div>{{Data.First_time_buyer_c}}</div> 
+                                        </div> -->                                     
+                                    </div> 
+                                </div>
+                                
+                                <!--End of property details-->
+                                <!--Security property address-->
+                                <hr/>
+                               
+                                
+                                
+                                <div>
+                                       <div class="SectionTitle">
+                                           Property Address
+                                       </div>
+                                
+                                
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-4 col-lg-3">
+                                            <label>Country</label>
+                                            <div>{{Data.New_property_country_c}}</div>
+                                        </div>                                     
+                                        <div class="col-sm-6 col-md-4 col-lg-3">
+                                            <label>Postcode</label>
+                                            <div> {{Data.New_property_postcode_c}}</div>
+                                        </div>    
+                                        <div class="col-sm-6 col-md-4 col-lg-3">
+                                            <label>Street</label>
+                                            <div>{{Data.New_property_street_c}}</div>
+                                        </div>                                      
+                                        <div class="col-sm-6 col-md-4 col-lg-3">
+                                            <label>City</label>
+                                            <div>{{Data.New_property_city_c}}</div>
+                                        </div>                                       
+                                    </div>
+                                 <hr/>
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-6">
+                                            <label>Is the property located in England, Wales or Mainland Scotland?</label>
+                                            <div>{{Data.Mainland_c}}</div>
+                                        </div>
+                                        <div class="col-sm-12 col-md-6">
+                                            <label>Are you looking to raise additional secured finance?</label>
+                                            <div>{{Data.Require_additional_secured_funds__c}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <!-- End security property address-->
+                            </div>
+                            
+                            
+                            
+                            
+                            <div ng-show="Tab==2">                         
+                                <div class="panel panel-default" ng-class="ApplicantClass()" ng-repeat="app in Data.Applicants" >
+                                      <div class="panel-heading">Applicant {{$index + 1}} - {{app.FirstName}} {{app.LastName}}</div>
+                                            <div class="panel-body" >                                       
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <label class="control-label">Title</label>
+                                                        <div>{{app.Title}}</div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <label class="control-label">First name</label>
+                                                        <div>{{app.FirstName}}</div>
+                                                    </div>                                                   
+                                                </div>
+                                                <hr/>
+                                                <div class="row">                                                    
+                                                    <div class="col-sm-6">
+                                                        <label class="control-label">Middle name</label>
+                                                        <div>{{app.MiddleName}}</div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <label class="control-label">Last name</label>
+                                                        <div>{{app.LastName}}</div>
+                                                    </div>
+                                                </div>
+                                                <hr/>
+                                                <div class="row">
+                                                     <div class="col-sm-6">
+                                                        <label class="control-label">Gender</label>
+                                                        <div>{{app.Gender}}</div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <label class="control-label">Date of birth</label>
+                                                        <div>{{app.DateOfBirth.Day}}/{{app.DateOfBirth.Month}}/{{app.DateOfBirth.Year}}</div>
+                                                    </div>
+                                                </div>
+                                                <hr />                                               
+                                                <div class="row">
+                                                    <div class="col-sm-8">
+                                                        <label class="control-label">Email address</label>
+                                                        <div><input class="form-control" type="email" ng-model="app.EmailAddress"/></div>
+                                                    </div>
+                                               </div>
+                                               <hr/>
+                                               <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <label class="control-label">Primary contact number</label>
+                                                        <div><input type="text" ng-model="app.PrimaryContactNumber" class="form-control"/></div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <label class="control-label">Secondary contact number</label>
+                                                        <div><input type="text" class="form-control" ng-model="app.SecondaryContactNumber"/></div>
+                                                    </div>
+                                                </div>                                               
+                                                <hr/>
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <label class="control-label">No. of dependants</label>
+                                                        <div><input type="number" class="form-control" ng-model="app.NumDependants"/></div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <label class="control-label">Planned retirement age</label>
+                                                        <div><input type="number" class="form-control" ng-model="app.RetirementAge"/></div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <!-- <div class="col-sm-6">
+                                                        <label class="control-label">Premier status</label>
+                                                        <div><input type="text" class="form-control" ng-model="app.PremierStatus"/></div>
+                                                    </div> -->
+                                                </div>
+                                                <hr/>
+                                                <div class="SectionTitle">
+                                                    Marketing
+                                                </div>
+                                                <div ng-show="$index==0">
+                                                <div class="row">
+                                                  <div class="col-xs-12">
+                                                      <input type="checkbox" ng-model="$parent.DPAConsent"/>
+                                                 
+                                                      <label style="padding-left:10px;">I consent to Al Rayan Bank's <a href="" ng-click="$parent.ShowDPA= !$parent.ShowDPA">Data Protection and Marketing Consent</a></label>
+                                                  </div>     
+                                              </div>
+                                               </div>
+                                              
+                                              <div ng-show="$parent.ShowDPA" class="DPAText">                                                    
+                                                    <p><strong>DATA PROTECTION</strong></p>
+                                                    <p>In accordance with the Data Protection Act 1998, Al Rayan Bank PLC is registered as a Data Controller on the public register of Data Controllers as maintained by the Information Commissioner. Any information which you provide to us will be added to our database and used to administer your account, for statistical analysis, for debt collection and fraud prevention. We may provide your information to third parties who are involved in the delivery of our products and services, however we will not provide your information to third parties for marketing purposes. If you would like to see a copy of the details we hold on you, please contact us. </p>
+                                    
+                                                    <p><strong>MARKETING</strong></p>
+                                                    <p>We may also use the information you have provided to send you communications we feel may be of interest to you. Such communications may include details of special offers, our products and services and general information updates.</p>
+                                                    
+                                                    <p><strong>EMAIL</strong></p>
+                                                    <p>I/we confirm that the email address provided in this application is mine/ours and not in use by anyone else. I authorise Al Rayan Bank to use this email address to send me communications relating to this application.</p>
+                                              </div>
+                                              
+                                              <hr/>
+                                                
+                                                
+                                                <div>
+                                                    <label>Please indicate if you 'DO NOT' wish to be contacted by Al Rayan Bank by any of the following</label>
+                                                </div>
+                                                <div class="marketing-pref">
+                                                    <label><input ng-model="app.HasEmail" type="checkbox" /> Email</label>
+                                                    <label><input ng-model="app.HasMail" type="checkbox"/> Mail</label>
+                                                    <label><input ng-model="app.HasSMS" type="checkbox"  /> SMS</label>
+                                                    <label><input ng-model="app.HasPhone" type="checkbox"  /> Phone</label>
+                                                </div>
+                                                <hr/>
+                                                
+                                                </div>
+                                                
+                                           
+                                    
+                                 
+                                  </div>
+                            </div>
+                            <div ng-show="Tab==3">
+                                <div class="panel panel-default" ng-class="ApplicantClass()" ng-repeat="app in Data.Applicants" >
+                                      <div class="panel-heading">Applicant {{$index + 1}} - {{app.FirstName}} {{app.LastName}}</div>
+                                            <div class="panel-body" > 
+                                            
+                                            
+                                            <div class="row" ng-show="app.BillingStreet">
+                                                <div class="col-sm-6">
+                                                    <label>Current Address</label>                                                
+                                                    <div ng-show="app.BillingStreet">{{app.BillingStreet}}</div>
+                                                    <div ng-show="app.Customer_Address_District_c">{{app.Customer_Address_District_c}}</div>
+                                                    <div ng-show="app.BillingCity">{{app.BillingCity}}</div>
+                                                    <div ng-show="app.BillingState">{{app.BillingState}}</div>
+                                                    <div ng-show="app.BillingPostalCode">{{app.BillingPostalCode}}</div>
+                                                    <div style="padding-top:10px;" ng-show="app.BillingCountry">{{app.BillingCountry}}</div>
+                                                </div>                                                
+                                                <div class="col-sm-6">
+                                                    <label>Move in date</label>
+                                                    <div>
+                                                        {{app.Date_moved_to_address_c.Day}}/{{app.Date_moved_to_address_c.Month}}/{{app.Date_moved_to_address_c.Year}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row" ng-show="app.ShippingStreet">
+                                                <div class="col-sm-6">
+                                                    <label>Previous Address</label>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div ng-show="app.ShippingStreet">{{app.ShippingStreet}}</div>
+                                                    <div ng-show="app.Customer_Previous_Address_District_c">{{app.Customer_Previous_Address_District_c}}</div>
+                                                    <div ng-show="app.ShippingCity">{{app.ShippingCity}}</div>
+                                                    <div ng-show="app.ShippingState">{{app.ShippingState}}</div>
+                                                    <div ng-show="app.ShippingPostalCode">{{app.ShippingPostalCode}}</div>
+                                                    <div style="padding-top:10px;" ng-show="app.ShippingCountry">{{app.ShippingCountry}}</div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    {{Date_moved_to_previous_address_c.Day}}/{{Date_moved_to_previous_address_c.Month}}/{{Date_moved_to_previous_address_c.Year}}
+                                                </div>
+                                            </div>
+                                            
+                                            
+                                            <div class="row" ng-show="app.ShippingStreet">
+                                                <div class="col-sm-6">
+                                                    <label>Previous Previous Address</label>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div ng-show="app.PersonMailingStreet">{{app.PersonMailingStreet}}</div>
+                                                    <div ng-show="app.Customer_Prev_Previous_Address_District_c">{{app.Customer_Prev_Previous_Address_District_c}}</div>
+                                                    <div ng-show="app.PersonMailingCity">{{app.PersonMailingCity}}</div>
+                                                    <div ng-show="app.PersonMailingState">{{app.PersonMailingState}}</div>
+                                                    <div ng-show="app.PersonMailingPostalCode">{{app.PersonMailingPostalCode}}</div>
+                                                    <div style="padding-top:10px;" ng-show="app.ShippingCountry">{{app.PersonMailingCountry}}</div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    {{Date_moved_to_prev_previous_address_c.Day}}/{{Date_moved_to_prev_previous_address_c.Month}}/{{Date_moved_to_prev_previous_address_c.Year}}
+                                                </div>
+                                            </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                       <!--                     
+                                                <div id="currentAddress{{$index}}">
+                
+                                                    <c:CAA_Address title="Current Address" model="app" dateField="Date_moved_to_address_c"
+                                                        postcode="BillingPostalCode" country="BillingCountry" county="BillingState"
+                                                        line1="BillingStreet" line2="Customer_Address_District_c" town="BillingCity" cid="0"/>
+                                                </div>
+                                                <div id="previousAddress{{$index}}" ng-show="ShowPrevAddress(app.Date_moved_to_address_c,app.Date_of_birth_c )">
+                                                    <c:CAA_Address title="Previous Address" model="app" dateField="Date_moved_to_previous_address_c" 
+                                                        postcode="ShippingPostalCode" country="ShippingCountry" county="ShippingState"
+                                                        line1="ShippingStreet" line2="Customer_Previous_Address_District_c" town="ShippingCity" cid="1"/>
+                                                </div>
+                                                <div id="previousPrevAddress{{$index}}" ng-show="ShowPrevAddress(app.Date_moved_to_previous_address_c,app.Date_of_birth_c)">
+                                                    {{ShowPreviousAddress(app)}}        
+                                                    <c:CAA_Address title="Previous Previous Address" model="app" dateField="Date_moved_to_prev_previous_address_c" 
+                                                        postcode="PersonMailingPostalCode" country="PersonMailingCountry" county="PersonMailingState" 
+                                                        line1="PersonMailingStreet" line2="Customer_Prev_Previous_Address_District_c" town="PersonMailingCity" cid="2" />
+                                                </div>                                           
+                                         -->
+                                                <div class="row" style="padding-top:20px;">
+                                                    <div class="col-xs-12">
+                                                        <label class="control-label">Additional address details</label>
+                                                        <textarea class="form-control" ng-model="app.AdditionalAddress" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                  
+                            </div>
+                            <div ng-show="Tab==4 && false">
+                                <div class="panel panel-default" ng-class="ApplicantClass()" ng-repeat="app in Data.Applicants" >
+                                    <div class="panel-heading">Applicant {{$index + 1}} - {{app.FirstName}} {{app.LastName}}</div>
+                                    <div class="panel-body" >
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <label>Home cirsumstances</label>
+                                                    <div>
+                                                        {{}}
+                                                    </div>    
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label>Other home cirsumstances</label>
+                                                    <div>
+                                                        {{}}
+                                                    </div>    
+                                                </div>
+                                            </div>
+                                            <hr/>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <label>What is your current monthly rental payment</label>
+                                                    <div>
+                                                        {{}}
+                                                    </div>    
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label>Name of landlord</label>
+                                                    <div>
+                                                        {{}}
+                                                    </div>    
+                                                </div>
+                                            </div>
+                                            <hr/>
+                                    </div>                                   
+                                </div>             
+                            </div>
+                            <div ng-show="Tab==5" class="panel-emp">
+                                    <div class="panel panel-default" ng-class="ApplicantClass()" ng-repeat="app in Data.Applicants" >
+                                      <div class="panel-heading">Applicant {{$index + 1}} - {{app.FirstName}} {{app.LastName}}</div>
+                                            <div class="panel-body" >
+                                            
+                                            <div class="panel-group panel-emp" id="accordionEmployment{{$index}}" role="tablist" aria-multiselectable="true">
+                                                  <div class="panel panel-default">
+                                                    <div class="panel-heading" role="tab" id="headingEmploymentOne{{$index}}">
+                                                      <h4 class="panel-title">
+                                                        <a role="button" data-toggle="collapse" data-parent="#accordionEmployment{{$index}}" 
+                                                            href="#collapseEmploymentOne{{$index}}" aria-expanded="true" aria-controls="collapseEmploymentOne{{$index}}">
+                                                          Primary Employment
+                                                        </a>
+                                                      </h4>
+                                                    </div>
+                                                    <div id="collapseEmploymentOne{{$index}}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingEmploymentOne{{$index}}">
+                                                      <div class="panel-body">
+                                                        <c:HPPProductSwitchFF_Primary />
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                  <div class="panel panel-default" ng-show="app.SecondEmployment == 'Yes'">
+                                                    <div class="panel-heading" role="tab" id="headingEmploymentTwo{{$index}}">
+                                                      <h4 class="panel-title">
+                                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordionEmployment{{$index}}" 
+                                                            href="#collapseEmploymentTwo{{$index}}" aria-expanded="false" aria-controls="collapseEmploymentTwo{{$index}}">
+                                                          Secondary Employment
+                                                        </a>
+                                                      </h4>
+                                                    </div>
+                                                    <div id="collapseEmploymentTwo{{$index}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingEmploymentTwo{{$index}}">
+                                                      <div class="panel-body">                                                           
+                                                        <c:HPPProductSwitchFF_Second />
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                  <div class="panel panel-default">
+                                                    <div class="panel-heading" role="tab" id="headingEmploymentThree{{$index}}">
+                                                      <h4 class="panel-title">
+                                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordionEmployment{{$index}}" 
+                                                            href="#collapseEmploymentThree{{$index}}" aria-expanded="false" aria-controls="collapseEmploymentThree{{$index}}">
+                                                          Income Details
+                                                        </a>
+                                                      </h4>
+                                                    </div>
+                                                    <div id="collapseEmploymentThree{{$index}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingEmploymentThree{{$index}}">
+                                                      <div class="panel-body">
+                                                            <div class="row">
+                                                                <div class="col-sm-6">
+                                                                    <label class="control-label">Do you have another income eg pension</label>
+                                                                    
+                                                                    <div>
+                                                                       <label class="radio-inline"><input name="optPension" ng-model="app.PrimaryEmployment.PensionIncome" type="radio" value="Yes" />Yes</label> 
+                                                                       <label class="radio-inline"><input name="optPension" ng-model="app.PrimaryEmployment.PensionIncome" type="radio" value="No" />No</label>
+                                                                    </div>                                                    
+                                                                </div>                                                                
+                                                            </div>
+                                                            <hr/>
+                                                            
+                                                            <div ng-show="app.PrimaryEmployment.PensionIncome == 'Yes'">
+                                                                <div class="row">
+                                                                    <div class="col-sm-6">
+                                                                        <label class="control-label">Source of income</label>
+                                                                        <div>
+                                                                            <input type="text" class="form-control" ng-model="app.Source_of_income_c"/>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        <label class="control-label">If yes to other income please give value</label>
+                                                                        <div>
+                                                                            <input type="number" class="form-control" ng-model="app.If_yes_to_other_income_please_give_value_c "/>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            <hr/>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-sm-6">
+                                                                    <label class="control-label">Net monthly income</label>
+                                                                    <div>
+                                                                        <input type="text" class="form-control" ng-model="app.PrimaryEmployment.NetIncome"/>
+                                                                    </div>
+                                                                </div>
+                                                            </div>                                                            
+                                                            <hr/>
+                                                            <div class="row">
+                                                                <div class="col-sm-12">
+                                                                    <label class="control-label">Additional employment information</label>
+                                                                    <div>
+                                                                        <textarea class="form-control" rows="8" ng-model="app.Additional_employment_information_c"/>
+                                                                    </div>
+                                                            
+                                                                </div>
+                                                            </div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                          </div>  
+                                      </div>                                       
+                            </div>
+                            
+                            <div ng-show="Tab==6">
+                                <div class="panel panel-default" ng-class="ApplicantClass()" ng-repeat="app in Data.Applicants" >
+                                      <div class="panel-heading">Applicant {{$index + 1}} - {{app.FirstName}} {{app.LastName}}</div>
+                                            <div class="panel-body" >
+                                                <div class="SectionTitle">    
+                                                    Asset Information
+                                                </div>
+                                                
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                    <label>Personal savings value</label>
+                                                    </div>
+                                                    <div class="col-sm-5">
+                                                        <input class="arbInputBox form-control " type="number" ng-model="app.Personal_savings_value_c"/>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="SectionTitle">    
+                                                    Personal debts
+                                                </div>
+                                                
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <label>Total monthly payment</label> 
+                                                        <div>
+                                                            £{{TotalMonthlyPayment(app) | number:2}} 
+                                                        </div>                                                   
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                           <label>Total debt</label> 
+                                                        <div>
+                                                            £{{TotalDebt(app) | number:2}} 
+                                                        </div>                                                         
+                                                    </div>
+                                                </div>
+                                                
+                                                
+                                                <div style="padding-top:10px;">
+                                                <button type="button" ng-click="AddDebt(app);" class="btn btn-default" >Add debt</button>
+                                                </div>
+                                                <div class="row" style="padding:8px;padding-top:20px;padding-bottom:20px;" ng-show="app.Debts.length > 0">
+                                                <div ng-repeat="debt in app.Debts" class="col-sm-12 budgetItem">                                                   
+                                             
+                                                    
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <label>Type of debt</label>
+                                                            <select class="form-control" ng-model="debt.Type_of_debt_c">
+                                                                <option value="">-- None --</option>
+                                                                <option>Credit Card</option>
+                                                                <option>Loan</option>
+                                                                <option>Hire purchase</option>
+                                                                <option>Store Card</option>
+                                                                <option>Mail order: monthly repayment</option>
+                                                                <option>Mail order: account</option>
+                                                                <option>Personal Contract Hire (Car scheme)</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <label>Lender</label>
+                                                            <input class="arbInputBox form-control" ng-model="debt.Lender"/>
+                                                        </div>
+                                                    </div>
+                                                    <hr/>
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <label>Monthly repayment</label>
+                                                            <input type="number" class="arbInputBox form-control" ng-model="debt.Monthly_repayment_c"/>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <label>Outstanding balance</label>
+                                                            <input type="number" class="arbInputBox form-control" ng-model="debt.Outstanding_balance_c"/>                                                          
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <hr/>
+                                                    <div class="row">
+                                                        <div class="col-sm-12">                                                            
+                                                            <c:CAA_Date title="Start date" model="debt" field="Start_date_c" NumYears="-50" req="true" />
+                                                        </div>                                                        
+                                                    </div>
+                                                    <hr/>
+                                                    
+                                                    <div class="row">
+                                                        <div class="col-sm-12">
+                                                            <c:CAA_Date title="When will this debt be paid off?" model="debt" field="PaidOffDebt_c" NumYears="50" req="true" />
+                                                        </div>                                                        
+                                                    </div>
+                                                   <hr/>
+                                                    <div class="row">
+                                                        <div class="col-sm-4">
+                                                            <label>Will this debt be paid off by this application?</label>
+                                                            
+                                                            <div>
+                                                                <div class="rad">
+                                                                    <label class="radio-inline">
+                                                                        <input name="optPaidOff{{app.Id}}{{$index}}" type="radio" value="True" ng-model="debt.Will_this_debt_be_paid_off_by_this_app_c"/>Yes
+                                                                    </label>
+                                                                </div>
+                                                                <div class="rad">
+                                                                    <label class="radio-inline">
+                                                                        <input name="optPaidOff{{app.Id}}{{$index}}" type="radio" value="False" ng-model="debt.Will_this_debt_be_paid_off_by_this_app_c"/>No
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                    
+                                                        <div class="col-sm-4">
+                                                            <label>Secured on this property</label>
+                                                            <div>
+                                                                <div class="rad">
+                                                                    <label class="radio-inline">
+                                                                        <input name="optSecured{{app.Id}}{{$index}}" type="radio" value="Yes" ng-model="debt.Secured_on_property_c"/>Yes
+                                                                    </label>
+                                                                </div>
+                                                                <div class="rad">
+                                                                    <label class="radio-inline">
+                                                                        <input name="optSecured{{app.Id}}{{$index}}" type="radio" value="No" ng-model="debt.Secured_on_property_c"/>No
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <label>Cleared before HPP starts</label>
+                                                            <div>
+                                                                <div class="rad">
+                                                                    <label class="radio-inline">
+                                                                        <input name="optCleared{{app.Id}}{{$index}}" type="radio" value="Yes" ng-model="debt.Cleared_before_HPP_starts_c"/>Yes
+                                                                    </label>
+                                                                </div>
+                                                                <div class="rad">
+                                                                    <label class="radio-inline">
+                                                                        <input name="optCleared{{app.Id}}{{$index}}" type="radio" value="No" ng-model="debt.Cleared_before_HPP_starts_c"/>No
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>                                                    
+                                                    
+                                                    <div style="padding:5px;">
+                                                        <button type="button" class="btn btn-default" ng-click="RemoveDebt(app,$index)">Remove</button>
+                                                    </div>
+                                                
+                                                    </div>
+                                                  </div>
+                                                <!--- END Modal debt -->
+                                               
+                                                <button type="button" ng-show="app.Debts.length > 0" ng-click="AddDebt(app);" class="btn btn-default" >Add debt</button>
+                                              
+                                                 
+                                                
+                                                <div>
+                                                </div>
+                                            </div>                                      
+                                </div>
+                            </div>
+                            
+                            <div ng-show="Tab==7" style="background-color: #fff;padding:10px;">
+                              
+                                <div class="row">
+                                    <div class="col-sm-2 col-sm-offset-5">
+                                        <label>Budgetary purposes</label>
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <select class="form-control arbBox" ng-model="Data.BudgetPurpose" name="budgetPurpose"
+                            ng-options="option as option  for option in Data.BudgetPurposes"
+                            />
+                                    
+                                      
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-2 col-sm-offset-5">
+                                        <label>No. of cars</label>
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <input type="number" class="form-control" ng-model="Data.NumCars"/>
+
+                                    </div>
+                                </div>
+                                <hr/>
+                       
+                                <div class="row" style="padding:5px;" ng-repeat="budgetItem in Data.BudgetItems" 
+                                    ng-class="(budgetItem.Value >= GetSuggestedBudgetValue(budgetItem) || budgetItem.Notes) ? 'budget-item-ok' :  'budget-item-query'  ">
+                                    <div class="col-sm-3">
+                                        <label>{{budgetItem.Title}}</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input class="arbInputBox form-control" type="number" ng-model="budgetItem.Value" />
+                                    </div>
+                                    <div class="col-sm-2 text-right">
+                                        {{GetSuggestedBudgetValue(budgetItem) |number:2 }}
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <textarea class="form-control" ng-model="budgetItem.Notes" />
+                                    </div>
+                                </div>
+                                
+                                
+                                <div class="row">
+                                    <div class="col-sm-3 text-right">
+                                        <label>Total</label>
+                                    </div>
+                                
+                                    <div class="col-sm-2">
+                                        <label>£{{GetBudgetTotal() | number:2}}</label>
+                                    </div>
+                                </div>
+                                                         
+                                
+                            </div>
+                            <div ng-show="Tab==8">
+                                <div class="section-header">Product suitability</div>
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        Are you expecting your income to significantly change in the near future?
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <textarea class="form-control" />
+                                    </div>
+                                    <div class="col-sm-2">
+                                        PICKLIST
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <ul>
+                                            <li>customer(s) aims / views of suitable term</li>
+                                            <li>surplus disposable income available / amount willing to commit / affordability</li>
+                                            <li>any known / likely income or expenditure charges</li>
+                                            <li>overall cost comparison (eg. potential total cost saving of a shorter term)</li>
+                                            <li>retirement age (evidence required if term taken beyond normal retirement age)</li>
+                                            <li>any other factors identified from the fact find</li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                1st priority
+                                            </div>
+                                            <div class="col-sm-3">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                2nd priority
+                                            </div>
+                                            <div class="col-sm-3">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                3rd priority
+                                            </div>
+                                            <div class="col-sm-3">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <label class="control-label">Product recommendation</label>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <label class="control-label">Reason for recommendation</label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <label class="control-label">Finance required</label>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label class="control-label">Term</label>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label class="control-label">Reason for term</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                           
+                          </div>
+                        <button class="btn btn-default" ng-click="Save()" ng-show="ShowCompleteButton() || true">Save</button>
+                  
+                        <button class="btn btn-default" ng-click="Complete()" ng-show="ShowCompleteButton() || true" ng-disabled="!DPAConsent">Complete</button>
+                       </div>
+                        </div>
+                    </div>
+              </div>
+                                       </div>
+                      </div>
+            </div>
+        </apex:define>
+        <apex:define name="Menu">
+        </apex:define>
+    </apex:composition>
+</apex:page>

@@ -1,0 +1,199 @@
+<apex:page showheader="false" sidebar="false" controller="MMR_FF_BTLLC_Addresses" doctype="html-5.0" action="{!Setup_Addresses}"><!-- C0644 -->
+    <head>
+        <c:MMR_PageHeader ></c:MMR_PageHeader>
+        <apex:include pagename="pca__Component" />
+        <script>
+        pca_Settings.DisableFieldRearrange = true;
+        </script>
+    </head>
+    <body style="background-color:#ededed;">
+
+        <style>
+            .q1show {
+                display: none;
+            }
+
+            .q2show {
+                display: none;
+            }
+
+            .hideLabel {
+                display: none;
+            }
+        </style>
+
+        <c:MMR_Header title="Director's Addresses" numapps="{!numapplying}" opp="{!bopp}" hide="{!IsCredit}" />
+        <div class="container">
+            <c:MMR_FF_BTLLC_Nav eventid="{!eventid}" active="2" activesection="B" rendered="{!!IsCredit && !IsCompleted}" />
+            <c:MMR_FF_BTLLC_Nav_Links eventid="{!eventid}" active="2" activesection="B" rendered="{!!IsCredit && IsCompleted}" />
+
+            <c:MMR_FF_BTLLC_Credit_Nav eventid="{!eventid}" active="2" activesection="B" rendered="{!IsCredit}" />
+
+            <apex:form id="aForm" styleclass="form-horizontal">
+
+                <div class="row">
+                    <c:MMR_FF_Address1 panelclass="panel-warning" applicantno="2" acc="{!Accs[1]}" rendered="{!NumApplying >1}" type="Director" personnum="1" />
+                    <c:MMR_FF_Address2 panelclass="panel-success" applicantno="3" acc="{!Accs[2]}" rendered="{!NumApplying >2}" type="Director" personnum="2" />
+                    <div class="clearfix"></div>
+                    <c:MMR_FF_Address3 applicantno="4" acc="{!Accs[3]}" rendered="{!NumApplying >3}" type="Director" personnum="3" />
+                    <c:MMR_FF_Address4 applicantno="5" acc="{!Accs[4]}" rendered="{!NumApplying >4}" type="Director" personnum="4" />
+                </div>
+
+                <div class="row" style="padding-bottom:20px;">
+                    <apex:commandbutton value="Previous" styleclass="btn-danger" action="{!Previous}" rendered="{!!IsCredit  && !IsCompleted }" />
+                    <apex:commandbutton value="Save" styleclass="btn-danger" action="{!Save}" rendered="{!!IsCompleted || IsCredit }" />
+                    <apex:commandbutton value="Next" styleclass="btn-danger" action="{!Next}" rendered="{!!IsCredit && !IsCompleted}" />
+                </div>
+
+            </apex:form>
+        </div>
+
+
+
+
+        <c:MMR_PageFooter ></c:MMR_PageFooter>
+        <span id="pca_status" style="display:none;" />
+
+
+
+
+
+
+        <script>
+
+        function CheckDates(applicantNo)
+    {
+
+                checkAddress(applicantNo);
+                checkPAddress(applicantNo);
+                checkPPAddress(applicantNo);
+
+    }
+
+
+     function getDiff(startDate )
+    {
+        var today= new Date();
+        var year = today.getFullYear() -  startDate.getFullYear();
+        var month =today.getMonth() -  startDate.getMonth();
+
+        if(isNaN(year) || isNaN(month))
+            return '';
+
+        return year + ' year(s), ' + month + ' month(s)';
+    }
+
+    function getMonths(startDate )
+    {
+        var today= new Date();
+        var year = today.getFullYear() -  startDate.getFullYear();
+        var month =today.getMonth() -  startDate.getMonth();
+        return (year * 12) + month ;
+    }
+
+function checkAddress(applicantNo )
+    {
+        var da= $(".addressc" + applicantNo ).val();
+
+            //var da = $("[id$='moved:dd:DateValue']").val();
+            //var da = $(".MoveDate").val()  ;
+            var n = da.split("/");
+            var dd = new Date(n[1] + "/" + n[0] + "/" + n[2]);
+
+            //$("#movedText").text( getDiff(dd));
+            var months = getMonths(dd);
+            if(months < (12*3))
+            {
+                $(".divaddressp" + applicantNo ).fadeIn(500);
+            }
+            else
+            {
+                $(".divaddressp" + applicantNo ).fadeOut(500);
+                $(".divaddresspp" + applicantNo ).fadeOut(500);
+            }
+    }
+
+function checkPAddress(applicantNo )
+{
+        var daMoved = $(".addressc" + applicantNo ).val();
+        var daMovedSplit = daMoved.split("/");
+        var daMovedDate = new Date(daMovedSplit [1] + "/" + daMovedSplit [0] + "/" + daMovedSplit [2]);
+
+
+        var da = $(".addressp" + applicantNo ).val();
+        var n = da.split("/");
+        var dd = new Date(n[1] + "/" + n[0] + "/" + n[2]);
+
+
+
+
+        //$("#movedPrevText").text( getDiff(dd));
+        var months = getMonths(dd);
+        var movedMonths = getMonths(daMovedDate );
+
+        if(movedMonths > (12 * 3))
+        {
+            $(".divaddresspp" + applicantNo ).fadeOut(500);
+        }
+        else
+        {
+            if(months < (12*3))
+            {
+                $(".divaddresspp" + applicantNo ).fadeIn(500);
+            }
+            else
+            {
+                $(".divaddresspp" + applicantNo ).fadeOut(500);
+            }
+        }
+}
+
+
+function checkPPAddress(applicantNo )
+{
+     var da = $(".addresspp" + applicantNo ).val();
+     var n = da.split("/");
+     var dd = new Date(n[1] + "/" + n[0] + "/" + n[2]);
+
+     //$("#movedPrevPrevText").text( getDiff(dd));
+
+    var months = getMonths(dd);
+        if(months < (12*3))
+        {
+            $("#addAddress").fadeIn(500);
+        }
+        else
+        {
+            $("#addAddress").fadeOut(500);
+        }
+}
+
+function SameAddressAs(applicant)
+{
+    $("[id$='addrPostCode"+applicant+"']").val($("[id$='addrPostCode']").val());
+    $("[id$='addrStreet"+applicant+"']").val($("[id$='addrStreet']").val());
+    $("[id$='addrCity"+applicant+"']").val($("[id$='addrCity']").val());
+    $("[id$='addrCountry"+applicant+"']").val($("[id$='addrCountry']").val());
+    $("[id$='addrPrevPostCode"+applicant+"']").val($("[id$='addrPrevPostCode']").val());
+    $("[id$='addrPrevStreet"+applicant+"']").val($("[id$='addrPrevStreet']").val());
+    $("[id$='addrPrevCity"+applicant+"']").val($("[id$='addrPrevCity']").val());
+    $("[id$='addrPrevCountry"+applicant+"']").val($("[id$='addrPrevCountry']").val());
+    $("[id$='addrPrevPrevPostCode"+applicant+"']").val($("[id$='addrPrevPrevPostCode']").val());
+    $("[id$='addrPrevPrevStreet"+applicant+"']").val($("[id$='addrPrevPrevStreet']").val());
+    $("[id$='addrPrevPrevCity"+applicant+"']").val($("[id$='addrPrevPrevCity']").val());
+    $("[id$='addrPrevPrevCountry"+applicant+"']").val($("[id$='addrPrevPrevCountry']").val());
+    $("[id$='addrCountry"+applicant+"List']").val($("[id$='addrCountryList']").val());
+    $("[id$='addrPrevCountry"+applicant+"List']").val($("[id$='addrPrevCountryList']").val());
+    $("[id$='addrPrevPrevCountry"+applicant+"List']").val($("[id$='addrPrevPrevCountryList']").val());
+    $("[id$='addrPostCode"+applicant+"']").val($("[id$='addrPostCode']").val());
+    $("[id$='movedCurrent"+applicant+"']").val($("[id$='movedCurrent']").val());
+    $("[id$='movedPrevious"+applicant+"']").val($("[id$='movedPrevious']").val());
+    $("[id$='movedPrevPrev"+applicant+"']").val($("[id$='movedPrevPrev']").val());
+    CheckDates(applicant);
+}
+
+
+        </script>
+
+    </body>
+</apex:page>

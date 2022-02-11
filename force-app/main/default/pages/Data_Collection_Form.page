@@ -1,0 +1,80 @@
+<!--C0685-->
+<apex:page applyBodyTag="false" showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false" controller="Data_Collection_Form_Controller" >
+    <head>
+        <apex:stylesheet value="{!URLFOR($Resource.Bootstrap_3_2_0, '/css/bootstrap.min.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.Bootstrap_3_2_0, '/css/bootstrap_spacelab.min.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/css/core.css')}"/>
+    </head>
+    <c:PriceDrawForm_Header title="Prize Draw Form" />   
+<apex:form >
+    <body>
+                <div class="headerBar">
+                    <div class="barContentLeft">
+                        <span class="textSmallerWhiteBold">Campaign</span>
+                        <span class="textSmallerWhite">: Data Collection</span>
+                    </div>
+                </div>
+            <div>
+                <div style="position: absolute; z-index: 2; width: 100%; margin-top: -15px; margin-left: -10px;">
+                    <img class="arbLogoSmall" src="{!URLFOR($Resource.Datacollectionlogotitle)}"></img>
+
+                    <div style="margin-left: 115px; font-size: 40px;font-family: simpleLight; margin-top: -32px;" class="sectionTitleSmallGray engageTitle">
+                         {!campaignname}
+                    </div>
+                    
+                    <div class="sectionTitleSmallGray engageTitle" style="height: 1px; width: calc(100% - 30px); background: rgb(184, 148, 86); margin-left: 30px; margin-top: 10px;">
+                    </div>
+                    
+                 <div >      
+                   <div >
+                      <div class="form-group">   
+                          <div class="col-sm-6">
+                              <div class="textLargeGold engageSubTitle" style="margin-top: 20px; margin-left: 40px; ">
+                                  <p> Asalaamu Alaikum </p>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                    <div class="col-sm-6">
+                      <div class="form-group">   
+                          <div class="col-sm-6">       
+                                  
+                          </div>
+                          <div class="col-sm-6" >
+                              <div style="margin-top: 25px; margin-left: 50px;">
+                                  <apex:commandButton styleClass="goldButton" value="LEAD FORM" style="width: 150px;" action="{!display}"/>
+                              </div>
+                              <div style="margin-top: 25px; margin-left: 50px;">
+                                  <input type="button" Class="goldButton" value="BACK" style="width: 150px;"  onclick = "landingpage();"/>
+                              </div>
+
+                               <div style="margin-top:350px;">
+                                    <img class="arbLogoBig" src="{!URLFOR($Resource.Datacollectionlogobig)}"></img> 
+                            </div>
+                          </div>
+                      </div>
+                  </div>
+                  </div>
+                        
+                </div>
+     
+                <div>
+                    <apex:image rendered="{!hasImage == true}" style=" margin-left: 255px; margin-top: 220px;width:500px;height:370px;"  value="{!'/servlet/servlet.FileDownload?file=' & attid}" />
+                    <apex:image rendered="{!hasImage == false}" style=" margin-left: 255px; margin-top: 220px;width:500px;height:370px;"   value="{!$Resource.DataCollectionsplash}" />
+                </div>
+                </div>  
+
+            <div class="footerBar">
+                <div class="barContentRight">
+                    <img class="footerLogo" src="{!URLFOR($Resource.Datacollectionlogotitle)}"></img>
+                </div>
+            </div>
+    </body>
+    </apex:form>
+    <script>
+        function landingpage()
+        {
+            window.location = '/apex/landing_page';
+        }
+    </script>
+</apex:page>

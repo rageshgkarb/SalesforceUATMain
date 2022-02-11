@@ -1,0 +1,50 @@
+<apex:page applyBodyTag="false" showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false">
+
+        <div class="verticalScroller" ng-controller="controllerTillManagement" ng-init="VaultTransferAcceptance_Init()" style="overflow: auto; height: 100%; margin-top: 15px;">
+            <div id="header">Vault Transfer Acceptance</div>
+
+            <div ng-repeat="transfer in VaultTransfers.TransferItems track by transfer.TransferId" class="searchResultItem" style="height:60px;" ng-click="VaultTransferAcceptance_Selected(transfer)">
+               
+                <div style="float:left;">
+                    <div style="float:left; padding-right: 15px; border-right: 1px solid gainsboro; width: 95px;">
+                            <div class="textMediumDarkGray">{{transfer.TransferDateTime.replace('BST','')}}</div>
+                    </div>
+                    <div style="float:left; margin-left: 15px;">
+                        <div class="textMediumDarkGray">From Depository: {{transfer.FromDepositoryName}} : {{transfer.Name}}</div>
+                        <div class="textDarkGray" style="margin-top: -2px;">From Cashier: {{transfer.FromUserName}}</div>
+                    </div>
+                </div>
+                <div style="float: right; margin-right: 3px; min-width: 96px;">
+                    <div ng-class="colorGreen" class="textMediumDarkGray" style="margin-top: 8px; font-size: 18px; float: right; margin-left: 3px;">{{transfer.FormattedTransferValue}}</div>
+                </div>      
+            </div>
+
+            <div style="background: #EAEAEA; margin: 0; width: calc(100% - 5px); padding: 20px;">
+                <div>
+                    <label ng-show="selectedTransfer">Selected Transaction: {{selectedTransfer.Name}}</label> 
+                </div>
+				<div ng-show="selectedTransfer">Denominations:</div>
+				
+				<div ng-repeat="denom in selectedTransfer.Denominations track by denom.Id" style="margin-left:10px;">
+					<div ng-if="denom.Direction__c == 'To Depository'">
+						{{selectedTransfer.TransferCurrency|filter_currencytosymbol}}{{denom.Value_of_Denomination__c | number: 2}}  x  {{denom.Number_of_Denomination__c}}  =  {{selectedTransfer.TransferCurrency|filter_currencytosymbol}}{{denom.Value_of_Denomination__c * denom.Number_of_Denomination__c | number : 2}}
+					</div>
+				</div>
+
+				<div style="height: 35px; margin-top: 10px; display: block;">
+	                <div class="col-sm-2 text-right">
+	                    <label ng-show="selectedTransfer">Password:</label> 
+	                </div>
+	                <div class="col-sm-4 col-md-4" >
+	                    <input class="form-control" type="password" ng-model="VaultTransfers.AcceptanceUser.Password" ng-show="selectedTransfer" />
+	                </div>
+				</div>				
+				
+				<div style="display: inline-block; width: 100%;">
+					<div style="float: left; margin-left: 10px; margin-top: 5px;" align="center" ng-show="Response_Success==false">{{Response_StatusDescription}}</div>
+                	<button id="VaultTransferAcceptance" class="goldButton" style="float: right; padding-left:30px !important; padding-right:30px !important; padding-top:17px !important; padding-bottom:17px !important;" ng-click="VaultTransferAcceptance_Execute()" ng-show="selectedTransfer" ng-disabled="working==true">Accept Vault Transfer</button>
+				</div>
+            </div>
+        </div>
+
+</apex:page>

@@ -1,0 +1,98 @@
+<apex:component controller="CMSCustomCalendarController" id="thePage">
+	
+	<apex:attribute type="CMSDateWrapper" name="acutalSelectedDay" description="Selected Date" assignTo="{!dateSelected}"	/>
+
+	<apex:stylesheet value="/sCSS/Theme2/default/homeCalendar.css" />
+	<style type="text/css">
+		
+		.calActive a{
+			text-decoration: none;
+		}
+		
+		.CMSCustCalInactiveMonth{
+			color: #919191 !Important;
+		}
+		
+		.CMSCustCalInactiveMonth a{
+			color: #919191 !Important;
+			text-decoration: none;
+		}
+		
+		.CMSCustCalInactiveDay{
+			color: #777 !Important;
+			background-color: #b5b5b5 !Important;
+		}
+		
+		.CMSCustChosenDate{
+			color: #FFF !Important;
+			background-color: #41AACB !Important;
+			font-weight: 700;
+		}
+		
+		.CMSCustCalHolidayDay{
+			color: #FFF !Important;
+			background-color: #57D6B3 !Important;
+		}
+		    	
+	</style>
+	
+	<apex:form id="theForm">
+         <apex:outputPanel id="theCalendar" >         	
+            <div class="mCalendar" style="width:250px; float:left;" >
+            	<div class="topLeft" >
+            		<div class="topRight"/>
+            	</div>
+            	
+				<div class="body">
+					<table cellspacing="0" cellpadding="2" border="0">
+						<tbody>
+							<tr class="header">
+								<td><apex:commandLink action="{!prev}" rerender="theCalendar">
+										<img title="Previous Month" class="prevCalArrow" alt="Previous Month" src="/s.gif" />
+									</apex:commandLink>
+								</td>
+								<td colspan="5" >{!month.monthname} {!month.yearname}
+								</td>
+								<td><apex:commandLink action="{!next}" rerender="theCalendar">
+									<img title="Next Month" class="nextCalArrow" alt="Next Month" src="/s.gif" />
+									</apex:commandLink>
+								</td>
+							</tr>
+							<tr>
+								<th scope="col" class="dayOfWeek">Mon</th>
+								<th scope="col" class="dayOfWeek">Tue</th>
+								<th scope="col" class="dayOfWeek">Wed</th>
+								<th scope="col" class="dayOfWeek">Thu</th>
+								<th scope="col" class="dayOfWeek">Fri</th>
+								<th scope="col" class="dayOfWeek">Sat</th>
+								<th scope="col" class="dayOfWeek">Sun</th>
+							</tr>
+							<apex:repeat value="{!weeks}" var="wk" id="foreachWeek">
+								<tr class="calRow">
+									<!-- or highlight -->
+									<apex:repeat value="{!wk.days}" var="day" id="foreachday">
+										<td valign="top" class="{!day.CSSName}">
+											<apex:commandLink action="{!highlightChosenDate}" value="{!day.dayofmonth2}" rendered="{!day.IsActive}" rerender="theCalendar" >
+												<apex:param name="selectedDate" value="{!day.FormatedDate}" />
+											</apex:commandLink>
+											<apex:outputText value="{!day.dayofmonth2}" rendered="{!NOT(day.IsActive)}" />
+										</td>
+									</apex:repeat>
+								</tr>
+							</apex:repeat>
+						</tbody>
+					</table>
+				</div>
+			
+				<div class="bottomLeft">
+					<div class="bottomRight"/>
+				</div>
+            </div>
+            <div style="padding-top: 39px; float:left;">
+            	The balance date selected is: <apex:outputText value=" {!selectedDateStr}" />
+            </div>
+
+            </apex:outputPanel>
+        </apex:form>
+	
+</apex:component>

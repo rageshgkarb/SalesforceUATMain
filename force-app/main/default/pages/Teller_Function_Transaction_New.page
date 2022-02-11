@@ -1,0 +1,285 @@
+<apex:page applyBodyTag="false" showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false">
+    
+
+<div style="width:100%; height: 100%; margin-top:15px; margin-left:15px;" ng-controller="controllerTransaction" data-ng-init="LoadFunctionPageData()">
+    <!-- Page Title --> 
+    <div style="display: inline-block;">
+        <div style="float: left;">            
+            <span class="pageSubTitleGray" ng-bind-html="pageDefinition.PageTitle"></span>
+            <span class="pageSubTitleGray"> : Stage ({{CurrentStageOrder}}/{{pageDefinition.Stages.length}}) : </span>
+            <span class="pageSubTitleGray" ng-bind-html="CurrentStageName"></span>
+        </div>        
+    </div>
+    
+    <!-- Page Content -->
+    <div class="pageStructure verticalScroller verticalScrollSection" style="margin-right: 5px; height: calc(100% - 33px);">
+        <div class="pageContentContainer">
+            
+            <div class="horizontalScrollContainer" style="margin-top: 0px; padding: 0px;" ng-cloak="ng-cloak">      
+                <ul id="horizontalScrollList" class="horizontalScrollList horizontalScroller">      
+                    <li class="scrollSection" style="height:100%; width: 65%; position: relative; min-width: 500px;">
+                        <div style="position:absolute; width: 100%; height: 100%;">
+                            <div id="transactionContent" class="verticalScroller" style="width: 100%; height: calc(100% - 66px); overflow-y:auto; overflow-x:hidden; outline:none;" tabindex="0" arb-Enter="nextButtonEventHandler(false)" arb-focus="transactionContentFocus">
+
+                                <div id="initial" ng-show="displayInitial==true">
+                                    <c:Teller_Material_Input type="text" labelText="{{labelDebitAccountNo}}" modelProperty="pageData.DebitAccountNo" width="170px" show="displayDebitAccountNo==true" disabled="disableDebitAccountNo==true" arbAccountNumberInput="true"></c:Teller_Material_Input> 
+                                    <c:Teller_Material_Input type="text" labelText="{{labelDebitAccountCCY}}" modelProperty="pageData.DebitAccountCurrency" width="170px" show="displayDebitAccountCCY==true" disabled="disableDebitAccountCCY==true" arbAccountNumberInput="true"></c:Teller_Material_Input>
+
+                                    <c:Teller_Material_Input type="text" labelText="{{labelCreditAccountNo}}" modelProperty="pageData.CreditAccountNo" width="170px" show="displayCreditAccountNo==true" disabled="disableCreditAccountNo==true" arbAccountNumberInput="true"></c:Teller_Material_Input>            
+                                    <c:Teller_Material_Input type="text" labelText="{{labelCreditAccountCCY}}" modelProperty="pageData.CreditAccountCurrency" width="170px" show="displayCreditAccountCCY==true" disabled="disableCreditAccountCCY==true" arbAccountNumberInput="true"></c:Teller_Material_Input>
+
+                                    <c:Teller_Material_Select labelText="{{labelMyCreditAccounts}}" ngmodelProperty="pageData.CreditAccountNo" width="300px" show="displayMyCreditAccounts==true" disabled="disableMyCreditAccounts==true" datasource="CreditAccounts" fieldTextName="label" fieldValueName="value"></c:Teller_Material_Select>                                     
+                                    <c:Teller_Material_Input type="text" labelText="{{labelAccountName}}" modelProperty="pageData.CustomerName" width="300px" show="displayAccountName==true" disabled="disableAccountName==true"></c:Teller_Material_Input>
+
+                                    <c:Teller_Material_Select labelText="{{labelWithdrawalCurrency}}" ngmodelProperty="pageData.WithdrawalCurrency" width="300px" show="displayWithdrawalCurrency==true" disabled="disableWithdrawalCurrency==true" datasource="withdrawalCurrencyValues"></c:Teller_Material_Select>  
+                                    <c:Teller_Material_Select labelText="{{labelDepositCurrency}}" ngmodelProperty="pageData.DepositCurrency" width="300px" show="displayDepositCurrency==true" disabled="disableDepositCurrency==true" datasource="depositCurrencyValues"></c:Teller_Material_Select>
+
+                                    <c:Teller_Material_Input type="text" labelText="{{labelTransactionAmount}}" modelProperty="pageData.TransactionAmount" width="140px" show="displayTransactionAmount==true" disabled="disableTransactionAmount==true || pageData.CloseNoticeAccount=='Y'" arbFocus="true" arbFocusDelay="1700" currencySymbol="pageData.CashCurrency" currencySymbolPadding="15px"></c:Teller_Material_Input> 
+
+
+                                    <c:Teller_Material_Input type="text" labelText="{{labelExchangeAmount}}" modelProperty="pageData.ExchangeAmount" width="140px" show="displayExchangeAmount==true" disabled="disableExchangeAmount==true" arbFocus="true" arbFocusDelay="1700" currencySymbol="pageData.TransactionCurrency" currencySymbolPadding="15px"></c:Teller_Material_Input> 
+                                    <c:Teller_Material_Input type="text" labelText="{{labelExchangeRate}}" modelProperty="pageData.ExchangeRate" width="140px" show="displayExchangeRate==true" disabled="disableExchangeRate==true" arbFocus="true" arbFocusDelay="1700"></c:Teller_Material_Input> 
+                                    
+                                    <!--C0700 Start-->
+                                    <c:Teller_Material_Input type="text" labelText="Case Number" modelProperty="pageData.LargeCashCase" width="140px" show="(pageData.ExchangeAmount != NULL && (pageData.ExchangeAmount + pageData.LargeCashDepositAggregate) >= pageData.LargeCashDepositLimit)" disabled="disableLargeCashCase==true" arbFocus="false" arbFocusDelay="1700"></c:Teller_Material_Input> 
+                                    <!--C0700 End-->
+                                                                       
+                                    <!-- Select input type -->
+                                    <c:Teller_Material_Select labelText="{{labelAmountType}}" ngmodelProperty="pageData.CustomerName" width="300px" show="displayAmountType==true" disabled="disableAmountType==true" datasource="amountTypeValues"></c:Teller_Material_Select>  
+                                    
+                                    <c:Teller_Material_Input type="text" labelText="{{labelChargeAmount}}" modelProperty="pageData.ChargeAmount" width="140px" show="displayChargeAmount==true" disabled="disableChargeAmount==true" currencySymbol="pageData.AccountCurrency" currencySymbolPadding="15px"></c:Teller_Material_Input> 
+                                    <c:Teller_Material_Input type="text" labelText="{{labelBeneficiaryAccountNo}}" modelProperty="pageData.BeneficiaryAccountNo" width="170px" show="displayBeneficiaryAccountNo==true" disabled="disableBeneficiaryAccountNo==true" ></c:Teller_Material_Input>                                    
+                                    <c:Teller_Material_Input type="text" labelText="{{labelBeneficiarySortCode}}" modelProperty="pageData.BeneficiarySortCode" width="170px" show="displayBeneficiarySortCode==true" disabled="disableBeneficiarySortCode==true" ></c:Teller_Material_Input> 
+                                    <c:Teller_Material_Input type="text" labelText="{{labelTransferType}}" modelProperty="pageData.TransferType" width="200px" show="displayTransferType==true" disabled="disableTransferType==true" ></c:Teller_Material_Input> 
+                                    <c:Teller_Material_Input type="text" labelText="{{labelNoOfCheques}}" modelProperty="pageData.NoOfCheques" width="100px" show="displayNoOfCheques==true" disabled="disableNoOfCheques==true" ></c:Teller_Material_Input> 
+                                    <c:Teller_Material_Input type="text" labelText="{{labelChequeSerialNo}}" modelProperty="pageData.ChequeSerialNo" width="350px" show="displayChequeSerialNo==true" disabled="disableChequeSerialNo==true" ></c:Teller_Material_Input> 
+                                    <c:Teller_Material_Input type="text" labelText="{{labelChequeType}}" modelProperty="pageData.ChequeType" width="150px" show="displayChequeType==true" disabled="disableChequeType==true" ></c:Teller_Material_Input> 
+                                    <c:Teller_Material_Input type="text" labelText="{{labelIssuingBank}}" modelProperty="pageData.IssuingBank" width="200px" show="displayIssuingBank==true" disabled="disableIssuingBank==true" ></c:Teller_Material_Input> 
+                                    
+                                    <!-- Select input type -->
+                                    <c:Teller_Material_Select labelText="{{labelPaymentPurpose}}" ngmodelProperty="pageData.PaymentPurpose" width="300px" show="displayPaymentPurpose==true" disabled="disablePaymentPurpose==true" datasource="paymentPurposeValues"></c:Teller_Material_Select>  
+                                                            
+                                    <!-- C0671 Start-->
+                                    <div ng-hide="LargeCashDepositAggregate < pageData.LargeCashDepositLimit">
+                                        <c:Teller_Material_Input type="text" labeltext="{{labelLargeCashCase}}{{LargeCashDepositAggregateMessage}}" modelproperty="pageData.LargeCashCase" width="350px" show="displayLargeCashCase==true" disabled="disableLargeCashCase==true"></c:Teller_Material_Input>
+                                        <!--
+                                        <c:teller_material_select labeltext="{{labelLargeCashBankWrap}}" modelproperty="pageData.LargeCashBankWrap" width="450px" show="displayLargeCashBankWrap==true" disabled="disableLargeCashBankWrap==true" datasource="LargeCashBankWrapValues"></c:teller_material_select>
+                                        <c:teller_material_input type="text" labeltext="{{labelLargeCashSource}}" modelproperty="pageData.LargeCashSource" width="350px" show="displayLargeCashSource==true" disabled="disableLargeCashSource==true"></c:teller_material_input>
+                                        <c:teller_material_input type="text" labeltext="{{labelLargeCashEvidence}}" modelproperty="pageData.LargeCashEvidence" width="350px" show="displayLargeCashEvidence==true" disabled="disableLargeCashEvidence==true"></c:teller_material_input>
+                                        <c:teller_material_input type="text" labeltext="{{labelLargeCashIntention}}" modelproperty="pageData.LargeCashIntention" width="350px" show="displayLargeCashIntention==true" disabled="disableLargeCashEvidence==true"></c:teller_material_input>
+                                        <c:teller_material_input type="text" labeltext="{{labelLargeCashCustomerBehavior}}" modelproperty="pageData.LargeCashCustomerBehavior" width="350px" show="displayLargeCashCustomerBehavior==true" disabled="disableLargeCashCustomerBehavior==true"></c:teller_material_input>
+                                        <c:teller_material_input type="text" labeltext="{{labelLargeCashSavingTime}}" modelproperty="pageData.LargeCashSavingTime" width="350px" show="displayLargeCashSavingTime==true" disabled="disableLargeCashSavingTime==true"></c:teller_material_input>
+                                        <c:teller_material_input type="text" labeltext="{{labelLargeCashFromSalary}}" modelproperty="pageData.LargeCashFromSalary" width="350px" show="displayLargeCashFromSalary==true" disabled="disableLargeCashFromSalary==true"></c:teller_material_input>
+                                        <c:teller_material_select labeltext="{{labelLargeCashCustomerProfileFit}}" modelproperty="pageData.LargeCashCustomerProfileFit" width="450px" show="displayLargeCashCustomerProfileFit==true" disabled="disableLargeCashCustomerProfileFit==true" datasource="LargeCashCustomerProfileFitValues"></c:teller_material_select>
+                                        <c:teller_material_select labeltext="{{labelLargeCashCustomerRiskRating}}" modelproperty="pageData.LargeCashCustomerRiskRating" width="450px" show="displayLargeCashCustomerRiskRating==true" disabled="disableLargeCashCustomerRiskRating==true" datasource="LargeCashCustomerRiskRatingValues"></c:teller_material_select>
+                                        <c:teller_material_select labeltext="{{labelLargeCashOnBoardCheck}}" modelproperty="pageData.LargeCashOnBoardCheck" width="450px" show="displayLargeCashOnBoardCheck==true" disabled="disableLargeCashOnBoardCheck==true" datasource="LargeCashOnBoardCheckValues"></c:teller_material_select>
+                                        -->
+                                    </div>
+                                    <!-- C0671 End-->
+                                    
+                                    <c:Teller_Material_Input type="text" labelText="{{labelReference}}" modelProperty="pageData.TransactionReference" width="350px" show="displayReference==true" disabled="disableReference==true" ></c:Teller_Material_Input> 
+                                    <c:Teller_Material_Input type="text" labelText="{{labelValueDate}}" modelProperty="pageData.ValueDate" width="100px" show="displayValueDate==true" disabled="disableValueDate==true" ></c:Teller_Material_Input> 
+                                    
+                                   
+                                    
+                                    <div ng-show="displayNarrativeLines==true">
+                                        <!-- length 35 -->
+                                        <c:Teller_Material_Input type="text" labelText="{{labelNarrativeLines}}" modelProperty="pageData.NarrativeLine1" maxlength="35" width="310px" show="displayNarrativeLines==true" disabled="disableNarrativeLines==true"></c:Teller_Material_Input> 
+                                        <c:Teller_Material_Input type="text" labelText="{{labelNarrativeLines}}" modelProperty="pageData.NarrativeLine2" maxlength="35" width="310px" arbFocus="pageData.NarrativeLine1.length == 35" show="pageData.NarrativeLine1.length > 0" disabled="disableNarrativeLines==true" ></c:Teller_Material_Input>                      
+                                        <c:Teller_Material_Input type="text" labelText="{{labelNarrativeLines}}" modelProperty="pageData.NarrativeLine3" maxlength="35" width="310px" arbFocus="pageData.NarrativeLine2.length == 35" show="pageData.NarrativeLine2.length > 0" disabled="disableNarrativeLines==true" ></c:Teller_Material_Input>
+                                        <c:Teller_Material_Input type="text" labelText="{{labelNarrativeLines}}" modelProperty="pageData.NarrativeLine4" maxlength="35" width="310px" arbFocus="pageData.NarrativeLine3.length == 35" show="pageData.NarrativeLine3.length > 0" disabled="disableNarrativeLines==true" ></c:Teller_Material_Input>
+                                    </div>
+                                    
+                                    <div ng-show="displayPaymentDetails==true">
+                                        <c:Teller_Material_Input type="text" labelText="{{labelPaymentDetails}}" modelProperty="pageData.PaymentDetailsLine1" maxlength="35" width="310px" show="displayPaymentDetails==true" disabled="disablePaymentDetails==true" ></c:Teller_Material_Input> 
+                                        <c:Teller_Material_Input type="text" labelText="{{labelPaymentDetails}}" modelProperty="pageData.PaymentDetailsLine2" maxlength="35" width="310px" arbFocus="pageData.PaymentDetailsLine1.length == 35" show="pageData.PaymentDetailsLine1.length > 0" disabled="disablePaymentDetails==true" ></c:Teller_Material_Input> 
+                                        <c:Teller_Material_Input type="text" labelText="{{labelPaymentDetails}}" modelProperty="pageData.PaymentDetailsLine3" maxlength="35" width="310px" arbFocus="pageData.PaymentDetailsLine2.length == 35" show="pageData.PaymentDetailsLine2.length > 0" disabled="disablePaymentDetails==true" ></c:Teller_Material_Input> 
+                                        <c:Teller_Material_Input type="text" labelText="{{labelPaymentDetails}}" modelProperty="pageData.PaymentDetailsLine4" maxlength="35" width="310px" arbFocus="pageData.PaymentDetailsLine3.length == 35" show="pageData.PaymentDetailsLine3.length > 0" disabled="disablePaymentDetails==true" ></c:Teller_Material_Input>                           
+                                    </div>
+                                    
+                                    <div ng-show="displayBeneficiaryDetails==true">
+                                        <c:Teller_Material_Input type="text" labelText="{{labelBeneficiaryDetails}}" modelProperty="pageData.BeneficiaryDetailsLine1" maxlength="35" width="310px" show="displayBeneficiaryDetails==true" disabled="disableBeneficiaryDetails==true" ></c:Teller_Material_Input> 
+                                        <c:Teller_Material_Input type="text" labelText="{{labelBeneficiaryDetails}}" modelProperty="pageData.BeneficiaryDetailsLine2" maxlength="35" width="310px" arbFocus="pageData.BeneficiaryDetailsLine1.length == 35" show="pageData.BeneficiaryDetailsLine1.length > 0" disabled="disableBeneficiaryDetails==true" ></c:Teller_Material_Input> 
+                                        <c:Teller_Material_Input type="text" labelText="{{labelBeneficiaryDetails}}" modelProperty="pageData.BeneficiaryDetailsLine3" maxlength="35" width="310px" arbFocus="pageData.BeneficiaryDetailsLine2.length == 35" show="pageData.BeneficiaryDetailsLine2.length > 0" disabled="disableBeneficiaryDetails==true" ></c:Teller_Material_Input> 
+                                        <c:Teller_Material_Input type="text" labelText="{{labelBeneficiaryDetails}}" modelProperty="pageData.BeneficiaryDetailsLine4" maxlength="35" width="310px" arbFocus="pageData.BeneficiaryDetailsLine3.length == 35" show="pageData.BeneficiaryDetailsLine3.length > 0" disabled="disableBeneficiaryDetails==true" ></c:Teller_Material_Input>                           
+                                    </div>
+                                    
+                                    <c:Teller_Material_Input type="text" labelText="{{labelAdditionalNotes}}" modelProperty="pageData.AdditionalNotes" width="350px" show="displayAdditionalNotes==true" disabled="disableAdditionalNotes==true" ></c:Teller_Material_Input> 
+                                    
+                                    <!-- MB 16/02/2016 Add Fields for 100 day notice account START-->
+                                     <!-- <c:teller_material_select labeltext="withdrawal type" modelproperty="pagedata.managerauthorisors.selectedauthorisor" width="200px" show="true" disabled="pagedata.managerauthorisors.selectedauthorisor.verified" datasource="pagedata.managerauthorisors.authorisors" fieldtextname="name" fieldvaluename="authorisorid" stylebackground="rgb(247, 247, 247);" stylemarginbottom="0px;" onchange="onmanagerchanged(kendoevent, 'selectedauthorisor')"></c:teller_material_select>                                      -->
+                                    
+                                    <!-- <div class="md_group" ng-show="true" style="margin-top:15px; width: 200px; margin-bottom:0px;;">
+                                        <div class="md_input" style="height: 34px; position: absolute;"></div>
+                                        <span class="k-widget k-combobox k-header kendoSelect ng-pristine ng-untouched ng-valid" style="width: 200px; margin-top: 0.5px; border: none; background: rgb(247, 247, 247);">
+                                            <span tabindex="-1" unselectable="on" class="k-dropdown-wrap k-state-default">
+                                                <input class="k-input kendoSelect ng-pristine ng-untouched ng-valid" type="text" autocomplete="off" title="" role="combobox" aria-expanded="false" tabindex="0" aria-disabled="false" aria-readonly="true" aria-autocomplete="list" aria-owns="" aria-busy="false" style="width: 100%; margin-top: 0.5px; border: none; background: rgb(247, 247, 247);" />
+                                                    <span tabindex="-1" unselectable="on" class="k-select">
+                                                        <span unselectable="on" class="k-icon k-i-arrow-s" role="button" tabindex="-1">select</span>
+                                                    </span>
+                                                </span>
+                                                <select arb-material-highlight-value="" arb-material-select="arbMaterialSelect" arb-material-select-disable="" class="kendoSelect ng-pristine ng-valid ng-touched" k-data-bind="" k-data-source="" k-data-text-field="'name'" k-data-value-field="'authorisorid'" k-ng-model="" k-on-change="onmanagerchanged(kendoevent, 'selectedauthorisor')" k-on-select="" k-options="" kendo-combo-box="kendo-combo-box" ng-model="" style="width: 200px; margin-top: 0.5px; border: none; display: none; background: rgb(247, 247, 247);" data-role="combobox" aria-disabled="false" aria-readonly="false">
+                                                    <option>Notice</option>
+                                                    <option>Free</option>
+                                                </select>
+                                            </span>
+                                            <span class="md_highlight"></span>
+                                            <span class="md_bar" style="z-index: 2; margin-top: 4px;"></span>
+                                            <label class="md_label">withdrawal type</label>
+                                    </div> -->
+                                      <!-- <div style="padding:  5px;width: 360px;padding-left: 5px;"> 
+                                         <c:Teller_Withdraw_Type_Select labeltext="withdrawal type" modelproperty="pagedata.managerauthorisors.selectedauthorisor" width="200px" show="true" disabled="pagedata.managerauthorisors.selectedauthorisor.verified" datasource="" fieldtextname="name" fieldvaluename="authorisorid" stylebackground="rgb(247, 247, 247);" stylemarginbottom="0px;" onchange="onmanagerchanged(kendoevent, 'selectedauthorisor')"></c:Teller_Withdraw_Type_Select> 
+                                     </div>   -->
+                                     <!-- <div>
+                                        <div style="font-size: 12px; color: #8C733A;">Withdrawal Type</div> -->
+                                        <!-- <select class="kendoSelect" style="width: 200px;" >
+                                            <option>Notice</option>
+                                            <option>Free</option>
+                                        </select> -->
+                                         <!-- <c:Teller_Withdraw_Type_Select labeltext="withdrawal type" modelproperty="" width="200px" show="true" disabled="pagedata.managerauthorisors.selectedauthorisor.verified" datasource="" fieldtextname="name" fieldvaluename="authorisorid" stylebackground="rgb(247, 247, 247);" stylemarginbottom="0px;" onchange="ondtpwithdrawaltypeChange"></c:Teller_Withdraw_Type_Select>  -->
+                                        <!-- {{pageDefinition.Fields}} -->
+                                        <!-- <c:Teller_Material_Select labelText="{{labelNoticeWithdrawalType}}" ngmodelProperty="pageData.NoticeWithdrawalType" width="300px" show="displayNoticeWithdrawalType==true" disabled="false" datasource="NoticeWithdrawalTypeValues"></c:Teller_Material_Select>   -->                                      
+                                    <!-- </div>  -->
+                                    <div ng-show="pageDefinition.PageTitle.indexOf('Notice') != -1">
+                                        <div style="padding-top: 10px;">
+                                            <c:Teller_Material_Select className="kendoInputNoticeWithdrawalType" labelText="{{labelNoticeWithdrawalType}}" ngmodelProperty="pageData.NoticeWithdrawalType" modelPropertyToWatch="pageData.NoticeWithdrawalType" width="200px" show="true" disabled="false" datasource="NoticeWithdrawalTypeValues"></c:Teller_Material_Select>
+                                        </div>
+                                        <!-- http://demos.telerik.com/kendo-ui/datepicker/rangeselection -->
+                                        <div>
+                                            <div style="font-size: 12px; color: #8C733A;">Date Notice Given</div>
+                                            <!-- <input id="dtpDateNoticeGiven" type="date" value="{!day(today())}/{!month(today())}/{!year(today())}" style="width: 200px" /> -->
+                                            <input id="dtpDateNoticeGiven" ng-model="pageData.NoticeGivenDate" arb-Material-Highlight-Value="{{pageData.NoticeGivenDate}}" style="width: 200px" />
+                                        </div>  
+                                        <div style="padding-top: 10px;">
+                                            <div style="font-size: 12px; color: #8C733A;">Maturity Date</div>
+                                            <!-- <input id="dtpMaturityDate" type="date" value="" style="width: 200px" /> -->
+                                            <input id="dtpMaturityDate" ng-model="pageData.NoticeMaturityDate" arb-Material-Highlight-Value="{{pageData.NoticeMaturityDate}}" style="width: 200px" />
+                                        </div>                                  
+                                        <!-- <c:Teller_Material_Input type="text" labelText="Maturity Date" modelProperty="pageData.BeneficiaryDetailsLine1" maxlength="35" width="310px" show="displayBeneficiaryDetails==true" disabled="disableBeneficiaryDetails==true" ></c:Teller_Material_Input>  -->
+                                        <div style="padding-top: 10px;">                                        
+                                            Close Notice Account : <input class="scaleUp" type="checkbox" ng-model="pageData.CloseNoticeAccount" ng-true-value="'Y'" ng-false-value="'N'" ng-change="pageData.TransactionAmount='00.00'"></input>                       
+                                        </div>      
+                                    </div>
+                                    <script>
+                                        //$(document).ready(function() {
+                                            // create DatePicker from input HTML element
+                                            $("#dtpDateNoticeGiven").kendoDatePicker({
+                                                    format: "dd/MM/yyyy",
+                                                    change: ondtpDateNoticeGivenChange
+                                                    });                                         
+                                            $("#dtpMaturityDate").kendoDatePicker({format: "dd/MM/yyyy"});
+                                            addDaysForMaturityDate(100);
+                                        
+                                        function ondtpwithdrawaltypeChange() {
+                                            //alert(document.getElementById('cmbWithdrawTypeSelect').value);
+                                            if (document.getElementById('cmbWithdrawTypeSelect').value=="Free")
+                                                addDaysForMaturityDate(0);
+                                            else
+                                                addDaysForMaturityDate(100);
+                                        }
+                                        function ondtpDateNoticeGivenChange() {
+                                            addDaysForMaturityDate(100);
+                                        }
+                                        function addDaysForMaturityDate(days){
+                                            //var depart = new Date(kendo.toString($("#dtpDateNoticeGiven").data("kendoDatePicker").value(), 'yyyy-MM-dd'));
+                                            //depart.setDate(depart.getDate() + days);
+                                            //$('#dtpMaturityDate').val(depart.getDate() + "/" + (depart.getMonth()+1)+"/" + depart.getFullYear());
+                                        }
+                                        //});
+                                    </script>
+                                    <!-- MB 16/02/2016 Add Fields for 100 day notice account END-->
+                                </div>
+                                <!-- #initial -->
+
+                                <div id="Denominations" style="height: 100%;" ng-show="displayDenominations==true">
+                                    <c:Teller_Transaction_Denominations ></c:Teller_Transaction_Denominations>
+                                </div>
+                                <!-- #Denominations -->
+
+
+                                <div id="FXDenominations" style="height: 100%;" ng-show="displayFXDenominations==true">
+                                    <c:Teller_Transaction_FXDenominations ></c:Teller_Transaction_FXDenominations>
+                                </div>
+                                <!-- #FXDenominations -->
+
+                                <div id="MandateCheck" style="height: 100%;" ng-show="displayMandateCheck==true">
+                                    <c:Teller_Transaction_MandateCheck ></c:Teller_Transaction_MandateCheck>
+                                </div>
+                                 <!-- #MandateCheck -->
+                                
+                                <div id="PrintMessage" style="height: 100%; position: relative;" ng-show="displayPrintMessage==true">
+                                    <div class="textMediumDarkGray" style="margin-right: 10px; white-space: normal;" tabindex="1">Print-out has been generated and is ready for printing, please press {{NextButtonTitle}} to continue.</div>
+                                    <img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_print.png')}" style="position: absolute;bottom: 10px;right: 10px; width: 100px; opacity: 0.1;"></img>
+                                </div>
+                                <!-- #Print -->
+        
+                                <div id="LimitCheck" style="height: 100%; position: relative;" ng-show="displayLimitCheck==true">   
+                                    <c:Teller_Transaction_LimitCheck ></c:Teller_Transaction_LimitCheck>
+                                </div>
+                                <!-- #LimitCheck -->
+                                
+                                <div id="SendToEBS" style="height: 100%; position: relative;" ng-show="displaySendToEBS==true">
+                                    <div class="textMediumDarkGray" style="  margin-right: 10px; white-space: normal;">Transaction is ready to be sent to EBS, please press {{NextButtonTitle}} to upload the transaction into the host system.</div>
+                                    <img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_upload.png')}" style="position: absolute;bottom: 10px;right: 10px; width: 100px; opacity: 0.1;"></img>
+                                    <div style="position: absolute; bottom: 25px;" ng-show="pageData.Response_Code == '100'">
+                                        <c:Teller_Transaction_ManagerAuth ></c:Teller_Transaction_ManagerAuth>
+                                    </div>
+                                </div> <!-- #SendToEBS -->
+                                 
+                                <div id="Completion" style="height: 100%; position: relative;" ng-show="displayCompletion==true">
+                                    <div class="textMediumDarkGray" style="  margin-right: 10px; white-space: normal;">Transaction completed successfully, press {{NextButtonTitle}} to return to the account summary.</div>
+                                    <img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_check.png')}" style="position: absolute;bottom: 10px;right: 10px; width: 100px; opacity: 0.1;"></img>
+                                </div> <!-- #Completion -->
+                                
+                                <div ng-show="false">
+                                    <div id="printoutSection" arb-Dynamic-Html="arbDynamicHtml" dynamic-template="{{PrintTemplate}}"></div>
+                                </div>
+                                 
+                                <div id="testing" ng-show="testing=='Y'">
+                                    <p>
+                                        Testing Data
+                                    </p>
+                                    Page Data: {{pageData}}<p/>
+                                    Page Definition: {{pageDefinition}}<p/>
+                                    Current Stage Order: {{CurrentStageOrder}}<p/>
+                                    Denominations: {{denominations}}<p/>
+                                    Signatories Response: {{signatoriesResponse}}<p/>
+                                    Check Mandates Response: {{checkMandatesResponse}}<p/>
+                                    Stage: {{stage}}<p/>
+                                    Verified: {{Verified}}<p/>
+                                    Verification Error Message: {{VerificationErrorMessage}}<p/>
+                                    Selected Signatories: {{selectedSignatories}}<p/>
+                                    SendToEBS Request: {{sendToEBSResponse}}<p/>
+                                    Response_Success: {{Response_Success}}<p/>
+                                    Response_StatusDescription: {{Response_StatusDescription}}<p/>
+                                    displayInitial: {{displayInitial}}<p/>
+                                    displayDenominations: {{displayDenominations}}<p/>
+                                    displayMandateCheck: {{displayMandateCheck}}<p/>
+                                    displayLimitCheck: {{displayLimitCheck}}<p/>
+                                    pageData.LargeCashDepositLimit: {{pageData.LargeCashDepositLimit}}<p/>
+                                    pageData.LargeCashDepositAggregate: {{pageData.LargeCashDepositAggregate}}<p />
+                                    pageData.TransactionAmount+pageData.LargeCashDepositAggregate: {{LargeCashDepositAggregate}}<p />
+                                    pageData.TransactionAmount: {{pageData.TransactionAmount}}<p/>
+                                    pageData.TransactionAmount >= pageData.LargeCashDepositLimit {{pageData.TransactionAmount >= pageData.LargeCashDepositLimit}}<p />
+                                </div>
+                            </div>
+                            <div style=" width: 100%; height: 50px; border-top: 1px solid rgb(244, 244, 244); padding-top:5px;">                                
+                                <div style="float: left; color:rgb(218, 46, 46); font-size: 14px; width: calc(100% - 240px);white-space: normal;" ng-show="Response_Success==false">{{Response_StatusDescription}}</div>
+                                <button ng-cloak="ng-cloak" id="NextButtonId" class="goldButton" style="float: right; padding: 10px 20px !important; margin-left:3px;"  ng-click="nextButtonEventHandler(false)" ng-disabled="working==true" >{{NextButtonTitle | uppercase}}</button>
+                                <button ng-cloak="ng-cloak" id="PreviousButtonId" class="goldButton" style="float:right; padding: 10px 20px !important;" ng-show="displayPreviousButton==true" ng-click="previousButtonEventHandler()">{{PreviousButtonTitle | uppercase}}</button>                             
+                            </div>
+                        </div>
+                    </li>
+                    <li class="scrollSection" style="height: 100%; width: 34%; background: rgb(247, 247, 247); border-left: 1px solid rgb(213, 213, 213);; position:relative; min-width: 250px;">
+                        <div class="verticalScroller" style="position:absolute; width: 100%; height: 100%; overflow-y:auto; overflow-x:hidden;">
+                            <c:Teller_Transaction_Summary ></c:Teller_Transaction_Summary>
+                        </div>
+                    </li>               
+                </ul>
+            </div>  
+            
+        </div>
+    </div> 
+</div>
+
+</apex:page>

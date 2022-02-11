@@ -1,0 +1,195 @@
+<apex:page controller="HPPEventApplicationController" sidebar="false" showHeader="false" title="Applicant Details">
+<head>
+<apex:includeScript value="{!$Resource.pca__LookupComponent}"/>
+<apex:includeScript value="{!$Resource.pca__EditPageLauncher}"/>
+<apex:includeScript value="{!$Page.pca__EditPageSettings}"/>
+</head>
+<body>
+<c:KendoResource ></c:KendoResource>
+<apex:form >
+
+
+<div id="formWrapper" >
+<!-- C00095--> 
+<c:HPPSummary objAcc="{!Acc}" objOpp="{!opp}" objExOpp="{!ExOpp}" Product="{!Prod}" rendered="false" />
+<div id="container" >
+
+<table width="100%">
+<tr>
+<td valign="top" id="sidebar" style="display: none;">
+    <c:HPPBOMenu oppId="{!Opp.Id}"  DirectorId="{!Opp.ProductEventDirector__c}" />
+</td>
+<td valign="top" id="contenttd">
+<div  id="topNav">
+<ul>
+<li><apex:commandLink action="{!PageApplication1}" value="Property Details" id="theCommandLink"/></li>
+<li><apex:commandLink rendered="{!Opp.Number_of_People_Applying__c> 0}" action="{!PageApplicant1}" value="Applicant 1" id="appLink1"/></li>
+<li><apex:commandLink rendered="{!Opp.Number_of_People_Applying__c> 1}" action="{!PageApplicant2}" value="Applicant 2" id="appLink2"/></li>
+<li><apex:commandLink rendered="{!Opp.Number_of_People_Applying__c> 2}" action="{!PageApplicant3}" value="Applicant 3" id="appLink3"/></li>
+<li><apex:commandLink rendered="{!Opp.Number_of_People_Applying__c> 3}" action="{!PageApplicant4}" value="Applicant 4" id="appLink4"/></li>
+<li class="active"><apex:commandLink action="{!PageApplication3}" value="Additional Information" id="link3"/></li>
+<li><apex:commandLink action="{!PageApplication4}" value="Valuation Information" id="link4"/></li>
+<li><apex:commandLink action="{!PageApplication6}" value="Payment Details" id="link6"/></li>
+<li><apex:commandLink action="{!PageApplication7}" value="Application Confirmation" id="link7"/></li>
+
+</ul>
+</div>
+<div style="padding: 20px;">
+
+<h1 style="font-size: 20pt;padding-bottom:30px;">Additional Information</h1>
+
+<apex:pageBlock >
+<div id="tabstrip">
+ <ul>
+                        <li class="k-state-active">
+                            Third party information
+                        </li>
+                        <li>
+                            Additional occupier information
+                        </li>
+                       
+                    </ul>      
+                  <div>
+
+
+    <table class="detailList">
+        <tbody>
+            <tr>
+                
+                <td class="labelCol">Access contact name</td><td class="dataCol"><apex:inputField value="{!ExOpp.Estate_agent_contact_name__c}" required="false"/></td>
+                <td class="labelCol">Access company name</td><td class="dataCol"><apex:inputField value="{!ExOpp.Estate_agent_company_name__c}" required="false"/></td>
+            </tr>
+            <tr>
+                <td class="labelCol">Access telephone number</td><td class="dataCol"><apex:inputField value="{!ExOpp.Estate_agent_contact_telephone_number__c}" required="false"/></td>
+                <td class="labelCol">Solicitor company name</td><td class="dataCol"><apex:inputField value="{!ExOpp.Solicitor_company_name__c}" required="false"/></td>
+            </tr>
+            <tr>
+                <td class="labelCol">Solicitor contact name</td><td class="dataCol"><apex:inputField value="{!ExOpp.Solicitor_contact_name__c}" required="false"/></td>
+                <td class="labelCol">Solicitor postcode</td><td class="dataCol"><apex:inputField id="empPCode" value="{!ExOpp.Solicitor_postcode__c}" required="false"/></td>
+            </tr>                        
+            <tr>
+
+
+                <td class="labelCol">Solicitor street</td><td class="dataCol"><apex:inputField id="empaddr1" value="{!ExOpp.Solicitor_street__c}"/></td>
+                               <td class="labelCol">Solicitor city</td><td class="dataCol"><apex:inputField id="empaddr2" value="{!ExOpp.Solicitor_city__c}" required="false"/></td>
+            </tr>
+            <tr>
+                <td class="labelCol">Solicitor country</td><td class="dataCol"><apex:inputField id="empCountry" value="{!ExOpp.Solicitor_country__c}"/></td>            
+               <td class="labelCol">Solicitor telephone number</td><td class="dataCol"><apex:inputField value="{!ExOpp.Solicitor_contact_telephone_number__c}" required="false"/></td>
+            </tr>      
+            <tr>
+                
+                <td class="labelCol">Solicitor email</td><td class="dataCol"><apex:inputField value="{!ExOpp.Solicitor_email_address__c}" required="false"/></td>
+                <td class="labelCol">Supporting information for the application</td><td class="dataCol"><apex:inputField value="{!ExOpp.Additional_Information__c}" required="false"/></td>
+                
+                
+                <td colspan="2"></td>
+            </tr>                                            
+        </tbody>
+    </table>
+    </div>
+    
+    
+    
+    
+    
+    
+    <div><!-- 2nd tab start -->
+
+    <table class="detailList">
+        <tbody>
+            <tr>
+                <td class="labelCol">How many people over 17 will occupy the property?</td><td class="dataCol"><apex:inputField value="{!ExOpp.Over_17_will_occupy_property__c}" required="false"/></td>
+                <td colspan="2"></td>
+            </tr>
+        </tbody>
+    </table>
+   
+    
+                    <div class="pbSubheader" >
+                        <h3>Other Adults</h3>
+                    </div>
+     <apex:outputPanel id="OtherAdultList" >
+       <apex:variable value="{!0}" var="rowNumAdult"/>
+      <ul style="list-style-type: none; padding-left: 15px;">
+      <apex:repeat value="{!OtherAdults }" var="d">
+<li style="border:1px solid #CCC; padding: 5px;margin-top: 5px;">      <c:OtherAdult otherAdult="{!d}"></c:OtherAdult>
+      <apex:commandButton value="Remove" action="{!RemoveAdult}"   reRender="OtherAdultList" status="adultRemoveStatus">
+      <apex:param name="nickName"
+                value="{!rowNumAdult}"
+                assignTo="{!rowDeleteAdult}"/> 
+               
+                
+                </apex:commandButton> <apex:actionStatus id="adultRemoveStatus" startStyle="padding-left: 10px;text-decoration:none;"   startText="Removing adult..."  stopText=""/>
+                </li>
+      <apex:variable var="rowNumAdult" value="{!rowNumAdult+ 1}"/>
+      </apex:repeat>
+      </ul>
+      </apex:outputPanel>
+          <apex:commandButton value="Add Adult" action="{!AddAdult}"  reRender="OtherAdultList" status="adultcounterStatus"/>
+      <apex:actionStatus id="adultcounterStatus"  startText=" (Adding new adult...)"  stopText=""/>
+    
+    
+     </div><!-- 2nd tab close -->
+    
+    </div><!-- close tabstrip-->
+
+
+
+                   
+              
+
+
+
+  
+ 
+      
+      
+      
+
+
+
+
+
+ <apex:commandButton styleClass="redBtn" value="Previous" action="{!LastApp}"/>
+  
+              <apex:commandButton styleClass="redBtn" value="Save" action="{!Save}"/>
+
+
+         
+         <apex:commandButton styleClass="redBtn" value="Next" action="{!PageApplication4}"/>
+        
+       
+
+            <script>
+                $(document).ready(function() {
+                    $("#tabstrip").kendoTabStrip({
+                        animation:  {
+                            open: {
+                                effects: "fadeIn"
+                            }
+                        }
+                    
+                    });
+                });
+            </script>
+       
+</apex:pageBlock>
+</div>
+</td></tr></table>
+</div>
+</div>
+ <span id="pca_status" style="display:none;" />
+<script type="text/javascript">
+    pca_Load();
+</script>
+<span id="hideMyParent"></span>
+<apex:outputPanel rendered="{!IsCompleted}">
+<script>
+SetReadOnly();
+</script>
+</apex:outputPanel>
+  </apex:form>
+  </body>
+
+</apex:page>

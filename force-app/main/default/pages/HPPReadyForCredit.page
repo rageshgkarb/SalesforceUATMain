@@ -1,0 +1,46 @@
+<apex:page controller="HPPReadyforCredit" sidebar="false" showHeader="false" title="Ready for Credit ">
+    <head>
+        <c:KendoResource ></c:KendoResource>
+    </head>
+    <body>
+        <apex:form >
+            <div id="formWrapper">
+                
+                <c:HPPSummary objAcc="{!Accounts[0]}" objOpp="{!opp}" objExOpp="{!ExOpp}" Product="{!Prod}" />
+                <div id="container" >
+                    <table width="100%">
+                        <tr>
+                            <td valign="top" id="sidebar">
+                                <c:HPPBOMenu oppId="{!Opp.Id}"  DirectorId="{!Opp.ProductEventDirector__c}" />
+                            </td>
+                            <td valign="top" id="contenttd">
+                                <div id="content">
+                                    <h1>Ready for Credit</h1>
+                                    <apex:pageMessages ></apex:pageMessages>
+                                
+                                    <apex:outputPanel id="mainPageBlock">
+                                    <div style="padding:20px;">
+                                        <!-- content -->
+                                        
+                                        <apex:pageBlock >
+                                                                                   
+                                                                                        <br> </br>
+                                            Please click on the button below to confirm that the application for <b> {!opp.name} </b> is ready to be assessed by Credit:
+                                        <br> </br>
+                                            <apex:pageBlockButtons location="bottom">
+                                                <apex:commandButton value="Ready for Credit" action="{!complete}" rendered="{!!IsCompleted}" />
+                                            </apex:pageBlockButtons>
+                                        </apex:pageBlock> 
+                                    </div>
+                                    </apex:outputPanel>
+                                </div>
+                                
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+                        
+        </apex:form>
+    </body>
+</apex:page>

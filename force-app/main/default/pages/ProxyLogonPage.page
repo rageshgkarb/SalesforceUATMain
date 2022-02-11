@@ -1,0 +1,18 @@
+<apex:page controller="IFMProxyLogonController2" id="thePage" action="{!doLogin}" showHeader="false" sidebar="false">
+<!-- action="{!doLogin}" -->
+<apex:form >
+<apex:pageblock id="pageblock">
+<apex:pageblocksection id="values">
+<h1>Connection Error - please try again or contact your system administrator </h1>
+<!-- <h1>Debug Info. Remove before going to Production</h1> -->
+<!-- <p>iPageURL: {!iPageURL} -->
+<!-- </p> -->
+
+
+<!-- <p>URL: <apex:outputtext value="{!dispURL}"/> -->
+
+<!-- </p> -->
+</apex:pageblocksection>
+<!--<apex:CommandButton value="" action="{!doLogin}" rerender="thePage,pageblock,values"/> -->
+</apex:pageblock>
+</apex:form></apex:page>

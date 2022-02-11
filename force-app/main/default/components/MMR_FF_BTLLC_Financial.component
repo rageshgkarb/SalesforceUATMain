@@ -1,0 +1,208 @@
+<apex:component controller="MMR_BTLLC_ComponentController" allowdml="true"><!-- C0644 -->
+    <apex:attribute description="Applicant no" name="ApplicantNo" type="String" required="true" assignto="{!AppNo}" />
+    <apex:attribute description="Acc" name="Acc" type="Account" required="true" />
+
+    <apex:attribute name="comkey"
+                    type="String"
+                    assignto="{!Key}"
+                    description="The key given to this component so the page can easily get access to it" />
+    <apex:attribute name="pController"
+                    type="MMR_PageControllerBase"
+                    assignto="{!pageController}"
+                    required="true"
+                    description="The controller for the page." />
+
+
+    <div class="AppWidth col-md-6">
+        <div class="panel applicantPanel panel-primary">
+            <div class="panel-heading"><h2>Director {!appNo} - {!Acc.Name}</h2>  </div>
+
+            <div class="panel-body">
+                <div class="panel panel-info">
+                    <div class="panel-heading">Asset Information  </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-sm-6">
+                                    <label for="">Personal savings value</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <apex:inputfield required="true" value="{!Acc.Personal_savings_value__c}" styleclass="form-control" />
+                                </div>
+                                <!-- Garnet - START -->
+                                <div class="col-sm-6">
+                                    <label for="">From where did the funds originate?</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <apex:inputfield required="true" value="{!Acc.Source_of_Funds__c}" styleclass="form-control" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <label for="">What is your total net worth?</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <apex:inputfield required="true" value="{!Acc.What_is_your_total_net_worth__c}" styleclass="form-control" />
+                                </div>
+                                <!-- Garnet - END -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+                <div class="panel panel-info">
+                    <div class="panel-heading">Personal Debts  </div>
+                    <div class="panel-body">
+
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-sm-6">
+                                    <label>Total Monthly Payment</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    {!TotalDebt}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- debts start -->
+                        <div class="row">
+
+                            <apex:variable value="{!0}" var="rowNumProp" />
+
+                            <ul class="list-group debtList">
+                                <apex:repeat value="{!Debts}" var="d">
+                                    <li class="list-group-item debtList">
+                                        <input class="debtId" type="hidden" value="{!d.id}"></input>
+                                        <input class="debtAcc" type="hidden" value="{!d.Owner_of_debt__c}"></input>
+
+                                        <div class="form-group">
+                                            <div class="col-sm-5 col-sm-offset-1">
+                                                <label for="">Type of debt</label>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <span class="form-control propType">{!d.Type_of_debt__c}  </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-sm-5 col-sm-offset-1">
+                                                <label for="">Lender</label>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <span class="form-control debtLender">{!d.Debt_Lender_Name__c}  </span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-5 col-sm-offset-1">
+                                                <label for="">Start date</label>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <span class="form-control debtStartDate">
+                                                    <apex:outputtext value="{0, date, dd'/'MM'/'yyyy}">
+                                                        <apex:param value="{!d.Start_date__c}" />
+                                                    </apex:outputtext>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-5 col-sm-offset-1">
+                                                <label for="">Monthly repayment</label>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <span class="form-control debtMonthlyPay">{!d.Monthly_repayment__c}</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-5 col-sm-offset-1">
+                                                <label for="">Outstanding balance</label>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <span class="form-control debtOutstanding">{!d.Outstanding_balance__c}</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-5 col-sm-offset-1">
+                                                <label for="">When will this debt be paid off?</label>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <span class="form-control debtLetProperty">
+                                                    <apex:outputtext value="{0, date, dd'/'MM'/'yyyy}">
+                                                        <apex:param value="{!d.PaidOffDebt__c}" />
+                                                    </apex:outputtext>
+                                                </span>
+
+
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-5 col-sm-offset-1">
+                                                <label for="">Will this debt be paid off by this application?</label>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <span class="form-control debtPaidOffThisApp">{!if(d.Will_this_debt_be_paid_off_by_this_app__c,'Yes','No') }</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-sm-5 col-sm-offset-1">
+                                                <label for="">Secured on property</label>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <span class="form-control debtSecured">{!d.Secured_on_property__c}</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-sm-5 col-sm-offset-1">
+                                                <label for="">Cleared before HPP starts</label>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <span class="form-control debtCleared">{!d.Cleared_before_HPP_starts__c}</span>
+                                            </div>
+                                        </div>
+
+
+                                        <button class="btn btn-info debtEdit" onclick="return false;">
+                                            Edit
+                                            <span class="glyphicon glyphicon-edit"></span>
+                                        </button>
+
+
+
+                                        <apex:commandlink styleclass="btn btn-danger pull-right" value="Remove" action="{!RemoveDebt}">
+                                            <span class="glyphicon glyphicon-remove-circle"></span>
+
+                                            <apex:param name="rowDeleteProperty"
+                                                        value="{!d.id}"
+                                                        assignto="{!rowDeleteProperty}" />
+
+
+                                        </apex:commandlink> <apex:actionstatus id="propRemoveStatus" startstyle="padding-left: 10px;text-decoration:none;" starttext="Removing debt..." stoptext="" />
+
+                                        <apex:variable var="rowNumProp" value="{!rowNumProp+ 1}" />
+                                    </li>
+                                </apex:repeat>
+                            </ul>
+
+                        </div>
+                        <button type="button" class="addProp btn btn-success" onclick="ShowDebtPopup({!AppNo});">Add</button>
+
+
+
+
+
+                        <!-- debts end -->
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+</apex:component>

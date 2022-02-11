@@ -1,0 +1,185 @@
+@charset "UTF-8";
+/* CSS Document for IBB by nickc@web-labs.co.uk */
+/* default view */
+@import url("tags.css");
+@import url("typo.css");
+@import url("access/contrastMenu.css");
+@import url("modules/header.css");
+@import url("modules/topmenu.css");
+@import url("modules/advertPromos.css");
+@import url("modules/menus.css");
+@import url("modules/columnForms.css");
+@import url("modules/promos.css");
+@import url("modules/curvyBox.css");
+@import url("modules/tables.css");
+@import url("modules/categoryColumns.css");
+@import url("modules/googleMaps.css");
+@import url("modules/search.css");
+@import url("modules/calculator.css");
+
+
+@import url("modules/footer.css");
+@import url("modules/pageAreaMenus.css");
+@import url("modules/siteMap.css");
+
+
+body {font-family: arial, helvetica, sans-serif;}
+.clr { 
+	clear:both;
+	overflow:hidden;
+	height:0px;
+}
+.hide { visibility:hidden; }
+.textOnly { display:none; }
+.printMe { display:none;}
+
+
+
+
+.shadow {
+	clear: both;
+	padding: 0;
+	width: 100%;
+	height: 4px;
+	line-height: 4px;
+	border-top: 1px solid #B0B0B0;
+	background-image: url(../graphics/modules/topmenu/shadow.gif);
+	background-position: top;
+	background-repeat:repeat-x;
+}
+
+#contents .crumb { 
+	font-size:.846em;
+	margin-bottom:.6em;
+}
+
+
+	#contents .intro p {
+			padding: 0 0 1.50em 0;
+			color: #000000;
+			line-height: 1.3em;
+			font-weight:bold;
+		}
+	#contents .promo.inContent { color:#000000; }
+	#contents .promo.inContent .clear {}
+	#contents .promo .clear {
+		background-image: url(../graphics/modules/IBB-eye-candy.png);
+		background-repeat: repeat-x;
+		background-position: 0px -973px;
+		padding-top: 1px;
+}
+
+
+#contents .page .module { margin:0 0 1em 0;}
+#contents .page .module p.moduleTitle { 
+	margin:0 0 1em 0;
+	padding-bottom:0;
+	color:#666666;
+	font-weight:normal;
+	font-size:1.538em;
+}
+
+
+#contents .module.apply { margin-top:1em; margin-bottom:1.5em;}
+#contents .module.apply p {display:block; float:left; margin-right:1em; }
+#contents .module.apply p input.button {font-size: 1.077em; margin-top:.2em; }
+
+
+
+/* To target a safari browser issue */
+
+@media screen and (-webkit-min-device-pixel-ratio:0){
+	#contents p input.button  { min-height:19px; padding-right:5px; padding-left:5px; }
+} 
+
+
+
+#contents .module.apply p.moduleTitle { font-size:1.615em; }
+
+
+
+#columModules .module .topper,
+#columModules .module .botter {
+/* change of bg for IE6 inherit */
+	background-color:#FFFFFF;
+}
+
+
+
+
+
+
+/* buttons */
+.buttonWrap { background-color:#DEDEDE; padding-bottom:3px; }
+input.button {
+	width:0 !important;
+	overflow:visible;
+	padding:0;
+	border-top:1px solid #C4C4C4;
+	border-right:1px solid #9E9E9E;
+	border-bottom:1px solid #6F6F6F;
+	border-left:1px solid #9E9E9E;
+	color:#000000;
+	font-weight:normal;
+	font-family:arial, sans-serif;
+	background-color:#E0E0E0;
+	background-image: url(../graphics/modules/IBB-eye-candy.png);
+	background-repeat: repeat-x;
+	background-position: left -833px;
+	text-transform:capitalize;
+}
+
+input.button:focus {
+	background-color:#E0E0E0;
+	background-image: url(../graphics/modules/IBB-eye-candy.png);
+	background-repeat: repeat-x;
+	background-position: left -853px;
+}
+
+
+#columModules input.button { padding-right:4px; padding-left:4px; }
+@media screen and (-webkit-min-device-pixel-ratio:0){
+	#columModules input.button   { min-height:21px; padding-right:5px; padding-left:5px; }
+} 
+input.button.blue {
+	border-top:1px solid #467CB3;
+	border-right:1px solid #10467D;
+	border-bottom:1px solid #00275e;
+	border-left:1px solid #10467D;
+	color:#FFFFFF;
+	background-color:#6298CF;
+	background-image: url(../graphics/modules/IBB-eye-candy.png);
+	background-repeat: repeat-x;
+	background-position: left -1252px;
+}
+
+#columModules input.button.blue.arrow {
+	background-image: url(../graphics/modules/menus/blue-button-register.png);
+	background-repeat: no-repeat;
+	background-position: right top;
+	padding-right:31px;
+}
+
+input.button.blue.arrow:focus {
+	background-image: url(../graphics/modules/menus/blue-button-register.png);
+	background-repeat: no-repeat;
+	background-position: right bottom;
+}
+input.button[class] {
+	width:auto !important;
+}
+
+
+
+#contents .module.formBlock p { 
+	padding-bottom: 1em;
+	line-height: 1.3em;
+	
+}
+#contents .module.formBlock p input { font-size: 1.077em; }
+
+#contents .module.formBlock p input.button {
+	padding-right: 4px;
+	padding-left: 4px;
+}
+

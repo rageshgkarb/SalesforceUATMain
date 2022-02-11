@@ -1,0 +1,258 @@
+<apex:component >
+ <script type="text/javascript">
+var secretEmptyKey = '[$empty$]';
+ var docugenApp = angular.module('docugenApp', ['ngAnimate','ngMessages','ngSanitize','ui.bootstrap','angular-svg-round-progressbar']).directive('focusMe', function($timeout, $parse) {
+     return {
+         //scope: true,   // optionally create a child scope
+         link: function(scope, element, attrs) {
+             var model = $parse(attrs.focusMe);
+             scope.$watch(model, function(value) {
+                 if(value === true) { 
+                     $timeout(function() {
+                         element[0].focus();
+                     });
+                 }
+             });
+         }
+     };
+ }).filter('unique', function() {
+   return function(collection, keyname) {
+      var output = [], 
+          keys = [];
+
+      angular.forEach(collection, function(item) {
+          var key = item[keyname];
+          if(keys.indexOf(key) === -1) {
+              keys.push(key);
+              output.push(item);
+          }
+      });
+
+      return output;
+   };
+}).directive('emptyTypeahead', function () {
+     return {
+         require: 'ngModel',
+         link: function (scope, element, attrs, modelCtrl) {
+             // this parser run before typeahead's parser
+             modelCtrl.$parsers.unshift(function (inputValue) {
+                 var value = (inputValue ? inputValue : secretEmptyKey); // replace empty string with secretEmptyKey to bypass typeahead-min-length check
+                 modelCtrl.$viewValue = value; // this $viewValue must match the inputValue pass to typehead directive
+                 return value;
+             });
+             
+             // this parser run after typeahead's parser
+             modelCtrl.$parsers.push(function (inputValue) {
+                 return inputValue === secretEmptyKey ? '' : inputValue; // set the secretEmptyKey back to empty string
+             });
+         }
+     }
+ });
+    
+ docugenApp.service('docugenService', ['$q', '$rootScope', function ($q, $rootScope) {
+     var maxStringSize = 6000000;    //Maximum String size is 6,000,000 characters
+     var maxFileSize = 4350000;      //After Base64 Encoding, this is the max file size
+     var chunkSize = 950000;         //Maximum Javascript Remoting message size is 1,000,000 characters
+     var attachment;
+     var attachmentName;
+     var fileSize;
+     var positionIndex;
+     var doneUploading;
+     
+     this.GetTemplates=function(){
+         var deferred = $q.defer();
+         Visualforce.remoting.timeout = 120000;
+         Edit_Docugen_EBS_Template.GetDocugenTemplates(function(result, event){
+             if(event.status){
+                 deferred.resolve(result);
+             }
+             else {
+                 deferred.reject(event);
+             }
+         });
+         return deferred.promise;
+     };
+     
+     this.GetWordFields=function(attachmentID){
+         var deferred = $q.defer();
+         Visualforce.remoting.timeout = 120000;
+         Edit_Docugen_EBS_Template.GetWordFields(attachmentID,function(result, event){
+             if(event.status){
+                 deferred.resolve(result);
+             }
+             else {
+                 deferred.reject(event);
+             }
+         });
+         return deferred.promise;
+     };
+     
+     this.removeAttachment=function(attachmentID){
+         var deferred = $q.defer();
+         Visualforce.remoting.timeout = 120000;
+         Edit_Docugen_EBS_Template.removeAttachment(attachmentID,function(result, event){
+             if(event.status){
+                 deferred.resolve(result);
+             }
+             else {
+                 deferred.reject(event);
+             }
+         });
+         return deferred.promise;   
+     };
+     
+     this.GetTemplateDetails=function(templateID){
+         var deferred = $q.defer();
+         Visualforce.remoting.timeout = 120000;
+         Edit_Docugen_EBS_Template.GetTemplateDetails(templateID,function(result, event){
+             if(event.status){
+                 deferred.resolve(result);
+             }
+             else {
+                 deferred.reject(event);
+             }     
+         });
+         return deferred.promise;
+     };
+     
+     this.getTemplateAttachments=function(templateID){
+         var deferred = $q.defer();
+         Visualforce.remoting.timeout = 120000;
+         Edit_Docugen_EBS_Template.getAttachments(templateID,function(result, event){
+             if(event.status){
+                 deferred.resolve(result);
+             }
+             else {
+                 deferred.reject(event);
+             }     
+         });
+         return deferred.promise;
+     };
+     
+     this.createDuplicate=function(templateID){
+         var deferred = $q.defer();
+         Visualforce.remoting.timeout = 120000;
+         Edit_Docugen_EBS_Template.CreateDuplicate(templateID,function(result, event){
+             if(event.status){
+                 deferred.resolve(result);
+             }
+             else {
+                 deferred.reject(event);
+             }     
+         });
+         return deferred.promise;
+     };
+     
+     this.saveTemplate=function(template){
+         var deferred = $q.defer();
+         Visualforce.remoting.timeout = 120000;
+         Edit_Docugen_EBS_Template.save(template,function(result, event){
+             if(event.status){
+                 deferred.resolve(result);
+             }
+             else {
+                 deferred.reject(event);
+             }     
+         });
+         return deferred.promise;
+     };
+     
+     
+     this.uploadFile=function(templateID){
+         var deferred = $q.defer();
+         Visualforce.remoting.timeout = 120000;
+         
+         var file = document.getElementById('template-file').files[0];
+         console.log(file);
+         if(file != undefined) {
+             if(file.size <= maxFileSize) {
+                 attachmentName = file.name;
+                 var fileReader = new FileReader();
+                 fileReader.onloadend = function(e) {
+                     attachment = window.btoa(this.result);  //Base 64 encode the file before sending it
+                     positionIndex=0;
+                     fileSize = attachment.length;
+                     console.log("Total Attachment Length: " + fileSize);
+                     doneUploading = false;
+                     if(fileSize < maxStringSize) {
+                         // BOC: uploadAttachment(null,templateID);
+                         
+                         var attachmentBody = "";
+                         if(fileSize <= positionIndex + chunkSize) {
+                             attachmentBody = attachment.substring(positionIndex);
+                             doneUploading = true;
+                         } else {
+                             attachmentBody = attachment.substring(positionIndex, positionIndex + chunkSize);
+                         }
+                         console.log("Uploading " + attachmentBody.length + " chars of " + fileSize);
+                         
+                         var fileId=null;
+                         
+                         Edit_Docugen_EBS_Template.doUploadAttachment(
+                             templateID, attachmentBody, attachmentName, fileId, 
+                             function(result, event) {
+                                 //console.log(result);
+                                 
+                                 if(event.status){
+                                     deferred.resolve(result);
+                                 }
+                                 else {
+                                     deferred.reject(event);
+                                 }
+                                 
+                                 
+                             },
+                             {buffer: true, escape: true, timeout: 120000}
+                         );
+                         
+                         
+                         // EOC: Upload attachment
+                         
+                         
+                     } else {
+                         alert("Base 64 Encoded file is too large.  Maximum size is " + maxStringSize + " your file is " + fileSize + ".");
+                     }
+                     
+                 }
+                 fileReader.onerror = function(e) {
+                     alert("There was an error reading the file.  Please try again.");
+                 }
+                 fileReader.onabort = function(e) {
+                     alert("There was an error reading the file.  Please try again.");
+                 }
+                 
+                 fileReader.readAsBinaryString(file);  //Read the body of the file
+                 
+             } else {
+                 alert("File must be under 4.3 MB in size.  Your file is too large.  Please try again.");
+             }
+         } else {
+             alert("You must choose a file before trying to upload it");
+         }
+         
+         return deferred.promise;
+     };
+     
+ 
+     
+     
+ }]);
+  
+ </script>
+    
+ <script type="text/javascript">
+    
+   
+//Method to prepare a file to be attached to the Account bound to the page by the standardController
+    function uploadFile(templateID) {
+      
+    }
+     
+
+//Sends parameters: Account Id, Attachment (body), Attachment Name, and the Id of the Attachment if it exists to the controller   
+    function uploadAttachment(fileId,templateID) {
+      
+        
+    }
+</script>
+</apex:component>

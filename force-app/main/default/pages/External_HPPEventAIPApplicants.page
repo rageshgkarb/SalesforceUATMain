@@ -1,0 +1,317 @@
+<apex:page controller="HPPEventAIPController" sidebar="false" showHeader="false" title="Applicants">
+<head>
+<c:ExternalKendo ></c:ExternalKendo>
+<style>
+.pbBody a
+{
+    color: #fff;
+}
+
+</style>
+</head>
+<body>
+
+<apex:form id="aForm" >
+<div id="headertop">
+    
+    <div id="ibbMotto">Banking you can <strong>believe</strong> in</div>
+    
+    <div class="headerLogo">
+        <a href="http://www.islamic-bank.com/"><img alt="IBB logo image" height="94" src="http://www.islamic-bank.com/graphics/shim.gif" title="Home page link" width="200"/></a>
+    </div>
+    
+    <div style="clear:both;"></div>
+</div>
+
+<div id="formWrapper">
+<div class="header" >
+<h1>{!Acc.Name} - Agreement in Principle</h1>
+</div>
+
+
+
+<div id="container" >
+
+<table width="100%">
+<tr>
+
+<td valign="top" id="contenttd">
+<div  id="topNav">
+
+<ul>
+<li ><apex:commandLink action="{!ProductDetails}" >Product Details</apex:commandLink></li>
+<li class="active">
+<span>
+Applicants
+</span>
+
+</li>
+<li class="k-header"><span>{!Accounts[0].name}</span></li>
+
+<apex:outputPanel rendered="{!Opp.Number_of_People_Applying__c> 1 && Prod!=null}">
+<li ><span>{!Accounts[1].name}</span></li>
+</apex:outputPanel>
+
+
+
+<apex:outputPanel rendered="{!Opp.Number_of_People_Applying__c> 2 && Prod!=null}">
+<li class="k-header"><span>{!Accounts[2].name}</span></li>
+
+</apex:outputPanel>
+<apex:outputPanel rendered="{!Opp.Number_of_People_Applying__c> 3}">
+<li class="k-header"><span>{!Accounts[3].name}</span></li>
+</apex:outputPanel>
+
+<li class="k-header"><span>AIP Confirmation</span></li>
+</ul>
+
+</div>
+
+
+<apex:pageMessages ></apex:pageMessages>
+<div style="text-align:right">
+    <apex:commandButton value="Previous" styleClass="ROButton blueBtn" action="{!ProductDetails}"/>
+<apex:commandButton value="Next" styleClass="ROButton redBtn" action="{!Applicant1}"/>
+</div>
+ <div class="inputArea">
+                  
+<h2>Applicants</h2>
+
+<div class="gridLayoutContainer">
+<div>
+
+
+
+
+<apex:pageBlock >
+<apex:pageBlockTable value="{!Applicants}" var="item" id="criteriaTable">
+                
+   
+         
+            <apex:column >
+            <apex:facet name="header">No.</apex:facet>
+             <apex:outputLabel value="{!item.Applicant_Number__c}"> </apex:outputLabel>
+         </apex:column>
+          
+                <apex:column >
+            <apex:facet name="header">Title</apex:facet>
+             <apex:outputLabel value="{!item.Prospect_Customer__r.Salutation}"> </apex:outputLabel>
+         </apex:column>
+         
+          <apex:column >
+            <apex:facet name="header">First Name</apex:facet>
+             <apex:outputLabel value="{!item.Prospect_Customer__r.FirstName}"> </apex:outputLabel>
+         </apex:column>
+         
+                   <apex:column >
+            <apex:facet name="header">Last Name</apex:facet>
+             <apex:outputLabel value="{!item.Prospect_Customer__r.LastName}"> </apex:outputLabel>
+         </apex:column>
+         
+           <apex:column >
+            <apex:facet name="header">Date of Birth</apex:facet>
+             
+        
+         
+         <apex:outputText value="{0,date,dd'/'MM'/'yyyy}">
+    <apex:param value="{!item.Prospect_Customer__r.Date_of_Birth__c}" />
+     </apex:outputText>
+          </apex:column>
+               <apex:column >
+            <apex:facet name="header">Remove</apex:facet>
+            <apex:outputLabel value="Primary Applicant" rendered="{!item.Applicant_Number__c  == 1}"></apex:outputLabel>
+            
+            <apex:commandLink styleClass="redBtn" action="{!delItem}" value="Del"  immediate="true" rendered="{!item.Applicant_Number__c != 1}">
+                <apex:param name="whichLine" value="{!item.Applicant_Number__c}" assignTo="{!whichLine}"/>
+            </apex:commandLink>
+         </apex:column>
+                     
+
+
+                     
+</apex:pageBlockTable>
+</apex:pageBlock>
+</div>
+</div>
+</div>
+
+ <div class="inputAreaAlt">
+                   
+<h2>Add additional applicant</h2>
+
+<div class="gridLayoutContainer">
+<div>
+
+    <table class="gridLayout">
+    <tbody>
+    
+    <tr>
+        <td class="labelCol">Title</td>
+        <td class="dataCol">
+        <apex:selectList value="{!TempTitle}" size="1">
+            <apex:selectOptions value="{!Titles}"></apex:selectOptions>
+        </apex:selectList>
+        
+        </td>
+        <td></td>
+    </tr>
+    <tr>
+        <td class="labelCol">First Name</td>
+        <td class="dataCol"><apex:inputText value="{!TempFirstName}" label="First Name"/></td>
+         <td></td>
+    </tr>
+    <tr>
+        <td class="labelCol">Last Name</td>
+        <td class="dataCol"><apex:inputtext value="{!TempLastName}" label="Last Name"/></td>
+         <td></td>
+    </tr>
+    <tr>
+        <td class="labelCol">Date of birth</td>
+        <td class="dataCol">
+        <c:DateSelect2 date="{!TempAccount.Date_of_Birth__c}"></c:DateSelect2>
+        
+       </td>
+         <td></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td><apex:commandButton styleClass="redBtn" value="Add new applicant" action="{!AddApplicant}"/></td>
+        <td></td>
+    </tr>
+    
+    </tbody>
+    </table>
+    
+    
+    </div>
+
+
+
+
+
+
+
+<apex:outputPanel rendered="{!ShowExisting}">
+
+A customer with these details has been found.
+
+
+</apex:outputPanel>
+
+
+
+</div>
+
+
+
+
+</div>
+
+<div style="text-align:right">
+    <apex:commandButton value="Previous" styleClass="ROButton blueBtn" action="{!ProductDetails}"/>
+<apex:commandButton value="Next" styleClass="ROButton redBtn" action="{!Applicant1}"/>
+</div>
+
+
+</td></tr>
+
+</table>
+
+</div>
+
+</div>
+<script type="text/javascript">
+$(document).ready(function() { 
+
+var now = new Date();
+var startYear=now.getFullYear()-100;
+var endYear=now.getFullYear();
+var optionsString=''; 
+if(startYear<endYear){
+    for(i=startYear;i<endYear+1;i++){
+        optionsString += "<option value=\""+i+"\">"+i+"</option>";
+       
+    } 
+    $('#calYearPicker').html(optionsString);
+} 
+//$('#sidebarDiv #hideMyParent').parent().parent().hide();
+});
+
+
+$(".dateFormat").hide();
+
+function SetDate(dateField)
+{
+    
+
+    var day = $(dateField).find('.DateDay').val();
+    var month= $(dateField).find('.DateMonth').val();
+    var year = $(dateField).find('.DateYear').val();        
+    
+    $(dateField).find('input').val(day +'/' + month + '/' + year);
+
+
+}
+
+$('[id$=DateValue]').each(function()
+{
+    var valu = $(this).val();
+    
+    if(valu == "")
+    return;
+    
+    valu = valu.replace('GMT ','');
+    valu = valu.replace('00:00:00 ','');
+    valu = valu.replace('Mon ','');
+    valu = valu.replace('Tue ','');
+    valu = valu.replace('Wed ','');
+    valu = valu.replace('Thu ','');
+    valu = valu.replace('Fri ','');
+    valu = valu.replace('Sat ','');
+    valu = valu.replace('Sun ','');    
+
+    
+    
+    var d = Date.parse(valu);
+    
+    var ds = d.toString('dd/MM/yyyy')
+    
+    var day = $(this).parent().find('.DateDay');
+    day.val(d.toString('dd'));
+    
+    var month = $(this).parent().find('.DateMonth');
+    month .val(d.toString('MM'));
+    
+    var year= $(this).parent().find('.DateYear');
+    year.val(d.toString('yyyy'));    
+           
+    $(this).val(ds);
+
+   
+});
+
+
+$('.DateDay').change(function()
+{
+
+
+
+SetDate($(this).parent());
+
+});
+
+$('.DateMonth').change(function()
+{
+SetDate($(this).parent());
+});
+
+$('.DateYear').change(function()
+{
+SetDate($(this).parent());
+});
+
+</script>
+  </apex:form>
+  </body>
+
+</apex:page>

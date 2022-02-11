@@ -1,0 +1,425 @@
+<apex:page controller="HPPEventAIPController" sidebar="false" showHeader="false" title="Applicant Details">
+<head>
+<apex:includeScript value="{!$Resource.pca__LookupComponent}"/>
+<apex:includeScript value="{!$Resource.pca__EditPageLauncher}"/>
+<apex:includeScript value="{!$Page.pca__EditPageSettings}"/>
+
+</head>
+<body>
+<c:KendoResource ></c:KendoResource>
+<apex:form >
+
+
+<div id="formWrapper">
+<div class="header" >
+<h1>{!Opp.Name} - {!Acc.Name} - AIP</h1>
+</div>
+
+
+
+<div id="container" >
+
+<table width="100%">
+<tr>
+
+<td valign="top" id="contenttd">
+
+<div  id="topNav">
+
+<ul>
+<li><apex:commandLink action="{!ProductDetails}" >Product Details</apex:commandLink></li>
+<li><span>Applicants</span></li>
+<li class="{!App1Css}"><span>{!Accounts[0].name}</span></li>
+
+<apex:outputPanel rendered="{!Opp.Number_of_People_Applying__c> 1 }">
+<li class="{!App2Css}"><span>{!Accounts[1].name}</span></li>
+</apex:outputPanel>
+
+
+
+<apex:outputPanel rendered="{!Opp.Number_of_People_Applying__c> 2 }">
+<li class="{!App3Css}"><span>{!Accounts[2].name}</span></li>
+
+</apex:outputPanel>
+<apex:outputPanel rendered="{!Opp.Number_of_People_Applying__c> 3}">
+<li class="{!App4Css}"><span>{!Accounts[3].name}</span></li>
+</apex:outputPanel>
+
+<li class="k-header"><span>AIP Confirmation</span></li>
+</ul>
+
+</div>
+
+
+
+
+<apex:pageBlock >
+<h2>Applicant {!CurApp } - {!Acc.name}</h2>
+
+
+
+
+
+<div style="background-color: #F89406; font-size: 14px; color: #ffffff; padding:5px;display: none;" id="savediv">
+You have made changes to this applicant.
+
+Click save to keep your changes, otherwise they will be lost.
+<apex:commandButton value="Save" action="{!save}"/>
+
+</div>
+
+
+
+   <div id="example" class="k-content">
+            <div id="forecast">
+                <div id="tabstrip">
+                    <ul>
+                        <li class="k-state-active">
+                            Personal Details
+                        </li>
+                        <li>
+                           Address
+                        </li>
+                        <li>
+                            Financial Information
+                        </li>
+                      <li>
+                          Marketing
+                      </li>
+                        
+                    </ul>
+                    <div>
+                    <apex:pageBlockSection showHeader="true" columns="2" id="tab1" lang="">
+                    <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Title"></apex:outputLabel>
+                    
+                    <apex:inputField value="{!Acc.salutation}" required="true"/>
+                    </apex:pageBlockSectionItem>
+                    
+                     
+                     <apex:inputField value="{!Acc.FirstName}" required="true"/>
+                     
+                     <apex:inputField value="{!Acc.Middle_Name__pc}" required="false"/>
+                     <apex:inputField value="{!Acc.LastName}" required="true"/>
+                     <apex:inputField value="{!Acc.Gender__c}" required="true"/>
+                     <apex:inputField value="{!Acc.Date_of_Birth__c}" required="false"/>
+                     <apex:inputField value="{!Acc.Home_Telephone_No__c}" required="true"/>
+                     <apex:inputField value="{!Acc.PersonEmail}" required="true"/>
+                     
+                    
+                    
+                    
+                  
+                    
+               
+                   </apex:pageBlockSection>
+                   
+                                   
+                    </div>
+                    <div>
+                    <apex:pageBlockSection showHeader="false" columns="1" id="tab2" lang="" title="Current Address">
+              
+                  
+
+
+<apex:inputField value="{!Acc.BillingPostalCode}" id="addrPostCode" required="true" label="Current Address Post Code" />
+<apex:pageBlockSectionItem >  
+<apex:outputLabel for="addrStreet" value="Customer Address" title="-Please key if unable to locate using postcode search">
+   <img src="/s.gif" alt="Help-" class="helpIcon"/>
+</apex:outputlabel>
+<apex:inputField value="{!Acc.BillingStreet}" id="addrStreet" required="true" label="Customer address" />
+
+</apex:pageBlockSectionItem> 
+
+
+<apex:inputField value="{!Acc.BillingCity}" id="addrCity" required="true" label="Current Address City" />
+<apex:inputField styleClass="noKendo" value="{!Acc.BillingCountry}" id="addrCountry" required="true" label="Current Address Country" />
+
+
+<apex:inputHidden id="addrHouseNo" value="{!Acc.Customer_Address_House_No__c}"/>
+              
+<apex:inputField styleClass="MoveDate" value="{!Acc.Date_moved_to_address__c}" required="true"/>   
+<span id="movedText"></span>           
+              
+              
+              
+                <apex:repeat value="{!$ObjectType.Account.FieldSets.Addresses_information}" var="f"> 
+                
+       <apex:inputField label="{!f.Label}" value="{!Acc[f]}" required="{!f.required}" rendered="false"/>
+    </apex:repeat>
+                     </apex:pageBlockSection>
+                    </div>
+                    <div>
+                    
+                    <div>
+                    
+                    
+                    <div class="pbSubheader">
+                    <h3>Employment Information</h3>
+                    </div>
+                    
+              <table class="detailList">
+              <tbody>
+              <tr>
+              <td class="labelCol">Employment Type</td><td class="dataCol"><apex:inputField styleClass="employType" value="{!Acc.Employment_Type__c}" required="true"/></td>
+              <td class="labelCol">Date Employment Commenced</td><td class="dataCol"><apex:inputField value="{!Acc.Date_Employment_Commenced__c}" required="false"/></td>
+              </tr>
+
+
+                <tr style="display:none;" class="employTypeItem">
+                <td class="labelCol">Do you have 3 years of accounts?</td><td class="dataCol"><apex:inputField value="{!Acc.Do_you_have_2_years_of_accounts__c}" required="false"/></td><td></td><td></td>
+                </tr>
+                
+              <tr>
+              <td class="labelCol">Net Monthly income</td><td class="dataCol"><apex:inputField value="{!Acc.Net_Monthly_Income__c}" required="false"/></td>
+              <td class="labelCol">Regular net monthly bonuses/overtime</td><td class="dataCol"><apex:inputField value="{!Acc.Non_guaranteed_overtime_commission__c}" required="false"/></td>
+              </tr> 
+         
+              
+               <tr>
+              <td class="labelCol">Do you have another income eg pension?</td><td class="dataCol"><apex:inputField value="{!Acc.Do_you_have_another_income_eg_pension__c}" required="false"/></td>
+              <td class="labelCol">If yes to other income please give value</td><td class="dataCol"><apex:inputField value="{!Acc.If_yes_to_other_income_please_give_value__c}" required="false"/></td>
+              </tr>
+                
+              </tbody>
+              </table>
+              </div>
+              
+              
+              <div class="pbSubheader">
+              <h3>Existing Property</h3>
+              
+              </div>
+              
+              <div>
+              <table class="detailList">
+              <tbody>
+                  <tr>
+                      <td class="labelCol">Are you selling an existing property?</td><td class="dataCol"><apex:inputField styleClass="ExistingProp" value="{!Acc.Are_you_selling_an_existing_property__c}" required="false"/></td>
+                      <td class="labelCol"><span class="existingpopitem" style="display: none;">Do you have a mortgage?</span></td><td  class="dataCol"><span class="existingpopitem" style="display: none;"><apex:inputField styleClass="hasMortgage" value="{!Acc.Do_you_have_a_mortgage__c}" required="false"/></span></td>
+                  </tr>
+                  
+                  <tr class="hasMortgageItem" style="display: none;">
+                      <td  class="labelCol">How much is outstanding on mortgage?</td><td class="dataCol"><apex:inputField value="{!Acc.Asset_MortgageOutstanding__c}" required="false"/></td>
+                      <td class="labelCol">Monthly rent or mortgage payment?</td><td class="dataCol"><apex:inputField value="{!Acc.Monthly_rent_or_mortgage_payment__c}" required="false"/></td>
+                  </tr>
+              </tbody>
+              </table>
+              </div>
+                    
+                    
+                    
+                    
+              
+      
+  
+      
+          <apex:pageBlockSection rendered="{!Opp.Interested_in__c == 'Buy To Let Purchase Plan'}" showHeader="true" columns="1" id="tab6" lang="" title="Buy To Let">
+                     <apex:repeat value="{!$ObjectType.Account.FieldSets.BTL_Questions}" var="f"> 
+       <apex:inputField value="{!Acc[f]}" required="{!f.required}"/>
+    </apex:repeat>
+      </apex:pageBlockSection>
+      
+      
+      
+                    </div>
+                   
+                   
+                   <div> <!-- Marketing tab -->
+                  <style>
+
+#navlist li
+{
+display: inline;
+list-style-type: none;
+margin-left:0;
+}
+</style>
+
+ <table class="detailList">
+              <tbody>
+ 
+ <tr>
+ <td class="labelCol">Are you happy for IBB to hold your data?</td>
+ <td class="dataCol">
+ <apex:inputField value="{!Acc.Are_you_happy_for_IBB_to_hold_your_data__c}" id="addHappy" required="true" label="Are you happy for IBB to hold your data?" />
+ </td>
+ </tr>
+ 
+ <tr><td colspan="2">
+<a target="_blank" href="/resource/1337159017000/MarketingConsent">Link To DPA statement</a>
+ </td></tr>
+ <tr>
+ <td colspan="2" >
+ Please indicate if you DO NOT wish to be contacted by IBB by any of the following
+ </td>
+ </tr>
+ 
+ <tr>
+ <td colspan="2" id="emailList">
+ 
+ <table>
+ <tr>
+     <td>Email : </td><td><apex:inputCheckbox value="{!HasEmail}" title="Email"/></td>
+ </tr>
+ <tr>
+     <td>Mail : </td><td><apex:inputCheckbox value="{!HasMail}" title="Mail"/></td>
+ </tr>
+  <tr>
+     <td>Phone : </td><td><apex:inputCheckbox value="{!HasPhone}" title="Phone"/></td>
+ </tr>
+ <tr>
+     <td>SMS : </td><td><apex:inputCheckbox value="{!HasSMS}" title="SMS"/></td>
+ </tr>
+ 
+ </table>
+ 
+
+ 
+ </td></tr>
+ 
+ </tbody>
+ </table>
+ 
+ 
+                   </div>
+                   
+                   
+                </div>
+            </div>
+
+         <apex:commandButton value="Save" styleClass="ROButton" action="{!save}" rendered="false"/>
+        <apex:commandButton value="Previous" styleClass="ROButton" action="{!PreviousAPP}"/>
+                <apex:commandButton value="Next" styleClass="ROButton" action="{!NextAPP}"/>
+       
+
+           
+        </div>
+</apex:pageBlock>
+</td></tr></table>
+
+</div>
+</div>
+
+<script>
+
+function getDiff(startDate )
+{
+    var today= new Date();
+    var year = today.getFullYear() -  startDate.getFullYear();
+    var month =today.getMonth() -  startDate.getMonth();     
+    return year + ' years, ' + month + ' months';
+}
+
+
+$(document).ready(function() { 
+$(":input").change(function () {
+// if any input element changes, enable the save and undo buttons
+$("#savediv_").css("display", "block");
+});
+
+
+ $(".MoveDate").change(function() {
+   
+  
+   
+        var da = new Date( $(".MoveDate").val()  );
+          
+         // $("#movedText").text( getDiff(da));
+
+                 
+        });
+
+function ExistingProperty()
+{
+    var sal = $("select.ExistingProp").val();
+              
+                       if(sal == 'Yes')
+                {
+                    $(".existingpopitem").fadeIn('slow');
+                    mortgateFields();
+                }
+                else
+                {
+                $(".existingpopitem").fadeOut('slow');
+                $(".hasMortgageItem").fadeOut('slow');
+                } 
+}
+
+$("select.ExistingProp").change(ExistingProperty);
+
+
+function mortgateFields()
+{
+    var sal = $("select.hasMortgage").val();              
+    if(sal == 'Yes')
+        {$(".hasMortgageItem").fadeIn('slow');}
+        else
+          {$(".hasMortgageItem").fadeOut('slow');}   
+}
+
+$("select.hasMortgage").change(mortgateFields);
+
+function employmentType()
+{
+    var sal = $("select.employType").val();         
+    var i = sal.indexOf("Self");  
+    if( i !== -1)
+    {
+        $(".employTypeItem").fadeIn('slow');
+    }    
+    else
+    {
+        $(".employTypeItem").fadeOut('slow');
+    }          
+}
+
+$("select.employType").change(employmentType);
+
+  employmentType();  
+  mortgateFields();
+  ExistingProperty();
+
+ });
+ 
+ 
+
+ 
+</script>
+
+<span id="pca_status" style="display:none;" />
+<script type="text/javascript">
+    pca_Load();
+</script>
+<span id="hideMyParent"></span>
+<script type="text/javascript">
+$(document).ready(function() { 
+
+var now = new Date();
+var startYear=now.getFullYear()-100;
+var endYear=now.getFullYear();
+var optionsString=''; 
+if(startYear<endYear){
+    for(i=startYear;i<endYear+1;i++){
+        optionsString += "<option value=\""+i+"\">"+i+"</option>";
+       
+    } 
+    $('#calYearPicker').html(optionsString);
+} 
+//$('#sidebarDiv #hideMyParent').parent().parent().hide();
+});
+
+
+$(".dateFormat").hide();
+
+</script>
+<apex:outputPanel rendered="{!IsCompleted}">
+<script>
+SetReadOnly();
+
+</script>
+</apex:outputPanel>
+  </apex:form>
+  </body>
+
+</apex:page>

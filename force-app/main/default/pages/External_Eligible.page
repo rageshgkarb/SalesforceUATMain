@@ -1,0 +1,154 @@
+<apex:page standardStylesheets="false" controller="EligibilityController"   sidebar="false" showHeader="false" title="Applicant Eligibility" >
+<head>
+<c:ExternalKendo ></c:ExternalKendo> 
+<apex:stylesheet value="https://fast.fonts.net/cssapi/127ef530-1eee-4efb-8ebe-815719f876a3.css"/>
+<style>
+
+
+
+
+#emailList
+{
+padding-top: 10px;
+}
+
+#emailList li
+{
+display: inline;
+list-style-type: none;
+margin-left:20px;
+
+}
+
+#formWrapper .header h1
+{
+    margin-top:0px;
+}
+
+#header
+{
+
+}
+
+#header h1
+{
+    margin-top: 0px;
+    color:#162f61;
+    font-size:22pt;
+    font-family: 'playfairdisplay', Arial, sans-serif;
+    padding:10px 10px 5px 10px;
+    font-weight: bold;
+}
+
+
+</style>
+
+
+
+
+
+
+
+
+
+</head>
+<body>
+
+<apex:form id="aForm" >
+
+<div id="headertop">
+            <c:LiabilitiesLogo />
+        </div>
+
+<div id="formWrapper" >
+
+
+
+<div class="header" >
+<h1>Eligible</h1>
+</div>
+
+<div id="pageContent">
+<apex:outputPanel >
+<div class="inputArea">
+<apex:pagemessages />
+
+<h2>Eligibility</h2>
+
+<div class="gridLayoutContainer">
+<div>
+Thank you for completing the HPP eligibility assessment. <br> </br>
+Based on the information that you have provided, our assessment is that you are eligible for one of our HPP products. <br> </br>
+ <apex:commandButton value="Click here to continue to the Agreement in Principle" rendered="false"  action="{!AIP}"    />
+</div>
+
+<a style="padding:10px;" class="btn redBtn" href="https://www.alrayanbank.co.uk/apply-online/hpp-thanks">Please click here to complete your eligibility</a>
+
+
+</div>
+    
+
+
+
+
+</div>
+</apex:outputPanel>
+
+
+
+
+
+
+<div style="padding: 15px;">
+<table width="100%">
+<tr>
+<td>
+<input id="btnClose"  type="button" name="backButton" value="Close" style="display:none;" 
+       
+       />
+</td>
+<td align="right">
+
+       
+       
+<apex:commandButton styleClass="redBtn" value="Next" action="{!changeNumApps}" rendered="{!IsFirstPage}"    />       
+       <apex:commandButton styleClass="redBtn" value="Check Eligibility" action="{!check}" id="but" rendered="{!!IsFirstPage && !Completed}"  />
+</td>
+</tr>
+</table>
+</div>
+
+
+
+<div>
+<table width="100%">
+<tr>
+<td valign="top">
+
+
+
+
+
+</td>
+<td valign="top">
+
+
+</td>
+</tr>
+
+</table>
+</div>
+
+</div>
+</div>
+
+
+
+  </apex:form>   
+  
+
+
+
+
+  </body>
+</apex:page>

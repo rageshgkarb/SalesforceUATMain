@@ -1,0 +1,25 @@
+<apex:page controller="BranchSelectorController">
+	<apex:sectionHeader title="{!$Label.CMS_Title}" subtitle="Select a Branch" />
+	
+	<apex:pageBlock title="{!$ObjectType.Branch__c.LabelPlural}" rendered="{!hasAccessToMultipleBranches}">
+		<apex:pageBlockTable value="{!branches}" var="branch">
+			<apex:column headerValue="{!$ObjectType.Branch__c.Fields.Name.Label}">
+				<apex:outputLink value="{!$Page.BranchSummary}?branchID={!branch.Id}">
+					<apex:outputText value="{!branch.Name}" />
+				</apex:outputLink>
+			</apex:column>
+			<apex:column value="{!branch.Branch_Location__c}" />
+		</apex:pageBlockTable>
+	</apex:pageBlock>
+	
+	<apex:pageBlock title="{!$ObjectType.Branch__c.LabelPlural}" rendered="{!hasAccessToZeroBranches}">
+		<apex:pageBlockSection columns="1">
+			<apex:outputText value="You do not have access to any branches." />
+		</apex:pageBlockSection>
+	</apex:pageBlock>
+	
+	<apex:form >
+		<apex:commandButton action="{!goToCMSApprovals}" value="Standard Cash Order Approval" />
+	</apex:form>
+	
+</apex:page>

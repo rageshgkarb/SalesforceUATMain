@@ -1,0 +1,11 @@
+@charset "UTF-8";
+/* CSS Document for parent dimensons to layouts */
+#main { 
+	width:1000px;
+	margin:0 0 0 0;
+}
+#contents { margin:10px; }
+#footer {
+	clear: left;
+	width: 100%;
+}

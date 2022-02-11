@@ -1,0 +1,6 @@
+<!--
+ - Created by lbrindle on 20/09/2018.
+ -->
+
+<apex:page id="DotConnect_Session" controller="DotConnect_Session_Controller" action="{!Redirect}">
+</apex:page>

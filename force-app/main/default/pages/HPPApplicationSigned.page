@@ -1,0 +1,139 @@
+<apex:page controller="HPPApplicationSignedController"   sidebar="false" showHeader="false" title="Submit to decison engine" action="{!Setup}">
+    <head>
+        <c:KendoResource ></c:KendoResource>
+    </head>
+    <body>
+        <apex:form >
+            <div id="formWrapper">
+                <!-- C00095--> 
+                <c:HPPSummary objAcc="{!Accounts[0]}" objOpp="{!opp}" objExOpp="{!ExOpp}" Product="{!Prod}" />
+                <div id="container" >
+                    <table width="100%">
+                        <tr>
+                            <td valign="top" id="sidebar">
+                                <c:HPPBOMenu oppId="{!Opp.Id}"  DirectorId="{!Opp.ProductEventDirector__c}" />
+                            </td>
+                            <td valign="top" id="contenttd">
+                                <div id="content">
+                                    <h1>Affordability and Credit Search</h1>
+                                    <apex:pageMessages ></apex:pageMessages>
+                                    <apex:outputPanel id="mainPageBlock" >
+                                    <div style="padding:20px;">
+                                    <!-- content -->
+                                    <apex:outputPanel rendered="{!!IsCompleted && !DeResponce && !ShowDeButton }">
+                                    
+                                    <!-- C0068 
+                                    <table class="detailList" width="50%">
+                                        <tbody>
+                                            <tr>
+                                                <td class="labelCol">Has the signed application form been received?</td><td class="dataCol"><apex:inputField required="true"  value="{!ExOpp.Application_form_signed__c}"/></td>                            
+                                            </tr>
+                                            <tr>  
+                                                <td class="labelCol">Have the supporting documents been received?</td><td class="dataCol"><apex:inputField required="true" value="{!ExOpp.Documents_Received__c}"/></td>            
+                                            </tr> 
+                                            <tr>  
+                                                <td class="labelCol">Date received</td><td class="dataCol"><apex:inputField required="true"  value="{!ExOpp.All_customer_documents_recieved__c}"/></td>            
+                                            </tr> 
+                                            
+                                        </tbody> 
+                                    </table> 
+                                    -->
+                                    
+                                    
+                                    <apex:inputHidden value="{!Opp.Number_of_People_Applying__c }"/>
+                                    
+                                    <br/><br/>
+                                    
+                                    <table class="detailList" width="50%">
+                                        <tbody>
+                                            
+                                            <apex:outputPanel rendered="{!Opp.Number_of_People_Applying__c  > 1}" >
+                                            <tr>
+                                                <td class="labelCol">Applicant 2's relationship to {!Accounts[0].Name}</td><td class="dataCol">
+                                                    <apex:selectList value="{!RelationshipApp2 }" required="true" label="Relationship 2">
+                                                        <apex:selectOptions value="{!Relationships}"></apex:selectOptions>
+                                                    </apex:selectList>
+                                                </td>                            
+                                            </tr>
+                                            </apex:outputPanel>
+                                            <apex:outputPanel rendered="{!Opp.Number_of_People_Applying__c  > 2}" >
+                                            <tr>
+                                                <td class="labelCol">Applicant 3's relationship to {!Accounts[0].Name}</td><td class="dataCol">
+                                                    <apex:selectList value="{!RelationshipApp3 }" required="true" label="Relationship 3">
+                                                        <apex:selectOptions value="{!Relationships}"></apex:selectOptions>
+                                                    </apex:selectList>
+                                                </td>                            
+                                            </tr>
+                                            </apex:outputPanel>   
+                                            <apex:outputPanel rendered="{!Opp.Number_of_People_Applying__c  > 3}" >
+                                            <tr>
+                                                <td class="labelCol">Applicant 4's relationship to {!Accounts[0].Name}</td><td class="dataCol">
+                                                    <apex:selectList value="{!RelationshipApp4 }" required="true" label="Relationship 4">
+                                                        <apex:selectOptions value="{!Relationships}"></apex:selectOptions>
+                                                    </apex:selectList>
+                                                </td>                            
+                                            </tr>
+                                            </apex:outputPanel> 
+                                        </tbody> 
+                                    </table>  
+                                    </apex:outputPanel>
+                                    <div style="text-align:right;">
+                                        <!-- C0586 Start--> 
+                                        <apex:outputpanel rendered="{!ShowBTLIAAReRunButton }">
+                                            Income Assisted Application Deficit = {!DeficitInIAA}<br />
+                                            <apex:commandbutton value="ReRun Affordability - Income Assisted Application" styleclass="redBtn" action="{!DoReRunAffordibility}" />
+
+                                          
+                                        </apex:outputpanel>   
+                                        <apex:commandbutton value="Run Affordability" styleclass="redBtn" action="{!DoAffordibility}" rendered="{!!IsCompleted && !DeResponce && !ShowDeButton && !ShowBTLIAAReRunButton && !ShowBTLIAAFailMessage }" />
+                                        <apex:outputpanel rendered="{!ShowBTLIAAFailMessage}">
+                                            Application cannot continue as Buy-to-Let Income Assisted Application Budget Planner is in Deficit
+                                        </apex:outputpanel>
+                                        <!-- C0586 End-->
+                                        <apex:commandButton value="Submit to decision engine" onclick="ShowDocumentLoad();" oncomplete="HideDocumentLoad();"  styleClass="redBtn" action="{!SubmitToDe}" reRender="mainPageBlock" rendered="{!!IsCompleted && !DeResponce && ShowDeButton }"/>
+                                    </div>
+                                    
+                                   
+                                    
+                                    <apex:pageMessages ></apex:pageMessages>
+                                   
+                                    
+                                    <br/><br/>
+                                    
+                                    <div style="text-align:right;">
+                               <apex:commandButton value="Complete Event" styleClass="redBtn" action="{!Complete}" rendered="{!!IsCompleted && DeResponce}" />
+                             <!-- <apex:commandButton value="Complete Event - Testing" styleClass="redBtn" action="{!Complete}" rendered="{!!IsCompleted}" />-->
+                                </div>
+                                </div>
+                                    </apex:outputPanel>
+                                </div>
+                                
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            <div id="fade"></div>
+<div id="overlay">
+Doing credit search...
+<br/>
+<br/>
+This may take a few seconds.
+
+<div style="padding-top: 50px;" >
+    <!--  CPDR01 
+<img src="{!URLFOR($Resource.ibbstyle, 'images/269.gif')}"></img>
+    -->
+<img src="{!URLFOR($Resource.ibbstyleexternal, 'graphics/logos/circular-timer.gif')}"></img>
+</div>
+
+
+</div>
+            
+        </apex:form>
+           
+       
+
+        </body>
+</apex:page>

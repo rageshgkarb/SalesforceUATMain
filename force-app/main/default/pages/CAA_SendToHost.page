@@ -1,0 +1,245 @@
+<apex:page showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false" controller="CAA_Core_Controller" action="{!SendToHost}">
+
+   <apex:include pageName="pca__Component"/>
+   <apex:composition template="CAA_Template">
+   
+   <apex:define name="include">
+        <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/controller/controller_sendtohost.js')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/service/service_send_to_host.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/service/service_application.js')}"/>
+ <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/service/service_parameters.js')}"/>
+    </apex:define>
+   
+      <apex:define name="body">
+         <div ng-controller="controllerSendToHost" ng-init="EventLogId = '{!EventLogId}'; IsANC={!IsANC}; SessionId='{!SessionId}'"><!-- ng-controller -->
+         <form name="myform">
+            <div class="row">
+               <div class="col-md-9">
+                  
+                  <div class="SectionHeader">
+                     <div class="numberCircleReverse">3</div>
+                     <div>Send To Host</div>
+                  </div>
+                  <apex:outputPanel layout="none" rendered="{!IsABranch}">
+                  <div class="PanelContents">
+                  <div style="padding-bottom:10px;">
+                  <div class="SectionTitle">
+                      Branch checklist
+                  </div>
+                  
+                      <div class="row">
+                          <div class="col-sm-6">
+                              <label>
+                                    <input type="checkbox" ng-required="true" ng-model="Checklist.Hand_out_Introductory_Leaflets_c"/> Hand out Introductory Leaflets
+                                </label>
+                          </div>
+                          <div class="col-sm-6">
+                              <label>
+                                    <input type="checkbox" ng-required="true" ng-model="Checklist.Purpose_of_Account_Account_T_Cs_c"/> Purpose of Account &amp; Account T&amp;Cs
+                                </label>
+                          </div>
+                          <div class="col-sm-6">
+                              <label>
+                                    <input type="checkbox" ng-required="true" ng-model="Checklist.Paying_in_book_c"/> Paying-in Book
+                                </label>
+                          </div>
+                          <div class="col-sm-6">
+                              <label>
+                                    <input type="checkbox" ng-required="true" ng-model="Checklist.Statements_c"/> Statements
+                                </label>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="col-sm-6">
+                              <label>
+                                    <input type="checkbox" ng-model="Checklist.Telephone_Banking_c"/> Telephone Banking
+                                </label>
+                          </div>
+                          <div class="col-sm-6">
+                              <label>
+                                    <input type="checkbox" ng-required="true" ng-model="Checklist.Online_Banking_c"/> Online Banking
+                                </label>
+                          </div>
+                          <div class="col-sm-6">
+                              <label>
+                                    <input type="checkbox" ng-required="true" ng-model="Checklist.Tariff_List_c"/> Tariff List
+                                </label>
+                          </div>                          
+                      </div>
+                      
+                      <apex:outputPanel layout="none" rendered="{!IsCurrentAccount}">
+                      
+                      <hr/>
+                      <div class="SectionTitle">
+                          Current Account
+                      </div>
+                      
+                      <div class="row">
+                          <div class="col-sm-3">
+                              <label>
+                                    <input type="checkbox" ng-required="true" ng-model="Checklist.Counter_Fee_Current_Account_Only_c"/> Counter Fee
+                                </label>
+                          </div>
+                          <div class="col-sm-3">
+                              <label>
+                                    <input type="checkbox" ng-required="true" ng-model="Checklist.Debit_Card_Current_Account_Only_c"/> Debit Card
+                                </label>
+                          </div>
+                          <div class="col-sm-3">
+                              <label>
+                                    <input type="checkbox" ng-required="true" ng-model="Checklist.PIN_Current_Account_Only_c"/> PIN
+                                </label>
+                          </div>
+                          <div class="col-sm-3">
+                              <label>
+                                    <input type="checkbox" ng-required="true" ng-model="Checklist.Chequebook_Current_Account_Only_c"/> Chequebook
+                                </label>
+                          </div>
+                      </div>
+                      </apex:outputPanel>
+             
+             
+             <div class="alert alert-danger" ng-show="myform.$invalid">
+                 You must confirm all items on the check list
+             </div>
+             
+                  </div>
+                  </div>
+                  </apex:outputPanel>
+                  
+                  <div class="PanelContents">
+                  <div style="padding-bottom:10px;">
+                  <div class="SectionTitle">
+                      <!-- C0551 -->
+                      <!--Setup on EBS -->
+                      {!titleText}
+                  </div>
+                  
+                  <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                      <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="headingOne">
+                          <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                              Details
+                            </a>
+                          </h4>
+                        </div>
+                        <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                          <div class="panel-body">
+                           
+                           <div ng-show="Data.Items" >
+                           
+                          <h4>Applicants- ANC</h4>
+                          <table class="table">
+                              <thead>
+                                  <tr>
+                                  <th width="80px">EBS ID</th>
+                                  <th>Name</th>
+                                  <th width="50px">Xml</th>
+                                  <th width="80px">On EBS</th>                       
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  <tr ng-repeat-start="app in Data.Items">
+                                      <td>{{app.EBSId}}</td>
+                                      <td><a href="/{{app.AccountId}}" target="_blank">{{app.Name}}</a></td>
+                                      <td>
+                                          <a href=""><i class="fa fa-code"></i></a>
+                                      </td>
+                                      <td align="center">
+                                          <i class="fa fa-times" ng-show="!app.EBSId"></i>
+                                          <i class="fa fa-check" ng-show="app.EBSId"></i>
+                                      </td>                                      
+                                  </tr>
+                                  <tr ng-repeat-end=" " ng-show="app.ANCError" class="danger">
+                                      <td></td>
+                                      <td colspan="2">{{app.ANCError}}</td>
+                                  </tr>
+                                  
+                              </tbody>
+                          </table>
+                          
+                          <!-- C0551 <div ng-hide="Data.IsFTD"> -->
+                               <div>
+                                   <h4>Open Account</h4>
+                                   <table class="table">
+                                       <thead>
+                                           <tr>
+                                               <th width="160px">Account Number</th>
+                                               <th>Product</th>
+                                               <th align="right" width="80px">On EBS</th>
+                                           </tr>
+                                       </thead>
+                                       <tbody>
+                                           <tr>
+                                               <td>{{Data.CustomerAccountId }}</td>
+                                               <td><a href="/" target="_blank">{{Data.ProductName}}</a></td>
+                                               <td align="center">
+                                                   <i class="fa fa-times" ng-show="!Data.CustomerAccountId "></i>
+                                                   <i class="fa fa-check" ng-show="Data.CustomerAccountId "></i>
+                                               </td>
+                                           </tr>
+                                       </tbody>
+
+                                       <!-- C0551 -->
+                                       <tr ng-show="Data.AWIError" class="danger">
+                                           <td></td>
+                                           <td colspan="2">{{Data.AWIError}}</td>
+                                       </tr>
+
+                                   </table>
+                               </div>
+                          
+                          <div ng-show="Data.Items && Data.Items.length > 1 && !Data.IsFTD">
+                          <h4>JARs</h4>
+                          <table class="table">
+                              <thead>
+                                  <tr>
+                                      <th width="80px">Applicant</th>
+                                      <th>Name</th>
+                                      <th align="right" width="80px">On EBS</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  <tr ng-repeat-start="app in Data.Items" ng-show="$index != 0">
+                                      <td>{{$index+1}}</td>
+                                      <td><a href="/{{app.AccountHolderId}}" target="_blank">{{app.Name}}</a></td>
+                                      <td align="center">
+                                          <i class="fa fa-times" ng-show="!app.JarComplete"></i>
+                                          <i class="fa fa-check" ng-show="app.JarComplete"></i>
+                                      </td>                                      
+                                  </tr>
+                                  <tr ng-repeat-end=" " ng-show="app.JARError" class="danger">
+                                      <td></td>
+                                      <td colspan="2">{{app.JARError}}</td>
+                                  </tr>
+                              </tbody>
+                          </table>
+                          </div>
+                           </div>
+                          </div><!-- panel body end -->
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div ng-show="myform.$valid && !HideButton">
+                          <button class="btn btnArb" ng-click="CallEBS()" ng-hide="Data.NextEventUrl">Send to Host</button>
+                          
+                          <a href="{{Data.NextEventUrl}}" class="btn btnArb" ng-show="Data.NextEventUrl">Next</a>
+                          </div>
+                    </div>
+                  </div>
+               </div>
+               <div class="col-md-3">
+                  <div class="rightcol visible-md visible-lg" id="sidebar" >
+                     <c:CAA_Progress Stage="2" rendered="{!IsGuest}"></c:CAA_Progress>
+                     <c:CAA_Event_Menu rendered="{!Not(IsGuest)}"/>
+                  </div>
+               </div>
+            </div>
+            <!--left col -->
+           </form>
+         </div>
+      </apex:define>
+   </apex:composition>
+</apex:page>

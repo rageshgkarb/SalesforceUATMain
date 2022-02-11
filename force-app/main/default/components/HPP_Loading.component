@@ -1,0 +1,19 @@
+<apex:component >
+       
+
+<!-- Load Screen -->
+        <div class="regionLoad" ng-cloak="ng-cloak" ng-show="Load" style="box-sizing: content-box !important; -webkit-box-sizing: content-box !important;">
+            
+            <div class="regionWaitMessage text-center" style="box-sizing: content-box !important; -webkit-box-sizing: content-box !important;">
+                <div class="regionSpinner">
+                    
+                </div>
+                <div class="regionTitle">
+                    Please wait
+                    <br />{{PleaseWaitAddOn}}
+                </div>
+                                
+            </div>
+            <div class="regionWaitBackground" style="box-sizing: content-box !important; -webkit-box-sizing: content-box !important;"></div>
+        </div>
+</apex:component>

@@ -1,0 +1,40 @@
+<apex:component >   
+    <apex:attribute name="labelText" description="Label Text" type="String" required="true"/>
+    <apex:attribute name="modelProperty" description="Property to bind to on the Model" type="String" required="false"/>    
+    <apex:attribute name="width" description="Width of control" type="String" required="true"/> 
+    <apex:attribute name="show" description="Show control" type="String" required="true"/>  
+    <apex:attribute name="disabled" description="Width of control" type="String" required="true"/>  
+    <apex:attribute name="type" description="type of control" type="String" required="true"/>   
+    <apex:attribute name="maxlength" description="maximum number of chars" type="String" required="false"/>
+    <apex:attribute name="value" description="text value" type="String" required="false"/>
+    <apex:attribute name="currencySymbol" description="currency symbol value" type="String" required="false" default="temp_currencySymbol"/>
+    <apex:attribute name="currencySymbolPadding" description="currency symbol value padding" type="String" required="false" default="5px"/>
+    
+    <apex:attribute name="arbFocus" description="Set focus on Input" type="String" required="false" default="false"/>
+    <apex:attribute name="arbFocusDelay" description="Delay when focus is applied" type="String" required="false"/>
+    <apex:attribute name="arbEnter" description="Capture enter key" type="String" required="false"/>
+        
+    <apex:attribute name="arbAccountNumberInput" description="Format account number with '-'" type="String" required="false"/>
+    <apex:attribute name="arbInputFilter" description="Format field based on a filter" type="String" required="false"/>
+    <apex:attribute name="arbInputFilterArgs" description="Format field based on a filter - arguments for filter" type="String" required="false"/>
+    <apex:attribute name="arbInputFilterOnLeave" description="Format field based on a filter - arguments for filter" type="String" required="false"/>
+    <apex:attribute name="arbInputParseHtml" description="Parse html text to escape HTML chars" type="String" required="false" default="false"/>
+    <apex:attribute name="arbSelectOnClick" description="Select all content on click" type="String" required="false" default="false"/>
+                
+    <apex:attribute name="styleTransform" description="style transform tag" type="String" required="false"/>
+    <apex:attribute name="styleLeft" description="style transform tag" type="String" required="false"/>
+    <apex:attribute name="styleMarginBottom" description="style transform tag" type="String" required="false"/>
+    
+    <apex:attribute name="infoText" description="info text" type="String" required="false"/>
+    <apex:attribute name="infoTextNgShow" description="ng-show for info text" type="String" required="false"/>
+    <apex:attribute name="infoTextIsError" description="ng-class for info text" type="String" required="false" default="false"/>
+    
+    <div class="md_group" style="margin-top:15px; margin-bottom:{!styleMarginBottom}; width: {!width}; transform: {!styleTransform}; left:{!styleLeft};" ng-show="{!show}">      
+      <input class="md_input" type="{!type}" required="required" maxlength="{!maxlength}" value="{!value}" ng-model="{!modelProperty}" style="padding-left: {!currencySymbolPadding}" ng-disabled="{!disabled}" arb-focus="{!arbFocus}" arb-Focus-Delay="{!arbFocusDelay}" arb-Input-Filter="{!arbInputFilter}" arb-Input-Filter-Args="{!arbInputFilterArgs}" arb-Input-Filter-On-Leave="{!arbInputFilterOnLeave}" arb-Account-Number-Input="{!arbAccountNumberInput}" arb-Input-Parse-Html="{!arbInputParseHtml}" arb-Enter="{!arbEnter}" ng-class="{'md_input_error' : {!infoTextIsError}}" arb-Select-On-Click="{!arbSelectOnClick}"></input>
+      <span class="md_highlight"></span>
+      <span class="md_bar"></span>
+      <span class="md_info_text" ng-show="{!infoTextNgShow}" ng-class="{'md_info_text_error' : {!infoTextIsError}}">{!infoText}</span>
+      <label class="md_label">{!labelText}</label>
+      <label class="md_currency" ng-if="{!currencySymbol} != null && {!currencySymbol} != ''" style="position: absolute; top: 5px; left: 5px; font-size: 15px; font-family: simple;">{{ {!currencySymbol} | filter_currencytosymbol }}</label>
+    </div>
+</apex:component>

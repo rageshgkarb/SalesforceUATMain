@@ -1,0 +1,30 @@
+<apex:component >   
+    <apex:attribute name="labelText" description="Label Text" type="String" required="true"/>
+    <apex:attribute name="width" description="Width of control" type="String" required="true"/> 
+    <apex:attribute name="show" description="Show control" type="String" required="true"/>  
+    <apex:attribute name="disabled" description="Width of control" type="String"/>  
+    <apex:attribute name="className" description="class name" type="String" required="false"/>  
+	<apex:attribute name="ngmodelProperty" description="Property to bind to on the Model" type="String" required="false" default=""/> 
+    <apex:attribute name="modelProperty" description="Property to bind to on the Model" type="String" required="false"/>    
+    <apex:attribute name="modelPropertyToWatch" description="Property to watch on the Model" type="String" required="false"/>
+    <apex:attribute name="modelDataBind" description="Property to bind object to the Model" type="String" required="false"/>    
+    <apex:attribute name="options" description="options of select box" type="String" required="false"/>
+    <apex:attribute name="datasource" description="Datasource of select box" type="String" required="false"/>
+    <apex:attribute name="fieldTextName" description="Field text to display" type="String" required="false"/>
+    <apex:attribute name="fieldValueName" description="Field value" type="String" required="false"/>
+    <apex:attribute name="onChange" description="On change event" type="String" required="false"/>
+    <apex:attribute name="onSelect" description="On select event" type="String" required="false"/>
+    <apex:attribute name="styleBackground" description="Background colour" type="String" required="false"/>
+    <apex:attribute name="styleMarginBottom" description="style transform tag" type="String" required="false"/>
+            
+    <div class="md_group" style="margin-top:15px; width: {!width}; margin-bottom:{!styleMarginBottom};" ng-show="{!show}">   
+        <div class="md_input" style="height: 34px; position: absolute;"></div>
+        <select class="{!className} kendoSelect" kendo-combo-box="kendo-combo-box" style="width: {!width}; margin-top: 0.5px; border: none; background:{!styleBackground}" k-data-bind="{!modelDataBind}" k-options="{!options}"  k-data-text-field="'{!fieldTextName}'" k-data-value-field="'{!fieldValueName}'" k-ng-model="{!modelProperty}" ng-model="{!ngmodelProperty}" k-data-source="{!datasource}" k-on-change="{!onChange}" k-on-select="{!onSelect}" arb-Material-Select="arbMaterialSelect" arb-Material-Highlight-Value="{{{!modelPropertyToWatch}}}" arb-Material-Select-Disable="{{{!disabled}}}"></select>                              
+        <span class="md_highlight"></span>
+        <span class="md_bar" style="z-index: 2; margin-top: 4px;"></span>
+        <label class="md_label">{!labelText}</label>
+    </div>  
+</apex:component>
+
+<!-- //ng-options="item as item for item in paymentPurposeValues track by item"
+//k-data-source="FilterLists.Tellers" k-data-text-field="'Name'" k-data-value-field="'Id'"  -->

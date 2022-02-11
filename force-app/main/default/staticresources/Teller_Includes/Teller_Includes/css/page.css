@@ -1,0 +1,808 @@
+
+
+		.pageStructure
+		{
+			height: calc(100% - 50px);
+		}
+		.pageContentContainer
+		{
+			height: 100%;
+		}
+		.pageContentLeft
+		{
+			background-color:#F4F4F4;
+			min-width: 375px;
+			max-width: 375px;
+			height: calc(100% - 137px);
+			position: absolute;
+			min-height: 570px;
+		}
+		.pageContentRight
+		{
+			position: absolute;
+			left: 430px;
+			height: calc(100% - 137px);
+			width: calc(100% - 430px);
+		}
+		
+		.pageTitleContainer
+		{
+			height: 47px;
+			margin-left: 15px;
+			margin-top: 3px;
+		}
+
+		.smallTile
+		{
+			min-height: 69px;			
+		}
+
+		.accountTile
+		{
+			background:  white;
+		    height: 70px !important;
+		    margin-left: 7px;                              
+		    margin-right: 3px;
+		    width: 327px;
+		    cursor:pointer;
+		}
+
+		.accountTile:hover
+		{
+			box-shadow: 1px 1px 8px #5A5A5A;
+		}
+
+		.accountTile > .tileIndicator,
+		.smallTile > .tileIndicator
+		{
+			background:#9c9c9c; 
+			height:69px; 
+			float: left; 
+			width: 5px;
+		}
+
+		.accountTile > .tileBody,
+		.smallTile > .tileBody
+		{
+			float: left; 
+			background:#fdfdfd; 
+			min-width: 180px; 
+			min-height: 69px;
+		}
+
+		.smallTile > .tileBody > .tileContent
+		{
+			margin-right: 20px; 
+			margin-top: 12px;
+		}
+
+		.smallTile > .tileBody > .tileContent > .tileValue
+		{
+			clear: both; 
+			float:right; 
+			display: block; 
+			position: relative;
+			color: #9c9c9c;
+		}
+
+		.smallTile > .tileBody > .tileContent > .tileTitle
+		{
+			float: right; 
+			color:#9c9c9c;
+			line-height:15px; 
+			clear: both; 
+			float:right; 
+			display: block; 
+			position: relative;
+		}
+
+		.tileColourRed > .tileIndicator
+		{
+			background:#e15757 !important;
+		}
+
+		.tileColourRed .tileBody > .tileContent > .tileValue
+		{
+			color:#e15757 !important;
+		}
+
+		.tileColourGreen > .tileIndicator
+		{
+			background:#78c678 !important;
+		}
+
+		.tileColourGreen .tileBody > .tileContent > .tileValue
+		{
+			color:#78c678 !important;
+		}
+
+		.tileColourBlue > .tileIndicator
+		{
+			background:#6caada !important;
+		}
+
+		.tileColourBlue .tileBody > .tileContent > .tileValue
+		{
+			color:#6caada !important;
+		}
+
+		.tileColourAmber > .tileIndicator
+		{
+			background:#EDD100 !important;
+		}
+
+		.tileColourAmber .tileBody > .tileContent > .tileValue
+		{
+			color:#EDD100 !important;
+		}
+
+		.LastUpdateRed {
+			margin-left: 7px;
+			height: 100px;
+			float: left;
+			width: 115px;
+			background: #e15757;
+			overflow: hidden;
+			position: relative;
+			cursor: pointer;
+		}
+
+		.LastUpdateGreen {
+			margin-left: 7px;
+			height: 100px;
+			float: left;
+			width: 115px;
+			background: #78c678;
+			overflow: hidden;
+			position: relative;
+		}
+
+		.LastUpdateGray {
+			margin-left: 7px;
+			height: 100px;
+			float: left;
+			width: 115px;
+			background: #D7D7D7;
+			overflow: hidden;
+			position: relative;
+		}
+
+		.sectionDetail > table 
+		{
+    		border-collapse: collapse;
+		}
+
+    	.sectionDetail > table > tbody > tr 
+    	{
+        	border-bottom: 1px solid #E9E9E9;
+        	line-height: 30px;
+    	}
+    
+        .sectionDetail > table > tbody > tr:last-child 
+        {
+  			border-bottom: 0;
+		}
+
+		#navlist
+		{
+			margin-top: 10px;
+			margin-bottom: 10px;
+		}
+
+		#navlist li 
+		{
+			display: inline;
+			list-style-type: none;
+			margin-left: 20px;
+		}
+
+		.requiredIndicator
+		{
+			height: 29px !important;
+			width: 3px;
+			float: left;
+			background: #B80000 !important;
+			margin-left: 5px;
+			margin-top: 5px;
+		}
+
+		.scrollSection
+		{
+			display: inline-table;
+			height: calc(100% - 10px);
+		}
+
+		.accountScrollSection
+		{
+			width: 740px;
+			border-left: thin solid #F4F4F4;
+			padding-left: 30px;
+			display: inline-block;
+		}
+
+		.customerScrollSection
+		{
+			width: 700px;
+			position: relative;
+			display: inline-block;
+		}
+
+		.customerSummarySection
+		{
+			width: 100%;
+		}
+
+		.horizontalScrollContainer
+		{
+			margin-top: 15px;
+			height: 100%;
+			padding-bottom: 10px;
+			padding-right: 10px;
+			padding-left: 10px;
+		}
+
+		.horizontalScrollList
+		{
+			height: 100%; 
+			width: 100%; 
+			white-space: nowrap; 
+			overflow-x: auto; 
+			overflow-y: hidden; 
+			padding:0px;
+			margin-bottom: 0px;
+		}
+
+		.verticalScrollSection
+		{
+			margin-left: 7px; 
+			height: calc(100% - 38px); 
+			overflow-y: auto;
+		}
+
+		.horizontalScroller::-webkit-scrollbar-track
+		{
+			-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+			background-color: #E0E0E0;
+		}
+		.horizontalScroller::-webkit-scrollbar
+		{
+			height: 8px;
+		}
+		.horizontalScroller::-webkit-scrollbar-thumb
+		{
+			background-color: #A9A9A9;
+		}
+
+		.verticalScroller::-webkit-scrollbar-track
+		{
+			-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+			background-color: #FFFFFF;
+		}
+		.verticalScroller::-webkit-scrollbar
+		{
+			width: 6px;
+		}
+		.verticalScroller::-webkit-scrollbar-thumb
+		{
+			background-color: #CDC5C5;;
+		}
+
+		.k-list::-webkit-scrollbar-track
+		{
+			-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+			background-color: #FFFFFF;
+		}
+		.k-list::-webkit-scrollbar
+		{
+			width: 6px;
+		}
+		.k-list::-webkit-scrollbar-thumb
+		{
+			background-color: #CDC5C5;;
+		}
+
+		.k-animation-container #headerSearchInput-list
+		{
+			height: 350px !important;
+		}
+
+		.k-animation-container #headerSearchInput-list .k-list
+		{
+			height: 352px !important;
+		}
+		
+		.k-animation-container #customerSearchInput-list
+		{
+			height: 400px !important;
+		}
+
+		.k-animation-container #customerSearchInput-list .k-list
+		{
+			height: 402px !important;
+		}
+
+		.k-animation-container
+		{
+  			margin-top: 2px !important;
+		}
+
+		.accountListContainer
+		{
+			height: calc(100% - 373px);
+			width: 343px;
+			background: rgb(231, 231, 231);
+			display: inline-block;
+			position: absolute;
+			margin-top: 10px;
+			left: 17px;
+			margin-top: 40px;
+		}
+
+		.accountsMenu
+		{
+			margin-top: 9px;
+		    list-style-type: none;
+		    padding:  0px;
+		    overflow-y:auto;
+		    height: calc(100% - 17px);
+		}
+
+		.toolbar
+		{
+			float: right;
+			margin-right: 15px;
+			margin-top: -3px;
+			text-align: center;
+		}
+
+		.toolbarButton:hover
+		{
+			opacity: 1;
+		}
+
+		.toolbarButton
+		{
+			cursor:pointer;
+			opacity: 0.5;
+			float: right;
+			margin-left: 25px;
+			text-align: -webkit-center;
+		}
+
+		.toolbarButton > .imgCircle
+		{
+			width: 36px;
+			height: 36px;
+			-webkit-border-radius: 25px;
+			-moz-border-radius: 25px;
+			border-radius: 30px;
+			border: solid rgb(94, 94, 94) 2px;
+			text-align: -webkit-center;
+		}
+
+		.toolbarButton > .imgCircle > img
+		{
+			height: 26px;
+			width: 26px;
+			display: block;
+			margin-top: 4px;
+			opacity: 0.7;
+		}
+
+		.toolbarButton > .caption
+		{
+			margin-top: 3px;
+			color:black;
+		}
+
+		.customerImg > .cameraIcon
+		{
+			visibility: collapse;
+			opacity: 0;
+			-webkit-transition:all linear 0.2s;
+		    -moz-transition:all linear 0.2s;
+		    -o-transition:all linear 0.2s;
+		    transition:all linear 0.2s;
+		}
+
+		.customerImgShow:hover > .cameraIcon
+		{
+			visibility: visible;
+			opacity: 0.8;
+			-webkit-transition:all linear 0.2s;
+		    -moz-transition:all linear 0.2s;
+		    -o-transition:all linear 0.2s;
+		    transition:all linear 0.2s;
+		}
+
+		.headerSearch
+		{			 
+			height: 40px; 
+			min-width: 40px;
+			float: left;
+			cursor: pointer;
+		}
+
+		.headerSearchOpen
+		{
+			background: rgb(140, 115, 58);
+		}
+
+		.headerUser
+		{
+			height: 40px;
+		  	padding-left: 15px;
+		  	padding-right: 10px;
+		  	float:right;
+		  	cursor: pointer;
+		}
+
+		.headerBtn:hover
+		{
+			background: rgb(140, 115, 58);
+		}
+		
+		.headerSearchInput 
+		{
+			transition: 0.3s linear all;
+			opacity: 1;
+		}
+		
+		.headerSearchInput.ng-hide 
+		{
+			opacity: 0;
+		}
+
+		.searchInput > input
+		{
+			border: 2px solid #b3995d !important;
+		}
+
+		.searchInput
+		{
+			width: 100% !important; 			
+			font-size: 22px !important;
+		}
+
+		.searchInput > input
+		{
+			width: calc(100% - 2px) !important;
+		}
+
+		.searchResultItem
+		{
+			  padding: 10px;
+			  background: whitesmoke;
+			  margin-bottom: 6px;
+			  width: calc(100% - 8px);
+			  height: 75px;
+			  cursor: pointer;
+		}
+
+		.searchResultItem:hover
+		{
+		  background: white;
+		  box-shadow: 1px 1px 8px #5A5A5A;
+		}
+
+		.searchInput > .k-loading
+		{
+		  right: 10px !important;
+  		  bottom: 16px !important;
+  		}
+		
+		.RefreshIndicatorReverse
+		{
+		  margin-top: 0px !important;
+		  opacity: 0;
+		  transform: rotate(0deg);  
+		  -webkit-transition:all .2s ease-in-out;
+		  -moz-transition:all .2s ease-in-out;
+		  -o-transition:all .2s ease-in-out;
+		  transition:all .2s ease-in-out;
+		}
+
+		/*.RefreshIndicator
+		{
+		  margin-left: calc(50% - 30px); 
+		  background: rgb(255, 255, 255); 
+		  height:55px; 
+		  width:55px;
+		  position:absolute; 
+		  top: -60px;
+		  border-radius: 50px;
+		  box-shadow: 1px 1px 2px rgb(186, 186, 186);
+		  border: 1px solid rgb(184, 184, 184);
+		}*/
+
+		.RefreshIndicatorStartRefresh
+		{
+		  margin-top: 100px !important;
+		  transform: rotate(0deg);  
+		  -webkit-transition:all .2s ease-in-out;
+		  -moz-transition:all .2s ease-in-out;
+		  -o-transition:all .2s ease-in-out;
+		  transition:all .2s ease-in-out;
+		}
+
+		.RefreshIndicatorEndRefresh
+		{
+		  -webkit-transform: scale(0,0); /* Safari */
+			transform: scale(0,0);
+		  -webkit-transition:all .5s ease-in-out;
+		  -moz-transition:all .5s ease-in-out;
+		  -o-transition:all .5s ease-in-out;
+		  transition:all .5s ease-in-out;
+		}
+
+
+		.RefreshIndicator
+		{
+		  margin-left: calc(50% - 30px);  
+		  position:absolute; 
+		  top: -60px; 
+		}
+
+		.GoldCircleButton
+		{
+			opacity: 0.8;
+		}
+
+		.GoldCircleButton:hover
+		{
+			opacity: 1;
+		}
+
+		.GoldCircle
+		{  
+		  background: rgb(179, 153, 93);
+		  height: 55px;
+		  width: 55px; 
+		  border-radius: 50px;
+		  box-shadow: 1px 1px 2px rgb(71, 71, 71);
+		  border: 1px solid rgb(140, 115, 58);
+		  cursor: pointer;
+		}
+
+		.GrayCircle
+		{
+	      height: 40px;
+		  width: 40px;
+		  background: rgb(148, 148, 148);
+		  border: none;
+		  box-shadow: 1px 1px 2px rgb(0, 0, 0);
+		  border-radius: 50px;
+		  cursor: pointer;
+		  opacity: 0;
+
+		  transform: scale(0.3,0.3);
+		  -webkit-transition: all cubic-bezier(0.36, -0.14, 0.33, 0.36) 0.2s;
+		  -moz-transition: all cubic-bezier(0.36, -0.14, 0.33, 0.36) 0.2s;
+		  -o-transition: all cubic-bezier(0.36, -0.14, 0.33, 0.36) 0.2s;
+		  transition: all cubic-bezier(0.36, -0.14, 0.33, 0.36) 0.2s;
+		}
+
+		.GrayCirleOpen
+		{
+			transform: scale(1,1);
+			opacity: 0.8;
+		}
+
+		.GoldCircleIcon
+		{
+		  height: 28px;
+		  -webkit-filter: invert(1);
+		  -webkit-transition:all linear 0.2s;
+		  -moz-transition:all linear 0.2s;
+		  -o-transition:all linear 0.2s;
+		  transition:all linear 0.2s;
+		}
+
+		.DetailsSubMenuOpen
+		{
+			transform: rotate(135deg);
+		}
+
+		.GrayCircleItems
+		{
+			margin-bottom: -15px;
+			-webkit-transition: all linear 0.1s;
+		  	-moz-transition: all linear 0.1s;
+		  	-o-transition: all linear 0.1s;
+		  	transition: all linear 0.1s;
+		}
+
+		.GrayCircleItemsOpen
+		{
+			margin-bottom: 0px !important;
+		}
+
+		.GrayCircleLabel
+		{
+			position: absolute; 
+			right: 50px; 
+			color: white;
+			top: 1px; 
+			padding: 10px;
+			opacity: 0;
+			visibility: collapse;
+			background: rgb(152, 152, 152);
+
+			font-family: simpleMedium;
+  			font-size: 10pt;
+  			border-radius: 3px;
+
+			-webkit-transition: all linear 0.2s;
+		  	-moz-transition: all linear 0.2s;
+		  	-o-transition: all linear 0.2s;
+		  	transition: all linear 0.2s;
+		}
+
+
+		.GrayCircleLabelHover
+		{
+			visibility: visible;
+			opacity: 1;
+		}
+
+		.RefreshIndicatorIcon
+		{
+		  height: 28px;
+		  margin-top: 13px;
+		  margin-left: 13px;
+		  -webkit-filter: invert(1);
+		}
+
+		@-webkit-keyframes rotating {
+			from{
+				-webkit-transform: rotate(0deg);
+			}
+			to{
+				-webkit-transform: rotate(360deg);
+			}
+		}
+
+		.RefreshIndicatorIconRotating {
+			-webkit-animation: rotating 1s linear infinite;
+		}
+
+		.RefreshIndicatorDragging {
+			overflow-y:hidden !important;
+		}
+
+		.colorGreen
+		{
+		  color: #78c678 !important;
+		}
+
+		.colorRed
+		{
+		  color: #e15757 !important;
+		}
+
+		.smalltoolbarButton
+		{
+			cursor:pointer;
+			opacity: 0.5;
+			float: right;
+			margin-left: 25px;
+			text-align: -webkit-center;
+		}
+
+		.smalltoolbarButton > .imgCircle
+		{
+			width: 30px;
+			height: 30px;
+			-webkit-border-radius: 25px;
+			-moz-border-radius: 25px;
+			border-radius: 30px;
+			border: solid rgb(94, 94, 94) 2px;
+			text-align: -webkit-center;
+		}
+
+		.smalltoolbarButton > .imgCircle > img
+		{
+			height: 23px;
+			width: 23px;
+			display: block;
+			margin-top: 2px;
+			margin-left: 1px;
+			opacity: 0.7;
+		}
+
+		.smalltoolbarButton:hover
+		{
+			opacity: 1;
+		}
+
+
+		.transactionHistoryContainer
+		{
+		  width: 663px;
+		  height: inherit;
+		  /*height: 392px;*/
+		  padding: 2px;
+		  overflow-y: auto;
+		}
+
+		.transactionHistoryContainer > .kendo-loading
+		{
+    		margin-left: 305px;
+		}
+
+
+		.transactionHistoryContainer.ng-hide-add, .transactionHistoryContainer.ng-hide-remove 
+		{
+		  -webkit-transition:all linear 0.5s;
+		  -moz-transition:all linear 0.5s;
+		  -o-transition:all linear 0.5s;
+		  transition:all linear 0.5s;
+		}
+
+		.transactionHistoryContainer.ng-hide-add.ng-hide-add-active,
+		.transactionHistoryContainer.ng-hide-remove 
+		{
+  			opacity:0;
+		}
+		
+		.transactionHistoryContainer.ng-hide-add,
+		.transactionHistoryContainer.ng-hide-remove.ng-hide-remove-active 
+		{
+  			opacity:1;
+		}
+
+		.transactionItem
+		{
+			background:  white; 
+			height:  50px; 
+			margin: 2px; 
+			position: relative;
+			margin-bottom: 3px;
+			display: table;
+			width: 100%;
+		}
+
+		.signatoryItem:hover > .signatoryIndicator
+		{
+		  background: black !important;
+		}
+
+		.signatoryIndicatorSelected
+		{
+			background: #b3995d !important;
+		}
+
+		.signatoryCheck
+		{
+			opacity: 0;
+			-webkit-transition:all linear 0.2s;
+		    -moz-transition:all linear 0.2s;
+		    -o-transition:all linear 0.2s;
+		    transition:all linear 0.2s;
+		}
+
+		.signatoryChecked
+		{
+			opacity: 1;
+		}
+
+		.fadeEffect.ng-hide-add, .fadeEffect.ng-hide-remove 
+		{
+			-webkit-transition: all cubic-bezier(0.36, -0.14, 0.33, 0.36) 0.2s;
+		  	-moz-transition: all cubic-bezier(0.36, -0.14, 0.33, 0.36) 0.2s;
+		  	-o-transition: all cubic-bezier(0.36, -0.14, 0.33, 0.36) 0.2s;
+		  	transition: all cubic-bezier(0.36, -0.14, 0.33, 0.36) 0.2s;
+		}
+
+		.fadeEffect.ng-hide-add.ng-hide-add-active,
+		.fadeEffect.ng-hide-remove 
+		{
+  			opacity:0;
+		}
+		
+		.fadeEffect.ng-hide-add,
+		.fadeEffect.ng-hide-remove.ng-hide-remove-active 
+		{
+  			opacity:1;
+		}
+

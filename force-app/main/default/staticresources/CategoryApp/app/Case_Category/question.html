@@ -1,0 +1,12 @@
+<div class="loader text-center" ng-if="loader">
+    <img src="assets/712.gif" style="position: relative;
+    margin-bottom: 5px;
+    margin-top: 20%;
+    width: 6%;  background: #f3f3f3;">
+    <div>Processing...</div>
+</div>
+
+<div class="mainContainer" ng-if="!loader">
+    <div ng-include src="'Case_Category/header.html'"></div>
+    <question-answer></question-answer>
+</div>

@@ -1,0 +1,58 @@
+<apex:page controller="HPPROTSentFromSolicitor" sidebar="false" showHeader="false" title="ROT Sent by Solicitor ">
+    <head>
+        <c:KendoResource ></c:KendoResource>
+    </head>
+    <body>
+        <apex:form >
+            <div id="formWrapper">
+
+                <c:HPPSummary objAcc="{!Accounts[0]}" objOpp="{!opp}" objExOpp="{!ExOpp}" Product="{!Prod}" />
+                <div id="container" >
+                    <table width="100%">
+                        <tr>
+                            <td valign="top" id="sidebar">
+                                <c:HPPBOMenu oppId="{!Opp.Id}"  DirectorId="{!Opp.ProductEventDirector__c}" />
+                            </td>
+                            <td valign="top" id="contenttd">
+                                <div id="content">
+                                    <h1>ROT Attached by Solicitor</h1>
+                                
+                                    <apex:outputPanel id="mainPageBlock">
+                                    <div style="padding:20px;">
+                                        <!-- content -->
+                                        
+                                        <apex:pageBlock >
+                                            <apex:pageBlockSection >
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="Please enter the date the ROT was attached" />
+                                                    <apex:inputField value="{!exOpp.ROTSentFromSolicitor__c}" required="true" />
+                                                </apex:pageBlockSectionItem>
+                                            </apex:pageBlockSection>
+                                            <br> </br>
+                                            <apex:pageBlockSection >
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="Solicitors Requested Completion date" />
+                                                    <apex:inputField value="{!exOpp.Requested_Completion_Date__c}" required="false" />
+                                                </apex:pageBlockSectionItem>
+                                            </apex:pageBlockSection>
+                                            <br> </br>
+                                            
+                                            Please click on the button below to confirm that the ROT for <b> {!opp.name} </b> has been attached to the opportunity
+                                        <br> </br>
+                                            <apex:pageBlockButtons location="bottom">
+                                                <apex:commandButton value="Confirm ROT Attached" action="{!complete}" />
+                                            </apex:pageBlockButtons>
+                                        </apex:pageBlock> 
+                                    </div>
+                                    </apex:outputPanel>
+                                </div>
+                                
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+                        
+        </apex:form>
+    </body>
+</apex:page>

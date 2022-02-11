@@ -1,0 +1,427 @@
+<!-- C0592  -->
+<apex:component >
+    <!-- controllerRMDetails -->
+    <script type="text/javascript">
+
+hppApp.controller('controllerRMDetails', ['$scope','$rootScope','$window','serviceRMDetails','$interval','serviceApplication',
+    function ($scope,$rootScope,$window,serviceRMDetails,$interval,serviceApplication)
+    {
+      $scope.SaveErrors = 0;
+      $scope.$watch('EventLogId', function () {
+      serviceApplication.LoadShow('Fetching customer data');
+      serviceRMDetails.GetApplicantData($scope.EventLogId,$scope.SessionId)
+          .then(
+            function(result){
+                $scope.Data= result.Data;
+                if(result.URL)
+                {
+                    	$window.location.href = result.URL.FormatURL();
+                    	return;
+                }
+
+        				for(var i = 0 ; i < $scope.Data.SourceOfFundsCountry.length; i++)
+        				{
+        					$scope.Data.SourceOfFundsCountry[i].Value = $scope.Data.SourceOfFundsCountry[i].Value.replace("&#39;","'");
+        					$scope.Data.SourceOfFundsCountry[i].Value = $scope.Data.SourceOfFundsCountry[i].Value.replace("&amp;","&");
+        					$scope.Data.SourceOfFundsCountry[i].Key = $scope.Data.SourceOfFundsCountry[i].Key.replace("&#39;","'");
+        					$scope.Data.SourceOfFundsCountry[i].Key = $scope.Data.SourceOfFundsCountry[i].Key.replace("&amp;","&");
+        				}
+
+	             serviceApplication.LoadHide(false);
+			     },
+			     function(error){
+				      serviceApplication.LoadHide(false);
+			     }
+			   );
+      });
+
+    $scope.ShowErrors = function()
+	{
+		try
+		{
+			if(!$scope.Data || !$scope.Data.Applicants) return;
+			var show = false;
+			//$scope.ValidApplicants = {};
+			for(var i = 0; i < $scope.Data.Applicants.length;i++)
+			{
+				var valid = true;
+				for (var property in $scope.myform.$error) {
+
+						var err = $scope.myform.$error[property];
+						for(var field in err)
+						{
+							if(field === 'remove')break;
+							var ff = err[field];
+
+
+
+							var g = ff.$name;
+							if(endsWith(g,i)){
+							valid = false;
+							break;
+							}
+						}
+						if(valid == false) break;
+
+				}
+
+
+				$scope.Data.Applicants[i].Valid = valid;
+				if(!valid) show = true;
+			}
+			return show;
+		}
+		catch(errr) {
+			var gg = 1;
+		}
+	}
+
+
+
+   var timer=$interval(function(){
+
+
+       $scope.AutoSave = true;
+
+       $scope.SaveData();
+
+   },15000);
+
+   $scope.killtimer=function(){
+       if(angular.isDefined(timer))
+       {
+          $interval.cancel(timer);
+          timer=undefined;
+      }
+  };
+
+  $scope.SaveData= function(item) {
+      $scope.ErrorAlertText = null;
+      if($scope.Data == null || $scope.Data.Applicants == null) return;
+      if($scope.DisableControl) return;
+      var data = {'Applicants' : angular.copy($scope.Data.Applicants)  , 'EventLogId' : $scope.EventLogId, 'Campaign' : $scope.Campaign, 'PaperStatements' : $scope.Data.PaperStatements }
+      serviceRMDetails.SaveData(data,$scope.SessionId)
+      .then(
+        function(result){
+
+            if(result.Success)
+            {
+             $scope.SaveErrors = 0;
+             $scope.SuccessAlertText = 'Data saved.';
+             $scope.ShowSuccessAlert= true;
+             window.setTimeout(function() {
+               $scope.ShowSuccessAlert=false; $scope.$apply();
+           }, 4000);
+         }
+         else
+         {
+             $scope.ErrorAlertText = result.Error;
+             $scope.SaveErrors += 1;
+             if($scope.SaveErrors == 3)
+             {
+                $scope.killtimer();
+            }
+        }
+        $scope.AutoSave = false;
+      },
+      function(error){
+		 $scope.SaveErrors += 1;
+		 $scope.AutoSave = false;
+
+		 if($scope.SaveErrors == 3)
+		 {
+			$scope.killtimer();
+		 }
+      }
+	);
+ }
+
+
+
+
+
+
+  $scope.ValidationClick = function(index, field){
+    var panel = '#collapse' + index;
+
+    $(panel).collapse('show');
+
+    var fieldVal = '#' + field + index;
+
+    setTimeout(function(){$(fieldVal).focus();}, 300)
+
+  }
+
+
+  $scope.PasswordVerification = function(authorisor){
+
+        if(authorisor.Password == '' || authorisor.Password == null)
+        {
+            $scope.Response_StatusDescription = 'Password cannot be empty';
+            return;
+        }
+
+        $scope.working = true;
+        serviceApplication.LoadShow('Verifying Password');
+        serviceRMDetails.PasswordVerification(authorisor.Username, authorisor.Password)
+        .then(
+                function (result) {
+                        if(result.Success == true)
+                        {
+                            authorisor.Verified = true;
+                            $scope.isVerified = true;
+                        }
+                        else
+                        {
+							authorisor.IncorrectPassword = true;
+                            $scope.Response_StatusDescription = 'Incorrect Password';
+                        }
+
+                        $scope.working = false;
+                         if(!$scope.$$phase) {
+                            $scope.$apply();
+                        }
+                        serviceApplication.LoadHide(false);
+                    },
+                function (error) {
+                        $scope.Response_Success = false;
+                        $scope.working = false;
+                        $scope.Response_StatusDescription = error.message;
+                         if(!$scope.$$phase) {
+                            $scope.$apply();
+                        }
+                        serviceApplication.LoadHide(false);
+                        alert(error.message);
+                    }
+            );
+     }
+
+
+$scope.HideComplete = function()
+{
+	if($scope.isFCU) return true;
+
+    if($scope.DisableControl) return true;
+
+	if($scope.isBranch && !($scope.ManagerAuthorisors && $scope.ManagerAuthorisors.selectedAuthorisor && $scope.ManagerAuthorisors.selectedAuthorisor.Verified))
+	{
+	 return true;
+	}
+
+	if(!$scope.Data || !$scope.Data.Applicants) return false;
+
+	for(var i = 0; i < $scope.Data.Applicants.length;i++)
+	{
+		if($scope.Data.Applicants[i].Correct == 'No') return true;
+	}
+	return false;
+}
+
+$scope.Complete = function(){
+    console.log('Start Complete()');
+	if(!$scope.myform.$valid)
+    {
+        return;
+    }
+
+	var approvalUser = '';
+	if($scope.ManagerAuthorisors && $scope.ManagerAuthorisors.selectedAuthorisor && $scope.ManagerAuthorisors.selectedAuthorisor.Verified)
+	{
+		approvalUser=$scope.ManagerAuthorisors.selectedAuthorisor.AuthorisorId;
+	}
+
+    var data = {'Applicants' : angular.copy($scope.Data.Applicants)  , 'EventLogId' : $scope.EventLogId,'ApprovalUser' : approvalUser,  'isEDD' : $scope.isEDD }
+
+	serviceApplication.LoadShow('Saving...');
+    serviceRMDetails.CompleteEvent(data,$scope.SessionId)
+    .then(
+        function(result){
+			if(result.Success)
+            {
+				if(result.URL && $scope.isABranch && $scope.isBranch && approvalUser!='')
+				{
+					$window.location.href = result.URL.FormatURL();
+					return;
+				}
+
+				serviceApplication.LoadHide(false);
+				$rootScope.PleaseWaitAddOn = 'This may take up to 2 minutes';
+				serviceApplication.LoadShow('RM...');
+				serviceRMDetails.CallRM($scope.EventLogId,$scope.SessionId,($scope.isRMT || $scope.isEDD || $scope.canEDD),$scope.isABranch)
+				.then(
+				function(result){
+					$scope.canEDD = result.isEDD;
+					if((!result.isRMT || result.isFCU) || (result.isRMT && $scope.isRMT))
+					{
+						if(result.URL)
+						{
+							$window.location.href = result.URL.FormatURL();
+							return;
+						}
+						else
+						{
+							if(result.isFCU)
+							{
+								$scope.isFCU = true;
+								$scope.RMAlertText = 'We are currently processing your application, you will be contacted shortly';
+								$scope.isBranch = false;
+							}
+							else
+							{
+								$scope.isFCU = false;
+								if(result.isRMT && result.isEDD)
+								{
+									$scope.isBranch = true;
+									if(result.ManagerAuthorisors)
+									{
+										$scope.ManagerAuthorisors =  result.ManagerAuthorisors;
+										$scope.ManagerAuthorisors.selectedAuthorisor = '';
+										$scope.ManagerAuthorisors.selectedAuthorisor.Verified = false;
+									}
+								}
+
+							}
+
+
+						}
+					}
+					else
+					{
+						$scope.isRMT = true;
+					}
+					$rootScope.PleaseWaitAddOn = '';
+					serviceApplication.LoadHide(false);
+				},
+				function(error){
+					$scope.ErrorAlertText = 'An error has occured during processing, please try again and if you still get an error, please contact your system administrator';
+					serviceApplication.LoadHide(false);
+                    $scope.killtimer();
+				}
+				);
+
+                $scope.Duplicates = result.HasDuplicates;
+            }
+
+        },
+        function(error){
+		    $scope.ErrorAlertText = 'An error has occured during processing, please try again and if you still get an error, please contact your system administrator';
+            serviceApplication.LoadHide(false);
+            $scope.killtimer();
+       }
+       );
+
+}
+
+$scope.autoCompleteOpen = function(event)
+{
+    if($scope.HideAutoComplete == true)
+    {
+        $scope.HideAutoComplete = false;
+        event.preventDefault();
+    }
+}
+
+
+}
+]);
+
+$(function () {
+  $('[rel="popover"]').popover();
+
+})
+
+    </script>
+    <!-- serviceRMDetails -->
+    <script type="text/javascript">
+        hppApp.service('serviceRMDetails', ['$q', '$rootScope', function ($q, $rootScope) {
+        this.GetApplicantData = function(id,sessionId)
+        {
+            var deferred = $q.defer();
+            MMR_RM_Controller.GetApplicantData(id,sessionId,function(result, event){
+                if(event.status){
+                    deferred.resolve(result);
+                }
+                else {
+                    deferred.reject(event);
+                }
+            },{ buffer: false, escape: false, timeout: 90000});
+            return deferred.promise;
+        }
+
+        this.CompleteEvent= function(data,sessionId)
+        {
+             var deferred = $q.defer();
+             MMR_RM_Controller.CompleteRM(data,sessionId,function(result, event){
+                if(event.status){
+                    deferred.resolve(result);
+                }
+                else {
+                    deferred.reject(event);
+                }
+            });
+            return deferred.promise;
+        }
+
+    this.SaveData= function(data,sessionId)
+	{
+		var deferred = $q.defer();
+		MMR_RM_Controller.SaveRMDetails(data,sessionId,function(result, event){
+			if(event.status){
+				deferred.resolve(result);
+			}
+			else {
+				deferred.reject(event);
+			}
+		});
+		return deferred.promise;
+	}
+
+	this.CallRM= function(id, session, isHigh,isABranch)
+        {
+            var deferred = $q.defer();
+		    Visualforce.remoting.timeout = 90000;
+            MMR_RM_Controller.CallRM(id,session,isHigh,isABranch,function(result, event){
+                if(event.status){
+                    deferred.resolve(result);
+                }
+                else {
+                    deferred.reject(event);
+                }
+            });
+            return deferred.promise;
+        }
+
+		this.PasswordVerification = function(userName, password)
+		{
+			var deferred = $q.defer();
+			MMR_RM_Controller.PasswordVerification(userName, password, function (result, event) {
+
+				if (event.status) {
+					deferred.resolve(result);
+				}
+				else {
+					deferred.reject(event);
+				}
+			});
+
+			return deferred.promise;
+		}
+
+    }]);
+    </script>
+    <!-- Styles -->
+    <style>
+        .form-control {
+            width:100%;
+            font-size:12px;
+            font-family: Arial,Helvetica,sans-serif;
+        }
+        .panel-default .panel-heading {
+            background-color:#000;
+            color:#fff;
+        }
+        h3 {
+            color:#f5f5f5;
+        }
+    </style>
+</apex:component>

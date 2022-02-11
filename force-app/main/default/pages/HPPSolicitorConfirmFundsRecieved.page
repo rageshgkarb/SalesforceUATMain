@@ -1,0 +1,52 @@
+<apex:page controller="HPPSolicitorConfirmFundsRecieved" sidebar="false" showHeader="false" title="Solicitor Confirm Funds Recieved">
+    <head>
+        <c:KendoResource ></c:KendoResource>
+    </head>
+    <body>
+        <apex:form > 
+            <div id="formWrapper">
+                <!-- C00095-->
+                <c:HPPSummary objAcc="{!Accounts[0]}" objOpp="{!opp}" objExOpp="{!ExOpp}" Product="{!Prod}" />
+                <div id="container" >
+                    <table width="100%">
+                        <tr>
+                            <td valign="top" id="sidebar">
+                                <c:HPPBOMenu oppId="{!Opp.Id}"  DirectorId="{!Opp.ProductEventDirector__c}" />
+                            </td>
+                            <td valign="top" id="contenttd">
+                                <div id="content">
+                                    <h1>Solicitor Confirm Funds Received</h1>
+                                
+                                    <apex:outputPanel id="mainPageBlock">
+                                    <div style="padding:20px;">
+                                        <!-- content -->
+                                        
+                                        <apex:pageBlock >
+                                            <apex:pageBlockSection >
+                                                <apex:pageBlockSectionItem >
+                                                    
+													<!--  CPDR01  <apex:outputLabel value="Funds Received from IBB" />-->
+													<apex:outputLabel value="Funds Received from Al Rayan Bank" />
+                                                    <apex:inputField value="{!exOpp.Receipt_of_funds_from_IBB_solicitors__c}" required="true" />
+                                                </apex:pageBlockSectionItem>
+                                            </apex:pageBlockSection>
+                                            
+                                            <apex:pageBlockButtons location="bottom">
+                                                <!--  CPDR01<apex:commandButton value="Funds Received from IBB" action="{!complete}" />
+												-->
+												<apex:commandButton value="Funds Received from Al Rayan Bank" action="{!complete}" />
+                                            </apex:pageBlockButtons>
+                                        </apex:pageBlock> 
+                                    </div>
+                                    </apex:outputPanel>
+                                </div>
+                                
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+                        
+        </apex:form>
+    </body>
+</apex:page>

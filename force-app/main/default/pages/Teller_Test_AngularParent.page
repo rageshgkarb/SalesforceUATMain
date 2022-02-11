@@ -1,0 +1,461 @@
+<apex:page applyBodyTag="false" showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false">
+	
+	<div id="PageController" ng-controller="controllerTransaction" data-ng-init="LoadFunctionPageData()" style="height:100%">
+                <div id="pageHeader">{{pageDefinition.PageTitle}}</div>
+                 <div id="contDiv">
+                    <div id="initial" ng-show="displayInitial==true">
+                        <div class="row" ng-show="displayCreditAccountNo==true">         
+                             <div class="col-sm-4 text-right">
+                                <label>{{labelCreditAccountNo}}:</label> 
+                             </div>
+                             <div class="col-sm-4 col-md-3 col-lg-2" >
+                                 <input ng-model="pageData.CreditAccountNo" type="text" class="form-control" id="CreditAccountNo" ng-disabled="disableCreditAccountNo==true" />
+                             </div>
+                        </div>
+                        <div class="row" ng-show="displayDebitAccountNo==true">         
+                             <div class="col-sm-4 text-right">
+                                <label>{{labelDebitAccountNo}}:</label> 
+                             </div>
+                             <div class="col-sm-4 col-md-3 col-lg-2" >
+                                 <input ng-model="pageData.DebitAccountNo" type="text" class="form-control" id="DebitAccountNo" ng-disabled="disableDebitAccountNo==true" />
+                             </div>
+                         </div>
+                         <div class="row" ng-show="displayAccountName==true">                 
+                             <div class="col-sm-4 text-right">
+                                 <label>{{labelAccountName}}:</label>
+                             </div>
+                                 <div class="col-sm-4 col-md-3 col-lg-2" >
+                                     <input ng-model="pageData.CustomerName" type="text" class="form-control" id="CustomerName" ng-disabled="disableAccountName==true"/>
+                                 </div>
+                         </div>
+                         <div class="row" ng-show="displayTransactionAmount==true">
+                             <div class="form-group">
+                                 <div class="col-sm-4 text-right">
+                                     <label>{{labelTransactionAmount}}:</label>
+                                 </div>
+                                 <div class="col-sm-4 col-md-3 col-lg-2" >
+                                     <input ng-model="pageData.TransactionAmount" type="text" class="form-control" id="TransactionAmount" ng-disabled="disableTransactionAmount==true"/>
+                                 </div>
+                             </div>
+                         </div>
+
+                         <div class="row" ng-show="displayAmountType==true">
+                             <div class="form-group">
+                                 <div class="col-sm-4 text-right">
+                                     <label>{{labelAmountType}}:</label>
+                                 </div>
+                                 <div class="col-sm-6 col-md-4">
+                                     <select ng-model="pageData.AmountType" ng-options="item as item for item in amountTypeValues track by item">
+                                    </select>
+                                 </div>
+                             </div>
+                         </div>
+
+                         <div class="row" ng-show="displayChargeAmount==true">
+                             <div class="form-group">
+                                 <div class="col-sm-4 text-right">
+                                     <label>{{labelChargeAmount}}:</label>
+                                 </div>
+                                 <div class="col-sm-4 col-md-3 col-lg-2" >
+                                     <input ng-model="pageData.ChargeAmount" type="text" class="form-control" id="ChargeAmount" ng-disabled="disableChargeAmount==true"/>
+                                 </div>
+                             </div>
+                         </div>
+
+                        <div class="row" ng-show="displayBeneficiaryAccountNo==true">
+                             <div class="form-group">
+                                 <div class="col-sm-4 text-right">
+                                     <label>{{labelBeneficiaryAccountNo}}:</label>
+                                 </div>
+                                 <div class="col-sm-4 col-md-3 col-lg-2" >
+                                     <input ng-model="pageData.BeneficiaryAccountNo" type="text" class="form-control" id="BeneficiaryAccountNo" ng-disabled="disableBeneficiaryAccountNo==true"/>
+                                 </div>
+                             </div>
+                         </div>
+
+                        <div class="row" ng-show="displayBeneficiarySortCode==true">
+                             <div class="form-group">
+                                 <div class="col-sm-4 text-right">
+                                     <label>{{labelBeneficiarySortCode}}:</label>
+                                 </div>
+                                 <div class="col-sm-4 col-md-3 col-lg-2" >
+                                     <input ng-model="pageData.BeneficiarySortCode" type="text" class="form-control" id="BeneficiarySortCode" ng-disabled="disableBeneficiarySortCode==true"/>
+                                 </div>
+                             </div>
+                         </div>
+
+                        <div class="row" ng-show="displayTransferType==true">
+                             <div class="form-group">
+                                 <div class="col-sm-4 text-right">
+                                     <label>{{labelTransferType}}:</label>
+                                 </div>
+                                 <div class="col-sm-4 col-md-3 col-lg-2" >
+                                     <input ng-model="pageData.TransferType" type="text" class="form-control" id="TransferType" ng-disabled="disableTransferType==true"/>
+                                 </div>
+                             </div>
+                         </div>
+
+                        <div class="row" ng-show="displayNoOfCheques==true">
+                             <div class="form-group">
+                                 <div class="col-sm-4 text-right">
+                                     <label>{{labelNoOfCheques}}:</label>
+                                 </div>
+                                 <div class="col-sm-6 col-md-4">
+                                     <input ng-model="pageData.NoOfCheques" type="text" class="form-control" id="NoOfCheques" maxlength="35" ng-disabled="disableNoOfCheques==true"/>
+                                 </div>
+                             </div>
+                         </div>
+                        
+                        <div class="row" ng-show="displayChequeSerialNo==true">
+                             <div class="form-group">
+                                 <div class="col-sm-4 text-right">
+                                     <label>{{labelChequeSerialNo}}:</label>
+                                 </div>
+                                 <div class="col-sm-6 col-md-4">
+                                     <input ng-model="pageData.ChequeSerialNo" type="text" class="form-control" id="ChequeSerialNo" maxlength="35" ng-disabled="disableChequeSerialNo==true"/>
+                                 </div>
+                             </div>
+                         </div>
+                        
+                        <div class="row" ng-show="displayChequeType==true">
+                             <div class="form-group">
+                                 <div class="col-sm-4 text-right">
+                                     <label>{{labelChequeType}}:</label>
+                                 </div>
+                                 <div class="col-sm-6 col-md-4">
+                                     <input ng-model="pageData.ChequeType" type="text" class="form-control" id="ChequeType" maxlength="35" ng-disabled="disableChequeType==true"/>                             
+                                 </div>
+                             </div>
+                         </div>
+                        
+                        <div class="row" ng-show="displayIssuingBank==true">
+                             <div class="form-group">
+                                 <div class="col-sm-4 text-right">
+                                     <label>{{labelIssuingBank}}:</label>
+                                 </div>
+                                 <div class="col-sm-6 col-md-4">
+                                     <input ng-model="pageData.IssuingBank" type="text" class="form-control" id="IssuingBank" maxlength="35" ng-disabled="disableChequeType==true"/>                             
+                                 </div>
+                             </div>
+                         </div>
+
+                        <div class="row" ng-show="displayPaymentPurpose==true">
+                             <div class="form-group">
+                                 <div class="col-sm-4 text-right">
+                                     <label>{{labelPaymentPurpose}}:</label>
+                                 </div>
+                                 <div class="col-sm-6 col-md-4">
+                                     <select ng-model="pageData.PaymentPurpose" ng-options="item as item for item in paymentPurposeValues track by item">
+                                        <option value="">{{PaymentPurposeDefault}}</option>
+                                    </select>
+                                 </div>
+                             </div>
+                         </div>
+                        
+                          <div class="row" ng-show="displayReference==true">
+                             <div class="form-group">
+                                 <div class="col-sm-4 text-right">
+                                     <label>{{labelReference}}:</label>
+                                 </div>
+                                 <div class="col-sm-6 col-md-4">
+                                     <input ng-model="pageData.TransactionReference" type="text" class="form-control" id="Narrative1" maxlength="35" ng-disabled="disableReference==true"/>                             
+                                 </div>
+                             </div>
+                         </div>
+                        
+                          <div class="row" ng-show="displayValueDate==true">
+                             <div class="form-group">
+                                 <div class="col-sm-4 text-right">
+                                     <label>{{labelValueDate}}:</label>
+                                 </div>
+                                 <div class="col-sm-6 col-md-4">
+                                     <input ng-model="pageData.ValueDate" type="text" class="form-control" id="ValueDate" maxlength="35" ng-disabled="disableValueDate==true"/>                             
+                                 </div>
+                             </div>
+                         </div>
+                        
+                         <div ng-show="displayNarrativeLines==true">
+                             <div class="row">
+                                 <div class="form-group">
+                                     <div class="col-sm-4 text-right">
+                                         <label>{{labelNarrativeLines}}:</label>
+                                     </div>
+                                     <div class="col-sm-6 col-md-4">
+                                         <input ng-model="pageData.NarrativeLine1" type="text" class="form-control" id="Narrative1" maxlength="35" ng-disabled="disableNarrativeLines==true" />
+                                     </div>
+                                 </div>
+                             </div>
+                             <div class="row" ng-show="pageData.NarrativeLine1.length > 0">
+                                 <div class="form-group">
+                                     <div class="col-sm-4 text-right">
+                                         
+                                     </div>
+                                     <div class="col-sm-6 col-md-4">
+                                         <input ng-model="pageData.NarrativeLine2" type="text" class="form-control" id="Narrative2" maxlength="35" ng-disabled="disableNarrativeLines==true" />
+                                     </div>
+                                 </div>
+                             </div>
+                             <div class="row" ng-show="pageData.NarrativeLine2.length > 0">
+                                 <div class="form-group">
+                                     <div class="col-sm-4 text-right">
+                                         
+                                     </div>
+                                     <div class="col-sm-6 col-md-4">
+                                         <input ng-model="pageData.NarrativeLine3" type="text" class="form-control" id="Narrative3" maxlength="35" ng-disabled="disableNarrativeLines==true"/>
+                                     </div>
+                                 </div>
+                             </div>
+                             <div class="row" ng-show="pageData.NarrativeLine3.length > 0">
+                                 <div class="form-group">
+                                     <div class="col-sm-4 text-right">
+                                         
+                                     </div>
+                                     <div class="col-sm-6 col-md-4">
+                                         <input ng-model="pageData.NarrativeLine4" type="text" class="form-control" id="Narrative4" maxlength="35" ng-disabled="disableNarrativeLines==true"/>
+                                     </div>
+                                 </div>
+                             </div>
+                        </div>
+
+
+                         <div ng-show="displayPaymentDetails==true">
+                             <div class="row">
+                                 <div class="form-group">
+                                     <div class="col-sm-4 text-right">
+                                         <label>{{labelPaymentDetails}}:</label>
+                                     </div>
+                                     <div class="col-sm-6 col-md-4">
+                                         <input ng-model="pageData.PaymentDetailsLine1" type="text" class="form-control" id="PaymentDetails1" maxlength="35" ng-disabled="disablePaymentDetails==true" />
+                                     </div>
+                                 </div>
+                             </div>
+                             <div class="row" ng-show="pageData.PaymentDetailsLine1.length > 0">
+                                 <div class="form-group">
+                                     <div class="col-sm-4 text-right">
+                                         
+                                     </div>
+                                     <div class="col-sm-6 col-md-4">
+                                         <input ng-model="pageData.PaymentDetailsLine2" type="text" class="form-control" id="PaymentDetails2" maxlength="35" ng-disabled="disablePaymentDetails==true" />
+                                     </div>
+                                 </div>
+                             </div>
+                             <div class="row" ng-show="pageData.PaymentDetailsLine2.length > 0">
+                                 <div class="form-group">
+                                     <div class="col-sm-4 text-right">
+                                         
+                                     </div>
+                                     <div class="col-sm-6 col-md-4">
+                                         <input ng-model="pageData.PaymentDetailsLine3" type="text" class="form-control" id="PaymentDetails3" maxlength="35" ng-disabled="disablePaymentDetails==true"/>
+                                     </div>
+                                 </div>
+                             </div>
+                             <div class="row" ng-show="pageData.PaymentDetailsLine3.length > 0">
+                                 <div class="form-group">
+                                     <div class="col-sm-4 text-right">
+                                         
+                                     </div>
+                                     <div class="col-sm-6 col-md-4">
+                                         <input ng-model="pageData.PaymentDetailsLine4" type="text" class="form-control" id="PaymentDetails4" maxlength="35" ng-disabled="disablePaymentDetails==true"/>
+                                     </div>
+                                 </div>
+                             </div>
+                        </div>
+
+
+                         <div ng-show="displayBeneficiaryDetails==true">
+                             <div class="row">
+                                 <div class="form-group">
+                                     <div class="col-sm-4 text-right">
+                                         <label>{{labelBeneficiaryDetails}}:</label>
+                                     </div>
+                                     <div class="col-sm-6 col-md-4">
+                                         <input ng-model="pageData.BeneficiaryDetailsLine1" type="text" class="form-control" id="BeneficiaryDetails1" maxlength="35" ng-disabled="disableBeneficiaryDetails==true" />
+                                     </div>
+                                 </div>
+                             </div>
+                             <div class="row" ng-show="pageData.BeneficiaryDetailsLine1.length > 0">
+                                 <div class="form-group">
+                                     <div class="col-sm-4 text-right">
+                                         
+                                     </div>
+                                     <div class="col-sm-6 col-md-4">
+                                         <input ng-model="pageData.BeneficiaryDetailsLine2" type="text" class="form-control" id="BeneficiaryDetails2" maxlength="35" ng-disabled="disableBeneficiaryDetails==true" />
+                                     </div>
+                                 </div>
+                             </div>
+                             <div class="row" ng-show="pageData.BeneficiaryDetailsLine2.length > 0">
+                                 <div class="form-group">
+                                     <div class="col-sm-4 text-right">
+                                         
+                                     </div>
+                                     <div class="col-sm-6 col-md-4">
+                                         <input ng-model="pageData.BeneficiaryDetailsLine3" type="text" class="form-control" id="BeneficiaryDetails3" maxlength="35" ng-disabled="disableBeneficiaryDetails==true"/>
+                                     </div>
+                                 </div>
+                             </div>
+                             <div class="row" ng-show="pageData.BeneficiaryDetailsLine3.length > 0">
+                                 <div class="form-group">
+                                     <div class="col-sm-4 text-right">
+                                         
+                                     </div>
+                                     <div class="col-sm-6 col-md-4">
+                                         <input ng-model="pageData.BeneficiaryDetailsLine4" type="text" class="form-control" id="BeneficiaryDetails4" maxlength="35" ng-disabled="disableBeneficiaryDetails==true"/>
+                                     </div>
+                                 </div>
+                             </div>
+                        </div>
+
+
+                    </div> <!-- #initial -->
+
+                    <div id="Denominations" ng-show="displayDenominations==true">
+                        <table class="table table-striped" id="Denominations" style="margin-top:0px;" >
+                            <thead>
+                                <tr>
+                                    <th class="col-sm-4">
+                                    </th>
+                                    <th class="col-sm-4">
+                                        Number of Notes/Coins
+                                    </th>
+                                    <th class="col-sm-4">
+                                        Total Selected Value
+                                    </th>
+                                    <th class="col-sm-4">
+                                        Number of Notes/Coins In Till
+                                    </th>
+                                 </tr>
+                            </thead>
+                            <tbody>
+                                
+                                <tr class="itemRow" ng-repeat="item in pageData.Denominations.TransactionDenonminations track by item.DenominationValue" ng-class-Even="'BranchItemOdd'" style="padding:5px;margin:0px;">
+                                    <td class="col-sm-4">
+                                        {{item.FormattedDenominationValue}}
+                                    </td>
+                                    <td class="col-sm-4">
+                                        <input type="number" name="item.NumberSelected" ng-model="item.NumberSelected" min="0" />
+                                    </td>
+                                    <td class="col-sm-4">
+                                        {{item.DenominationValue * item.NumberSelected}}
+                                    </td>
+                                    <td class="col-sm-4">
+                                        {{item.NoInTill}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div>
+                            Total Selected: {{pageData.Denominations.TotalSelectedValue}} Total Requested: {{pageData.Amount}}
+                        </div>
+                    </div> <!-- #Denominations -->
+
+                    <div id="MandateCheck" ng-show="displayMandateCheck==true">
+                        <div id="SignatoryList">
+                            <table class="table table-striped" id="Signatories" style="margin-top:0px;" >
+                                <thead>
+                                    <tr>
+                                        <th class="col-sm-4">
+                                            Customer Present?
+                                        </th>
+                                        <th class="col-sm-4">
+                                            Image
+                                        </th>
+                                        <th class="col-sm-4">
+                                            Signature
+                                        </th>
+                                        <th class="col-sm-4">
+                                            EBS Id
+                                        </th>
+                                        <th class="col-sm-4">
+                                            Primary Account Holder
+                                        </th>
+                                        <th class="col-sm-4">
+                                            Customer Name
+                                        </th>
+                                        <th class="col-sm-4">
+                                            Relationship to Primary Applicant
+                                        </th>
+                                        <th class="col-sm-4">
+                                            Relationship Type
+                                        </th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                    <tr class="itemRow" ng-repeat="item in signatoriesResponse.signatories" ng-class-Even="'BranchItemOdd'" style="padding:5px;margin:0px;">
+                                        <td class="col-sm-4">
+                                            <input type="checkbox" name="selected" ng-checked="isSelected(item.AccountHolderId)" ng-click="updateSelection($event, item.AccountHolderId)"/>
+                                        </td>
+                                        <td class="col-sm-4">
+                                            <img src="/servlet/servlet.FileDownload?file={{item.ImageId}}" ng-class="imageClass" width="157" height="157" />
+                                        </td>
+                                        <td class="col-sm-4">
+                                            <img src="/servlet/servlet.FileDownload?file={{item.SignatureId}}" ng-class="imageClass" width="157" height="54"/>
+                                        </td>
+                                        <td class="col-sm-4">
+                                            {{item.CustomerEBSId}}
+                                        </td>
+                                        <td class="col-sm-4">
+                                            {{item.PrimaryAccountHolder}}
+                                        </td>
+                                        <td class="col-sm-4">
+                                            {{item.CustomerName}}
+                                        </td>
+                                        <td class="col-sm-4">
+                                            {{item.RelationshipToPrimaryApplicant}}
+                                        </td>
+                                        <td class="col-sm-4">
+                                            {{item.RelationshipType}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> <!-- #MandateCheck -->
+
+                    <div id="LimitCheck" ng-show="displayLimitCheck==true">
+                    </div> <!-- #LimitCheck -->
+
+                    <div id="SendToEBS" ng-show="displaySendToEBS==true">
+                    </div> <!-- #SendToEBS -->
+                     
+                    <div id="Completion" ng-show="displayCompletion==true">
+                    </div> <!-- #Completion -->
+                     
+                    <div class="functionfooter">
+                        <div class="row">
+                            <div class="col-sm-offset-1 col-sm-10">
+                                <button id="PreviousButtonId" class="btn btn-default" ng-click="previousButtonEventHandler()">{{PreviousButtonTitle}}</button>
+                                <div align="center" ng-show="Response_Success==false">{{Response_StatusDescription}}</div>
+                                <button id="NextButtonId" class="btn btn-success pull-right" ng-click="nextButtonEventHandler()" ng-disabled="working==true" >{{NextButtonTitle}}</button> 
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="testing" ng-show="testing=='Y'">
+                        <p>
+                            Testing Data
+                        </p>
+                        Page Data: {{pageData}}<p/>
+                        Page Definition: {{pageDefinition}}<p/>
+                        Current Stage Order: {{CurrentStageOrder}}<p/>
+                        Denominations: {{denominations}}<p/>
+                        Signatories Response: {{signatoriesResponse}}<p/>
+                        Check Mandates Response: {{checkMandatesResponse}}<p/>
+                        Stage: {{stage}}<p/>
+                        Verified: {{Verified}}<p/>
+                        Verification Error Message: {{VerificationErrorMessage}}<p/>
+                        Selected Signatories: {{selectedSignatories}}<p/>
+                        SendToEBS Request: {{sendToEBSResponse}}<p/>
+                        Response_Success: {{Response_Success}}<p/>
+                        Response_StatusDescription: {{Response_StatusDescription}}<p/>
+                        displayInitial: {{displayInitial}}<p/>
+                        displayDenominations: {{displayDenominations}}<p/>
+                        displayMandateCheck: {{displayMandateCheck}}<p/>
+                        displayLimitCheck: {{displayLimitCheck}}<p/>
+                        testing: {{testing}}<p/>
+                    </div>
+                </div> <!-- #contDiv -->
+            </div>
+	
+</apex:page>

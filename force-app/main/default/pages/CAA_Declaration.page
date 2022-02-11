@@ -1,0 +1,465 @@
+<apex:page showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false" controller="CAA_Core_Controller" action="{!Declaration_Init}">
+
+
+
+<apex:composition template="CAA_Template">
+    <apex:define name="include">
+        <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/controller/controller_declaration.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/service/service_declaration.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/service/service_ebs.js')}"/>
+    </apex:define>
+        <apex:define name="body">
+        
+        <div ng-controller="controllerDeclaration" ng-init="EventLogId = '{!EventLogId}';Decision='{!DeResponse}';SessionId='{!SessionId}';applicantNames='{!applicantNames.size}';isISA={!isISA};isYPSA={!IsYPSA}"> <!--ctl -->
+         
+        <div class="row">
+<div class="col-md-9">
+        
+
+<div class="SectionHeader" style="margin-bottom:18px;">
+    <div class="numberCircleReverse">3</div>
+    <div>Declaration</div>
+</div>
+
+<div class=""/>
+
+
+<div ng-show="Decision == 'DECLINE'" class="PanelContents">
+<div>
+Thank you for your application for an Al Rayan Bank {!productType}
+</div>
+<br/>
+<div>
+We have reviewed your application and we must advise you that regretfully, in this instance, we are unable to offer the facility you have requested.
+</div>
+<br/>
+<div>
+Al Rayan Bank, like most financial organisations, assesses applications using information supplied by credit bureau.  Unfortunately, in this case we have been supplied with information by Equifax Ltd that means we are unable to accept your application at this moment. If you would like more information please either go to www.equifax.co.uk or write to:-<br/>
+</div>
+<br/>
+<div>
+Equifax plc
+</div>
+<div>
+Credit File Advice Centre
+</div>
+<div>
+Po Box 1140
+</div>
+<div>
+Bradford
+</div>
+<div>
+BD1 5US
+</div>
+<br/>
+<div>
+A fee of £2.00 will be payable to Equifax Plc if you wish to use either of these methods.
+</div>
+<br/>
+<div>
+If you require any further information about your account application please contact us on 0800 4080 786.
+</div>
+
+<c:CAA_Next_Steps_Footer ></c:CAA_Next_Steps_Footer>
+
+</div>
+
+<!--
+<div ng-show="Decision == 'REFER' || Decision == 'ADDRESSMISMATCH'">
+    It was refered - contact message
+</div>
+-->
+
+
+<div ng-show="!Error">
+<div style="
+    background: white;
+    padding: 15px 20px;
+    font-weight: bold;
+    margin-bottom: 19px;
+">Please expand and accept the following declarations to continue your application</div>
+
+
+    <apex:outputPanel rendered="{!NOT(isISA)}">
+
+<div class="panel-heading" role="tab" id="heading0" style="padding:0px !important;">
+    <h4 class="panel-title">
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse0" aria-expanded="false" aria-controls="collapse0" style="text-decoration:none;">
+            <div class="SectionSubHeader">
+                Automatic Exchange of Information (AEOI)
+            </div>
+        </a>
+    </h4>
+</div>
+<div id="collapse0" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading0">
+    <div class="panel-body" style="padding:0px !important;"> 
+        <div class="PanelContents" style="margin-bottom:0px;">
+            <div>
+                                                    <span>
+                                                        <small>
+                                                            Tax legislations referred to in this form are regulations created to enable automatic exchange of information and include
+                                                            Foreign Account Tax Compliance Act, various agreements to improve
+                                                            international tax compliance entered into between the UK, the Crown
+                                                            Dependencies and the Overseas Territories, and OECD Common Reporting
+                                                            Standard for Automatic Exchange of Financial Account Information,
+                                                            as implemented in the relevant jurisdictions
+                                                        </small>
+                                                    </span>
+                                                </div>
+                                                <hr/>
+                                                <div>
+                                                    <span>
+                                                        <ul>
+                                                            <li>
+                                                        I understand that the information supplied by me is covered by the full provisions of the terms and conditions governing
+                                                        the Account Holder’s relationship with Al Rayan Bank PLC setting out
+                                                        how Al Rayan Bank PLC may use and share the information supplied by me.
+                                                                </li>
+                                                        <li>I acknowledge that the information contained in this form and information
+                                                        regarding the Account Holder and any reportable Account(s) may be provided
+                                                        to the tax authorities of the country in which this account(s) is/are
+                                                        maintained and exchanged with tax authorities of another country or countries
+                                                        in which the Account Holder may be tax resident pursuant to inter-governmental
+                                                            agreements to exchange financial account information.</li>
+                                                            <li>I certify that
+                                                        I am the Account Holder (or I am authorised to sign for the Account Holder)
+                                                        of all account(s) to which this application relates.
+                                                        <strong>
+                                                            I declare that all statements made in this declaration are, to the best of my knowledge and belief, correct and complete</strong>.
+                                                            </li>
+                                                            <li>
+                                                        I undertake to advise Al Rayan Bank PLC within 28 days of any change
+                                                        in circumstances which affects the tax residency status of the individual
+                                                        identified in Section 1 of this form or causes the information contained
+                                                        to become incorrect or incomplete, and to provide Al Rayan Bank PLC with
+                                                        a suitably updated self-certification and declaration within 28 days
+                                                        of such change.
+                                                            </li>
+                                                            </ul>
+                                                    </span>
+                                                </div>
+            <div style="margin-top: 15px;">
+
+                <apex:variable value="0" var="num0"/>
+                <div class="row">
+
+
+                    <apex:repeat value="{!applicantNames}" var="a" >
+
+
+                        <apex:outputPanel layout="none" rendered="{!NOT(IsYPSA) ||  NOT(VALUE(num0)==0) }">
+                        <div class="col-md-6">
+                            <strong>
+                                <apex:outputPanel layout="none" rendered="{!IsYPSA}">
+                                    Guardian {!VALUE(num0)} - {!a}
+                                </apex:outputPanel>
+                                <apex:outputPanel layout="none" rendered="{!NOT(IsYPSA)}">
+                                    Applicant {!VALUE(num0) + 1} - {!a}
+                                </apex:outputPanel>
+                            </strong><br/>
+                            <!--
+                            Please indicate the capacity in which you are signing this form
+                            <br/>
+                            <select style="max-width: 200px;" class="form-control arbBox" ng-model="capacity{!num0}" name="capacity{!num0}" ng-required="true"
+                                   >
+                            <option>Self</option>
+                                <option>Guardian</option>
+                                <option>Power of attorney</option>
+                            </select>
+                            -->
+                            <br/>
+                            <button class="btn"  ng-click="i_agree0_clicked{!num0} = true;" ng-class="i_agree0_clicked{!num0} ? 'goldbutton' : 'blackbutton'">I agree</button>
+                        </div>
+
+                        </apex:outputPanel>
+                        <apex:variable var="num0" value="{!VALUE(num0) + 1}"/>
+
+                    </apex:repeat>
+                </div>
+
+
+            <!--<button class="btn" ng-click="i_agree0_clicked = true;"  ng-class="i_agree0_clicked ? 'goldbutton' : 'blackbutton'">I agree</button>-->
+        </div>
+        </div>
+    </div>
+</div>
+    </apex:outputPanel>
+
+
+
+<!--C0750: CAA Quick Wins Ends-->
+<!--<div ng-show="i_agree0_clicked">-->
+<div>
+<div class="panel-heading" role="tab" id="heading1" style="padding:0px !important;">
+    <h4 class="panel-title">
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse1" aria-expanded="false" aria-controls="collapse1" style="text-decoration:none;">
+            <div class="SectionSubHeader">
+                Prevention of fraud and money laundering        
+            </div>
+        </a>
+    </h4>
+</div>
+<div id="collapse1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading1">
+    <div class="panel-body" style="padding:0px !important;"> 
+        <div class="PanelContents" style="margin-bottom:0px;">
+            <c:CAA_Declaration_YPSA_ML rendered="{!(showYPSATC || showYPNATC)}" ></c:CAA_Declaration_YPSA_ML>
+            <c:CAA_Declaration_Saving_ML rendered="{!showSavingText}" ></c:CAA_Declaration_Saving_ML>
+            <c:CAA_Declaration_Current_ML rendered="{!showCurrentText}" ></c:CAA_Declaration_Current_ML>
+            
+            <div>
+                <hr/>
+                <apex:variable value="0" var="num1"/>
+                <div class="row">
+
+
+                    <apex:repeat value="{!applicantNames}" var="a" >
+                        <apex:outputPanel layout="none" rendered="{!NOT(IsYPSA) ||  NOT(VALUE(num1)==0) }">
+                            <div class="col-md-6">
+                                <strong>
+                                    <apex:outputPanel layout="none" rendered="{!IsYPSA}">
+                                        Guardian {!VALUE(num1)} - {!a}
+                                    </apex:outputPanel>
+                                    <apex:outputPanel layout="none" rendered="{!NOT(IsYPSA)}">
+                                        Applicant {!VALUE(num1) + 1} - {!a}
+                                    </apex:outputPanel>
+                                </strong><br/>
+                                <button class="btn"  ng-click="i_agree1_clicked{!num1} = true;" ng-class="i_agree1_clicked{!num1} ? 'goldbutton' : 'blackbutton'">I agree</button>
+
+                            </div>
+                        </apex:outputPanel>
+                        <apex:variable var="num1" value="{!VALUE(num1) + 1}"/>
+                    </apex:repeat>
+                </div>
+
+            <!--<button class="btn" ng-click="i_agree1_clicked = true;"  ng-class="i_agree1_clicked ? 'goldbutton' : 'blackbutton'">I agree</button>-->
+        </div>
+        </div>
+    </div>
+</div>
+</div>
+<!--C0764 FSCS starts-->
+<div>
+<div class="panel-heading" role="tab" id="heading2" style="padding:0px !important;">
+    <h4 class="panel-title">
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse2" aria-expanded="false" aria-controls="collapse2" style="text-decoration:none;">
+            <div class="SectionSubHeader">
+                Financial Services Compensation Scheme (FSCS)      
+            </div>
+        </a>
+    </h4>
+</div>
+<div id="collapse2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading2">
+    <div class="panel-body" style="padding:0px !important;"> 
+        <div class="PanelContents" style="margin-bottom:0px;">
+            <div>
+                <p>
+                    <span>
+                        All eligible deposits with Al Rayan Bank are protected by the Financial Services Compensation Scheme (FSCS), the UK's deposit guarantee scheme, up to a total of £85,000. Most deposits are covered by the scheme.
+                    </span>
+                </p>
+                <p>
+                    <span>
+                        Any deposits you hold above the FSCS compensation limit are unlikely to be covered, unless under specific circumstances, as determined by the FSCS.
+                    </span>
+                </p>
+                <p>
+                    <img src="{!URLFOR($Resource.CAA_Includes, '/documents/FSCS.PNG')}" />
+                </p>
+                <p>
+                    <span>
+                        For your own benefit and protection, you should read the FSCS Information Sheet which you can access by clicking on the link below.
+                    </span>
+                </p>
+                <p>
+                    <a href="{!URLFOR($Resource.CAA_Includes, '/documents/FSCS.pdf')}" target="_blank"><strong style="color:black;">FSCS Information Sheet</strong></a>
+                </p>
+            </div>
+            <div>
+                <hr/>
+                <apex:variable value="0" var="num2"/>
+                <div class="row">
+                    <apex:repeat value="{!applicantNames}" var="a" >
+                        <apex:outputPanel layout="none" rendered="{!NOT(IsYPSA) ||  NOT(VALUE(num2)==0) }">
+                            <div class="col-md-6">
+                                <strong>
+                                    <apex:outputPanel layout="none" rendered="{!IsYPSA}">
+                                        Guardian {!VALUE(num2)} - {!a}
+                                    </apex:outputPanel>
+                                    <apex:outputPanel layout="none" rendered="{!NOT(IsYPSA)}">
+                                        Applicant {!VALUE(num2) + 1} - {!a}
+                                    </apex:outputPanel>
+                                </strong><br/>
+                                <button class="btn"  ng-click="i_agree2_clicked{!num2} = true;" ng-class="i_agree2_clicked{!num2} ? 'goldbutton' : 'blackbutton'">I agree</button>
+
+                            </div>
+                        </apex:outputPanel>
+                        <apex:variable var="num2" value="{!VALUE(num2) + 1}"/>
+                    </apex:repeat>
+
+
+                </div>
+
+
+                <!--<button class="btn" ng-click="i_agree2_clicked = true;"  ng-class="i_agree2_clicked ? 'goldbutton' : 'blackbutton'">I agree</button>-->
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!--C0764 FSCS ends-->
+<!--<div ng-show="i_agree1_clicked">-->
+<div>
+<!--C0764 FSCS starts-->
+<div class="panel-heading" role="tab" id="heading3" style="padding:0px !important;">
+<!--C0764 FSCS ends-->
+    <h4 class="panel-title">
+        <!--C0764 FSCS starts-->
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse3" aria-expanded="false" aria-controls="collapse3" style="text-decoration:none;">
+        <!--C0764 FSCS ends-->
+            <div class="SectionSubHeader">
+                Declaration        
+            </div>
+        </a>
+    </h4>
+</div>
+<!--C0764 FSCS starts-->
+<div id="collapse3" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading3">
+<!--C0764 FSCS ends-->
+    <div class="panel-body" style="padding:0px !important;"> 
+<div style="padding:20px;" class="PanelContents" >
+    <!--<apex:include pageName="CAA_DeclarationText"/>-->
+
+    <c:CAA_Declaration_YP rendered="{!(showYPSATC || showYPNATC)}" prod="{!ibbproductname}"></c:CAA_Declaration_YP>
+    <c:CAA_Declaration_Saving rendered="{!showSavingText}" prod="{!ibbproductname}"></c:CAA_Declaration_Saving>
+    <c:CAA_Declaration_Current rendered="{!showCurrentText}" prod="{!ibbproductname}"></c:CAA_Declaration_Current>    
+    
+    <hr/>
+
+    <apex:variable value="0" var="num4"/>
+    <div class="row">
+        <apex:repeat value="{!applicantNames}" var="a" >
+            <apex:outputPanel layout="none" rendered="{!NOT(IsYPSA) ||  NOT(VALUE(num4)==0) }">
+                <div class="col-md-6">
+                    <strong>
+                        <apex:outputPanel layout="none" rendered="{!IsYPSA}">
+                            Guardian {!VALUE(num4)} - {!a}
+                        </apex:outputPanel>
+                        <apex:outputPanel layout="none" rendered="{!NOT(IsYPSA)}">
+                            Applicant {!VALUE(num4) + 1} - {!a}
+                        </apex:outputPanel>
+                    </strong><br/>
+                    <button class="btn"  ng-click="i_agree3_clicked{!num4} = true;" ng-class="i_agree3_clicked{!num4} ? 'goldbutton' : 'blackbutton'">I agree</button>
+
+                </div>
+            </apex:outputPanel>
+            <apex:variable var="num4" value="{!VALUE(num4) + 1}"/>
+        </apex:repeat>
+
+
+    </div>
+
+
+    <div>    
+    <!--C0764 FSCS starts-->
+    <!--<button class="btn"  ng-click="i_agree3_clicked = true;" ng-class="i_agree3_clicked ? 'goldbutton' : 'blackbutton'">I agree</button>-->
+    <!--C0764 FSCS ends-->
+</div>
+<hr/>
+<!--C0764 FSCS starts-->
+<!--<button class="btn btnArb" ng-show="i_agree1_clicked && i_agree2_clicked && i_agree3_clicked" ng-click="CallDe()" >-->
+    <button class="btn btnArb" ng-show="ShowContinue()" ng-click="CallDe()" >
+                       <span> <strong>Continue</strong>
+                           <span class="fa-stack fa" >
+                      <i class="fa fa-circle-thin fa-stack-2x"></i>
+                      <i class="fa fa-chevron-right fa-stack-1x"></i>
+                    </span>
+                    </span>
+                       
+                    </button>
+                    <!--C0764 FSCS ends-->
+                      
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<apex:outputPanel rendered="{!Not(IsGuest)}">
+<div ng-show="Error" class="PanelContents">
+    <div class="SectionTitle">
+        System Error
+    </div>
+    <div>
+        
+        
+        
+        <table class="table">
+        <thead>
+            <tr>
+                <th>Applicant</th>
+                <th>Decision</th>
+                <th>Message</th>
+            </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="item in Data.Reasons">
+            <td>
+                {{item.ThisApplicant.Applicant_Number__c}}
+            </td>
+            <td>
+                {{item.ThisDecision}}
+            </td>
+            <td>
+                {{item.ReasonDescription}}
+            </td>
+        </tr>
+        </tbody>
+        </table>
+    </div>
+    <!--C0764 FSCS starts-->
+    <button class="btn btnArb" ng-show="i_agree1_clicked && i_agree2_clicked && i_agree3_clicked" ng-click="CallDe()" >
+                       <span> <strong>Continue</strong>
+                           <span class="fa-stack fa" >
+                      <i class="fa fa-circle-thin fa-stack-2x"></i>
+                      <i class="fa fa-chevron-right fa-stack-1x"></i>
+                    </span>
+                    </span>
+                       
+                       
+                       
+                    </button> 
+                    <!--C0764 FSCS ends-->   
+</div>
+</apex:outputPanel>
+<apex:outputPanel rendered="{!IsGuest}">
+<div ng-show="Error" class="PanelContents">
+    Thank you for your application. 
+    
+    Your application is being processed and we will contact you to discuss further.
+</div>
+</apex:outputPanel>
+
+
+
+</div>
+
+
+
+<div class="col-md-3">
+<div class="rightcol visible-md visible-lg" id="sidebar" >
+     <c:CAA_Progress Stage="3" rendered="{!IsGuest}"></c:CAA_Progress>  
+     <c:CAA_Event_Menu rendered="{!Not(IsGuest)}" />
+     
+     
+     
+</div>
+
+</div>
+</div> <!-- row -->
+</div> <!-- ctl -->
+
+
+</apex:define>
+</apex:composition>
+</apex:page>

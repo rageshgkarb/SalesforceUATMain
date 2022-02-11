@@ -1,0 +1,193 @@
+<apex:page showheader="false" sidebar="false" controller="MMR_FF_BTLLC_Income" action="{!Setup}"><!-- C0644 -->
+    <head>
+
+        <c:MMR_PageHeader ></c:MMR_PageHeader>
+        <apex:include pagename="pca__Component" />
+        <script>
+        pca_Settings.DisableFieldRearrange = true;
+        </script>
+
+    </head>
+    <body>
+
+
+        <c:MMR_Header title="Employment & Income" numapps="{!NumApplying }" opp="{!bopp}" hide="{!IsCredit}" />
+        <div class="container">
+            <c:MMR_FF_BTLLC_Nav eventid="{!eventid}" active="4" activesection="B" rendered="{!!IsCredit && !IsCompleted}" />
+            <c:MMR_FF_BTLLC_Nav_Links eventid="{!eventid}" active="4" activesection="B" rendered="{!!IsCredit && IsCompleted}" />
+
+            <c:MMR_FF_BTLLC_Credit_Nav eventid="{!eventid}" active="4" activesection="B" rendered="{!IsCredit}" />
+
+            <apex:form id="aForm" styleclass="form-horizontal">
+                <apex:pagemessages ></apex:pagemessages>
+                <div class="row">
+                    <c:MMR_FF_BTLLC_Income appno="1" applicant="{!Accs[1]}" rendered="{!numApplying > 1}" type="Director" />
+                    <c:MMR_FF_BTLLC_Income appno="2" applicant="{!Accs[2]}" rendered="{!numApplying > 2}" type="Director" />
+                    <div class="clearfix" />
+                    <c:MMR_FF_BTLLC_Income appno="3" applicant="{!Accs[3]}" rendered="{!numApplying > 3}" type="Director" />
+                    <c:MMR_FF_BTLLC_Income appno="4" applicant="{!Accs[4]}" rendered="{!numApplying > 4}" type="Director" />
+                    <div class="clearfix" />
+                </div>
+
+                
+
+
+                <div class="row" style="padding-bottom:20px;">
+
+                    <apex:commandbutton styleclass="btn btn-danger" value="Previous" action="{!Prev}" rendered="{!!IsCredit && !IsCompleted}" />
+                    <!--CPDR01 apex:commandButton styleClass="btn btn-success"  value="Save" action="{!Save}" rendered="{!!IsCompleted || IsCredit }"/-->
+                    <apex:commandbutton styleclass="btn btn-danger" value="Save" action="{!Save}" rendered="{!!IsCompleted || IsCredit }" />
+                    <apex:commandbutton styleclass="btn btn-danger" value="Next" action="{!Next}" rendered="{!!IsCredit && !IsCompleted}" />
+
+                </div>
+
+                <span id="pca_status" style="display:none;" />
+
+
+            </apex:form>
+        </div>
+
+        <c:MMR_PageFooter ></c:MMR_PageFooter>
+
+        <script>
+
+function updateEmploymentType1()
+{
+    var sel =  $(this);
+    var value = sel.val();
+    var id = sel.attr('id');
+    var appNo = GetApplicantNo('employmentType1',id);
+
+
+    //var value= $("select.employmentType").val();
+    FadeInput(value,'Other','employmentOther' + appNo);
+
+    if(value.indexOf('Self Employed') !== -1)
+    {
+        FadeInput('','','selfEmpItem1' + appNo);
+    }
+    else
+    {
+        FadeInput('','No','selfEmpItem1' + appNo);
+    }
+
+    if(value == 'Housewife' || value=='Unemployed' || value == 'Retired')
+    {
+        FadeInput('','No','employmentHide1' + appNo);
+    }
+    else
+    {
+        FadeInput('','','employmentHide1' + appNo);
+    }
+
+
+    //LB - update to default nature of business to N/A if housewife or unemploayed
+    if(value == 'Housewife' || value=='Unemployed')
+    {
+        $("select[class*='employmentNatoB1"+appNo+"']").val('N/A');
+    }
+
+    if(value == 'Retired')
+    {
+        $("select[class*='employmentNatoB1"+appNo+"']").val('Retired');
+    }
+
+    var nature = $("select[class*='employmentNatoB1"+appNo+"']").val();
+    if((value != 'Housewife' && value !='Unemployed' && value != 'Retired') && nature == 'N/A')
+    {
+        $("select[class*='employmentNatoB1"+appNo+"']").val(null);
+    }
+
+
+
+    updateEmployementTypeShared(appNo);
+}
+
+function updateEmployementTypeShared(appNo)
+{
+    console.log('updateEmployementTypeShared AppNo='+appNo);
+    var value= $("select.employmentType1" + appNo).val();
+
+    console.log('updateEmployementTypeShared value='+value);
+
+    if(typeof(value)=='undefined')
+    {
+        value='';
+    }
+
+
+    var retired = value;
+
+    if(value == 'Retired')
+    {
+        retired = 'Retired';
+    }
+    FadeInput(retired ,'Retired','employmentRetired' + appNo);
+
+
+    if(value.indexOf('Self Employed') !== -1 )
+    {
+        FadeInputContains('Self employed','Self employed','selfEmployed' +appNo);
+    }
+    else
+    {
+        FadeInputContains(' ','Self-employed','selfEmployed' + appNo);
+    }
+}
+
+function employmentNatoB1()
+{
+    var sel =  $(this);
+    var value = sel.val();
+    var id = sel.attr('id');
+    var appNo = GetApplicantNo('employmentNatoB1',id);
+
+    var employmentType = $("select[class*='employmentType1" + appNo + "']").val();
+
+
+    if(value == 'N/A' && employmentType != 'Housewife' && employmentType !='Unemployed' && employmentType != 'Retired' )
+    {
+        var s = "select[class*='employmentNatoB1" + appNo + "']";
+        $(s).val(null);
+
+        //$(s).children().removeAttr("selected");
+    }
+
+}
+
+function employmentNatoB1Init()
+{
+    var sel =  $(this);
+    var value = sel.val();
+    var id = sel.attr('id');
+    var appNo = GetApplicantNo('employmentNatoB1',id);
+
+    if(value)
+    {
+        var s = "select[class*='employmentNatoB1" + appNo + "']";
+        $(s).prepend("<option value=''>--None--</option>");
+    }
+}
+
+$(function() {
+    $("select[class*='employmentType1']").each(updateEmploymentType1);
+    $("select[class*='employmentType1']").change(updateEmploymentType1);
+
+    /*$("select[class*='secondEmployment']").each(secondEmployment);
+    $("select[class*='secondEmployment']").change(secondEmployment);
+
+    $("select[class*='employmentHasOtherIncome']").each(updateOtherIncome);
+    $("select[class*='employmentHasOtherIncome']").change(updateOtherIncome);
+
+    $("select[class*='nonIncomeSelect1']").each(nonIncome1);
+    $("select[class*='nonIncomeSelect1']").change(nonIncome1);*/
+
+    $("select[class*='employmentNatoB1']").each(employmentNatoB1);
+    $("select[class*='employmentNatoB1']").change(employmentNatoB1);
+
+    $("select[class*='employmentNatoB1']").each(employmentNatoB1Init);
+});
+
+        </script>
+    </body>
+</apex:page>

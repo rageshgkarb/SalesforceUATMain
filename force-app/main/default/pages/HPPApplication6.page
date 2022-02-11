@@ -1,0 +1,209 @@
+<apex:page controller="HPPEventApplicationController" sidebar="false" showHeader="false" title="Applicant Details">
+<head>
+
+
+</head>
+<body>
+<c:KendoResource ></c:KendoResource>
+<apex:form >
+
+
+<div id="formWrapper">
+<!-- C00095--> 
+<c:HPPSummary objAcc="{!Acc}" objOpp="{!opp}" objExOpp="{!ExOpp}" Product="{!Prod}" rendered="false"/>
+
+<div id="container" >
+
+<table width="100%">
+<tr>
+<td valign="top" id="sidebar" style="display: none;">
+    <c:HPPBOMenu oppId="{!Opp.Id}"  DirectorId="{!Opp.ProductEventDirector__c}" />
+</td>
+<td valign="top" id="contenttd">
+<div  id="topNav">
+<ul>
+<li><apex:commandLink action="{!PageApplication1}" value="Property Details" id="theCommandLink"/></li>
+<li><apex:commandLink rendered="{!Opp.Number_of_People_Applying__c> 0}" action="{!PageApplicant1}" value="Applicant 1" id="appLink1"/></li>
+<li><apex:commandLink rendered="{!Opp.Number_of_People_Applying__c> 1}" action="{!PageApplicant2}" value="Applicant 2" id="appLink2"/></li>
+<li><apex:commandLink rendered="{!Opp.Number_of_People_Applying__c> 2}" action="{!PageApplicant3}" value="Applicant 3" id="appLink3"/></li>
+<li><apex:commandLink rendered="{!Opp.Number_of_People_Applying__c> 3}" action="{!PageApplicant4}" value="Applicant 4" id="appLink4"/></li>
+<li><apex:commandLink action="{!PageApplication3}" value="Additional Information" id="link3"/></li>
+<li><apex:commandLink action="{!PageApplication4}" value="Valuation Information" id="link4"/></li>
+
+
+<li><apex:commandLink action="{!PageApplication7}" value="Application Confirmation" id="link7"/></li>
+
+</ul>
+</div>
+<div style="padding: 20px;">
+
+<h1 style="font-size: 20pt;padding-bottom:30px;">Payment</h1>
+<apex:pagemessages ></apex:pagemessages>
+<apex:pageBlock >
+  
+   <div id="tabstrip">
+                    <ul>
+                        <li class="k-state-active">
+                            Card Details
+                        </li>
+                        <li>
+                            Other Payment Method
+                        </li>
+                        <li>
+                           Direct Debit Details
+                        </li>
+                    </ul>
+                    <div><!-- start Card Details -->                    
+              
+                    
+                    
+                    
+                    <apex:pageBlockSection id="pbsCardDetails" title="Card Details" columns="2" collapsible="false" >
+                
+                <apex:inputField id="cardType" value="{!card.Card_Type__c}" rendered="{!IF(card.Name=='', true, false)}" required="false" />
+                <apex:outputField id="txtCardType" value="{!card.Card_Type__c}" rendered="{!not(IF(card.Name=='', true, false))}" />
+                
+                <apex:inputField id="issueNumber" value="{!card.Issue_Number__c}" rendered="{!IF(card.Name=='', true, false)}"/>
+                <apex:outputField id="txtIssueNumber" value="{!card.Issue_Number__c}" rendered="{!not(IF(card.Name=='', true, false))}" />
+            
+                <apex:inputField id="cardNumber" value="{!card.Name}" rendered="{!IF(card.Name=='', true, false)}" required="false"/>
+                <apex:outputField id="txtCardNumber" value="{!card.Name}" rendered="{!not(IF(card.Name=='', true, false))}" />
+                
+                <!-- <apex:inputField id="cardSecurityCode" value="{!card.Security_Code__c}" rendered="{!IF(card.Token__c==null, true, false)}" required="false" /> -->
+                <!-- <apex:outputText rendered="{!not(IF(card.Token__c==null, true, false))}">&nbsp;</apex:outputText> -->
+                <apex:pageBlockSectionItem rendered="{!storeCardSecurityCode}">
+                	<apex:outputLabel value="Security Code" />
+                	<apex:outputPanel >
+	                	<apex:inputField id="cardSecurityCode" value="{!card.Security_Code_Encrypted__c}" rendered="{!IF(card.Security_Code_Encrypted__c==null, true, false)}" required="false" />
+	                	<apex:outputText rendered="{!not(IF(card.Security_Code_Encrypted__c==null, true, false))}">&nbsp;</apex:outputText>
+                	</apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!NOT(storeCardSecurityCode)}"></apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem id="pbsiExpiry" rendered="{!IF(card.Token__c==null, true, false)}" >
+                    <apex:outputText id="lblExpiry" value="Expiry (mm/yyyy)" />
+                    <apex:outputPanel >
+                        <apex:inputField id="cardExpiryMonth" value="{!card.Expiry_Month__c}" style="width:30px" />
+                        <apex:outputText value=" / " />
+                        <apex:inputField id="cardExpiryYear" value="{!card.Expiry_Year_Text__c}" style="width:60px" />
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem rendered="{!not(IF(card.Token__c==null, true, false))}" >
+                    <apex:outputLabel id="lblExpiryDate" value="Expiry Date" />
+                    <apex:outputText rendered="{!not(IF(card.Name==null, true, false))}">{!cardExpiryDate}</apex:outputText>
+                </apex:pageBlockSectionItem>
+                
+                <apex:inputField id="cardCurrency" value="{!card.Card_Currency__c}" rendered="false" />
+                <apex:outputText >&nbsp;</apex:outputText>
+                
+                <apex:pageBlockSectionItem id="pbsiValidFrom" rendered="{!IF(card.Token__c==null, true, false)}" >
+                    <apex:outputText id="lblValidFrom" value="Valid From (mm/yyyy)" />
+                    <apex:outputPanel >
+                        <apex:inputField id="cardValidFromMonth" value="{!card.Valid_From_Month__c}" style="width:30px" />
+                        <apex:outputText value=" / " />
+                        <apex:inputField id="cardValidFromYear" value="{!card.Valid_From_Year_Text__c}" style="width:60px" />
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:outputText rendered="{!not(IF(card.Token__c==null, true, false))}" >&nbsp;</apex:outputText>
+                <apex:outputText >&nbsp;</apex:outputText>
+            </apex:pageBlockSection>
+                    <apex:commandButton value="Add" action="{!AddCard}"/>
+                     <apex:pageBlock id="pbCard" title="Select Card" rendered="{!HasCards}" mode="edit" tabstyle="Account">
+            
+            <apex:pageBlockTable id="tblCard" value="{!Cards}" var="c"  >
+            	<apex:column headerValue="Select">
+					<apex:commandButton value="Delete" styleClass="redBtn" action="{!DeleteCard}" reRender="hiddenBlock" oncomplete="refreshPage();" >
+						<apex:param name="deleteCardId" value="{!c.card.id}" assignTo="{!deleteCardId}" />                    
+					</apex:commandButton>
+				</apex:column>
+                <apex:column value="{!c.card.Name}"/>
+                <apex:column value="{!c.card.Card_Type__c}"/>
+                <apex:column headerValue="Expiry Date" value="{!c.card.Expiry_Date_Encrypted__c}" />
+            </apex:pageBlockTable>
+            
+        </apex:pageBlock>
+        
+        <apex:pageBlock id="hiddenBlock" rendered="false"></apex:pageBlock>
+        <apex:actionFunction name="refreshPage" />
+        
+                    </div><!-- end Card Details -->   
+                    <div><!-- start Other Payment Method -->                    
+                    
+                      
+                    <table class="detailList">
+                       <tbody>
+                       <tr>
+                           <td class="labelCol">Other payment method</td><td class="dataCol"><apex:inputField value="{!exOpp.Other_payment_method__c}"   /></td>
+
+                    
+                       </tr>
+                       <tr>
+                           <td class="labelCol">Other payment account number</td><td class="dataCol"><apex:inputField value="{!exOpp.Other_payment_account_no__c}"   /></td>                    
+                           <td class="labelCol">Other payment sortcode</td><td class="dataCol"><apex:inputField value="{!exOpp.Other_payment_sortcode__c }"   /></td>                                                                      
+                       </tr>
+                       </tbody>
+                    </table>   
+                       
+                       
+                    
+                    </div><!-- end Other Payment Method -->
+                    <div><!-- start Direct Debit Details -->                    
+                    <apex:pageBlockSection showHeader="false" columns="1">
+<apex:image url="{!$Resource.DirectDebitLogo}"/>
+Instruction to your Bank or Building Society<br/>
+<br/>
+Please pay Islamic Bank of Britain plc Direct Debits from the account detailed in this Instruction subject to the safeguards assured by the Direct Debit Guarantee.  I understand that this Instruction may remain with Islamic Bank of Britain plc and, if so, details will be passed electronically to my Bank/Building Society.<br/>
+<br/>
+Banks/Building Societies may not accept Direct Debit Instructions for some types of accounts. The setup of DD mandate can take up to 7 working days. <br/>
+<br/>
+<apex:inputField value="{!Opp.Initial_Payment_Amount__c}" rendered="false" required="false"/>
+<apex:pageBlockSectionItem helpText="" rendered="false" >
+  <apex:outputLabel for="startDate" value="Date of Payment" title="{!$ObjectType.Opportunity.Fields.Preferred_start_date__c.inlineHelpText}">
+   <img src="/s.gif" alt="Help" class="helpIcon"/>
+  </apex:outputlabel>
+  <apex:inputField value="{!Opp.Preferred_start_date__c}" required="true" id="startDate"/>
+</apex:pageBlockSectionItem>
+
+<apex:pageBlockSectionItem helpText=""  >
+ <apex:outputLabel for="startDate" value="Name of Account"/>
+<apex:inputField value="{!Opp.Name_of_current_Bank_Building_Society__c}"  required="false"/>
+</apex:pageBlockSectionItem>
+<apex:inputField value="{!Opp.Sort_Code__c}" required="false"/>
+<apex:inputField value="{!Opp.Account_Number__c}" required="false"/>
+<apex:inputField value="{!ExOpp.DDPreferredPaymentDate__c }" required="false"/>
+</apex:pageBlockSection>
+                    
+                    </div><!-- end Direct Debit Details -->                                                         
+                </div>
+  
+  
+  
+  
+  
+  
+  
+
+         <apex:commandButton styleClass="redBtn" value="Previous" action="{!PageApplication5}"/>
+         <apex:commandButton styleClass="redBtn" value="Save" action="{!Save}"/>
+          <apex:commandButton styleClass="redBtn" value="Next" action="{!PageApplication7}"/>
+       
+
+        
+         
+       
+</apex:pageBlock>
+</div>
+</td></tr></table>
+</div>
+</div>
+
+<apex:outputPanel rendered="{!IsCompleted}">
+<script>
+SetReadOnly();
+</script>
+</apex:outputPanel>
+
+  </apex:form>
+  </body>
+
+</apex:page>

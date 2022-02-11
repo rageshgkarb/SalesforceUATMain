@@ -1,0 +1,43 @@
+<apex:page applyBodyTag="false" showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false">
+
+        <div class="verticalScroller" ng-controller="controllerTillManagement" ng-init="TillManagement_LoadDenominations()" style="overflow: auto; height: 100%; margin-top: 15px;">
+            <div id="header">Balance Till</div>
+
+            <div ng-repeat="item in Denominations.TillCurrencies track by item.CurrencySymbol">
+                Currency: {{item.CurrencySymbol}}
+                <table class="table table-striped" id="Denominations" style="margin-top:0px;" >
+                    <thead>
+                        <tr>
+                            <th class="col-sm-4">
+                            </th>
+                            <th class="col-sm-4">
+                                Number of Notes/Coins
+                            </th>
+                            <th class="col-sm-4">
+                                Total Selected Value
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="itemRow" ng-repeat="denomitem in Denominations.TransactionDenonminations track by denomitem.FormattedDenominationValue" ng-if="denomitem.DenominationCurrency == item.CurrencySymbol" ng-class-Even="'BranchItemOdd'" style="padding:5px;margin:0px;">
+                            <td class="col-sm-4">
+                                {{denomitem.FormattedDenominationValue}}
+                            </td>
+                            <td class="col-sm-4">
+                                <input type="number" name="denomitem.NumberSelected" ng-model="denomitem.NumberSelected" min="0" />
+                            </td>
+                            <td class="col-sm-4">
+                                {{denomitem.DenominationValue * denomitem.NumberSelected | number : 2}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="background: #F4F4F4; margin: 0; width: calc(100% - 5px); padding: 20px; height: 172px;">
+                <div style="float: left; margin-left: 10px; margin-top: 5px;" align="center" ng-show="Response_Success==false">{{Response_StatusDescription}}</div>
+                <button id="BalanceTill" class="goldButton" style="float: right; padding-left:30px !important; padding-right:30px !important; padding-top:17px !important; padding-bottom:17px !important;" ng-click="BalanceTill_Execute()" ng-disabled="working==true" >Balance Till</button>
+            </div>
+        </div>
+
+</apex:page>

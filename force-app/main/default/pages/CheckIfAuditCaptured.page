@@ -1,0 +1,15 @@
+<apex:page standardController="Account" extensions="checkIfAuditCaptured_controller" id="thePage" action="{!autoRedirectPage}" applyBodyTag="false" showHeader="false" sidebar="false" >
+  
+    <apex:form >
+       
+        <apex:outputPanel id="redirectPanel" >
+            <apex:outputText rendered="{!redirect}">
+                <script type="text/javascript">
+                    window.top.location.href = '{!url}';
+                </script>
+            </apex:outputText>
+        </apex:outputPanel>
+    </apex:form>
+
+   
+</apex:page>

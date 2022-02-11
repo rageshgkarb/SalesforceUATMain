@@ -1,0 +1,35 @@
+<apex:component >
+<apex:stylesheet value="{!URLFOR($Resource.IBBFooterCSS)}"/>
+<apex:attribute name="showFooter" description="Show the footer" type="Boolean" required="false"/>
+
+<!--<apex:stylesheet value="http://www.islamic-bank.com/style/footer.css"/>-->
+<!--<apex:stylesheet value="http://www.islamic-bank.com/style/typo.css"/>-->
+<!--<apex:stylesheet value="http://www.islamic-bank.com/style/default.css"/>-->
+
+<!-- <link href="http://www.islamic-bank.com/style/default.css" rel="stylesheet" type="text/css" media="screen" />  -->
+<!-- footer
+<div id="footer">
+    <div class="footerItems">
+        <ul>
+            <li><a title="Legal" href="http://www.islamic-bank.com/legal/">Legal</a></li>
+
+            <li>|</li>
+            <li><a title="Security and Privacy" href="http://www.islamic-bank.com/security-privacy/">Security and Privacy</a></li>
+            <li>|</li>
+            <li><a title="Media" href="http://www.islamic-bank.com/media/">Media</a></li>
+            <li>|</li>
+            <li><a title="Glossary" href="http://www.islamic-bank.com/glossary/">Glossary</a></li>
+
+        </ul>
+    <div class="topLink">
+            <a href="#main" title="Jump to top of this page">Top</a>
+        </div>
+    </div><div style="clear:both;">
+
+    </div>
+</div>
+<div class="shadow">
+
+</div> -->
+
+</apex:component>

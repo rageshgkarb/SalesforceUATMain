@@ -1,0 +1,450 @@
+<apex:component >
+<apex:attribute name="Title" type="String" description=""/>
+<apex:attribute name="NumApps" type="Integer" description=""/>
+<apex:attribute name="PastDates" type="Boolean" description=""/>
+<apex:attribute name="opp" type="opportunity" description=""/>
+
+<apex:attribute name="Hide" type="Boolean" description=""/>
+<apex:stylesheet value="https://fast.fonts.net/cssapi/127ef530-1eee-4efb-8ebe-815719f876a3.css"/>
+<style>
+body{
+ background-color:#ededed; 
+
+}
+
+.requiredInput{
+    border-left: solid 5px red;
+}
+
+.form-group .dateOnlyInput input{
+    width: 100%;
+}
+
+.form-group{
+    margin-bottom:5px;
+}
+
+.form-control{
+    height:25px;
+    padding:0px 0px 0px 12px;   
+}
+
+.applicantPanel .panel-body
+{
+    padding:25px;
+}
+
+/*Remove BTN styling*/
+
+body button, body .btn{
+    color:#fff;
+    font-size:12px;
+    font-weight:normal;
+    background-image:none;
+    min-width: 100px;   
+}
+
+body .btn-default{
+    color:#777;
+}
+
+
+body button .btn-primary, body .btn.btn-primary{
+    background-color:#b3995d;
+    border-color:#b3995d;
+}
+
+
+body button .btn-danger, body .btn.btn-danger{
+    background-color:#b3995d;
+    border-color:#b3995d;
+}
+
+body button .btn-danger:hover, body .btn.btn-danger:hover{
+    background-color:#333333;
+    border-color:#333333;
+}
+
+body button .btn-success, body .btn.btn-success
+{
+    /* CPDR01
+    background-color:#5cb85c;
+    border-color:#4cae4c;
+    */
+    background-color:#b3995d;
+    border-color:#b3995d;
+    
+}
+
+body button .btn-success:hover, body .btn.btn-success:hover
+{
+    /* CPDR01
+    background-color:#47a447;
+    border-color:#398439;
+    */
+     background-color:#333333;
+    border-color:#333333;
+}
+
+body button .btn-info, body .btn.btn-info
+{
+    color:#fff;
+    /* CPDR01
+    background-color:#3057a4;
+    border-color:#285888;
+    */
+    background-color:#b3995d;
+    border-color:#b3995d;
+}
+
+body button .btn-info:hover, body .btn.btn-info:hover
+{
+    /* CPDR01
+    background-color:#285888;
+    border-color:#285888;
+    */
+    background-color:#333333;
+    border-color:#333333;
+}
+
+
+.datePicker{
+    z-index:1200;
+}
+
+.budgetrow{
+    height:35px;
+    padding-left:5px;
+    padding-top:5px;
+}
+.budgetrow2{
+    height:35px;
+    background-color:#dcdcdc;
+    padding-left:5px;
+    padding-top:5px;    
+}
+    
+/* CPDR01 */
+.navbar-header
+{
+    background-color:#000;
+}
+/* CPDR01 end */
+    
+.navbar-default
+{
+    border-bottom: 4px solid #b3995d;
+}
+
+.nav-pills>li>a, .nav-pills>li>a:hover, .nav-pills>li>a:focus
+{
+    border: 1px solid #ddd;  
+    min-height:60px;  
+    
+    /* CPDR01 */
+    color:#000;
+    
+}
+
+    .nav-pills>li.active>a
+    {
+    /* CPDR01*/
+    background-color:#000;
+    }
+    
+    .nav-pills>li.active>a:hover
+    {
+    /* CPDR01*/
+    background-color:#b3995d;
+    }
+    .nav-pills>li.active>a:focus
+    {
+    /* CPDR01*/
+    background-color:#b3995d;
+    }
+    
+.nav-pills>li>a:hover, .nav-pills>li>a:focus
+{
+   background-color:#fff;
+}
+
+
+.nav-tabs>li>a
+{
+    border-left: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+    border-right: 1px solid #ddd;    
+}
+.nav-tabs>li>a:hover, .nav-tabs>li>a:focus
+{
+    background-color:#fff;
+}
+
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus
+{
+    background-color:#000;
+    color:#fff;
+}
+
+.navbar-brand{
+    font-family: 'Optima LT W01 Medium', Arial, sans-serif;
+}
+
+    /* CPDR01 */
+.panel-primary
+    {
+        border-color:#000;
+    }
+.panel-primary>.panel-heading
+{
+    color:#fff;
+    background-color:#000;
+    border-color:#000;
+}
+
+
+    
+    a
+    {
+        color:#b3995d;
+    }
+    /* CPDR01*/
+
+/* CPDR01 */
+.modal-header
+{
+    background-color:#000;
+}
+    
+.modal-title
+{
+    color:#fff;
+    background-color:#000;
+}
+    
+.table>thead>tr>th
+{
+    color:#fff;
+    background-color:#000;
+}
+    
+tr.headerRow th
+{
+    color:#fff;
+    background-color:#000;
+}
+    
+body .pbBody table.list tr.headerRow td, body .pbBody table.list tr.headerRow th
+{
+    background:#000;
+    background-color:#000;
+    color:#fff;
+}
+/* CPDR01 */
+    
+</style>
+
+<apex:outputPanel rendered="{!!Hide}">
+    <nav class="navbar navbar-default" role="navigation" >
+    <div class="navbar-header" style="width:100%;"  >
+        <a class="navbar-brand" href="#"><h2 style="color:#FFFFFF;">{!Opp.Name}<apex:outputtext rendered="{!Opp.Name!=null}"> - </apex:outputtext>{!Title}</h2></a>
+        <button id="widthToggle" class="btn btn-primary pull-right">Toggle Width</button>
+    </div>
+    </nav>
+</apex:outputPanel>    
+
+
+<apex:outputPanel rendered="{!Opp != null && !hide}">
+<div class="panel panel-default">
+<div class="panel-body">
+<div class="container">
+<div class="row">
+    <div class="col-sm-6 col-md-3">
+       <label>Primary customer name</label> 
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <apex:outputField value="{!opp.account.name}"/>
+    </div>
+    <div class="col-sm-6 col-md-3">
+       <label>Property Value</label> 
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <apex:outputField value="{!opp.Purchase_price_market_value__c}"/>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6 col-md-3">
+       <label>Status</label> 
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <apex:outputField value="{!opp.Status_HPP_CAA__c}"/>
+    </div>
+    <div class="col-sm-6 col-md-3">
+     <label>Finance Required</label>
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <apex:outputField value="{!opp.Finance_Required__c}"/>
+    </div>
+    
+</div>
+<div class="row">
+    <div class="col-sm-6 col-md-3">
+       <label>BDM</label> 
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <apex:outputField value="{!opp.SellerName__c}"/>
+    </div>
+    <div class="col-sm-6 col-md-3">
+    <!--REAC changes start-->
+       <!--<label>Term</label> -->
+       <label>{!IF (CONTAINS(Opp.Interested_in__c, 'REAC'),'Term (Outstanding Months)', 'Term (In Years)')}</label> 
+    <!--REAC changes end-->   
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <apex:outputField value="{!opp.Term_of_Finance__c}"/>
+    </div>
+</div>
+ <!--C0785: HPP - Automatic Valuation Model start-->
+<div class="row">
+<div class="col-sm-6 col-md-3">
+       <label>FTV%</label> 
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <apex:outputField value="{!opp.FTV__c}"/>
+    </div>
+</div>
+
+ <!--C0785: HPP - Automatic Valuation Model end-->
+</div>
+</div>
+
+</div>
+</apex:outputPanel>
+<c:MMR_calHack rendered="{!!PastDates}"></c:MMR_calHack>
+
+<script>
+    var appFullWidth = false;
+    var numApps = {!numApps};
+
+    function SetWidth()
+    {
+        if(appFullWidth )
+            {
+                $('.AppWidth').removeClass('col-md-12').addClass('col-md-6');
+            }
+            else
+            {
+                $('.AppWidth').removeClass('col-md-6').addClass('col-md-12');            
+            }
+        appFullWidth =!appFullWidth ;
+    }
+    
+    
+    
+    
+    
+    
+
+    $(function(){
+    
+        if(numApps ==1)
+    {
+        SetWidth();
+    }
+    
+    //add bootstrap style to the postcode anywhere generated county drop downs
+    $("select[id$='CountryList']").each(function(index){
+        if(!$(this).hasClass('form-control'))
+        {
+            $(this).addClass('form-control');
+        }    
+    });
+    //add bootstrap style to the postcode anywhere generated county drop downs
+    $("select[id$='countryList']").each(function(index){
+        if(!$(this).hasClass('form-control'))
+        {
+            $(this).addClass('form-control');
+        }    
+    });
+    
+    //add bootstrap style to the postcode anywhere generated county drop downs
+    $("input[id$='PostCode']").each(function(index){    
+        var btn = $(this).next('.btn');        
+        btn.css('background-image','none');
+        btn.addClass('btn-primary');   
+    });
+    //add bootstrap style to the postcode anywhere generated county drop downs
+    $("input[id$='zip']").each(function(index){    
+        var btn = $(this).next('.btn');        
+        btn.css('background-image','none');
+        btn.addClass('btn-primary');   
+    });
+    
+    //add full width to street address table
+    $("textarea[id$='Street']").each(function(index){    
+        var parent = $(this).closest("table");        
+        parent.css('width', '100%');
+    });
+    //add full width to street address table
+    $("textarea[id$='street']").each(function(index){    
+        var parent = $(this).closest("table");        
+        parent.css('width', '100%');
+    });
+    
+    
+    
+    //restyle salesforce lookups
+    $('.lookupInput').each(function(index){
+        if(!$(this).parent().hasClass('form-control'))
+        {
+            var inn = $(this).find('input.form-control');
+            inn.css('width', 'calc(100% - 2em');
+            inn.css('display','inline-block');
+            
+            var link = $(this).find('a.form-control');
+            link.removeClass('form-control');
+            
+            link.addClass('btn');
+            link.addClass('btn-primary');
+            link.css('min-width','0px');
+            
+            var img = link.find('img').remove();
+            link.append('<span class="glyphicon glyphicon-search"></span>') ;
+        }
+        else
+        {
+            var outerForm = $(this).parent();
+            outerForm.removeClass('form-control');
+            
+            var dropdown =outerForm.find('select');
+            dropdown.addClass('form-control');
+            dropdown.css('width','50%');
+            dropdown.css('display','inline-block');
+            
+            var lookup = outerForm.find('.lookupInput');
+        
+            lookup.find('input').addClass('form-control').css('width','calc(50% - 2em)').css('display','inline-block');
+            
+            
+            var link = lookup.find('a');
+            
+            link.addClass('btn');
+            link.addClass('btn-primary');
+            link.css('min-width','0px');
+            
+            var img = link.find('img').remove();
+            link.append('<span class="glyphicon glyphicon-search"></span>') ;
+        }
+    
+    });
+    
+    
+    $('form').attr('novalidate','novalidate');
+    
+    
+        $('#widthToggle').click(SetWidth);
+        
+    });
+</script>
+
+</apex:component>

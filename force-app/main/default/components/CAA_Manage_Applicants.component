@@ -1,0 +1,532 @@
+<apex:component >
+<apex:attribute name="YPSA" type="Boolean" description=""/>
+
+<style>
+.searchInput {
+    width: 100% !important;
+    font-size: 22px !important;
+}
+
+</style>
+
+<div class="panel-group" id="ManApp" role="tablist" aria-multiselectable="true" ng-init="Initialise()">
+  <div class="panel panel-primary">
+    <div class="panel-heading " role="tab" id="ManAppheadingOne">
+      <h4 class="panel-title">
+        <a class="accordion-toggle collapsed" role="button" data-toggle="collapse" data-parent="#ManApp" href="#ManAppcollapseOne" aria-expanded="true" aria-controls="ManAppcollapseOne">
+          Manage Applicants
+        </a>
+      </h4>
+    </div>
+    <div id="ManAppcollapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="ManAppheadingOne">
+      <div class="panel-body">
+
+     <div id="ApplicantList">
+     
+
+     
+    <table class="table">
+        <thead>
+            <th>No.</th>
+            <th>D?</th>
+            <th>EBS ID</th>
+            <th>Title</th>
+            <th>FirstName</th>
+            <th>Last Name</th>
+            <th>Date of Birth</th>
+            <th>Remove</th>        
+        </thead>
+        <tbody>
+            <tr ng-repeat="applicant in Data.Applicants" >
+                <td>{{$index + 1}}</td>
+                <td>
+                    <i class="fa fa-user-times" ng-show="applicant.Possible_Duplicate_c"></i>
+                </td>             
+                <td>{{applicant.EBS_ID_c}}</td>
+                <td>{{applicant.Salutation}}</td>
+                <td>{{applicant.FirstName}}</td>
+                <td>{{applicant.LastName}}</td>
+                <td>{{applicant.Date_of_birth_c.Day}}/{{applicant.Date_of_birth_c.Month}}/{{applicant.Date_of_birth_c.Year}}</td>
+                <td><a href="" ng-hide="({!YPSA} &&  ($index == '0' || $index=='1')) || ( {!!YPSA} &&  $index == '0')" ng-click="RemoveApplicant(applicant)">Remove {{$index}}</a></td>                               
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<div class="alert alert-danger" ng-show="ApplicantErrorAlertText">
+<span class="fa fa-thumbs-down" aria-hidden="true"></span>
+    {{ApplicantErrorAlertText}}
+</div>
+    
+
+<div  ng-hide="Data.Applicants.length == 4">     
+<div style="margin-top: 20px; margin-left: 5px; height: 80px;">
+                            <div style="float:left; width: calc(100% - 55px);" ng-init="InitialiseSearchBar()">
+                                <input class="searchInput" arb-focus="searchOpen" style="font-family: simple;" kendo-auto-complete="kendo-auto-complete" ng-model="SearchCriteria" k-options="SearchAutoCompleteOptions" arb-Enter="FindCustomer()" id="customerSearchInput" k-on-open="autoCompleteOpen(kendoEvent)"></input>
+                            </div>
+                            <div class="goldButton" style="float: right; width:48px; height:48px; margin-top: 1px;" ng-click="FindCustomer()">
+                                <img class="" src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/search.png')}" style="height: 35px; -webkit-filter: invert(1); filter: invert(1); margin-left: -5px;"></img>
+                            </div>
+                        </div>
+                        
+                        
+                        <div style="height: 100%;">
+                            <div style="display: inline-block;">
+                                <label class="pageSubTitleGray" style="margin-left: 5px;" ng-show="SearchButtonPressed">Results ({{SearchResults.length}})</label>
+                            </div>
+                            <div class="verticalScroller verticalScrollSection" style="height: calc(100% - 180px);" ng-show="SearchResults.length != 0">
+                                
+                                <div style="margin-top: 20px; padding-left:2px;">
+                                    <div ng-repeat="customer in SearchResults" class="searchResultItem" ng-click="GotoCustomer(customer)">
+                                        <div style="float: left;">
+                                            <img style="box-shadow: 0 0 3px black; border-radius: 50%; height:55px; width:55px;" ng-src="{{customer.ImageURL}}" onError="this.onerror=null; this.src='{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/user_error.png')}';"></img>
+                                        </div>
+                                        <div style="float:left; margin-left: 11px;">
+                                            <div style="font-size: 17px; font-family: simpleBold; font-weight: normal; margin-top: -3px;">{{customer.Name}}</div>
+                                            <div style="font-size: 15px; font-family: simple; margin-top: -2px;">{{customer.Address}}</div>
+                                            <div style="font-size: 15px; font-family: simple; margin-top: -2px;">Date of birth: {{customer.DOB  | date:'dd/MM/yyyy'}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+      
+        
+  <div class="row">
+   <!-- <div class="col-sm-3">
+        <button class="btn btnArb" ng-click="FindExistingAccounts()">Add existing customer</button>
+    </div>-->
+    <div class="col-sm-3"> <!--onclick="$('#NewCusModal').modal();"-->
+        <button class="btn btnArb"   data-toggle="modal" data-target=".bs-example-modal-lg" ng-click="NewAccountData.Title='';NewAccountData.Firstname='';NewAccountData.Lastname='';AddError='';ShowDupe=false;ExistingAccounts=false;">Add new customer</button>
+    </div>
+
+</div>
+
+     
+</div>
+
+<div ng-show="Data.Applicants.length == 4">
+    <h4>Application has the maximum number of applicants</h4>
+
+</div>     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+      </div> <!-- end body -->
+    </div>
+  </div>
+  
+  </div>
+
+
+
+
+
+
+
+<!--
+
+<div class="SectionHeader">
+    Manage Applicants
+</div>
+
+
+
+<div id="ApplicantList">
+    <table class="table">
+        <thead>
+            <th>No.</th>
+            <th>EBS ID</th>
+            <th>Title</th>
+            <th>FirstName</th>
+            <th>Last Name</th>
+            <th>Date of Birth</th>
+            <th>Remove</th>        
+        </thead>
+        <tbody>
+            <tr ng-repeat="applicant in Data.Applicants" >
+                <td>{{$index + 1}}</td>
+                <td>{{applicant.EBSId}}</td>
+                <td>{{applicant.Salutation}}</td>
+                <td>{{applicant.FirstName}}</td>
+                <td>{{applicant.LastName}}</td>
+                <td>{{applicant.Date_of_birth_c.Day}}/{{applicant.Date_of_birth_c.Month}}/{{applicant.Date_of_birth_c.Year}}</td>
+                <td><a href="" ng-show="$index != '0'" ng-click="RemoveApplicant(applicant)">Remove {{$index}}</a></td>
+                               
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<div class="row">
+    <div class="col-sm-6">
+        <input class="form-control" type="text" placeholder="Search for customer"/>
+    </div>
+    <div class="col-sm-3">
+        <button class="btn">Add existing customer</button>
+    </div>
+    <div class="col-sm-3">
+        <button class="btn"   data-toggle="modal" data-target=".bs-example-modal-lg">Add new customer</button>
+    </div>
+
+</div>
+-->
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Existing Accounts</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+            <div class="col-sm-4">
+                <label>First name</label>
+                <div>
+                {{NewAccountData.Firstname}}
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <label>Last name</label>
+                <div>
+                {{NewAccountData.Lastname}}
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <label>Date of birth</label>
+                <div>
+                {{NewAccountData.DOB.Day}} /{{NewAccountData.DOB.Month}}/{{NewAccountData.DOB.Year}}
+                </div>
+            </div>
+            
+        </div>
+        
+        <div style="padding-top:30px;">
+          <table class="table">
+              <thead>
+                  <th></th>
+                  <th>Action</th>
+                  <th>EBS Id</th>
+                  <th>Postcode</th>
+                  <th>Address</th>
+                  <th>Email</th>
+                  
+              </thead>
+              <tbody>
+                  <tr ng-repeat="account in ExistingAccounts">
+                      <td><a href="/{{account.ID}}" target="_blank">View</a></td>
+                      <td><button class="btn" ng-click="AddExistingApplicant(account.ID)">Select</button></td> 
+                      <td>{{account.EBSId}}</td>
+                      <td>{{account.Postcode}}</td>
+                      <td>{{account.Address}}</td>
+                      <td>{{account.Email}}</td>
+                      
+                  </tr>
+              </tbody>
+          </table>  
+        </div>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="FindModal" tabindex="-1" role="dialog" aria-labelledby="FindModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="FindModalLabel">Results for "{{SearchValue}}"</h4>
+      </div>
+      <div class="modal-body">
+        <ul>      
+           <li ng-repeat="account in FoundAccounts" ng-class-odd="'odd'" ng-class-even="'even'">
+               <div class="row">
+                   <div class="col-sm-2">
+                   <!--<i class="fa fa-eye"><a href="/{{account.ID}}" target="_blank"></a></i>-->
+                       
+                       <a class="btn btnArb" href="/{{account.ID}}" target="_blank">
+                          <i class="fa fa-check "></i></a>
+                   </div>
+                   
+                   <div class="col-sm-10">
+                   
+                       <div class="row">
+                           <div class="col-sm-5">
+                               <a href="/{{account.ID}}" target="_blank">
+                                   {{account.Firstname}} 
+                                   {{account.Lastname}}
+                               </a>
+                           </div>
+                           <div class="col-sm-2">
+                               {{account.EBSId}}
+                           </div>
+                           <div class="col-sm-5">
+                               {{account.Email}}
+                           </div>
+                       </div>
+                       
+                       <div class="row">
+                       <!--<div class="col-sm-2">
+                           <a href="/{{account.ID}}" target="_blank">Select</a>
+                       </div>-->
+                           <div class="col-sm-6">
+                               {{account.Address}}
+                           </div>
+                       </div>
+                  </div>
+               </div>
+               
+           </li>
+       </ul>
+   
+        <!--
+        <div>
+          <table class="table">
+              <thead>
+                  <th></th>
+                  <th>Action</th>
+                  <th>EBS Id</th>
+                  <th>Name</th>
+                  <th>Address</th>
+                  <th>Contact</th>
+                  
+              </thead>
+              <tbody>
+                  <tr ng-repeat="account in FoundAccounts">
+                      <td><a href="/{{account.ID}}" target="_blank">View</a></td>
+                      <td><a href="" >Select</a></td> 
+                      <td>{{account.EBSId}}</td>
+                      <td>{{account.Firstname}}<br/>{{account.Lastname}}</td>
+                      <td>{{account.Postcode}}<br/>{{account.Address}}</td>
+                      <td>{{account.Address}} <br/>{{account.Email}}</td>
+ 
+                  </tr>
+              </tbody>
+          </table>  
+        </div>
+        -->
+        
+      </div>      
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- Modal Duplicate -->
+<div class="modal fade" id="DuplicateModal" tabindex="-1" role="dialog" aria-labelledby="FindModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="FindModalLabel">Results for "{{SearchValue}}"</h4>
+      </div>
+      <div class="modal-body">
+        
+        
+      </div>      
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<!-- Modal new customer -->
+<div class="modal fade bs-example-modal-lg" id="NewCusModal" tabindex="-1" role="dialog" aria-labelledby="NewCusModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="NewCusModalLabel">New applicant</h4>
+      </div>
+      <div class="modal-body">
+   
+        
+        <div class="row">
+                <div class="col-sm-4">
+                    <label>Title</label>                    
+                    <div>
+                        <select class="form-control" ng-model="NewAccountData.Title">
+                            <option ng-repeat="title in Data.Title" value="{{title.Key}}" >{{title.Value}}</option>
+                        </select>
+                    </div>                
+                </div>                
+            
+                <div class="col-sm-4">
+                    <label>First Name</label>
+                
+                    <div>
+                        <input type="text" class="form-control" ng-model="NewAccountData.Firstname"/>
+                    </div>
+                </div>
+                
+                <div class="col-sm-4">
+                    <label>Last Name</label>
+                    <div>
+                        <input type="text" class="form-control" ng-model="NewAccountData.Lastname"/>
+                    </div>
+                </div>
+                
+                
+            </div>
+            
+            <c:CAA_Date title="Date of birth" model="NewAccountData" field="DOB" numYears="-90" />
+            
+            <div>
+                <button class="btn btnArb" ng-click="CheckExistingCustomer(false)">Add new prospect/customer</button>
+                <button ng-show="ExistingAccounts" class="btn btn-danger" ng-click="ShowDupe=true">Ignore possible duplicate?</button>
+            </div> 
+            
+            <div class="alert alert-danger" ng-show="ShowDupe">
+                Are you sure you wish to create a new customer account, even though it is a possbile duplicate.
+                <br/><br/>
+                Plesse check with COO before proceeding<br/>
+                <div>
+                    <button ng-show="ExistingAccounts" class="btn btn-danger" ng-click="CheckExistingCustomer(true)">Ignore possible duplicate and continue</button>
+                </div>
+            </div>
+            
+            <div class="alert alert-danger" ng-show="AddError">
+                {{AddError}}
+            </div>
+            
+            
+           <div style="padding-top:30px;">
+           
+           
+           
+           
+           
+           
+           
+           
+           
+           
+           
+          <table class="table">
+              <thead>
+                  <th></th>
+                  <th>Action</th>
+                  <th>EBS Id</th>
+                  <th>Postcode</th>
+                  <th>Address</th>
+                  <th>Email</th>
+                  
+              </thead>
+              <tbody>
+                  <tr ng-repeat="account in ExistingAccounts">
+                      <td><a href="/{{account.ID}}" target="_blank">View</a></td>
+                      <td><button class="btn" ng-click="AddExistingApplicant(account.ID)">Select</button></td> 
+                      <td>{{account.EBSId}}</td>
+                      <td>{{account.Postcode}}</td>
+                      <td>{{account.Address}}</td>
+                      <td>{{account.Email}}</td>
+                      
+                  </tr>
+              </tbody>
+          </table>  
+        </div>
+            
+        
+      </div>   
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<!--
+<div class="row">
+    <div class="col-sm-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">Add new customer/div>
+          <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-8">
+                    <input type="text" ng-model="SearchValue" class="form-control" placeholder="Please enter search string"/>
+                </div>
+                <div class="col-sm-4">
+                    <button class="btn" ng-click="FindExistingAccounts() ">Add existing customer</button>
+                </div>
+            </div>            
+          </div>
+        </div>
+    </div>
+    
+    <div class="col-sm-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">Add new prospect/customer</div>
+          <div class="panel-body">
+        
+            <div class="row">
+                <div class="col-sm-4">
+                    <label>Title</label>                    
+                    <div>
+                        <select class="form-control" ng-model="NewAccountData.Title">
+                            <option ng-repeat="title in Data.Title" value="{title.Key}" >{{title.Value}}</option>
+                        </select>
+                    </div>                
+                </div>                
+            
+                <div class="col-sm-4">
+                    <label>First Name</label>
+                
+                    <div>
+                        <input type="text" class="form-control" ng-model="NewAccountData.Firstname"/>
+                    </div>
+                </div>
+                
+                <div class="col-sm-4">
+                    <label>Last Name</label>
+                    <div>
+                        <input type="text" class="form-control" ng-model="NewAccountData.Lastname"/>
+                    </div>
+                </div>
+                
+                
+            </div>
+            
+            <c:CAA_Date title="Date of birth" model="NewAccountData" field="DOB" numYears="-60" />
+            
+            <div>
+                <button class="btn" ng-click="CheckExistingCustomer()">Add new prospect/customer</button>
+            </div>            
+          </div>
+        </div>
+    </div>
+</div>
+-->
+
+</apex:component>

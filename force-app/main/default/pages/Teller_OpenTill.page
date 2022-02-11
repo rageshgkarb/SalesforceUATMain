@@ -1,0 +1,17 @@
+<apex:page applyBodyTag="false" showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false">
+        <div class="verticalScroller" ng-controller="controllerTillManagement" ng-init="OpenTill_Init()" style="overflow: auto; height: 100%; margin-top: 15px;">
+            <div id="header">Open Till</div>
+
+			<div class="col-md-4"  ng-show="Stage=='Initial'">
+				<select id="tillInput" class="form-control" ng-model="tillIdToOpen" ng-options="item.TillId as item.TillName for item in Tills"></select>
+			</div>
+
+            <div style="background: #F4F4F4; margin: 0; width: calc(100% - 5px); padding: 20px; height: 172px;">
+                <div style="float: left; margin-left: 10px; margin-top: 5px;" align="center" ng-show="Response_Success==false">{{Response_StatusDescription}}</div>
+                <button id="OpenTIll_Select" class="goldButton" style="float: right; padding-left:30px !important; padding-right:30px !important; padding-top:17px !important; padding-bottom:17px !important;" ng-click="OpenTIll_Select()" ng-show="Stage=='Initial'" >Select Till</button>
+
+                <button id="OpenTill" class="goldButton" style="float: right; padding-left:30px !important; padding-right:30px !important; padding-top:17px !important; padding-bottom:17px !important;" ng-click="OpenTill_Execute()" ng-show="Stage=='Final'" >Open Till</button>
+            </div>
+        </div>
+
+</apex:page>

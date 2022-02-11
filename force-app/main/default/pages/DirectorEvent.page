@@ -1,0 +1,424 @@
+<apex:page standardController="Event__c" extensions="HPPDirectorEventController" showHeader="false" sidebar="false">
+    <!-- C0644 Added RecordType fields/inputs etc -->
+<apex:form >
+<c:KendoResource ></c:KendoResource>
+<h2 style="font-size: 14pt;">Edit Event : {!Event.name}</h2>
+  
+ 
+  
+  
+  <div style="height:30px;">
+  
+  </div>
+  
+  
+  
+  <table width="100%">
+  
+  <tr><td valign="top" rowspan="2">
+  <apex:outputPanel rendered="{!directorId != null}">
+  Director:  
+ 
+ <a href="/apex/DirectorEventPage?id={!director.id}">
+              
+              {!Director.name}</a>
+ 
+ 
+ 
+  <div id="organizer" style="width:200px;">
+<ul id="panelbar">
+   <li>
+   Flow Events
+   <ul>
+   <apex:repeat value="{!FlowEvents}" var="fe">
+
+
+<li>
+<a href="/apex/directorevent?id={!fe.EventId}&d={!directorId}">{!fe.Description}</a>
+</li>
+
+   </apex:repeat>
+   </ul>
+</li>
+
+<li>
+    Rewind Events
+</li>
+<li>
+    Adhoc Events
+</li>
+
+</ul>
+</div>
+ </apex:outputPanel>
+  
+  
+  
+  
+  
+  </td>
+  
+  <td>
+   <table class="list">
+  <tr><td class="labelCol">Event Name</td><td class="dataCol"><apex:inputfield value="{!Event.name}"/></td></tr>
+  <tr><td class="labelCol">Event Type</td><td class="dataCol">
+  <apex:selectList size="1" value="{!Event.EventType__c}">
+  <apex:selectOption itemValue="Flow"/>
+    <apex:selectOption itemValue="Rewind" />
+      <apex:selectOption itemValue="Adhoc"/>
+  </apex:selectList>
+  
+</td></tr>
+    
+    <tr><td class="labelCol">Rollback Code</td><td class="dataCol">
+  <apex:selectList size="1" value="{!Event.RollbackCode__c}">
+     <apex:selectOptions value="{!RollBackEventActions}"> </apex:selectOptions>
+    
+  </apex:selectList>
+  
+</td></tr>
+
+
+
+  <tr><td class="labelCol">Creates Cases</td><td class="dataCol"><apex:inputField value="{!Event.CreatesCases__c}"/></td></tr>
+  <tr><td class="labelCol">Custom Page Location</td><td class="dataCol"><apex:inputField value="{!Event.CustomPageLocation__c}"/></td></tr>
+    <tr>
+        <td>Time to compelte (minutes)</td><td><apex:inputField value="{!Event.TimeToComplete__c}"/></td>
+    </tr>
+    <tr>
+        <td>Business Hours</td><td><apex:inputField value="{!Event.Business_Hours__c}"/> </td>        
+    </tr>
+    <tr>
+        <td>Event Queue</td><td><apex:inputField value="{!Event.EventQueue__c}"/>  </td>
+    </tr>
+    <tr>
+        <td>SLA (Work Days)</td><td><apex:inputField value="{!Event.SLADays__c}"/></td>
+    </tr>
+
+
+  </table>
+  
+  </td></tr>
+  
+  
+  <tr>
+  
+  
+  <td width="99%" valign="top">
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <div id="tabstrip">
+                    <ul>
+                        <li class="k-state-active">
+                            Required Fields
+                        </li>
+                        <li>
+                           Actions
+                        </li>
+                      
+                      <li>
+                          Update Fields
+                      </li>
+                      <li>
+                          Allowed Roles
+                      </li>
+                      
+                      <li>
+                      Usage
+                      </li>
+                        
+                    </ul>
+                    <div><!-- tab 1 start-->  
+  
+  <apex:outputPanel id="criteriaPanel">  
+  <div class="bPageBlock brandSecondaryBrd secondaryPalette">
+  <div class="pbBody">
+  <table id="rfGrid" class="list" >
+  <tbody>
+<tr class="headerRow"> 
+<th>Action</th>
+ <th  >Object</th>
+<th >Field</th><th>Custom Error Message</th><th>Record Type</th></tr>
+
+
+  <apex:repeat value="{!RequiredFields}" var="rf">
+    <tr class="dataRow">
+    <td>
+    <apex:commandLink action="{!delItem}" value="Del" rerender="criteriaPanel" immediate="true">
+                            <apex:param name="delObj" value="{!rf.ObjectName}" assignTo="{!delObj}"/>
+                            <apex:param name="delField" value="{!rf.Field}" assignTo="{!delField}"/>
+                        </apex:commandLink>
+    </td>
+    
+    
+    <td>{!rf.ObjectName}</td><td>{!rf.Field}</td><td><apex:inputText size="80" value="{!rf.Message}"/></td><td><apex:inputtext size="80" value="{!rf.RecordType}" /></td></tr>
+  </apex:repeat>
+  </tbody>
+  </table>
+  </div>
+  </div>
+  
+      <div class="bPageBlock brandSecondaryBrd secondaryPalette">
+  <div class="pbBody">
+  <table class="list">
+  <tr class="headerRow">
+      <th width="200">Object</th><th>Field</th><th>Record Type (leave blank for all)</th><th width="80">Action</th>
+  </tr>
+  <tr>
+  <td>
+                        <apex:selectList value="{!crObjOption}" id="crObjList" size="1" required="true">
+                            <apex:selectOptions value="{!crObjOptions}"/>
+                            <apex:actionSupport event="onchange" rerender="criteriaPanel"/>              
+                        </apex:selectList>  
+  </td>
+  
+  <td>
+                          <apex:selectList value="{!crField}" id="crFieldList" size="1" required="true" rendered="{!crObjOption != '' && crObjOption != null && crObjOption != '--'}">
+                            <apex:selectOptions value="{!crFieldOptions}"/>
+                                          
+                        </apex:selectList>
+  </td>
+      <td>
+          <apex:inputtext size="80" value="{!crRecType}" />
+      </td>
+  
+  <td>
+  <apex:commandButton rendered="{!crObjOption != null && crObjOption != '--'}" action="{!AddField}" reRender="criteriaPanel" value="Add Field"/>
+  </td>
+ </tr>
+  
+  
+  </table>
+  </div>
+  </div>
+  </apex:outputPanel>
+  </div><!-- close tab 1-->
+  
+  
+  <div><!-- start tab 2-->
+  
+  <apex:outputPanel id="actionPanel"> 
+  
+    <table>
+     <tr><td>Object</td><td>
+                        <apex:selectList styleClass="nokendo" value="{!lstAction}" id="actionList" size="1" required="true">
+                            <apex:selectOptions value="{!lstActions}"/>
+                                        
+                        </apex:selectList>    </td></tr>
+       <tr><td>Field</td><td>
+    <apex:selectList value="{!ActRunWhen}" id="actionRunWhen" size="1" required="true">
+                            
+                            <apex:selectOption itemValue="Created"></apex:selectOption>
+                            <apex:selectOption itemValue="Completed"></apex:selectOption>
+                          
+                                        
+                        </apex:selectList>  </td></tr>
+       <tr><td></td><td>
+  <apex:commandButton action="{!AddAction}" reRender="actionPanel" value="Add Action"/>
+  </td></tr>
+  </table>
+   
+  <div class="bPageBlock brandSecondaryBrd secondaryPalette">
+  <div class="pbBody">
+  <table id="rfGrid" class="list" >
+  <tbody>
+<tr class="headerRow"> 
+<th>Action</th>
+<th>Run On</th>
+ <th  >Sequence</th>
+<th >Class Name</th></tr>
+
+
+  <apex:repeat value="{!EventAction }" var="act">
+    <tr class="dataRow">
+    <td>
+    <apex:commandLink oncomplete="toaster.success('Deleted');" action="{!delAction}" value="Del" rerender="actionPanel" immediate="true">
+                            <apex:param name="delAct" value="{!act.ClassName}" assignTo="{!delAct}"/>
+                      
+                        </apex:commandLink>
+    </td>
+    
+    
+    <td>{!act.RunWhen}</td><td>{!act.Sequence}</td><td>{!act.ClassName}</td></tr>
+  </apex:repeat>
+  </tbody>
+  </table>
+  </div>
+  </div>
+  
+   
+ 
+  </apex:outputPanel>
+  
+  
+  
+  
+  </div><!-- end tab 2-->
+  
+  
+  <div>
+  
+  <apex:outputPanel id="updateFieldPanel">  
+  <div class="bPageBlock brandSecondaryBrd secondaryPalette">
+  <div class="pbBody">
+  <table id="ufGrid" class="list" >
+  <tbody>
+<tr class="headerRow"> 
+<th>Action</th>
+ <th>Object</th>
+<th>Field</th><th>Use When</th><th>Value</th><th>Only if null</th></tr>
+
+
+  <apex:repeat value="{!UpdateFields}" var="uf">
+    <tr class="dataRow">
+    <td>
+    <apex:commandLink action="{!delUpdateField}" value="Del" rerender="updateFieldPanel" immediate="true">
+                            <apex:param name="delUpdateObj" value="{!uf.ObjectName}" assignTo="{!delUpdateObj}"/>
+                            <apex:param name="delUpdateField" value="{!uf.Field}" assignTo="{!delUpdateField}"/>
+                        </apex:commandLink>
+    </td>
+    
+    
+    <td>{!uf.ObjectName}</td><td>{!uf.Field}</td><td>{!uf.UseWhen}</td><td>{!uf.Value}</td><td>{!uf.OnlySetWhenNull}</td></tr>
+  </apex:repeat>
+  </tbody>
+  </table>
+  </div>
+  </div>
+  
+      <div class="bPageBlock brandSecondaryBrd secondaryPalette">
+  <div class="pbBody">
+  <table class="list">
+  <tr class="headerRow">
+      <th width="200">Object</th><th>Field</th><th>Use When</th><th>Value</th><th>Only if null</th><th width="80">Action</th>
+  </tr>
+  <tr>
+  <td>
+                        <apex:selectList value="{!updateFieldObject}"  size="1" required="true">
+                            <apex:selectOptions value="{!crObjOptions}"/>
+                            <apex:actionSupport event="onchange" rerender="updateFieldPanel"/>              
+                        </apex:selectList>  
+  </td>
+  
+  <td>
+                          <apex:selectList value="{!updateField}"  size="1" required="true" rendered="{!updateFieldObject!= '' && updateFieldObject!= null && updateFieldObject!= '--'}">
+                            <apex:selectOptions value="{!updateFieldList}"/>
+                                          
+                        </apex:selectList>
+  </td>
+  <td>
+    <apex:selectList value="{!updateFieldWhen}"  size="1" required="true" rendered="{!updateFieldObject!= '' && updateFieldObject!= null && updateFieldObject!= '--'}">
+                            <apex:selectOption itemValue="Creation"/>
+                            <apex:selectOption itemValue="Completion"/>
+                                          
+                        </apex:selectList>
+  </td>
+  
+  
+  <td><apex:inputText value="{!UpdateValue}"/></td>
+  <td><apex:inputCheckbox value="{!UpdateNull}"/></td>
+  
+  <td>
+  <apex:commandButton rendered="{!updateFieldObject!= null && updateFieldObject!= '--'}" action="{!AddUpdateField}" reRender="updateFieldPanel" value="Add Field"/>
+  </td>
+ </tr>
+  
+  
+  </table>
+  </div>
+  </div>
+  </apex:outputPanel>
+  
+  </div>
+  
+  <div><!-- tab open-->
+ 
+      <apex:outputPanel id="rolePanel">
+      
+      <apex:selectList id="noKendo" size="1" value="{!SelectedRole}">
+      <apex:selectOptions value="{!lstRoles}"></apex:selectOptions>
+      </apex:selectList>
+      <apex:commandButton value="Add Role" action="{!AddRole}" reRender="rolePanel"/>
+        
+
+  <div class="bPageBlock brandSecondaryBrd secondaryPalette">
+  <div class="pbBody">
+  
+  <table id="rfGrid" class="list" >
+  <tbody>
+<tr class="headerRow"> 
+<th width="60px">Action</th>
+<th>Role</th>
+</tr>
+
+
+  <apex:repeat value="{!ConfiguredRoles}" var="role">
+    <tr class="dataRow">
+    <td>
+    <apex:commandLink action="{!delRole}" value="Remove" rerender="rolePanel" immediate="true">
+                            <apex:param name="delAct" value="{!role.id}" assignTo="{!deleteRole}"/>
+                      
+                        </apex:commandLink>
+    </td>
+    
+    
+    <td>{!role.Name}</td></tr>
+  </apex:repeat>
+  </tbody>
+  </table>
+  </div>
+  </div>
+  </apex:outputPanel>
+    </div><!-- tab closed -->
+  
+  <div><!--tab usage open-->
+      <div>
+          This event is used in the following directors
+      </div>
+      <table>
+          <tr>
+              <th>Director</th>
+          </tr>
+      <apex:repeat value="{!UsedOn}" var="pd">
+          <tr>
+              <td>
+              <a href="/apex/DirectorEventPage?id={!pd.id}">
+              
+              {!pd.name}</a></td>
+          </tr>
+      
+      </apex:repeat>
+      </table>
+  
+  
+  
+  </div><!--tab usage close-->
+  
+  
+  
+  
+  </div> <!-- close tab strip-->
+  </td></tr>
+  </table>
+  
+  
+  <apex:commandButton oncomplete="toaster.success('Deleted');" action="{!Save}" value="Save"/>
+  
+
+  
+  
+  </apex:form>
+</apex:page>

@@ -1,0 +1,15 @@
+<apex:component >
+
+
+<!--<apex:includeScript value="{!URLFOR($Resource.ibbstyle,'/kendo/jquery.min.js')}"/>-->
+<!--<apex:includeScript value="{!URLFOR($Resource.ibbstyle, 'jquery.hoverIntent.minified.js')}"/>-->
+<!--<apex:includeScript value="{!URLFOR($Resource.ibbstyle, 'ibb.js')}"/>-->
+
+<!--<apex:includeScript value="{!URLFOR($Resource.ibbstyle, '/kendo/kendo.all.min.js')}"/>-->
+<apex:includeScript value="{!URLFOR($Resource.ibbstyle, '/jquery.validate.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.ibbstyle, '/additional-methods.min.js')}"/>
+
+<!--<apex:includeScript value="{!URLFOR($Resource.ibbstyle, '/autosize/jquery.autosize-min.js')}" />-->
+
+<!--<apex:includeScript value="{!URLFOR($Resource.ibbstyle, '/toaster/toastr.min.js')}"/>-->
+</apex:component>

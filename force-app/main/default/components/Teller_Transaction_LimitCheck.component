@@ -1,0 +1,188 @@
+<apex:component >
+	<div class="sectionTitle">Authorisation</div>
+	<div class="textDarkGray" style="white-space: normal;">Please provide the following authorisation to process this transaction.</div>
+
+	<!-- First Authorisor -->
+	<div style="margin-top: 15px;">
+		<div style="width: 430px; background: rgb(247, 247, 247);display: table-cell;">
+			<img style="height: 50px; width: 50px; margin: 6px; float: left;" ng-src="{{TellerImageURL}}" onError="this.onerror=null; this.src='{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/user_error.png')}';"></img>
+			<div style="float: left;padding:  5px;width: 360px;padding-left: 5px;">
+				<c:Teller_Material_Input type="text" labelText="First Authorisor" modelProperty="LimitData.FirstAuthorisor" width="100%" disabled="true" show="true" styleMarginBottom="0px;"></c:Teller_Material_Input> 
+			</div>
+		</div>
+	</div>
+
+	<!-- Second Authorisor -->
+	<div style="margin-top: 15px;" ng-show="ShowSecondAuthorisor">   
+		<div style="width: 430px; background: rgb(247, 247, 247);display: table-cell;">
+			<div style="background: rgb(215, 215, 215); height: 50px; width: 50px; margin: 6px; float: left; position:relative;">
+				<img ng-show="LimitData.SecondAuthorisor != null" style="height: 50px; width: 50px; float: left; position:absolute;" ng-src="{{LimitData.SecondAuthorisor.ImageUrl}}" onError="this.onerror=null; this.src='{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/user_error.png')}';"></img>
+				<img style="height: 75px; width: 75px; position:absolute; top: -25px; left: -25px;" ng-show="LimitData.SecondAuthorisor.Verified" src="{!URLFOR($Resource.Teller_Includes,'/Teller_Includes/media/checked_corner.png')}"></img>
+			</div>
+			<div style="float: left;padding:  5px;width: 360px;padding-left: 5px;">
+				<c:Teller_Material_Select labelText="Second Authorisor" modelProperty="LimitData.SecondAuthorisor" width="100%" show="true" disabled="LimitData.SecondAuthorisor.Verified" datasource="LimitData.SecondAuthorisors" fieldTextName="Name" fieldValueName="AuthorisorId" styleBackground="rgb(247, 247, 247);" styleMarginBottom="0px;" onChange="onAuthorisorChanged(kendoEvent, 'SecondAuthorisor')"></c:Teller_Material_Select>
+				<div ng-bind-html="LimitData.SecoundAuthorisorRoles" style="text-align: right; font-size: 11px; display: block; font-family: simpleMedium; padding-right: 5px; padding-top: 2px; padding-left: 10px; overflow: hidden; color: rgb(163, 163, 163);"></div>
+			</div>
+		</div>
+		<div ng-show="(LimitData.SecondAuthorisor != null) || (LimitData.SecondAuthorisor.Name!='') || (LimitData.SecondAuthorisor.Verified != true)">
+			<div ng-show="(LimitData.SecondAuthorisor!=null) && (LimitData.SecondAuthorisor!='') && (LimitData.SecondAuthorisor.Verified != true)" style="width: 430px; background: rgb(247, 247, 247);display: table-cell;">
+
+				<div style="padding-left: 19px;padding-top: 10px;height: 50px; width: 50px; margin: 6px; float: left; cursor:pointer;" ng-click="SecondAuthorisorChoice='Password'">
+					<c:Teller_Material_RadioInput labelText="" radioGroup="secondAuthoriserGroup" modelProperty="SecondAuthorisorChoice" radioValue="Password"></c:Teller_Material_RadioInput>
+				</div>
+				
+				<div style="float: left;padding:  5px;width: 360px;padding-left: 5px;">
+					<div style="float:left;">
+						<c:Teller_Material_Input type="password" labelText="Password" modelProperty="LimitData.SecondAuthorisor.Password" width="318px" show="LimitData.SecondAuthorisor!=''" disabled="SecondAuthorisorChoice!='Password'" styleMarginBottom="0px;" infoText="{{LimitData.SecondAuthorisor.IncorrectPassword == true ? 'Incorrect password' : 'Verified'}}" infoTextNgShow="LimitData.SecondAuthorisor.IncorrectPassword || LimitData.SecondAuthorisor.Verified" infoTextIsError="LimitData.SecondAuthorisor.IncorrectPassword" arbEnter="PasswordVerification(LimitData.SecondAuthorisor)" arbFocus="SecondAuthorisorChoice =='Password'"></c:Teller_Material_Input> 							
+					</div>
+					<div style="float: right; margin-top: 15px;">
+						<button class="goldButton" style="margin-right: 0px; padding: 3.5px !important; margin-left: -2px;" ng-click="PasswordVerification(LimitData.SecondAuthorisor)" ng-disabled="SecondAuthorisorChoice!='Password'">
+							<img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/sort_direction.png')}" style="height: 25px; transform: rotate(-90deg); -webkit-filter: invert(1);"></img>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div ng-show="(LimitData.SecondAuthorisor != null) || (LimitData.SecondAuthorisor.Name!='') || (LimitData.SecondAuthorisor.Verified != true)">
+			<div ng-show="(LimitData.SecondAuthorisor!=null) && (LimitData.SecondAuthorisor!='') && (LimitData.SecondAuthorisor.Verified != true)" style="width: 430px; background: rgb(247, 247, 247);display: table-cell;">
+				<div style="padding-left: 19px;padding-top: 10px;height: 50px; width: 50px; margin: 6px; float: left; cursor:pointer;" ng-click="SecondAuthorisorChoice='SubmitForApproval'">
+					<c:Teller_Material_RadioInput labelText="" radioGroup="secondAuthoriserGroup" modelProperty="SecondAuthorisorChoice" radioValue="SubmitForApproval"></c:Teller_Material_RadioInput>
+				</div>
+				<div style="float: left;padding:  5px;width: 360px;padding-left: 5px;">													
+					<div style="width: 100%; margin-top: 11px;">
+						<button class="goldButton" ng-click="SubmitForApproval()" ng-disabled="SecondAuthorisorChoice!='SubmitForApproval'">SUBMIT FOR APPROVAL</button>
+					</div>
+				</div>
+			</div>
+		</div>										
+	</div>	
+	
+	<!-- Thrid Authorisor -->
+	<div style="margin-top: 15px;" ng-show="ShowThirdAuthorisor">   
+		<div style="width: 430px; background: rgb(247, 247, 247);display: table-cell;">
+			<div style="background: rgb(215, 215, 215); height: 50px; width: 50px; margin: 6px; float: left; position:relative;">
+				<img ng-show="LimitData.ThirdAuthorisor != null" style="height: 50px; width: 50px; float: left; position:absolute;" ng-src="{{LimitData.ThirdAuthorisor.ImageUrl}}" onError="this.onerror=null; this.src='{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/user_error.png')}';"></img>
+				<img style="height: 75px; width: 75px; position:absolute; top: -25px; left: -25px;" ng-show="LimitData.ThirdAuthorisor.Verified" src="{!URLFOR($Resource.Teller_Includes,'/Teller_Includes/media/checked_corner.png')}"></img>
+			</div>
+			<div style="float: left;padding:  5px;width: 360px;padding-left: 5px;">
+				<c:Teller_Material_Select labelText="Third Authorisor" modelProperty="LimitData.ThirdAuthorisor" width="100%" show="true" disabled="false" datasource="LimitData.ThirdAuthorisors" fieldTextName="Name" fieldValueName="AuthorisorId" styleBackground="rgb(247, 247, 247);" styleMarginBottom="0px;" onChange="onAuthorisorChanged(kendoEvent, 'ThirdAuthorisor')"></c:Teller_Material_Select>
+				<div ng-bind-html="LimitData.ThirdAuthorisorRoles" style="text-align: right; font-size: 11px; display: block; font-family: simpleMedium; padding-right: 5px; padding-top: 2px; padding-left: 10px; overflow: hidden; color: rgb(163, 163, 163);"></div>
+			</div>
+		</div>
+		<div ng-show="(LimitData.ThirdAuthorisor != null) || (LimitData.ThirdAuthorisor.Name!='') || (LimitData.ThirdAuthorisor.Verified != true)">
+			<div ng-show="(LimitData.ThirdAuthorisor!=null) && (LimitData.ThirdAuthorisor!='') && (LimitData.ThirdAuthorisor.Verified != true)" style="width: 430px; background: rgb(247, 247, 247);display: table-cell;">
+
+				<div style="padding-left: 19px;padding-top: 10px;height: 50px; width: 50px; margin: 6px; float: left; cursor:pointer;" ng-click="ThirdAuthorisorChoice ='Password'">
+					<c:Teller_Material_RadioInput labelText="" radioGroup="thirdAuthoriserGroup" modelProperty="ThirdAuthorisorChoice" radioValue="Password"></c:Teller_Material_RadioInput>
+				</div>
+				
+				<div style="float: left;padding:  5px;width: 360px;padding-left: 5px;">
+					<div style="float:left;">
+						<c:Teller_Material_Input type="password" labelText="Password" modelProperty="LimitData.ThirdAuthorisor.Password" width="318px" show="LimitData.ThirdAuthorisor!=''" disabled="ThirdAuthorisorChoice!='Password'" styleMarginBottom="0px;" infoText="{{LimitData.ThirdAuthorisor.IncorrectPassword == true ? 'Incorrect password' : 'Verified'}}" infoTextNgShow="LimitData.ThirdAuthorisor.IncorrectPassword || LimitData.ThirdAuthorisor.Verified" infoTextIsError="LimitData.ThirdAuthorisor.IncorrectPassword" arbEnter="PasswordVerification(LimitData.ThirdAuthorisor)" arbFocus="ThirdAuthorisorChoice =='Password'"></c:Teller_Material_Input> 							
+					</div>
+					<div style="float: right; margin-top: 15px;">
+						<button class="goldButton" style="margin-right: 0px; padding: 3.5px !important; margin-left: -2px;" ng-click="PasswordVerification(LimitData.ThirdAuthorisor)" ng-disabled="ThirdAuthorisorChoice!='Password'">
+							<img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/sort_direction.png')}" style="height: 25px; transform: rotate(-90deg); -webkit-filter: invert(1);"></img>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div ng-show="(LimitData.ThirdAuthorisor != null) || (LimitData.ThirdAuthorisor.Name!='') || (LimitData.ThirdAuthorisor.Verified != true)">
+			<div ng-show="(LimitData.ThirdAuthorisor!=null) && (LimitData.ThirdAuthorisor!='') && (LimitData.ThirdAuthorisor.Verified != true)" style="width: 430px; background: rgb(247, 247, 247);display: table-cell;">
+				<div style="padding-left: 19px;padding-top: 10px;height: 50px; width: 50px; margin: 6px; float: left; cursor:pointer;" ng-click="ThirdAuthorisorChoice ='PreApprovedCase'">
+					<c:Teller_Material_RadioInput labelText="" radioGroup="thirdAuthoriserGroup" modelProperty="ThirdAuthorisorChoice" radioValue="PreApprovedCase"></c:Teller_Material_RadioInput>
+				</div>
+				<div style="float: left;padding:  5px;width: 360px;padding-left: 5px;">
+					<div style="float:left;">
+						<c:Teller_Material_Input type="text" labelText="Pre-Approved Case" modelProperty="LimitData.ThirdAuthorisorPreApprovedCase" width="318px" show="LimitData.ThirdAuthorisor!=''" disabled="ThirdAuthorisorChoice!='PreApprovedCase'" styleMarginBottom="0px;" arbFocus="ThirdAuthorisorChoice =='PreApprovedCase'"></c:Teller_Material_Input> 							
+					</div>
+					<div style="float: right; margin-top: 15px;">
+						<button class="goldButton" style="margin-right: 0px; padding: 3.5px !important; margin-left: -2px;" ng-click="PreApprovedCase(3, LimitData.ThirdAuthorisor.AuthorisorId)" ng-disabled="ThirdAuthorisorChoice!='PreApprovedCase'">
+							<img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/search.png')}" style="height: 25px; -webkit-filter: invert(1);"></img>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div ng-show="(LimitData.ThirdAuthorisor != null) || (LimitData.ThirdAuthorisor.Name!='') || (LimitData.ThirdAuthorisor.Verified != true) && (LimitData.AllowSubmitForApproval==true)">
+			<div ng-show="(LimitData.ThirdAuthorisor!=null) && (LimitData.ThirdAuthorisor!='') && (LimitData.ThirdAuthorisor.Verified != true)" style="width: 430px; background: rgb(247, 247, 247);display: table-cell;">
+				<div style="padding-left: 19px;padding-top: 10px;height: 50px; width: 50px; margin: 6px; float: left; cursor:pointer;" ng-click="ThirdAuthorisorChoice ='SubmitForApproval'">
+					<c:Teller_Material_RadioInput labelText="" radioGroup="thirdAuthoriserGroup" modelProperty="ThirdAuthorisorChoice" radioValue="SubmitForApproval"></c:Teller_Material_RadioInput>
+				</div>
+				<div style="float: left;padding:  5px;width: 360px;padding-left: 5px;">													
+					<div style="width: 100%; margin-top: 11px;">
+						<button class="goldButton" ng-click="SubmitForApproval()" ng-disabled="ThirdAuthorisorChoice!='SubmitForApproval'">SUBMIT FOR APPROVAL</button>
+					</div>
+				</div>
+			</div>
+		</div>										
+	</div>		
+	
+	<!-- Fourth Authorisor -->
+	<div style="margin-top: 15px; margin-bottom: 15px;" ng-show="ShowForthAuthorisor">   
+		<div style="width: 430px; background: rgb(247, 247, 247);display: table-cell;">
+			<div style="background: rgb(215, 215, 215); height: 50px; width: 50px; margin: 6px; float: left; position:relative;">
+				<img ng-show="LimitData.FourthAuthorisor != null" style="height: 50px; width: 50px; float: left; position:absolute;" ng-src="{{LimitData.FourthAuthorisor.ImageUrl}}" onError="this.onerror=null; this.src='{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/user_error.png')}';"></img>
+				<img style="height: 75px; width: 75px; position:absolute; top: -25px; left: -25px;" ng-show="LimitData.FourthAuthorisor.Verified" src="{!URLFOR($Resource.Teller_Includes,'/Teller_Includes/media/checked_corner.png')}"></img>
+			</div>
+			<div style="float: left;padding:  5px;width: 360px;padding-left: 5px;">
+				<c:Teller_Material_Select labelText="Fourth Authorisor" modelProperty="LimitData.FourthAuthorisor" width="100%" show="true" disabled="false" datasource="LimitData.FourthAuthorisors" fieldTextName="Name" fieldValueName="AuthorisorId" styleBackground="rgb(247, 247, 247);" styleMarginBottom="0px;" onChange="onAuthorisorChanged(kendoEvent, 'FourthAuthorisor')"></c:Teller_Material_Select>
+				<div ng-bind-html="LimitData.FourthAuthorisorRoles" style="text-align: right; font-size: 11px; display: block; font-family: simpleMedium; padding-right: 5px; padding-top: 2px; padding-left: 10px; overflow: hidden; color: rgb(163, 163, 163);"></div>
+			</div>
+		</div>
+		<div ng-show="(LimitData.FourthAuthorisor != null) || (LimitData.FourthAuthorisor.Name!='') || (LimitData.FourthAuthorisor.Verified != true)">
+			<div ng-show="(LimitData.FourthAuthorisor!=null) && (LimitData.FourthAuthorisor!='') && (LimitData.FourthAuthorisor.Verified != true)" style="width: 430px; background: rgb(247, 247, 247);display: table-cell;">
+
+				<div style="padding-left: 19px;padding-top: 10px;height: 50px; width: 50px; margin: 6px; float: left; cursor:pointer;" ng-click="FourthAuthorisorChoice ='Password'">
+					<c:Teller_Material_RadioInput labelText="" radioGroup="fourthAuthoriserGroup" modelProperty="FourthAuthorisorChoice" radioValue="Password"></c:Teller_Material_RadioInput>
+				</div>				
+				<div style="float: left;padding:  5px;width: 360px;padding-left: 5px;">
+					<div style="float:left;">
+						<c:Teller_Material_Input type="password" labelText="Password" modelProperty="LimitData.FourthAuthorisor.Password" width="318px" show="LimitData.FourthAuthorisor!=''" disabled="FourthAuthorisorChoice!='Password'" styleMarginBottom="0px;" infoText="{{LimitData.FourthAuthorisor.IncorrectPassword == true ? 'Incorrect password' : 'Verified'}}" infoTextNgShow="LimitData.FourthAuthorisor.IncorrectPassword || LimitData.FourthAuthorisor.Verified" infoTextIsError="LimitData.FourthAuthorisor.IncorrectPassword" arbEnter="PasswordVerification(LimitData.FourthAuthorisor)" arbFocus="FourthAuthorisorChoice =='Password'"></c:Teller_Material_Input> 														
+					</div>
+					<div style="float: right; margin-top: 15px;">
+						<button class="goldButton" style="margin-right: 0px; padding: 3.5px !important; margin-left: -2px;" ng-click="PasswordVerification(LimitData.FourthAuthorisor)" ng-disabled="FourthAuthorisorChoice!='Password'">
+							<img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/sort_direction.png')}" style="height: 25px; transform: rotate(-90deg); -webkit-filter: invert(1);"></img>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div ng-show="(LimitData.FourthAuthorisor != null) || (LimitData.FourthAuthorisor.Name!='') || (LimitData.FourthAuthorisor.Verified != true)">
+			<div ng-show="(LimitData.FourthAuthorisor!=null) && (LimitData.FourthAuthorisor!='') && (LimitData.FourthAuthorisor.Verified != true)" style="width: 430px; background: rgb(247, 247, 247);display: table-cell;">
+				<div style="padding-left: 19px;padding-top: 10px;height: 50px; width: 50px; margin: 6px; float: left; cursor:pointer;" ng-click="FourthAuthorisorChoice ='PreApprovedCase'">
+					<c:Teller_Material_RadioInput labelText="" radioGroup="fourthAuthoriserGroup" modelProperty="FourthAuthorisorChoice" radioValue="PreApprovedCase"></c:Teller_Material_RadioInput>
+				</div>
+				<div style="float: left;padding:  5px;width: 360px;padding-left: 5px;">
+					<div style="float:left;">
+						<c:Teller_Material_Input type="text" labelText="Pre-Approved Case" modelProperty="LimitData.FourthAuthorisorPreApprovedCase" width="318px" show="LimitData.FourthAuthorisor!=''" disabled="FourthAuthorisorChoice!='PreApprovedCase'" styleMarginBottom="0px;" arbFocus="FourthAuthorisorChoice =='PreApprovedCase'"></c:Teller_Material_Input> 							
+					</div>
+					<div style="float: right; margin-top: 15px;">
+						<button class="goldButton" style="margin-right: 0px; padding: 3.5px !important; margin-left: -2px;" ng-click="PreApprovedCase(4, LimitData.FourthAuthorisor.AuthorisorId)" ng-disabled="FourthAuthorisorChoice!='PreApprovedCase'">
+							<img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/search.png')}" style="height: 25px; -webkit-filter: invert(1);"></img>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div ng-show="(LimitData.FourthAuthorisor != null) || (LimitData.FourthAuthorisor.Name!='') || (LimitData.FourthAuthorisor.Verified != true) && (LimitData.AllowSubmitForApproval==true)">
+			<div ng-show="(LimitData.FourthAuthorisor!=null) && (LimitData.FourthAuthorisor!='') && (LimitData.FourthAuthorisor.Verified != true)" style="width: 430px; background: rgb(247, 247, 247);display: table-cell;">
+				<div style="padding-left: 19px;padding-top: 10px;height: 50px; width: 50px; margin: 6px; float: left; cursor:pointer;" ng-click="FourthAuthorisorChoice ='SubmitForApproval'">
+					<c:Teller_Material_RadioInput labelText="" radioGroup="forthAuthoriserGroup" modelProperty="FourthAuthorisorChoice" radioValue="SubmitForApproval"></c:Teller_Material_RadioInput>
+				</div>
+				<div style="float: left;padding:  5px;width: 360px;padding-left: 5px;">													
+					<div style="width: 100%; margin-top: 11px;">
+						<button class="goldButton" ng-click="SubmitForApproval()" ng-disabled="FourthAuthorisorChoice!='SubmitForApproval'">SUBMIT FOR APPROVAL</button>
+					</div>
+				</div>
+			</div>
+		</div>										
+	</div>	
+	
+</apex:component>

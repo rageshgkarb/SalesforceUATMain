@@ -1,0 +1,473 @@
+<apex:page applyBodyTag="false" applyHtmlTag="false" showHeader="false" sidebar="false"  docType="html-5.0"  standardStylesheets="false" controller="PageLayoutConfigController">
+<html lang="en">
+  <head>
+  
+  <apex:includeScript value="https://code.jquery.com/jquery-1.11.3.min.js"/>
+   <!-- Bootstrap -->
+    <apex:stylesheet value="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <!--<apex:stylesheet value="https://maxcdn.bootstrapcdn.com/bootswatch/3.2.0/spacelab/bootstrap.min.css"/>-->
+    <apex:stylesheet value="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"/>
+    <apex:includeScript value="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"/>
+    
+    <apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.11/angular.min.js"/>
+    <apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.11/angular-animate.min.js"/>
+    <apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.11/angular-sanitize.js"/>
+    <apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular-messages.js"/>
+
+
+<link rel="stylesheet" href="https://kendo.cdn.telerik.com/2016.1.112/styles/kendo.common.min.css" />
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2016.1.112/styles/kendo.blueopal.min.css" />
+    <script src="https://kendo.cdn.telerik.com/2016.1.112/js/kendo.all.min.js"></script>
+
+  <apex:stylesheet value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/css/core.css')}" />
+  <apex:stylesheet value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/css/navigation.css')}" />
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700"/>
+  
+  
+ <!-- <link rel="stylesheet" href="https://marceljuenemann.github.io/angular-drag-and-drop-lists/demo/framework/vendor/bootstrap-theme.min.css"/>
+  <link rel="stylesheet" href="https://marceljuenemann.github.io/angular-drag-and-drop-lists/demo/framework/demo-framework.css"/>
+  <link rel="stylesheet" href="https://marceljuenemann.github.io/angular-drag-and-drop-lists/demo/nested/nested.css"/>
+  
+  <script src="https://marceljuenemann.github.io/angular-drag-and-drop-lists/angular-drag-and-drop-lists.js"/>
+  
+  
+  <script src="https://marceljuenemann.github.io/angular-drag-and-drop-lists/demo/framework/vendor/prism.js"/>
+  <script src="https://marceljuenemann.github.io/angular-drag-and-drop-lists/demo/framework/demo-framework.js"/> -->
+  
+  <apex:includescript value="{!URLFOR($Resource.DropDownFrameWork, 'drop-down-list.js')}" />
+  <apex:includescript value="{!URLFOR($Resource.DropDownFrameWork, 'Prism.js')}" />
+  <apex:includescript value="{!URLFOR($Resource.DropDownFrameWork, 'demoframewok.js')}" />
+  
+  <link rel="stylesheet" href="{!URLFOR($Resource.DropDownFrameWork, 'demo-framework.css')}"/>
+  <link rel="stylesheet" href="{!URLFOR($Resource.DropDownFrameWork, 'Nested.css')}"/>
+  <link rel="stylesheet" href="{!URLFOR($Resource.DropDownFrameWork, 'bootstrapDropDown.css')}"/>
+  
+    <c:TestStyle />
+  
+  
+  
+  <style>
+  .verticalScrollSection {
+    margin-left: 7px;
+    height: calc(100% - 60px);
+    overflow-y: auto;
+    
+    overflow-x: hidden;
+}
+
+
+  
+  </style>
+  
+  
+ <c:PageLayoutConfig_JS />
+  
+  
+</head>
+
+<body ng-app="demo" ng-controller="NestedListsDemoController" class="nestedDemo" ng-init="Setup('{!layoutId}');BaseObject='Opportunity';Name='BTL Opportunity'">
+  
+    
+    
+        <!-- HEADER -->
+        <div class="headerBar">
+            <div class="barContentLeft">
+                <span class="textSmallerWhiteBold">Al Rayan Bank</span>
+                <span class="textSmallerWhite">: Page Layout</span>
+            </div>            
+        </div>
+        
+        
+        <!-- LEFT NAV -->
+        <nav class="nav">
+        <!--<nav ng-class="{'nav' : menuOpen == 'false', 'nav open' : menuOpen == 'true'}" ng-mouseenter="menuOpen = 'true'" ng-mouseleave="menuOpen = 'false'" class="nav">-->
+            <div>
+                <div class="burger" ng-class="{'burger' : menuOpen == 'false', 'burger active' : menuOpen == 'true'}" ng-click="menuOpen == 'true' ? menuOpen = 'false' : menuOpen = 'true'">
+                    <div class="line"></div>
+                    <div class="line"></div>
+                    <div class="line"></div>
+                </div>
+            </div>
+
+            <div style="margin-top:10px;">
+                <div style="margin-left:12px;">
+                    <label class="textSmallWhiteBold">Menu</label>
+                </div>          
+                
+                <div class="menu ng-hide" ng-show="menuOpen == 'true'" style="margin-top: 30px;">
+                    <ul class="menuScroll">
+                        
+                       <div class="expanderContainer">                        
+                    
+                        <div class="sectionTitle expanderHeader" ng-click="ExpandedTab = 'Components'" ng-class="{expanderHeaderSelected : ExpandedTab == 'Components'}">
+                            Components
+                        </div>
+                        <div class="expanderContent verticalScroller" ng-show="ExpandedTab == 'Components'">
+                           
+                                <ul>
+                                    <!-- The toolbox only allows to copy objects, not move it. After a new
+                                         element was created, dnd-copied is invoked and we generate the next id -->
+                                         
+                                         <!-- dnd-copied="item.id = item.id + 1" -->
+                                    <li ng-repeat="item in models.templates" 
+                                        dnd-draggable="item"
+                                        dnd-effect-allowed="copy"
+                                       dnd-copied="Drop(item)"                
+                                        >   
+                                        <span class="btn btn-danger btn-sm" style="width:100px;" disabled="disabled"><i class="fa fa-table"></i> {{item.label}}</span>
+                                    </li>
+                                </ul>
+                        </div>
+                    
+                        <div class="sectionTitle expanderHeader" ng-click="ExpandedTab = 'MasterFields'" ng-class="{expanderHeaderSelected : ExpandedTab == 'MasterFields'}">
+                            Master Fields - {{FieldData.length}}
+                        </div>
+                        <div class="expanderContent " ng-show="ExpandedTab == 'MasterFields'">
+                        
+                      
+                            <div class="expanderHeaderSelected" style="margin:0px;">
+                            
+                                 <div class="row">
+                                      <div class="col-sm-12">
+                                          <!--<select class="form-control" ng-options="rf.fieldname for rf in RelatedFields" />-->
+                                          <select class="form-control" ng-model="SelectedMaster">
+                                              <option ng-repeat="rr in MasterFields" value="{{rr.fieldname}}">{{rr.objectname}} - {{rr.fieldname}}</option>
+                                          </select>
+                                      </div>
+                                  </div>      
+                            
+                            
+                            <div class="row">
+                                <div class="col-sm-8">                                    
+                                    <input placeholder="Filter" class="form-control ng-pristine ng-valid ng-touched" ng-model="fieldFilter"/>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="goldButton" ng-click="ToggleFilter()">
+                                        <span ng-show="apiorname == 'name'">Label</span>
+                                        <span ng-show="apiorname == 'api'">Api Name</span>
+                                    </label> 
+                                </div>
+                            </div>    
+                            </div>                       
+                        
+                        <div style="padding-left:5px;">
+                            <span class="smallTextTitle" ng-show="limitval  > MasterFieldsFilter().length">Showing {{MasterFieldsFilter().length }} of {{MasterFieldsFilter().length}}</span>
+                            <span class="smallTextTitle" ng-show="limitval  < MasterFieldsFilter().length">Showing {{limitval }} of {{MasterFieldsFilter().length}}</span>
+                        </div>
+                        
+                            <div class="verticalScrollSection" style="height:calc(100% - 90px)">
+                            <div style="display:inline-block" class="ng-binding" ng-init="apiorname='api';limitval =25; ">
+                           
+                    
+                            
+                            
+                            <div ng-repeat="field in MasterFieldsFilter() | limitTo:limitval" >
+        
+        
+        
+        
+          <span class="smallText" dnd-copied="Drop(field)" dnd-draggable="field" dnd-effect-allowed="copy" ng-show="apiorname=='name'">{{field.label}}</span>
+          <span class="smallText" dnd-copied="Drop(field)" dnd-draggable="field" dnd-effect-allowed="copy" ng-show="apiorname=='api'">{{field.apiname}}</span>
+            
+                    
+        </div>
+                            <span ng-show="limitval < MasterFieldsFilter().length" class="goldButton sm" ng-click="limitval=limitval + 25">Show more...</span>
+                            
+                            
+                            <!--<input ng-model="limitval" type="number" class="ng-pristine ng-valid ng-touched"/>-->
+                            </div>
+                            
+                            </div>
+                            
+                        </div>
+                        
+                        
+                        
+                        <div class="sectionTitle expanderHeader" ng-click="ExpandedTab = 'RelatedLists'" ng-class="{expanderHeaderSelected : ExpandedTab == 'RelatedLists'}">
+                            Related Lists
+                        </div>
+                        <div class="expanderContent" ng-show="ExpandedTab == 'RelatedLists'">
+                        <div class="verticalScrollSection" style="height:100%;">
+                            <div ng-repeat="item in RelatedList" dnd-copied="Drop(item)" dnd-draggable="item" dnd-effect-allowed="copy" style="border-bottom: 1px black solid">
+                           
+                                   <div><strong>{{item.Name}}</strong></div>
+                                   <div style="font-size:12px" class="row" >
+                                       <div class="col-sm-6">
+                                           <label class="smallTextTitle" style="margin-bottom:0px;">Relationship Name</label>
+                                           <div>{{item.Label}}</div>
+                                       </div>
+                                       
+                                       <div class="col-sm-6">
+                                           <label class="smallTextTitle" style="margin-bottom:0px;">Lookup Field</label>
+                                           <div>{{item.Field}}</div>
+                                       </div>                                       
+                                      
+                                   </div>
+                                  
+
+                                                                   
+                           
+<!--                                {{item.Label}} -> {{item.Name}}-->
+                            </div>
+                        </div>
+                        </div>                        
+                    </div>
+
+
+
+                       
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        
+            
+    
+    <div class="regionContent ng-scope" ng-class="{ 'blurContent': Load }" ui-view="viewContent">
+        <div class="pageTitleContainer">
+            <div style="float: left;">                
+                <span class="pageTitleGray">Page Layout Config : </span> 
+                
+                
+                <span class="pageTitleBlack customerTitle">
+                    {{LayoutName}}
+                </span>
+            </div> 
+            
+            
+            
+            
+            <div class="pull-right">
+            
+            <span style="font-size:28px">
+             <ul dnd-list="[]" style="width:100px; list-style: none">            
+                <li><i class="fa fa-trash"></i></li>
+            </ul>
+            </span>
+            </div>
+            
+            <div class="pull-right" style="font-size:20px">
+            <span class="goldButton sm" ng-click="Save()"><i class="fa fa-floppy-o" style="margin-right:5px;"></i> Save </span>
+            </div>
+            
+            <div class="pull-right" style="font-size:20px">
+                <div class="alert alert-success" ng-show="SuccessMessage">
+                    {{SuccessMessage}}
+                </div>
+            </div>
+                       
+        </div>
+        
+        <div class="pageStructure">
+            <div class="pageContentContainer row " style="margin:0px;">
+                <div class="pageContentLeft col-sm-3" style="    height: calc(100% - 38px);
+    overflow-y: auto;">      
+                 
+                 
+                 
+                 
+                 
+                    <div class="expanderContainer">
+                        <div class="sectionTitle expanderHeader" ng-click="ExpandedTab = 'Configure'" ng-class="{expanderHeaderSelected : ExpandedTab == 'Configure'}">
+                            Configure - {{models.selected.type}}
+                        </div>
+                        <div class="expanderContent"  ng-show="ExpandedTab == 'Configure'">
+                             <!--<div class="verticalScrollSection" style="height:100%;">-->
+                        
+                        
+                            <div ng-show="!models.selected">
+                            Please select an item to configure it
+                            </div>
+                        
+                        
+                        
+                            <div ng-show="models.selected.type" ng-include="models.selected.type + '_setting.html'" style="height:100%;">
+                            
+                            </div>
+                            <!--</div>-->
+                        </div>
+                    
+                        <div class="sectionTitle expanderHeader" ng-click="ExpandedTab = 'Components'" ng-class="{expanderHeaderSelected : ExpandedTab == 'Components'}">
+                            Components
+                        </div>
+                        <div class="expanderContent verticalScroller" ng-show="ExpandedTab == 'Components'">
+                           
+                                <ul>
+                                    <!-- The toolbox only allows to copy objects, not move it. After a new
+                                         element was created, dnd-copied is invoked and we generate the next id -->
+                                         
+                                         <!-- dnd-copied="item.id = item.id + 1" -->
+                                    <li ng-repeat="item in models.templates" 
+                                        dnd-draggable="item"
+                                        dnd-effect-allowed="copy"
+                                       dnd-copied="Drop(item)"                
+                                        >   
+                                        <span class="btn btn-danger btn-sm" style="width:100px;" disabled="disabled"><i class="fa fa-table"></i> {{item.label}}</span>
+                                    </li>
+                                </ul>
+                        </div>
+                    
+                        <div class="sectionTitle expanderHeader" ng-click="ExpandedTab = 'MasterFields'" ng-class="{expanderHeaderSelected : ExpandedTab == 'MasterFields'}">
+                            Master Fields - {{FieldData.length}}
+                        </div>
+                        <div class="expanderContent " ng-show="ExpandedTab == 'MasterFields'">
+                        
+                      
+                            <div class="expanderHeaderSelected" style="margin:0px;">
+                            
+                                 <div class="row">
+                                      <div class="col-sm-12">
+                                          <!--<select class="form-control" ng-options="rf.fieldname for rf in RelatedFields" />-->
+                                          <select class="form-control" ng-model="SelectedMaster">
+                                              <option ng-repeat="rr in MasterFields" value="{{rr.fieldname}}">{{rr.objectname}} - {{rr.fieldname}}</option>
+                                          </select>
+                                      </div>
+                                  </div>      
+                            
+                            
+                            <div class="row">
+                                <div class="col-sm-8">                                    
+                                    <input placeholder="Filter" class="form-control ng-pristine ng-valid ng-touched" ng-model="fieldFilter"/>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="goldButton" ng-click="ToggleFilter()">
+                                        <span ng-show="apiorname == 'name'">Label</span>
+                                        <span ng-show="apiorname == 'api'">Api Name</span>
+                                    </label> 
+                                </div>
+                            </div>    
+                            </div>                       
+                        
+                        <div style="padding-left:5px;">
+                            <span class="smallTextTitle" ng-show="limitval  > MasterFieldsFilter().length">Showing {{MasterFieldsFilter().length }} of {{MasterFieldsFilter().length}}</span>
+                            <span class="smallTextTitle" ng-show="limitval  < MasterFieldsFilter().length">Showing {{limitval }} of {{MasterFieldsFilter().length}}</span>
+                        </div>
+                        
+                            <div class="verticalScrollSection" style="height:calc(100% - 90px)">
+                            <div style="display:inline-block" class="ng-binding" ng-init="apiorname='api';limitval =25; ">
+                           
+                    
+                            
+                            
+                            <div ng-repeat="field in MasterFieldsFilter() | limitTo:limitval" >
+        
+        
+        
+        
+          <span class="smallText" dnd-copied="Drop(field)" dnd-draggable="field" dnd-effect-allowed="copy" ng-show="apiorname=='name'">{{field.label}}</span>
+          <span class="smallText" dnd-copied="Drop(field)" dnd-draggable="field" dnd-effect-allowed="copy" ng-show="apiorname=='api'">{{field.apiname}}</span>
+            
+                    
+        </div>
+                            <span ng-show="limitval < MasterFieldsFilter().length" class="goldButton sm" ng-click="limitval=limitval + 25">Show more...</span>
+                            
+                            
+                            <!--<input ng-model="limitval" type="number" class="ng-pristine ng-valid ng-touched"/>-->
+                            </div>
+                            
+                            </div>
+                            
+                        </div>
+                        
+                        
+                        
+                        <div class="sectionTitle expanderHeader" ng-click="ExpandedTab = 'RelatedLists'" ng-class="{expanderHeaderSelected : ExpandedTab == 'RelatedLists'}">
+                            Related Lists
+                        </div>
+                        <div class="expanderContent" ng-show="ExpandedTab == 'RelatedLists'">
+                        <div class="verticalScrollSection" style="height:100%;">
+                            <div ng-repeat="item in RelatedList" dnd-copied="Drop(item)" dnd-draggable="item" dnd-effect-allowed="copy" style="border-bottom: 1px black solid">
+                           
+                                   <div><strong>{{item.Name}}</strong></div>
+                                   <div style="font-size:12px" class="row" >
+                                       <div class="col-sm-6">
+                                           <label class="smallTextTitle" style="margin-bottom:0px;">Relationship Name</label>
+                                           <div>{{item.Label}}</div>
+                                       </div>
+                                       
+                                       <div class="col-sm-6">
+                                           <label class="smallTextTitle" style="margin-bottom:0px;">Lookup Field</label>
+                                           <div>{{item.Field}}</div>
+                                       </div>                                       
+                                      
+                                   </div>
+                                  
+
+                                                                   
+                           
+<!--                                {{item.Label}} -> {{item.Name}}-->
+                            </div>
+                        </div>
+                        </div>                        
+                    </div>
+                </div>                
+                
+                <div class="pageContentRight col-sm-9 ">
+               
+                
+                
+                    <div class="editPanel">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label class="smallTextTitle">Base Object</label>
+                                <div>{{BaseObject}}</div>                                
+                            </div>
+                            <div class="col-sm-3">
+                                <label class="smallTextTitle">Layout Name</label>
+                                <div><input class="form-control" ng-model="LayoutName"/></div>                                
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="smallTextTitle">Description</label>
+                                <div><input class="form-control" ng-model="Description"/></div>                                
+                            </div>
+                        </div>
+                    </div>
+              
+                
+                    <div class="rightScroll layoutPanel">
+                     <div class="row">
+                        <div ng-repeat="(zone, list) in models.headerzone" class="col-sm-12">
+                            <div class="dropzone box box-yellow">
+                                <!-- The dropzone also uses the list template -->
+                                <h3>Header</h3>
+                                <div ng-include="'list.html'"></div>
+                            </div>
+                        </div>
+                    </div>
+                
+                
+                    <div class="row">
+                        <div ng-repeat=" list in models.dropzones" class="col-sm-12" >
+                            <div class="dropzone box box-yellow">
+                                <!-- The dropzone also uses the list template -->
+                                <h3>Dropzone - <input style="color:black;" type="text" ng-model="list.label"/></h3><button type="button" ng-click="MoveZoneUp($index)">Up</button><button type="button" ng-click="MoveZoneDown($index)">Down</button><button type="button" ng-click="DeleteZone($index)">Delete</button>
+                                <div ng-include="'zlist.html'"></div>
+                            </div>
+                        </div>
+                        
+                        <button type="button" ng-click="AddZone()">Add Zone</button>
+                        
+<!--                        <button type="button" ng-click="models.dropzones.push({'label':'new zone', 'items':[]})">Add Zone</button>-->
+                    </div>
+                    
+                    
+                    </div>
+                </div>
+            </div>
+        </div><!-- End pageStructure -->
+        
+      <div class="footerBar">
+      
+            <div class="barContentRight">
+                <img class="footerLogo" src="/resource/1457108009000/Teller_Includes/Teller_Includes/media/logo_title.png"/>
+            </div>
+        </div>
+        
+    </div>
+
+        <c:Page_Layout_Contrainer_Templates /> 
+
+</body>
+</html>
+</apex:page>

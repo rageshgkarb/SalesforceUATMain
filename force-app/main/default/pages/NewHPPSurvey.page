@@ -1,0 +1,119 @@
+<apex:page standardController="CSI_Record__c" >
+
+
+
+
+    <apex:form >
+        <apex:pageBlock >
+        
+          <h1>HPP Survey</h1>
+          <div></div>       
+          We would appreciate if you can take 5 minutes to provide your feedback concerning your recent Home Purchase Plan with IBB. Your opinions will help us ensure we provide the best service we can and understand any challenges you may have had.
+         
+          <div></div>
+          <apex:pageBlockSection >
+              <apex:inputField label="Name of Customer" value="{!CSI_Record__c.Name_of_Customer__c}"/>
+              <apex:inputField label="HPP Opportunity" value="{!CSI_Record__c.HPP_Customer_Name__c}"/>
+          </apex:pageBlockSection>
+          <apex:pageBlockSection title="STAGE 1 - INITIAL ELIGIBLITY CONTACT" columns="1">
+              <apex:inputField label="Q1 - Have you ever applied for Home Finance with a provider other than IBB?" value="{!CSI_Record__c.Q1__c}"/>
+              <apex:inputField label="Q2 - How easy was it for you to contact IBB when you decided to raise finance for your home? Please answer using a 5 point scale where 5 is very easy, 4 is easy, 3 is unsure, 2 is difficult and 1 is very difficult." value="{!CSI_Record__c.Q2__c}"/>
+              <apex:outputText value="Q3 - Please specify how much you agree with the following statements concerning your contact with personnel at IBB? Please answer using a 5 point scale where 5 is you definitely agree, 4 is agree , 3 is unsure, 2 is do not agree and 1 is do not agree at all."/>
+              <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="a.   The information provided by the staff at IBB on the Home Purchase Plan products was helpful" for="Q3a"/>
+                    <apex:inputField value="{!CSI_Record__c.Q3a__c}" id="Q3a"/> 
+                </apex:pageBlockSectionItem>
+              <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="b.   The website details concerning the Home Purchase Plan products was helpful" for="Q3b" />
+                    <apex:inputField value="{!CSI_Record__c.Q3b__c}" id="Q3b"/> 
+                </apex:pageBlockSectionItem>
+              <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="c.   The initial eligibility process with the staff member you spoke to was easy to understand and follow" for="Q3c"/>
+                    <apex:inputField value="{!CSI_Record__c.Q3c__c}" id="Q3c"/> 
+                </apex:pageBlockSectionItem>
+              <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="d.   After meeting the IBB eligibility the appointment with the HPP specialist was arranged in a timely manner" for="Q3d"/>
+                    <apex:inputField value="{!CSI_Record__c.Q3d__c}" id="Q3d"/> 
+                </apex:pageBlockSectionItem>
+              <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="e.   The appointment process for your Agreement in Principle/Application with IBB was straightforward" for="Q3e"/>
+                    <apex:inputField value="{!CSI_Record__c.Q3e__c}" id="Q3e"/> 
+                </apex:pageBlockSectionItem>
+              
+              
+              
+              
+              <apex:inputField label="Q4 - What is your overall satisfaction with the initial eligibility contact stage with IBB?  Please answer using a 0 to 10 scale where 10 is you are totally satisfied, 5 is unsure and 0 is not at all satisfied." value="{!CSI_Record__c.Q4__c}"/>
+              
+             
+              <apex:outputText value="If the customer gave a score of 0-5 for Q4 ask Q4a and Q4b otherwise go to Q5" style="color:red"/>
+              
+              
+              <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Q4a - What were your main causes of dissatisfaction?" for="Q4a" style="color:red"/>
+
+                    <apex:inputField value="{!CSI_Record__c.Q4a__c}" id="Q4a"/> 
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Q4b - How do you consider this situation should be improved?" for="Q4b" style="color:red"/>
+                    <apex:inputField value="{!CSI_Record__c.Q4b__c}" id="Q4b"/> 
+                </apex:pageBlockSectionItem>
+              
+              <apex:outputText value="If the customer selected yes for Q1 ask Q5 otherwise go to Q6" style="color:red"/>
+              
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Q5 - Regarding your experience with IBB, how does the initial eligibility contact compare to the experience with other financial service providers? Please answer on a 5 point scale where 5 is IBB was much better, 4 is IBB was better, 3 is the same, 2 is IBB was worse and 1 is IBB was much worse." for="Q5" style="color:red"/>
+                    <apex:inputField value="{!CSI_Record__c.Q5__c}" id="Q5"/> 
+                </apex:pageBlockSectionItem>
+                
+          </apex:pageBlockSection>
+          <apex:pageBlockSection title="STAGE 2 - APPLICATION" columns="1">
+              <apex:outputText style="font-weight:800" value="Moving on to your actual application, we now consider how IBB dealt with your application once it had been submitted with supporting documents."/>
+              <apex:inputField label="Q6 - When you submitted your application and documents to your HPP Specialist/BDM, how many days do you estimate did it took for IBB to approve your application?" value="{!CSI_Record__c.Q6__c}"/>
+              <apex:inputField label="Q7 - Did IBB ask you to provide further information to assess your application before it was approved?" value="{!CSI_Record__c.Q7__c}"/>
+              <apex:inputField label="Q8 - Once your case was approved how many days do you estimate it took for you to receive the Valuation report?" value="{!CSI_Record__c.Q8__c}"/>
+              <apex:outputText value="Q9 - How satisfied were you with the following? Please answer using a 0 to 10 scale where 10 is you are totally satisfied, 5 is unsure and 0 is not at all satisfied."/>
+              <apex:inputField label="a.   The amount of time it took for IBB to make a decision approving your case" value="{!CSI_Record__c.Q9a__c}"/>
+              <apex:inputField label="b.   The amount of time it took for you to receive the Valuation report" value="{!CSI_Record__c.Q9b__c}"/>
+              <apex:outputText value="If the customer gave a score of 0-5 for Q9a or Q9b ask Qc otherwise go to Q10" style="color:red"/>
+             
+          
+          <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="c.  What do you consider would have been a reasonable number of days?" for="Q9c" style="color:red"/>
+                    <apex:inputField value="{!CSI_Record__c.Q9c__c}" id="Q9c"/> 
+                </apex:pageBlockSectionItem>
+           <apex:outputText value="If the customer selected yes for Q1 ask Q10 otherwise go to Q11" style="color:red"/>
+          <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Q10 - Regarding your experience with IBB, how does the application stage compare to the experience with other financial service providers? Please answer on a 5 point scale where 5 is IBB was much better, 4 is IBB was better, 3 is the same, 2 is IBB was worse and 1 is IBB was much worse." for="Q10" style="color:red"/>
+                    <apex:inputField value="{!CSI_Record__c.Q10__c}" id="Q10"/> 
+                </apex:pageBlockSectionItem>
+          
+          </apex:pageBlockSection>
+          
+          <apex:pageBlockSection title="STAGE 3 - OFFER AND DEALING WITH SOLICITORS" columns="1">
+              <apex:outputText style="font-weight:800" value="We will now consider your experience with IBB producing your offer letter and your experience
+with the solicitors dealing with your application
+"/>
+              <apex:inputField label="Q11 - Did IBB meet your expectations in producing the offer letter? Please answer using a 5 point scale where 5 is exceeded expectations, 4 is met expectations, 3 is unsure, 2 is slightly failed to meet expectations  and 1 totally failed to meet expectations." value="{!CSI_Record__c.Q11__c}"/>
+             
+              <apex:outputText value="If the customer gave a score of 1-3 for Q11 ask Q11a otherwise go to Q12" style="color:red"/>
+                           
+          
+          <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Q11a - How did IBB not meet your expectations?" for="Q11a" style="color:red"/>
+                    <apex:inputField value="{!CSI_Record__c.Q11a__c}" id="Q11a"/> 
+                </apex:pageBlockSectionItem>
+           <apex:inputField label="Q12 - How clear was the offer letter? Please answer using a 5 point scale where 5 is very clear, 4 is clear, 3 is unsure, 2 is confusing and 1 is very confusing." value="{!CSI_Record__c.Q12__c}"/>
+           <apex:inputField label="Q13 - Did you discuss the offer letter with your solicitor?" value="{!CSI_Record__c.Q13__c}"/>
+           <apex:inputField label="Q14 - Did your own Solicitor receive their copy of the offer letter promptly?" value="{!CSI_Record__c.Q14__c}"/>
+           <apex:inputField label="Q15 - Did you use one of IBB’s panel of solicitors who are experienced in Islamic Finance for your Home Purchase?" value="{!CSI_Record__c.Q15__c}"/>
+          
+          
+          </apex:pageBlockSection>
+          
+          <apex:pageBlockSection >
+              <apex:commandButton value="Save" action="{!save}"/>
+          </apex:pageBlockSection>  
+      </apex:pageBlock>
+    </apex:form>
+</apex:page>

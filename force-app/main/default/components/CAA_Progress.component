@@ -1,0 +1,102 @@
+<apex:component layout="none">
+    <apex:attribute name="Stage" description="The stage that the application is at" required="true" type="Integer"/>
+    
+    
+    
+    <div class="your-progress">    
+        <div class="your-progress-title">
+            Your progress
+        </div>
+    
+    
+        
+    <apex:outputPanel layout="none" rendered="{!Stage == 1}" > 
+        <div class="your-progress-items">
+        <ul class="your-progress-stages list-unstyled">
+            <li class="your-progress-active">1</li> 
+            <li class="your-progress-next">2</li>    
+            <li class="your-progress-next">3</li>    
+            <li class="your-progress-next">4</li>
+            <li class="your-progress-next">5</li>
+        </ul>
+        </div>
+        <div class="your-progress-desc">
+        <!--C0750: CAA Quick Wins Starts-->
+            <p>Stage 1 <span style="color:rgb(179,153,93)">(of 5)</span></p>
+        <!--C0750: CAA Quick Wins Ends-->           
+        </div>
+    </apex:outputPanel>    
+    
+    <apex:outputPanel layout="none" rendered="{!Stage == 2}" > 
+        <div class="your-progress-items">
+        <ul class="your-progress-stages list-unstyled">
+            <li class="your-progress-complete">1</li> 
+            <li class="your-progress-active">2</li>    
+            <li class="your-progress-next">3</li>    
+            <li class="your-progress-next">4</li> 
+            <li class="your-progress-next">5</li> 
+        </ul>
+        </div>
+        <div class="your-progress-desc">
+        <!--C0750: CAA Quick Wins Starts-->
+            <p>Stage 2 <span style="color:rgb(179,153,93)">(of 5)</span></p>       
+        <!--C0750: CAA Quick Wins Ends-->    
+        </div>     
+    </apex:outputPanel> 
+    
+    <apex:outputPanel layout="none" rendered="{!Stage == 3}" > 
+        <div class="your-progress-items">
+        <ul class="your-progress-stages list-unstyled">
+            <li class="your-progress-complete">1</li> 
+            <li class="your-progress-complete">2</li>    
+            <li class="your-progress-active">3</li>    
+            <li class="your-progress-next">4</li> 
+            <li class="your-progress-next">5</li>   
+        </ul>
+        </div>
+        <div class="your-progress-desc">
+        <!--C0750: CAA Quick Wins Starts-->
+            <p>Stage 3 <span style="color:rgb(179,153,93)">(of 5)</span></p>       
+        <!--C0750: CAA Quick Wins Ends-->    
+        </div>   
+    </apex:outputPanel> 
+    
+    <apex:outputPanel layout="none" rendered="{!Stage == 4}" >
+        <div class="your-progress-items"> 
+        <ul class="your-progress-stages list-unstyled">
+            <li class="your-progress-complete">1</li> 
+            <li class="your-progress-complete">2</li>    
+            <li class="your-progress-complete">3</li>    
+            <li class="your-progress-active">4</li>
+            <li class="your-progress-next">5</li>  
+        </ul>
+        </div>
+        <div class="your-progress-desc">
+        <!--C0750: CAA Quick Wins Starts-->
+            <p>Stage 4 <span style="color:rgb(179,153,93)">(of 5)</span></p>       
+        <!--C0750: CAA Quick Wins Ends-->    
+        </div>     
+    </apex:outputPanel> 
+
+    <apex:outputpanel layout="none" rendered="{!Stage == 5}">
+        <div class="your-progress-items">
+            <ul class="your-progress-stages list-unstyled">
+                <li class="your-progress-complete">1</li>
+                <li class="your-progress-complete">2</li>
+                <li class="your-progress-complete">3</li>
+                <li class="your-progress-complete">4</li>
+                <li class="your-progress-active">5</li>
+            </ul>
+        </div>
+        <div class="your-progress-desc">
+        <!--C0750: CAA Quick Wins Starts-->
+            <p>Stage 5 <span style="color:rgb(179,153,93)">(of 5)</span></p>
+        <!--C0750: CAA Quick Wins Ends-->    
+        </div>
+    </apex:outputpanel> 
+        
+        
+    
+    </div>
+    
+</apex:component>

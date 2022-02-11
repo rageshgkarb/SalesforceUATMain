@@ -1,0 +1,358 @@
+<apex:page >
+    <apex:includeScript value="{!URLFOR($Resource.JQuery, 'jquery-1.11.3.min.js')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.BootstrapInside)}" />
+    <apex:stylesheet value="{!URLFOR($Resource.FontAwesome_4_5_0, '/css/font-awesome.min.css')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Angular_1_3_11, 'angular.min.js')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.Angular_1_3_11, 'angular-animate.min.js')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.Angular_1_3_11, 'angular-sanitize.js')}"  />
+    <apex:includeScript value="{!URLFOR($Resource.Angular_1_3_11, 'angular-messages.js')}"  />
+    
+    <apex:includeScript value="{!URLFOR($Resource.ngbootstrap)}" />
+    <apex:includeScript value="{!URLFOR($Resource.roundProgress)}" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800" rel="stylesheet"/>
+    
+    <c:Docugen_NgApp ></c:Docugen_NgApp>
+    
+    <style type="text/css">
+        
+        
+        @font-face {
+        font-family: 'Oswald';
+        src: url('{!URLFOR($Resource.OswaldRegular)}') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+        }
+        @font-face {
+        font-family: 'Oswald';
+        src: url('{!URLFOR($Resource.OswaldLight)}') format('truetype');
+        font-weight: normal;
+        font-style: italic;
+         }
+        @font-face {
+        font-family: 'Oswald';
+        src: url('{!URLFOR($Resource.OswaldBold)}') format('truetype');
+        font-weight: bold;
+        font-style: normal;
+        }
+        
+        h3{
+            display:block;
+        }
+        
+        
+        .inner-body{
+            width:100%;
+        }
+        
+        .docugen{
+            width:100%;
+            font-family:Open Sans;
+        }
+        
+        
+        
+        .flx-table{
+            display:table;
+            width:100%;
+            border-collapse: collapse;
+            position:relative;
+        }
+        
+        .flx-table .flx-thead{
+            display:table-head;
+            width:100%;
+        }
+        
+        .flx-table .flx-tbody{
+            display:table-body;
+            width:100%;
+        }
+        
+        .flx-table .flx-tr{
+            display:table-row;
+            width:100%;
+            border:1px solid #c0c0c0;
+            
+        }
+        
+        .flx-table .flx-tr.even{
+            background-color:#f0f0f0;
+        }
+        
+        .flx-table .flx-tr:hover{
+            background-color:#CFEEF8;
+        }
+        
+        .flx-table .flx-tr.head{
+            background-color:#c0c0c0;
+        }
+        
+        .flx-table .flx-colgroup{
+            display:table-column-group;
+        }
+        
+        .flx-table .flx-col{
+            display:table-column;
+        }
+        
+        .flx-table .flx-td,.flx-table .flx-th,.flx-table span{
+            display:table-cell;
+            width:24%;
+            padding:10px;
+            overflow:hidden;
+            max-width:300px;
+        }
+        
+        .flx-table .flx-caption{
+            display:table-caption;
+        }
+        
+        .add-btn,.remove-btn{
+            cursor:pointer;
+        }
+        
+        i.fa{
+            line-height:auto !important;
+        }
+        
+        input.ng-invalid {
+            border:1px solid #FF4500 !important;
+        }
+        
+        .input-icon{
+            position:absolute;
+            right:10px;
+            top:10px;
+            color:#FF4500;
+        }
+        
+        .input-icon .fa-exclamation-triangle
+        {
+            color:#FF4500;
+        }
+        
+        .input-icon .fa-check
+        {
+            color:#1797C0; 
+        }        
+        
+        .input-with-icon{
+            position:relative;
+            display:inline-block;
+            width:100%
+        }
+        
+        .signal {
+            border: 5px solid #333;
+            border-radius: 30px;
+            height: 30px;
+            left: 50%;
+            margin: -15px 0 0 -15px;
+            opacity: 0;
+            position: absolute;
+            top: 50%;
+            width: 30px;
+         
+            animation: pulsate 1s ease-out;
+            animation-iteration-count: infinite;
+        }
+        
+        @keyframes pulsate {
+            0% {
+                transform: scale(.1);
+                opacity: 0.0;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+        
+        .modal-body{
+            min-height:150px;
+        }
+        
+        .ng-hide {
+          opacity: 0;
+        }
+        
+        .ng-hide-remove,
+        .ng-hide-add {
+        /*display: inline-block !important;*/
+        }
+        
+        .ng-hide-remove {
+          transition: all linear 100ms;
+        }
+        
+        .ng-hide-add {
+          transition: all linear 200ms;
+        }
+        
+        .panel-brown{
+          background-color:#F2EDE9 !important;
+          border-color: #ddd !important;
+        }
+        
+        .btn-primary{
+            background-color:#B3995D !important;
+            color:#fff !important;
+            border-color:#B3995D !important;
+            
+        }
+        
+        .btn-primary:hover{
+            background-color:#A58B52 !important;
+        }
+        
+        .state-icon {
+            left: -5px;
+        }
+        
+        .list-group-item:hover{
+            background:#E0C68D;
+            color:#fff;
+        }
+        
+        .list-group-item-primary {
+            color: rgb(255, 255, 255);
+            background-color: #B3995D !important;
+        }
+        
+        .checkbox{
+            cursor:pointer;
+        }
+        
+        .checkbox input[type=checkbox]{
+            top:6px !important;
+        }
+        
+        .input-with-icon .dropdown-menu{
+            height:400px;
+            overflow-y:scroll;
+        }
+        
+        .dropdown-toggle{
+            padding:10px !important;
+            border:0 !important;
+            color:#707070 !important;
+        }
+        
+        .uib-dropdown-menu .form-control{
+            width:200px !important; 
+        }
+        
+        .uib-dropdown-menu li{
+            margin:0 !important;
+            padding:10px !important;
+        }
+        
+        .templateList li{
+            margin:0 !important;
+        }
+        
+        h4{
+            display:block;
+            margin-bottom:10px;
+        }
+        
+        h3{
+            font-family:Open Sans !important;
+            font-weight: 700!important;
+        }
+        
+        .card-holder .card i{
+            font-size:20px;
+            float:left;
+            position:absolute;
+            top:5px;
+            left:5px;
+        }
+        
+        
+        
+        .card-holder .card{
+            padding:5px;
+            margin:5px 10px;
+            border:1px solid #c0c0c0;
+            width:200px;
+            display:inline-block;
+            background-color:#fff;
+            position:relative;    
+            color:#101010;
+            
+            
+            -webkit-box-shadow: 1px 1px 1px 0px rgba(163,163,163,1);
+            -moz-box-shadow: 1px 1px 1px 0px rgba(163,163,163,1);
+            box-shadow: 1px 1px 1px 0px rgba(163,163,163,1);
+             
+        }
+        
+        .card-holder{
+            /*border-top:1px solid #c0c0c0;*/
+        }
+        
+        .card-holder .card-hide{
+            color:#fff !important;
+            visibility:hidden;
+        }
+        
+        .card-holder .card:hover{
+            background-color:#F2ECDE;
+        }
+        
+        .card-holder a{
+            margin:5px 10px;
+            width:200px;
+            display:inline-block;
+        }
+        
+        .card-holder table{
+            width:200px;
+        }
+        
+        .card-holder .card td{
+            padding:5px;
+        }
+        
+        .top-border{
+            border-top:solid 1px #c0c0c0;
+        }
+        
+        .list-group-item .badge
+        {
+            border-radius:0;
+            padding:5px 6px;
+            margin-top:-3px;
+            display:inline-block;
+            background-color:#c0c0c0;
+            border: 1px #303030 solid;
+            color:#303030;
+            font-family:Open Sans;
+        }
+        
+        .list-group-item{
+            border-radius:0;
+        }
+        
+        .round-progress-wrapper{
+            font-family:Oswald;
+        }
+        
+        a{
+            cursor:pointer;
+        }
+        
+        a.disabled{
+            cursor:default;
+            text-decoration:none !important;
+            color:#000 !important;
+        }
+        
+    </style>
+    
+    <div class="bootstrap-container"  ng-app="docugenApp">
+        <div class="inner-body">
+            <apex:insert name="body" />
+        </div>
+    </div>
+</apex:page>

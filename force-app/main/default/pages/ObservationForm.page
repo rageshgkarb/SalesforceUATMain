@@ -1,0 +1,221 @@
+<apex:page controller="ObservationForm_Controller"  showChat="false" showHeader="false" showQuickActionVfHeader="false" sidebar="false" docType="html-5.0">
+   <body style="brightGreyBack ng-scope  ext-webkit ext-chrome">
+    <c:KendoResource ></c:KendoResource>
+    <style>
+    .SectionHeader{
+        padding: 8px;
+        background-color: rgb(179,153,93);
+        color: rgb(255,255,255);
+        font-size: 18px;
+        margin-bottom: 3px;
+        margin-top: 36px;
+    }
+    .navbar {
+        background-image: -webkit-linear-gradient(#fff, #eee 50%, #e4e4e4);
+        background-image: -o-linear-gradient(#fff, #eee 50%, #e4e4e4);
+        background-image: linear-gradient(#fff, #eee 50%, #e4e4e4);
+        background-repeat: no-repeat;
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffe4e4e4', GradientType=0);
+        filter: none;
+        border: 1px solid #d5d5d5;
+        text-shadow: 0 1px 0 rgb(255 255 255 / 30%);
+        margin-right: auto;
+        margin-left: auto;
+    }
+    
+    .footer {
+        
+        bottom: 0;
+        width: 50%;
+        height: 60px;
+        background-color: rgb(237,237,237);
+        font-size: 15px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+    .container {
+        margin-right: auto;
+        margin-left: auto;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+        
+    .navbar-fixed-top, .navbar-fixed-bottom {
+        position: fixed;
+        right: 0;
+        left: 0;
+        z-index: 1030;
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+    }
+        
+        
+    .navbar-default {
+        background-color: #fff;
+        background-image: none;
+        height: 80px;
+    }
+    
+    .navbar-fixed-top {
+        top: 0;
+        border-width: 0 0 1px;
+    }
+    
+    .navbar {
+        position: relative;
+        min-height: 50px;
+        margin-bottom: 20px;
+        border: 1px solid transparent;
+    }
+    
+    .navbar-default {
+        background-color: #f8f8f8;
+        border-color: #e7e7e7;
+    }
+    
+    .navbar-fixed-top {
+        top: 0;
+        border-width: 0 0 1px;
+    }
+    
+    .navbar-fixed-top, .navbar-fixed-bottom {
+        position: fixed;
+        right: 0;
+        left: 0;
+        z-index: 1030;
+        -webkit-transform: translate3d(0,0,0);
+        -o-transform: translate3d(0,0,0);
+        transform: translate3d(0,0,0);
+    }
+    .redBtn2{
+         -moz-box-shadow: inset 0px 1px 0px 0px #b3995d;
+        -webkit-box-shadow: inset 0px 1px 0px 0px #b3995d;
+        box-shadow: inset 0px 1px 0px 0px #b3995d;
+        background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, #b3995d;), color-stop(1, #b3995d;) );
+        background: -moz-linear-gradient( center top, #b3995d; 5%, #b3995d; 100% );
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f24537', endColorstr='#c62d1f');
+        background-color: #b3995d;
+        -moz-border-radius: 3px;
+        -webkit-border-radius: 3px;
+        border-radius: 3px;
+        border: 1px solid #b3995d;
+        display: inline-block;
+        color: #ffffff;
+        font-family: arial;
+        font-size: 13px;
+        font-weight: bold;
+        padding: 4px 9px;
+        text-decoration: none;
+        /* text-shadow: 1px 1px 0px #810e05;
+    }
+    </style>
+    <!-- <apex:form id="formId">
+    
+        <div class="navbar navbar-default navbar-fixed-top arbHeader" style="width:70%">
+            <div class="container"><span id="j_id0:j_id1:j_id33"><span id="j_id0:j_id1:j_id34">
+                <img alt="Al Rayan Bank" class="navbar-brand" itemprop="logo" src="{!URLFOR($Resource.CorporateLogo)}" style="padding-right:80px;"/>
+                </span></span>
+           </div>
+           
+        </div>
+        
+        <div style="min-height:600px;padding-top:50px;width:70%" class="container" >
+              
+              
+                <div class="SectionHeader">
+                    Select Form 
+                </div> 
+                <br/>
+               
+                <apex:pagemessages ></apex:pagemessages>
+                
+                <b>Please select the form to Continue:</b><br/><br/>
+                <div>
+                    <apex:selectList value="{!formId}" size="1" styleClass="noKendo" style="width:500px;" multiselect="false" s>
+                        <apex:selectOptions value="{!FormDetails}"/>
+                    </apex:selectList>
+                </div><br/>
+                <apex:commandButton styleClass="redBtn2" value="Continue" action="{!continueToForm}" reRender="formId"/>
+           
+            
+         
+           
+            
+            <br/><br/><br/><br/>           
+            
+         
+        </div>
+        
+         
+       
+    </apex:form>-->
+    <head>
+        <!-- stylesheets -->
+        <apex:stylesheet value="https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.1/select2.css"/>
+        <apex:stylesheet value="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
+        
+        <style type="text/css">
+            body {
+            padding: 40px;
+            }
+        </style>
+        
+        <!-- scripts -->
+        <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.1/select2.js" />
+            
+        <script>    
+            $(document).ready(function(){
+                $('select[id$=select2id]').select2();
+            });
+        </script>
+    </head>
+    
+    
+    
+    <apex:form id="formId">
+    
+        <div class="navbar navbar-default navbar-fixed-top arbHeader" style="width:70%">
+            <div class="container"><span id="j_id0:j_id1:j_id33"><span id="j_id0:j_id1:j_id34">
+                <img alt="Al Rayan Bank" class="navbar-brand" itemprop="logo" src="{!URLFOR($Resource.CorporateLogo)}" style="padding-right:80px;"/>
+                </span></span>
+           </div>
+           
+        </div>
+        
+        <div style="min-height:600px;padding-top:50px;width:70%" class="container" >
+              
+              
+                <div class="SectionHeader">
+                    Select Form 
+                </div> 
+                <br/>
+               
+                <apex:pagemessages ></apex:pagemessages>
+                
+                <b>Please select the form to Continue:</b><br/><br/>
+                <div>
+            <apex:selectList value="{!formId}" size="1" styleClass="noKendo" style="width:500px;" multiselect="false" id="select2id">
+                <apex:selectOptions value="{!FormDetails}"/>
+            </apex:selectList></div><br/>
+                <apex:commandButton styleClass="redBtn2" value="Continue" action="{!continueToForm}" reRender="formId"/>
+           
+            
+         
+           
+            
+            <br/><br/><br/><br/>           
+            
+         
+        </div>
+      </apex:form>
+    <footer class="footer" style="width:70%">
+            <div class="container"><span id="j_id0:j_id1:j_id66">
+    <p class="text-muted">© Copyright 2021 Al Rayan Bank PLC
+                    <a href="https://www.alrayanbank.co.uk/privacy" target="_blank">Privacy and Security</a>&nbsp;|&nbsp;
+    <a href="https://www.alrayanbank.co.uk/cookies-policy" target="_blank">Cookie Policy</a>
+    </p></span>
+            </div>
+        </footer>
+    </body>
+</apex:page>

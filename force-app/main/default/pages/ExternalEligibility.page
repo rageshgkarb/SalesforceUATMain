@@ -1,0 +1,849 @@
+<apex:page standardstylesheets="false" controller="EligibilityController" sidebar="false" showheader="false" title="Applicant Eligibility" action="{!SetupExternal}">
+    <head>
+        <apex:stylesheet value="https://fast.fonts.net/cssapi/127ef530-1eee-4efb-8ebe-815719f876a3.css" />
+        <c:ExternalKendo ></c:ExternalKendo>
+        <apex:include pagename="pca__Component" />
+        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE10" />
+        <style>
+            #emailList {
+                padding-top: 10px;
+            }
+
+                #emailList li {
+                    display: inline;
+                    list-style-type: none;
+                    margin-left: 20px;
+                }
+
+            #formWrapper .header h1 {
+                margin-top: 0px;
+            }
+
+            #header {
+            }
+
+                #header h1 {
+                    margin-top: 0px;
+                    color: #162f61;
+                    font-size: 22pt;
+                    font-family: 'playfairdisplay', Arial, sans-serif;
+                    padding: 10px 10px 5px 10px;
+                    font-weight: bold;
+                }
+        </style>
+    </head>
+    <body>
+        <apex:form id="aForm">
+            <div id="headertop">
+
+                <c:LiabilitiesLogo ></c:LiabilitiesLogo>
+            </div>
+            <div id="formWrapper">
+
+                <div class="header">
+                    <h1>Eligibility Assessment</h1>
+                </div>
+                <div id="pageContent">
+                    <apex:outputpanel rendered="{!IsFirstPage}">
+                        <div class="inputArea">
+                            <apex:pagemessages />
+                            <h2>Product details</h2>
+                            <div class="gridLayoutContainer">
+                                <div>
+                                    <table class="gridLayout">
+                                        <tbody>
+                                            <tr>
+                                                <td class="labelCol"><apex:outputlabel value="Number of applicants" for="recent" /></td>
+                                                <td class="dataCol">
+                                                    <apex:selectlist style="width:200px;" value="{!Opp.Number_of_People_Applying__c }" id="recent" size="1">
+                                                        <apex:selectoption itemlabel="1" itemvalue="1"></apex:selectoption>
+                                                        <apex:selectoption itemlabel="2" itemvalue="2"></apex:selectoption>
+                                                        <apex:selectoption itemlabel="3" itemvalue="3"></apex:selectoption>
+                                                        <apex:selectoption itemlabel="4" itemvalue="4"></apex:selectoption>
+                                                    </apex:selectlist>
+                                                </td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="labelCol"><apex:outputlabel value="Product type" for="addInterest" /><span class="star">*</span></td>
+                                                <td class="dataCol"><apex:inputfield style="width:200px;" value="{!Opp.Interested_in__c}" id="addInterest" label="Interested in" styleclass="BTLSelect required" /></td>
+                                                <td class="status"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                    </apex:outputpanel>
+
+                    <apex:pageblock rendered="{!!IsFirstPage }">
+                        <apex:outputpanel rendered="{!Opp.StageName == 'Not Eligible - HPP' && !Completed   }">
+                            <div style="padding: 30px;font-size:13px;">
+                                <apex:outputpanel rendered="{!Opp.StageName == 'HPP -Eligible Opportunity' && !Completed   }">
+                                    <apex:commandbutton value="Complete Eligibility" action="{!CompleteAIP}" />
+                                </apex:outputpanel>
+
+                                <apex:outputpanel rendered="{!Opp.StageName == 'Not Eligible - HPP' && !Completed   }">
+                                    <apex:commandbutton value="Complete Eligibility" action="{!CompleteAIP}" rendered="false" />
+                                </apex:outputpanel>
+
+                                <div>
+                                    <p>Thank you for completing the HPP eligibility assessment.</p>
+                                    <p>Based on the information you have provided, our assessment is that you are not eligible for one of our HPP products for the following reasons:</p>
+                                </div>
+
+                                <apex:outputtext value="{!EligibleOutput}" escape="false" />
+                                <apex:image url="/servlet/servlet.ImageServer?id=01520000000fxB7&amp;oid=00D20000000MKv1&amp;lastMod=1266842218000" rendered="{!Opp.StageName == 'Not Eligible - HPP'}" />
+
+                            </div>
+                        </apex:outputpanel>
+                        <div class="inputArea">
+                            <apex:pagemessages />
+                            <apex:messages />
+                            <h2>Personal details</h2>
+                            <div class="gridLayoutContainer">
+                                <div>
+                                    <table class="gridLayout">
+                                        <tbody>
+                                            <tr>
+                                                <td class="labelCol">Title<span class="star">*</span></td>
+                                                <td class="dataCol">
+                                                    <apex:selectlist size="1" value="{!Title}" styleclass="salutation required" id="addTitle" required="false" label="Title">
+                                                        <apex:selectoptions value="{!Titles}" />
+                                                    </apex:selectlist>
+                                                </td>
+                                                <td class="status"></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="labelCol">
+                                                    First name<span class="star">*</span>
+                                                </td>
+                                                <td class="dataCol"><apex:inputtext value="{!FirstName}" id="addFirst" label="First name" /></td>
+                                                <td class="status"></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="labelCol">Last name<span class="star">*</span></td>
+                                                <td class="dataCol"><apex:inputtext value="{!Surname}" id="addLast" label="Last name" /></td>
+                                                <td class="status"></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="labelCol">Current address: country<span class="star">*</span></td>
+                                                <td class="dataCol"><apex:inputfield value="{!Applicant1.BillingCountry}" id="addrCountry" label="Current Address Country" /></td>
+                                                <td class="status"></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="labelCol">Current address: postcode</td>
+                                                <td class="dataCol"><apex:inputfield value="{!Applicant1.BillingPostalCode}" id="addrPostCode" required="false" label="Current address post code" /></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="labelCol">
+                                                    <apex:outputlabel for="addrStreet" value="Customer address" title="-Please key if unable to locate using postcode search">
+                                                        <img src="/s.gif" alt="Help-" class="helpIcon" />
+                                                    </apex:outputlabel>
+                                                </td>
+                                                <td class="dataCol"><apex:inputfield styleclass="required" value="{!Applicant1.BillingStreet}" id="addrStreet" label="Customer address" /></td>
+                                                <td class="status"></td>
+                                            </tr>
+
+
+                                            <tr>
+                                                <td class="labelCol">Current address: city<span class="star">*</span></td>
+                                                <td class="dataCol"><apex:inputfield styleclass="required" value="{!Applicant1.BillingCity}" id="addrCity" label="Current address city" /></td>
+                                                <td class="status"></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="labelCol">Phone<span class="star">*</span></td>
+                                                <td class="dataCol"><apex:inputfield styleclass="required" value="{!Applicant1.Home_Telephone_No__c}" id="addPhone" label="Phone" /></td>
+                                                <td class="status"></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="labelCol">Email<span class="star">*</span></td>
+                                                <td class="dataCol"><apex:inputfield styleclass="required email" value="{!Applicant1.PersonEmail}" id="addPersonEmail" label="Email" /> </td>
+                                                <td class="status"></td>
+
+                                            </tr>
+
+
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <apex:inputhidden id="addrHouseNo" value="{!Applicant1.Customer_Address_House_No__c}" />
+                        </div>
+
+                        <div class="inputAreaAlt">
+
+                            <apex:outputpanel rendered="{!Opp.Number_of_People_Applying__c > 0}">
+                                <div>
+                                    <h2>Applicant 1</h2>
+                                    <div class="gridLayoutContainer">
+                                        <table class="gridLayout">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="labelCol"></td>
+                                                    <td class="dataCol"></td>
+                                                    <td class="status"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="labelCol">Date of birth<span class="star">*</span></td>
+                                                    <td class="dataCol"><c:DateSelect2 date="{!Applicant1.Date_of_Birth__c}"></c:DateSelect2> </td>
+                                                    <td class="status"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="labelCol">Employment type<span class="star">*</span></td>
+                                                    <td class="dataCol"><apex:inputfield styleclass="required" value="{!Applicant1.Employment_Type__c}" /></td>
+                                                    <td class="status"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="labelCol">Have you had six months continuous employment or three years self-employment?<span class="star">*</span></td>
+                                                    <td class="dataCol"><apex:inputfield styleclass="required" value="{!Applicant1.X6_months_employment__c}" /> </td>
+                                                    <td class="status"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="labelCol">If self employed, do you have three years of accounts?<span class="star">*</span></td>
+                                                    <td class="dataCol"><apex:inputfield value="{!Applicant1.Do_you_have_2_years_of_accounts__c}" /></td>
+                                                    <td class="status"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="labelCol">Gross annual income<span class="star">*</span></td>
+                                                    <td class="dataCol"><apex:inputfield styleclass="required" value="{!Applicant1.Gross_Annual_Income__c}" /> </td>
+                                                    <td class="status"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="labelCol">Net monthly income (£)<span class="star">*</span></td>
+                                                    <td class="dataCol"><apex:inputfield styleclass="required" value="{!Applicant1.Net_Monthly_Income__c}" /> </td>
+                                                    <td class="status"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="labelCol">Total monthly financial commitments (£)<span class="star">*</span></td>
+                                                    <td class="dataCol"><apex:inputfield styleclass="required" value="{!Applicant1.Total_monthly_financial_commitments__c }" /></td>
+                                                    <td class="status"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </apex:outputpanel>
+
+
+                            <apex:outputpanel rendered="{!Opp.Number_of_People_Applying__c > 1}">
+                                <div>
+                                    <h2>Applicant 2</h2>
+                                    <div class="gridLayoutContainer">
+                                        <table class="gridLayout">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="labelCol"></td>
+                                                    <td class="dataCol"></td>
+                                                    <td class="status"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="labelCol">Date of birth<span class="star">*</span></td>
+                                                    <td class="dataCol"><c:DateSelect2 date="{!Applicant2.Date_of_Birth__c}"></c:DateSelect2> </td>
+                                                    <td class="status"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="labelCol">Employment type<span class="star">*</span></td>
+                                                    <td class="dataCol"><apex:inputfield styleclass="required" value="{!Applicant2.Employment_Type__c}" /></td>
+                                                    <td class="status"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="labelCol">Have you had 6 months continuous employment or 3 years self-employment?<span class="star">*</span></td>
+                                                    <td class="dataCol"><apex:inputfield styleclass="required" value="{!Applicant2.X6_months_employment__c}" /> </td>
+                                                    <td class="status"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="labelCol">If self employed, do you have three years of accounts?<span class="star">*</span></td>
+                                                    <td class="dataCol"><apex:inputfield value="{!Applicant2.Do_you_have_2_years_of_accounts__c}" /></td>
+                                                    <td class="status"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="labelCol">Gross annual income<span class="star">*</span></td>
+                                                    <td class="dataCol"><apex:inputfield styleclass="required" value="{!Applicant2.Gross_Annual_Income__c}" /> </td>
+                                                    <td class="status"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="labelCol">Net monthly income (£)<span class="star">*</span></td>
+                                                    <td class="dataCol"><apex:inputfield styleclass="required" value="{!Applicant2.Net_Monthly_Income__c}" /> </td>
+                                                    <td class="status"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="labelCol">Total monthly financial commitments (£)<span class="star">*</span></td>
+                                                    <td class="dataCol"><apex:inputfield styleclass="required" value="{!Applicant2.Total_monthly_financial_commitments__c }" /></td>
+                                                    <td class="status"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </apex:outputpanel>
+                            <apex:outputpanel rendered="{!Opp.Number_of_People_Applying__c > 2}">
+                                <div>
+                                    <h2>Applicant 3</h2>
+                                    <div class="gridLayoutContainer">
+                                        <table class="gridLayout">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="labelCol"></td>
+                                                    <td class="dataCol"></td>
+                                                    <td class="status"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="labelCol">Date of birth<span class="star">*</span></td>
+                                                    <td class="dataCol"><c:DateSelect2 date="{!Applicant3.Date_of_Birth__c}"></c:DateSelect2> </td>
+                                                    <td class="status"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="labelCol">Employment type<span class="star">*</span></td>
+                                                    <td class="dataCol"><apex:inputfield styleclass="required" value="{!Applicant3.Employment_Type__c}" /></td>
+                                                    <td class="status"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="labelCol">Have you had 6 months continuous employment or 3 years self-employment?<span class="star">*</span></td>
+                                                    <td class="dataCol"><apex:inputfield styleclass="required" value="{!Applicant3.X6_months_employment__c}" /> </td>
+                                                    <td class="status"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="labelCol">If self employed, do you have three years of accounts?<span class="star">*</span></td>
+                                                    <td class="dataCol"><apex:inputfield value="{!Applicant3.Do_you_have_2_years_of_accounts__c}" /></td>
+                                                    <td class="status"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="labelCol">Gross annual income<span class="star">*</span></td>
+                                                    <td class="dataCol"><apex:inputfield styleclass="required" value="{!Applicant3.Gross_Annual_Income__c}" /> </td>
+                                                    <td class="status"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="labelCol">Net monthly income (£)<span class="star">*</span></td>
+                                                    <td class="dataCol"><apex:inputfield styleclass="required" value="{!Applicant3.Net_Monthly_Income__c}" /> </td>
+                                                    <td class="status"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="labelCol">Total monthly financial commitments (£)<span class="star">*</span></td>
+                                                    <td class="dataCol"><apex:inputfield styleclass="required" value="{!Applicant3.Total_monthly_financial_commitments__c }" /></td>
+                                                    <td class="status"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </apex:outputpanel>
+
+                            <apex:outputpanel rendered="{!Opp.Number_of_People_Applying__c > 3}">
+                                <div>
+                                    <h2>Applicant 4</h2>
+                                    <div class="gridLayoutContainer">
+                                        <table class="gridLayout">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="labelCol"></td>
+                                                    <td class="dataCol"></td>
+                                                    <td class="status"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="labelCol">Date of birth<span class="star">*</span></td>
+                                                    <td class="dataCol"><c:DateSelect2 date="{!Applicant4.Date_of_Birth__c}"></c:DateSelect2> </td>
+                                                    <td class="status"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="labelCol">Employment type<span class="star">*</span></td>
+                                                    <td class="dataCol"><apex:inputfield styleclass="required" value="{!Applicant4.Employment_Type__c}" /></td>
+                                                    <td class="status"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="labelCol">Have you had 6 months continuous employment or 3 years self-employment?<span class="star">*</span></td>
+                                                    <td class="dataCol"><apex:inputfield styleclass="required" value="{!Applicant4.X6_months_employment__c}" /> </td>
+                                                    <td class="status"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="labelCol">If self employed, do you have three years of accounts?<span class="star">*</span></td>
+                                                    <td class="dataCol"><apex:inputfield value="{!Applicant4.Do_you_have_2_years_of_accounts__c}" /></td>
+                                                    <td class="status"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="labelCol">Gross annual income<span class="star">*</span></td>
+                                                    <td class="dataCol"><apex:inputfield styleclass="required" value="{!Applicant4.Gross_Annual_Income__c}" /> </td>
+                                                    <td class="status"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="labelCol">Net monthly income (£)<span class="star">*</span></td>
+                                                    <td class="dataCol"><apex:inputfield styleclass="required" value="{!Applicant4.Net_Monthly_Income__c}" /> </td>
+                                                    <td class="status"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="labelCol">Total monthly financial commitments (£)<span class="star">*</span></td>
+                                                    <td class="dataCol"><apex:inputfield styleclass="required" value="{!Applicant4.Total_monthly_financial_commitments__c }" /></td>
+                                                    <td class="status"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </apex:outputpanel>
+
+
+
+
+                        </div>
+
+
+
+                        <div class="inputArea">
+
+                            <div>
+                                <h2>Property details</h2>
+
+                                <div class="gridLayoutContainer">
+                                    <table class="gridLayout">
+                                        <tbody>
+                                            <tr>
+                                                <td class="labelCol">Property type<span class="star">*</span></td>
+                                                <td class="dataCol"><apex:inputfield styleclass="required" value="{!Opp.Property_type__c}" /></td>
+                                                <td class="status"></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="labelCol">Purpose of finance<span class="star">*</span></td>
+                                                <td class="dataCol"><apex:inputfield styleclass="required" value="{!Opp.Purpose_of_Finance__c}" /></td>
+                                                <td class="status"></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="labelCol">Purchase price/market value (£)<span class="star">*</span></td>
+                                                <td class="dataCol"><apex:inputfield styleclass="required" value="{!Opp.Purchase_price_market_value__c}" /></td>
+                                                <td class="status"></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="labelCol">Term of finance (years)<span class="star">*</span></td>
+                                                <td class="dataCol"><apex:inputfield styleclass="required" value="{!Opp.Term_of_Finance__c}" /></td>
+                                                <td class="status"></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="labelCol">Finance required (£)<span class="star">*</span></td>
+                                                <td class="dataCol"><apex:inputfield styleclass="required" value="{!Opp.Finance_Required__c}" /></td>
+                                                <td class="status"></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="labelCol">Please tick if you have a County Court Judgement or you are bankrupt</td>
+                                                <td class="dataCol"><apex:inputfield value="{!Opp.Have_you_ever_had_a_CCJ_or_been_bankrupt__c}" /></td>
+                                                <td class="status"></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="labelCol">Will the property be your main residence?<span class="star">*</span></td>
+                                                <td class="dataCol"><apex:inputfield styleclass="required" value="{!Opp.Will_the_property_be_the_main_residence__c }" /></td>
+                                                <td class="status"></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="labelCol">Is the primary applicant a first time buyer?<span class="star">*</span></td>
+                                                <td class="dataCol"><apex:inputfield styleclass="required" value="{!Opp.First_time_buyer__c}" /></td>
+                                                <td class="status"></td>
+                                            </tr>
+
+
+
+
+                                            <apex:outputpanel rendered="{!Opp.Interested_in__c == 'Buy To Let Purchase Plan'}">
+                                                <tr>
+                                                    <td class="labelCol">Do you currently own a property which you owned for more than 12 months?</td>
+                                                    <td class="dataCol"><apex:inputfield value="{!opp.Do_you_currently_own_a_property__c }" id="ownproperty" /></td>
+                                                    <td class="status"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="labelCol">Monthly rental income expected from this property</td>
+                                                    <td class="dataCol"><apex:inputfield value="{!Opp.Monthly_rental_income__c}" id="rental" /></td>
+                                                    <td class="status"></td>
+                                                </tr>
+                                            </apex:outputpanel>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+                        <div class="inputAreaAlt">
+
+                            <div>
+                                <!--Data protection changes-->
+                                <!--<h2>Use of your data</h2>-->
+                                <h2>Data protection and marketing consent</h2>
+                                <!--Data protection changes end-->
+                                <div class="gridLayoutContainer">
+                                    <table class="gridLayout">
+                                        <tbody>
+                                            <tr>
+                                                <td class="labelCol">Please confirm you are happy for Al Rayan Bank to hold your data to progress your account<span class="star">*</span></td>
+                                                <td class="dataCol"><apex:inputfield styleclass="required" value="{!Applicant1.Are_you_happy_for_IBB_to_hold_your_data__c}" id="addHappy" /></td>
+                                                <td class="status"></td>
+                                            </tr>
+                                        <!--Commented below Data protection changes-->
+                                          <!--  <tr>
+                                                <td class="labelCol">
+                                                    <a target="_blank" href="resource/1337159017000/MarketingConsent">Please click here to review how your data will be held and used by Al Rayan Bank</a>
+                                                </td>
+                                                <td colspan="2"></td>
+                                            </tr> -->
+                                            <!--Data protection changes end-->
+
+
+                                            <tr>
+                                                <td class="labelCol" colspan="2" Style="text-align:left;">
+                                                    <label>From time to time we’d also love to tell you about our Islamic financial services, products and any new offers that we think you’d be interested in based on the information we hold about you. If you would like to hear from us about these please tick the appropriate box(es) so we know how you would prefer us to contact you.</label>
+                                                </td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="labelCol" colspan="2">
+                                                    <div id="emailList">
+                                                        <ul>
+                                                            <!-- C0737 Start -->
+                                                            <li><apex:inputcheckbox value="{!HasNewsletter}" styleClass="HasNewsletter" onclick="onPrefClick()" /> E-Newsletter</li>                          
+                                                            <li><apex:inputcheckbox value="{!HasEmail}" title="Email" styleClass="HasEmail" onclick="onPrefClick()" />Email</li>
+                                                            <li><apex:inputcheckbox value="{!HasMail}" title="Post" styleClass="HasMail" onclick="onPrefClick()" />Post</li>
+                                                            <li><apex:inputcheckbox value="{!HasSMS}" title="SMS" styleClass="HasSMS" onclick="onPrefClick()" />SMS</li>
+                                                            <li><apex:inputcheckbox value="{!HasPhone}" title="Phone" styleClass="HasPhone" onclick="onPrefClick()" />Phone</li>
+                                                            <!-- C0737 End -->
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="labelCol" colspan="2" Style="text-align:left;">
+                                                    <label>If you would prefer not to hear from us with Al Rayan Bank marketing information and offers, please tick here:&nbsp;<!-- C0737 Start --><apex:inputcheckbox value="{!HasNone}" styleClass="HasNone" onclick="onNonPrefClick()" /><!-- C0737 End --> </label>
+                                                    <br/><label>You can change your preferences at any time, by writing to us at Al Rayan Bank, 24a Calthorpe Road, Edgbaston, Birmingham, B15 1RP.</label>
+                                                    <label>If you would like more information about how we use your information please click <a href="https://www.alrayanbank.co.uk/privacy" target="_blank">here</a></label>
+                                                </td>
+                                                <td></td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                                <!-- C0737 Start -->
+                            <apex:outputpanel rendered="{!IsMarketPrefSelected = 'No'}">
+                                <div style="background-color: rgb(235,94,80);color: #fff;padding: 20px;margin-top: 10px;">
+                                    Please select a marketing preference, we cannot proceed with your application without capturing this information.
+                                </div>
+                            </apex:outputpanel>
+                            <!-- C0737 End -->
+
+                        </div>
+
+
+                    </apex:pageblock>
+
+                    <div style="padding: 15px;">
+                        <table width="100%">
+                            <tr>
+                                <td>
+                                    <input id="btnClose" type="button" name="backButton" value="Close" style="display:none;" />
+                                </td>
+                                <td align="right">
+
+
+                                    <apex:commandbutton styleclass="redBtn" value="Next" action="{!changeNumApps}" rendered="{!IsFirstPage}" />
+                                    <apex:commandbutton styleclass="redBtn" value="Check Eligibility" action="{!check}" id="but" rendered="{!!IsFirstPage && !Completed}" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div>
+                        <table width="100%">
+                            <tr>
+                                <td valign="top"></td>
+                                <td valign="top"></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- footer
+                    <div style="background-color: #e31b1d; height: 30px;">
+
+                    </div>-->
+                </div>
+            </div>
+
+            <!--Privacy link changes-->
+            <!--C0675-->
+            <footer class="footer" style="text-align:center;">
+                <!--C0697-->
+                <c:Standard_Footer_Copyright_Links />
+            </footer>
+
+    </apex:form>
+
+    <script type="text/javascript">
+
+
+  $(document).ready(function() {
+
+     var getGroups = function()
+     {
+         var result = {};
+         $('[id$=DateValue]').each(function(i)
+         {
+            var day = $(this).parent().find('.DateDay').attr('name');
+            var month =$(this).parent().find('.DateMonth').attr('name');
+            var year = $(this).parent().find('.DateYear').attr('name');
+
+            result['fieldPair_' + i] = day+ ' ' + month + ' ' + year;
+         });
+         return result;
+     }
+
+jQuery.validator.addMethod("ukDate", function(value, element) {
+    return Date.parseExact(value, "d/M/yyyy");
+    },
+    "Please enter a date in the format dd/mm/yyyy."
+);
+
+
+jQuery.validator.addMethod("ukDate2", function(value, element) {
+
+        var day = $(element).parent().find('.DateDay').val();
+        var month =$(element).parent().find('.DateMonth').val();
+        var year = $(element).parent().find('.DateYear').val();
+
+        var dateValue = day + '/' + month + '/' + year;
+
+    return Date.parseExact(dateValue , "d/M/yyyy");
+    },
+    "Please enter a date in the format dd/mm/yyyy."
+);
+
+
+
+
+    // validate signup form on keyup and submit
+    $("form[id$='aForm']").validate({
+
+
+    groups: getGroups(),
+
+    success: function(label){
+        label.html("&nbsp;").addClass("evCompleted");
+    },
+
+            errorPlacement: function(error, element) {
+
+            var par = element.parent();
+
+
+
+
+                var td1 = element.parent("td");
+                var td2 = $(td1).next("td.status");
+
+                if(td1.length == 0)
+                {
+                    error.appendTo( element.parent().parent("td").next("td.status") );
+                }
+                else
+                {
+
+                error.appendTo( td2 );
+                }
+
+
+
+
+            }
+
+
+    });
+
+    $('[id$=addFirst]').rules("add",{
+         required: true
+     });
+
+      $('[id$=addLast]').rules("add",{
+         required: true
+     });
+
+
+
+
+
+     /*$('[id$=DateValue]').rules("add",{ukDate: true});*/
+
+     $('[id$=DateDay]').rules("add",{ukDate2: true});
+     $('[id$=DateMonth]').rules("add",{ukDate2: true});
+     $('[id$=DateYear]').rules("add",{ukDate2: true});
+
+
+
+
+
+
+     /* $('[id$=dateOB1]').val('01/01/1980'); */
+
+
+
+
+
+jQuery.validator.messages.required = "Please enter a value";
+
+});
+
+  $('input').keyup(function(){
+    if(!$(this).valid()){
+
+        $(this).parent("td").next("td.status").find("label").removeClass("evCompleted");
+
+        return false;
+    }
+});
+
+    </script>
+
+
+    <span id="pca_status" style="display:none;" />
+    <!--
+    <script type="text/javascript">
+        pca_Load();
+    </script>
+    -->
+    <span id="hideMyParent"></span>
+    <script type="text/javascript">
+$(document).ready(function() {
+
+
+
+
+
+
+var now = new Date();
+var startYear=now.getFullYear()-100;
+var endYear=now.getFullYear();
+var optionsString='';
+if(startYear<endYear){
+    for(i=startYear;i<endYear+1;i++){
+        optionsString += "<option value=\""+i+"\">"+i+"</option>";
+
+    }
+    $('#calYearPicker').html(optionsString);
+}
+//$('#sidebarDiv #hideMyParent').parent().parent().hide();
+});
+
+
+
+
+$("#btnClose").click(function(e) {
+    e.preventDefault();
+
+    var kendoWindow = $("<div />").kendoWindow({
+            title: "Confirm",
+            resizable: false,
+            modal: true
+        });
+
+    kendoWindow.data("kendoWindow")
+        .content($("#delete-confirmation").html())
+        .center().open();
+
+    kendoWindow
+        .find(".delete-confirm,.delete-cancel")
+            .click(function() {
+                if ($(this).hasClass("delete-confirm")) {
+                    window.close();
+                }
+
+                kendoWindow.data("kendoWindow").close();
+            })
+            .end()
+});
+
+$('select option')
+                .filter(function() { return $.trim( $(this).text() ) == '--None--'; })
+                .html('&nbsp; &nbsp; &nbsp; --&nbsp;&nbsp;&nbsp;&nbsp;Please select&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;&nbsp;&nbsp;' );
+
+function SetDate(dateField)
+{
+
+
+    var day = $(dateField).find('.DateDay').val();
+    var month= $(dateField).find('.DateMonth').val();
+    var year = $(dateField).find('.DateYear').val();
+
+    $(dateField).find('input').val(day +'/' + month + '/' + year);
+
+
+}
+
+
+$('.DateDay').change(function()
+{
+
+
+
+SetDate($(this).parent());
+
+});
+
+$('.DateMonth').change(function()
+{
+SetDate($(this).parent());
+});
+
+$('.DateYear').change(function()
+{
+SetDate($(this).parent());
+});
+
+
+
+$('[id$=DateValue]').each(function()
+{
+    SetDate($(this).parent());
+});
+    // C0737 Start
+    function onPrefClick(){
+        if($(".HasNewsletter").attr('checked')=="checked" || $(".HasEmail").attr('checked')=="checked" || $(".HasMail").attr('checked')=="checked" || $(".HasSMS").attr('checked')=="checked" || $(".HasPhone").attr('checked')=="checked"){
+            $(".HasNone").prop('checked', false);
+        }
+    }
+    function onNonPrefClick(){
+        if($(".HasNone").attr('checked')=="checked"){
+            $(".HasNewsletter").prop('checked', false);
+            $(".HasEmail").prop('checked', false);
+            $(".HasMail").prop('checked', false);
+            $(".HasSMS").prop('checked', false);
+            $(".HasPhone").prop('checked', false);
+        }
+    }
+    // C0737 End
+
+    </script>
+    <script id="delete-confirmation" type="text/x-kendo-template">
+        <p class="delete-message">Are you sure?</p>
+        <button class="delete-confirm k-button">Yes</button>
+        <a href="#" class="delete-cancel">No</a>
+    </script>
+
+    <script>
+  /* C0697 Removed for future use
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-1918108-15', 'force.com');
+  ga('send', 'pageview');*/
+
+    </script>
+    </body>
+</apex:page>

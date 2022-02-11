@@ -1,0 +1,429 @@
+<apex:page showHeader="false" sidebar="false" controller="MMR_FF_Credit" action="{!Setup_Credit}">
+<head>
+    <c:MMR_PageHeader ></c:MMR_PageHeader>
+
+    <apex:include pageName="pca__Component"/>
+    <script>
+        pca_Settings.DisableFieldRearrange = true;
+</script>    
+</head>
+<body>
+  
+
+  
+  <c:MMR_Header title="Credit History" numapps="{!NumApplying }" opp="{!bopp}" hide="{!IsCredit}"/>
+
+      <div class="container">
+          <c:MMR_FF_Nav EventId="{!eventid}" active="6" activesection="B" rendered="{!!IsCredit && !IsCompleted}"/>
+          <c:MMR_FF_Nav_Links EventId="{!eventid}" active="6" activesection="B" rendered="{!!IsCredit && IsCompleted}"/>
+          
+          <c:MMR_Credit_Nav EventId="{!eventid}" active="6" activesection="B" rendered="{!IsCredit}"/>
+    
+        <apex:form id="aForm" styleClass="form-horizontal">
+        
+        <div class="row">
+        <c:MMR_FF_Credit comKey="1" pController="{!this}" ApplicantNo="1" Acc="{!Accs[0]}" rendered="{!NumApplying >0}"/>
+                <c:MMR_FF_Credit comKey="1" pController="{!this}"  ApplicantNo="2" Acc="{!Accs[1]}" rendered="{!NumApplying >1}"/>
+                <div class="clearfix"/>
+                <c:MMR_FF_Credit comKey="1" pController="{!this}"  ApplicantNo="3" Acc="{!Accs[2]}" rendered="{!NumApplying >2}"/>
+                <c:MMR_FF_Credit comKey="1" pController="{!this}"  ApplicantNo="4" Acc="{!Accs[3]}" rendered="{!NumApplying >3}"/>
+                <div class="clearfix"/>
+        </div>      
+        
+ 
+    
+    <div class="row">
+ <apex:commandButton styleClass="btn btn-primary"  value="Previous" action="{!Previous}" rendered="{!!IsCredit && !IsCompleted}"/>
+  <apex:commandButton styleClass="btn btn-success"  value="Save" action="{!Save}" rendered="{!!IsCompleted || IsCredit }"/>
+   <apex:commandButton styleClass="btn btn-danger"  value="Next" action="{!Next}" rendered="{!!IsCredit && !IsCompleted}"/>
+     </div>
+     
+
+     
+     
+      <!-- Modal -->
+<div class="modal fade" id="ccjModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Add CCJ</h4>
+      </div>
+      <div class="modal-body bodyccj">
+       
+       <div class="row">
+       
+           
+           <apex:inputHidden id="ccjId" value="{!EditCCJ.id}"/>
+       
+           <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Applicant</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:selectList id="ccjAccount" size="1" styleClass="form-control" value="{!EditCCJ.Account__c}">
+                    <apex:selectOptions value="{!selApplicant}" ></apex:selectOptions>
+                    </apex:selectList>
+                </div>
+            </div>
+       
+                <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Date of judgement</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:inputText id="ccjDateJudge" value="{!EditCCJ.CCJ_date_of_CCJ__c}" styleClass="form-control" />
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Amount of judgement</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:inputField id="ccjAmount" value="{!EditCCJ.CCJ_amount_of_CCJ__c}" styleClass="form-control" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Date judgement repaid</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:inputText id="ccjRepaid" value="{!EditCCJ.CCJ_date_repaid__c}" styleClass="form-control" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Is a certificate of satisfaction held?</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:inputField id="ccjHeld" value="{!EditCCJ.CCJ_certificate_held__c}" styleClass="form-control" />
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Reason for judgement</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:inputField id="ccjReason" value="{!EditCCJ.CCJ_Reason__c}" styleClass="form-control" />
+                </div>
+            </div>
+       </div>
+       
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <apex:commandButton value="Save" action="{!SaveCCJ}" styleclass="btn btn-success">  </apex:commandButton>
+        
+        
+ 
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+     
+     
+     
+     
+     
+       <!-- Modal -->
+<div class="modal fade" id="defaultModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Add Default</h4>
+      </div>
+      <div class="modal-body bodydefault">
+       
+       <div class="row">
+       
+           
+           <apex:inputHidden id="accId2" value="{!EditDefault.id}"/>
+       
+           <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Applicant</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:selectList id="defAccount" size="1" styleClass="form-control" value="{!EditDefault.Account__c}">
+                    <apex:selectOptions value="{!selApplicant}" ></apex:selectOptions>
+                    </apex:selectList>
+                </div>
+            </div>
+       
+                <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Date of default</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:inputText id="defDate" value="{!EditDefault.Default_date__c}" styleClass="form-control" />
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Amount of default</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:inputField id="defAmount" value="{!EditDefault.Default_amount__c}" styleClass="form-control" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Date default repaid</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:inputText id="defRepaidDate" value="{!EditDefault.Default_date_repaid__c}" styleClass="form-control" />
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-1">
+                    <label for="" >Reason for default</label>    
+                </div>
+                <div class="col-sm-5">
+                    <apex:inputField id="defReason" value="{!EditDefault.Default_reason__c}" styleClass="form-control" />
+                </div>
+            </div>
+       </div>
+       
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <apex:commandButton value="Save" action="{!SaveDefault}" styleclass="btn btn-success">  </apex:commandButton>
+        
+        
+ 
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->    
+     
+     
+     
+     <script type="text/javascript">
+     
+     
+     
+     function hasccj()
+{
+    var sel =  $(this);
+    var value = sel.val();
+    var id = sel.attr('id');    
+    var appNo = GetApplicantNo('credCCJ',id);
+
+    //var value= $("select.credCCJ").val();
+    FadeInput(value,'Yes','CreditRow' + appNo);
+}
+
+     function hasdef()
+{
+    var sel =  $(this);
+    var value = sel.val();
+    var id = sel.attr('id');    
+    var appNo = GetApplicantNo('credDefault',id);
+
+    //var value= $("select.credDefault").val();
+    FadeInput(value,'Yes','DefaultRow' + appNo);
+}
+     
+     
+
+    function ShowDefaultPopup(event,o)
+    {
+        $("[id$='defAccount']").prop('disabled', false);
+        window.scrollTo(0, 0);
+        $('#defaultModal').modal({
+            backdrop: 'static'
+        });
+        $("[id$='accId2']").val('');
+        $("[id$='defDate']").val('');
+        $("[id$='defAmount']").val('');
+        $("[id$='defRepaidDate']").val('');
+        $("[id$='defReason']").val('');
+    }
+    
+    function EditDefault(sender)
+    {
+        window.scrollTo(0, 0);
+        $('#defaultModal').modal({
+            backdrop: 'static'
+        });        
+        var id = sender.closest(".defList");          
+        $("[id$='accId2']").val(id.find('.defId').val());
+        $("[id$='defAccount']").val(id.find('.defAcc').val());        
+        $("[id$='defDate']").val(id.find('.defDate').text());
+        $("[id$='defAmount']").val(id.find('.defAmount').text());
+        $("[id$='defRepaidDate']").val(id.find('.defDateRepaid').text());
+        $("[id$='defReason']").val(id.find('.defReason').text());
+        $("[id$='defAccount']").prop('disabled', 'disabled');
+    }
+    
+    
+    function ShowCCJPopup(event,o)
+    {
+        $("[id$='ccjAccount']").prop('disabled', false);
+        window.scrollTo(0, 0);
+        $('#ccjModal').modal({
+            backdrop: 'static'
+        });
+        $("[id$='ccjId']").val('');
+        $("[id$='ccjDateJudge']").val('');
+        $("[id$='ccjAmount']").val('');
+        $("[id$='ccjRepaid']").val('');
+        $("[id$='ccjHeld']").val('');
+        $("[id$='ccjReason']").val('');
+ 
+    }
+    
+    function EditCCJ(sender)
+    {
+        window.scrollTo(0, 0);
+        $('#ccjModal').modal({
+            backdrop: 'static'
+        });        
+        var id = sender.closest(".ccjList");          
+        $("[id$='ccjId']").val(id.find('.ccjId').val());
+        $("[id$='ccjAccount']").val(id.find('.ccjAcc').val());        
+        $("[id$='ccjDateJudge']").val(id.find('.ccjDateJudgement').text());
+        $("[id$='ccjAmount']").val(id.find('.ccjAmount').text());
+        $("[id$='ccjHeld']").val(id.find('.ccjHeld').text()); 
+        $("[id$='ccjRepaid']").val(id.find('.ccjRepaid').text());    
+        
+        /*
+        var ff = id.find('.ccjHeld');
+        //alert(ff.text());
+        
+        var fff = $("[id$='ccjHeld']");
+        
+        var t = ff.text();
+        
+        $("[id$='ccjHeld']").find('option').each(function( i, opt ) {
+    if( opt.value === t) 
+        $(opt).attr('selected', 'selected');
+});
+        */
+        
+        //$("[id$='ccjHeld']").val(id.find('.ccjHeld').text());        
+        $("[id$='ccjReason']").val(id.find('.ccjReason').text());
+        $("[id$='ccjAccount']").prop('disabled', 'disabled');
+    }
+    
+    
+    $(function (){
+    
+        $("[id$='defDate']").attr('placeholder','dd/mm/yyyy');
+        $("[id$='defRepaidDate']").attr('placeholder','dd/mm/yyyy');
+        $("[id$='ccjDateJudge']").attr('placeholder','dd/mm/yyyy');
+        $("[id$='ccjRepaid']").attr('placeholder','dd/mm/yyyy');
+    
+        var errors = $(".bodyccj").find(".errorMsg");
+        if(errors.size()>0)
+        {
+            $('#ccjModal').modal();
+        }   
+        
+        var errors = $(".defaultccj").find(".errorMsg");
+        if(errors.size()>0)
+        {
+            $('#defaultModal').modal();
+        } 
+        
+        
+        $("select[class*='credCCJ']").each(hasccj);
+        $("select[class*='credCCJ']").change(hasccj);
+        $("select[class*='credDefault']").each(hasdef);
+        $("select[class*='credDefault']").change(hasdef);
+        
+        
+        $('.ccjEdit').click(function(){
+        EditCCJ($(this));
+    });
+    
+         $('.defEdit').click(function(){
+        EditDefault($(this));
+    });
+        
+    });   
+
+</script>
+     
+     
+     
+     
+     
+     
+        
+     
+     
+        </apex:form>        
+    </div>
+    
+    <c:MMR_PageFooter ></c:MMR_PageFooter>
+
+
+<script>
+    function credArrears()
+    {
+        var sel =  $(this);
+        var value = sel.val();
+        var id = sel.attr('id');    
+        var appNo = GetApplicantNo('credArrearsSelect',id);
+        
+        FadeInput(value,'Yes','credArrearsItem' + appNo);
+    }
+    
+    function credWorse()
+    {
+        var sel =  $(this);
+        var value = sel.val();
+        var id = sel.attr('id');    
+        var appNo = GetApplicantNo('credWorseSelect',id);
+        
+        FadeInput(value,'Yes','credWorseItem'+ appNo);
+    }
+    
+    function credBankrupt()
+    {
+        var sel =  $(this);
+        var value = sel.val();
+        var id = sel.attr('id');    
+        var appNo = GetApplicantNo('credBankruptSelect',id);
+
+        FadeInput(value,'Yes','credBankruptItem' + appNo);
+    }
+    
+    function credIVAWorse()
+    {
+        var sel =  $(this);
+        var value = sel.val();
+        var id = sel.attr('id');    
+        var appNo = GetApplicantNo('credIVAWorseSelect',id);
+        
+        FadeInput(value,'Yes','credIVAWorseItem' + appNo);
+    }
+    
+    
+    $(function(){
+        $("select[class*='credArrearsSelect']").each(credArrears);
+        $("select[class*='credArrearsSelect']").change(credArrears);
+        $("select[class*='credWorseSelect']").each(credWorse);
+        $("select[class*='credWorseSelect']").change(credWorse);
+        $("select[class*='credBankruptSelect']").each(credBankrupt);
+        $("select[class*='credBankruptSelect']").change(credBankrupt);
+        $("select[class*='credIVAWorseSelect']").each(credIVAWorse);
+        $("select[class*='credIVAWorseSelect']").change(credIVAWorse);        
+    });
+
+</script>
+
+</body>
+
+</apex:page>

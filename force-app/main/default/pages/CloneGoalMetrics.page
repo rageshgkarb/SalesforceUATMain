@@ -1,0 +1,387 @@
+<apex:page applyBodyTag="false" standardController="Goal" extensions="CloneGoalMetricsController" docType="html-5.0" showHeader="false" standardStylesheets="false">
+    <head>
+    <base href="{!URLFOR($Resource.CategoryApp, 'app/')}" />
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'/>
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="css/normal.css"/>
+    <link rel="stylesheet" type="text/css" href="css/button.css"/>
+    <link rel="stylesheet" href="css/style.css"/>
+    <link rel="stylesheet" href="css/angular-material.css"/>
+    <style type="text/css">
+        .goal-edit-box{
+            width: 400px;
+            height: 500px;
+            position: relative;
+            margin: auto;
+            padding: 30px 30px;
+        }
+        .input-text-theme-1{
+            border:none;
+            border-bottom: 1px solid #D3D3D4;
+            background-color: initial;
+            background-repeat: no-repeat !important;
+            background-position: 2px 2px;
+            padding: 7px 0px;
+        }
+        .field-row{
+            padding: 20px;   
+        }
+        .field-index {
+            position: absolute;
+            display: inline-block;
+            height: 27px;
+            width: 27px;
+            border: 1px solid #d3d3d3;
+            border: 1px solid #828282;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 27px;
+            margin-top: 5px;
+        }
+        .goal-name-box .field-index {
+            margin-top: 35px;
+        }
+        .goal-name-box md-input-container{
+            padding-bottom: 0px;
+        }
+        .field-box {
+            display: inline-block;
+            margin-left: 45px;
+            width: 100%;
+        }
+        .w100{
+            width: 100%;
+        }
+        .w50{
+            width: 50%;
+        }
+        .goal-label,
+        .date-box,
+        .goal-date{
+            display: inline-block;
+            width: 49%;
+        }
+        .goal-label{
+            color: #828282;
+        }
+        .date-icon{
+            position: absolute;
+            margin-left: -30px;
+            margin-top: 10px;
+        }
+        .btn-theme-1{
+            background: #cc9f52;
+            color:#000;
+            height: 40px;
+        }
+        md-datepicker {
+            background: transparent;
+        }
+        .loader-msg{
+            position: absolute;
+            margin-top: 20px;
+            width: 100%;
+            text-align: center;  
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 27%;
+        }
+        .loader-obj{
+            display: inherit;
+            position: relative;
+            margin-top: 20%;
+            width: 6%;  
+            background: #f3f3f3;
+            background: transparent;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .submit-box{
+            text-align: center;
+        }
+        .submit-btn{
+            margin:auto;
+            float: none;
+        }
+        md-input-container:not(.md-input-invalid).md-input-focused .md-input{
+            border-color: #7D7B7B;
+        }
+        md-input-container.md-default-theme:not(.md-input-invalid).md-input-focused .md-input, md-input-container:not(.md-input-invalid).md-input-focused .md-input{
+            border-color: #7D7B7B;
+        }
+        .md-default-theme .md-datepicker-input-container.md-datepicker-focused, .md-datepicker-input-container.md-datepicker-focused{
+            border-color: #7D7B7B;
+        }
+        md-input-container.md-default-theme:not(.md-input-invalid).md-input-focused label, md-input-container:not(.md-input-invalid).md-input-focused label{
+            color: #525151;
+        }
+        input[type=button][disabled]{
+            opacity: 0.5;
+        }
+    </style>
+    <script src="lib/angular.js"></script>
+    <script src="lib/angular-sanitize.js"></script>
+    <script src="lib/angular-animate.js"></script>
+    <script src="lib/angular-aria.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-messages.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.js"></script>
+        <script src="lib/angular-material.js"></script>
+    </head>
+        
+        
+        <body ng-app="goalApp" ng-controller="GoalCtrl" ng-cloak="">
+                <apex:form >
+            <apex:actionFunction action="{!cloneGoalAndMetrics}" name="cloneGoalAndMetricsJS" reRender="progressMsgPanel" status="cloneGoalMsg" oncomplete="cloneReportsJS();">
+                <apex:param name="goalName" value="" />
+                <apex:param name="goalStartDate" value="" />
+                <apex:param name="goalDueDate" value="" />
+                <apex:param name="metricStartDate" value="" />
+                <apex:param name="metricDueDate" value="" />
+            </apex:actionFunction>
+            <apex:actionFunction action="{!cloneReports}" name="cloneReportsJS" status="cloneReportMsg" reRender="progressMsgPanel" oncomplete="redirectToGoalClone();" />
+                     
+            <div class="headerContainer">
+                <div class="headerBox">
+                    <div class="backImg">
+                        <a href="/0WI/o" class="backImg"><img src="assets/back.png" style="vertical-align:middle" /><span>GOALS</span>
+                        </a>
+                    </div>
+                    <div><img src="assets/Al_Rayan_Logo_100x172.gif" class="logo" /></div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="loader" ng-if="loader">
+                    <img src="assets/712.gif" class="loader-obj" />
+                </div>
+                <div class="loader-msg">
+                    <apex:outputPanel id="progressMsgPanel">
+                        <apex:actionStatus id="cloneGoalMsg" startText="Cloning Goal & Metrics..." />
+                        <apex:actionStatus id="cloneReportMsg" startText="Linking Reports..." />
+                    </apex:outputPanel> 
+                </div>
+                
+                <div class="goal-edit-box" ng-show="!loader">
+                    <div class="field-row goal-name-box">
+                        <div class="field-index">1</div>
+                        <div class="field-box">
+                            <md-input-container class="md-block">
+                                <label>Goal Name</label>
+                                <input ng-model="goalName" required="required" />
+                            </md-input-container>        
+                        </div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-index">2</div>
+                        <div class="field-box">
+                            <div class="goal-label">START DATE</div>
+                            <div class="date-box">
+                                <md-datepicker ng-change="startDateFilter()" id='startDate' ng-model="startDate" md-placeholder="Enter date"></md-datepicker>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-index">3</div>
+                        <div class="field-box">
+                            <div class="goal-label">DUE DATE</div>
+                            <div class="date-box">
+                                <md-datepicker ng-change="dueDateFilter()" md-min-date="dueMinDate" md-max-date="dueMaxDate" id='dueDate' ng-model="dueDate" md-placeholder="Enter date"></md-datepicker>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-index">4</div>
+                        <div class="field-box">
+                            <div class="goal-label">METRIC START DATE</div>
+                            <div class="date-box">
+                                <md-datepicker ng-change="metricStartDateFilter()" id='metricStartDate' ng-model="metricStartDate" md-placeholder="Enter date"></md-datepicker>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-index">5</div>
+                        <div class="field-box">
+                            <div class="goal-label">METRIC DUE DATE</div>
+                            <div class="date-box">
+                                <md-datepicker md-min-date="metricDueMinDate" md-max-date="metricDueMaxDate" id='metricDueDate' ng-model="metricDueDate" md-placeholder="Enter date"></md-datepicker>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-box submit-box">
+                            <input ng-click="saveUpdatedGoal()" ng-disabled="!(goalName.length>0)" type="button" class="button btn-theme-1 submit-btn" value="SUBMIT" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+                    <script>
+    angular.module('goalApp',['ngMaterial','ngMessages']);
+    angular.module('goalApp').config(['$mdDateLocaleProvider',function ($mdDateLocaleProvider) {
+
+            //Changes date locale to DD/MM/YY format
+            $mdDateLocaleProvider.formatDate = function(date) {
+                return date ? moment(date).format('DD-MM-YYYY') : '';
+              };
+              
+              $mdDateLocaleProvider.parseDate = function(dateString) {
+                var m = moment(dateString, 'DD-MM-YYYY', true);
+                return m.isValid() ? m.toDate() : new Date(NaN);
+              };
+        }]);
+    angular.module('goalApp').controller('GoalCtrl', function($scope) {
+
+        //parses changed start date and sets other dates based on that
+        $scope.startDateFilter = function () {
+                var date = $scope.startDate;
+                  $scope.dueMinDate = new Date(date);
+                  if((date-$scope.dueDate)>0){
+                    $scope.dueDate = new Date(date.getFullYear(),date.getMonth()+1,0);  
+                  }
+
+                  $scope.metricStartDate = new Date(date);
+                  return true;
+          }
+          //parses changed metric start date and sets other dates based on that
+          $scope.metricStartDateFilter = function () {
+                var date = $scope.metricStartDate;
+              $scope.metricDueMinDate = new Date(date);
+              if((date-$scope.metricDueDate)>0){
+                $scope.metricDueDate = new Date(date.getFullYear(),date.getMonth()+1,0);  
+              }
+              return true;
+          }
+
+          //parses changed due date and sets other dates based on that
+          $scope.dueDateFilter = function () {
+                var date = $scope.dueDate;
+              $scope.metricDueDate = new Date(date);
+              return true;
+          }
+      
+      // Goal object that wrapes around functionalities related to storing and parsing goal params
+      $scope.goalApp = {};
+
+        $scope.goalApp.cacheGoalElements = function () {
+            this.eleName = document.querySelector('#goalName');
+            this.eleStartDate = document.querySelector('#startDate');
+            this.eleDueDate = document.querySelector('#dueDate');
+            this.eleMetricDueDate = document.querySelector('#metricDueDate');
+        }
+
+        $scope.goalApp.currentGoal = '{!goal.StartDate}';
+        if(!$scope.goalApp.currentGoal || $scope.goalApp.currentGoal.length==0){
+        	$scope.goalApp.currentGoal = new Date();
+        }
+        $scope.goalApp.nextGoal = null;
+        $scope.goalApp.goalBase = {
+            startDate:null,
+            dueDate:null,
+            metricDueDate:null,
+            initGoal: function (goalDate) {
+                if(goalDate){
+                    this.updateStartDate(new Date(goalDate.getFullYear(),goalDate.getMonth(),1));
+                    this.updateDueDate(new Date(this.startDate.getFullYear(),this.startDate.getMonth()+1,0));
+                    this.updateMetricDueDate(new Date(this.dueDate));
+                }
+            },
+            updateStartDate: function (dateObj) {
+                if(dateObj){
+                    this.startDate = dateObj;
+                }
+            },
+            updateDueDate: function (dateObj) {
+                if(dateObj){
+                    this.dueDate = dateObj;
+                }
+            },
+            updateMetricDueDate: function (dateObj) {
+                if(dateObj){
+                    this.metricDueDate = dateObj;
+                }
+            },
+        };
+        $scope.goalApp.createNextMonthGoal = function () {
+            this.nextGoal = Object.create(this.goalBase);
+            this.nextGoal.initGoal(new Date(this.currentGoal.getFullYear(),this.currentGoal.getMonth()+1,1));
+        }
+
+        //initializes goal name
+        $scope.goalApp.setGoalName = function () {
+            $scope.goalName = '{!Goal.Owner.Firstname} {!Goal.Owner.LastName} '+this.nextGoal.startDate.toLocaleDateString('en-us',{month:'long'})+' '+this.nextGoal.startDate.getFullYear();
+        }
+
+        //initializes start date
+        $scope.goalApp.setStartDate = function () {
+            $scope.startDate = $scope.goalApp.nextGoal.startDate;
+        }
+
+        //initializes due date
+        $scope.goalApp.setDueDate = function () {
+            $scope.dueDate = $scope.goalApp.nextGoal.dueDate;
+            $scope.dueMinDate = new Date($scope.startDate);
+        }
+
+        //initializes metric start date
+        $scope.goalApp.setMetricStartDate = function () {
+            $scope.metricStartDate = $scope.goalApp.nextGoal.startDate;
+        }
+
+        //initializes metric due date
+        $scope.goalApp.setMetricDueDate = function () {
+            $scope.metricDueDate = $scope.goalApp.nextGoal.metricDueDate;
+            $scope.metricDueMinDate = new Date($scope.metricStartDate);
+        }
+
+        //Parses current month's goal and initialize next month's goal parameters
+        $scope.goalApp.init = function () {
+            this.cacheGoalElements();
+            this.currentGoal = new Date(this.currentGoal);
+            this.createNextMonthGoal();
+            this.setGoalName();
+            this.setStartDate();
+            this.setMetricStartDate();
+
+            this.setDueDate();
+            this.setMetricDueDate();
+
+        }
+
+        //Saves the updated goal data to server
+        $scope.saveUpdatedGoal = function () {
+            /*var strStartDate = $scope.startDate.toLocaleDateString('en-us').replace(/[^ -~]/g,''),
+                strDueDate = $scope.dueDate.toLocaleDateString('en-us').replace(/[^ -~]/g,''),
+                strMetricStartDate = $scope.metricStartDate.toLocaleDateString('en-us').replace(/[^ -~]/g,''),
+                strMetricDueDate = $scope.metricDueDate.toLocaleDateString('en-us').replace(/[^ -~]/g,''),
+                strName = $scope.goalName;*/
+            /*var strStartDate = $scope.startDate.toLocaleDateString('en-in'),
+                strDueDate = $scope.dueDate.toLocaleDateString('en-in'),
+                strMetricStartDate = $scope.metricStartDate.toLocaleDateString('en-in'),
+                strMetricDueDate = $scope.metricDueDate.toLocaleDateString('en-in'),
+                strName = $scope.goalName;*/
+            var strStartDate = $scope.startDate.getDate()+'/'+($scope.startDate.getMonth()+1)+'/'+$scope.startDate.getFullYear(),
+                strDueDate = $scope.dueDate.getDate()+'/'+($scope.dueDate.getMonth()+1)+'/'+$scope.dueDate.getFullYear(),
+                strMetricStartDate = $scope.metricStartDate.getDate()+'/'+($scope.metricStartDate.getMonth()+1)+'/'+$scope.metricStartDate.getFullYear(),
+                strMetricDueDate = $scope.metricDueDate.getDate()+'/'+($scope.metricDueDate.getMonth()+1)+'/'+$scope.metricDueDate.getFullYear(),
+                strName = $scope.goalName;
+            cloneGoalAndMetricsJS(strName,strStartDate,strDueDate,strMetricStartDate,strMetricDueDate);
+            //cloneGoalAndMetricsJS('test random','01/07/2016','30/07/2016','01/07/2016','30/07/2016');
+            $scope.loader = true;
+
+        }
+
+        //Initializes Goal
+        $scope.goalApp.init();
+    });
+
+    // Redirects to goal list page 
+    function redirectToGoalClone() {
+        window.location.href = "/0WI/o";
+    }
+    </script>
+		</apex:form>
+        </body>
+
+    
+    
+    
+</apex:page>

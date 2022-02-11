@@ -1,0 +1,27 @@
+<apex:component >
+<apex:attribute name="genericobject" description="This is the debt." type="GenericObject__c"  required="true"/>
+
+<table class="detailList">
+<tbody>
+<tr>
+    <td class="labelCol">Date of judgement </td><td><apex:inputField value="{!genericobject.CCJ_date_of_CCJ__c}"   /></td>
+    <td class="labelCol">Amount of judgement</td><td><apex:inputField value="{!genericobject.CCJ_amount_of_CCJ__c}"  /></td>
+</tr>
+
+<tr>
+<td class="labelCol">Date judgement repaid</td><td><apex:inputField value="{!genericobject.CCJ_date_repaid__c}"  /></td>
+    <td class="labelCol">Is a certificate of satisfaction held?</td><td><apex:inputField value="{!genericobject.CCJ_certificate_held__c}"   /></td>
+    
+</tr>
+<tr>
+<td class="labelCol">Reason for judgement</td><td colspan="3"><apex:inputField style="width: 300px"  value="{!genericobject.CCJ_Reason__c}"  /></td>
+   
+    
+</tr>
+
+</tbody>
+</table>
+
+
+
+</apex:component>

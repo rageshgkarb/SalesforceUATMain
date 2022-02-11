@@ -1,0 +1,360 @@
+<apex:page controller="HPPConfirmedROTController" sidebar="false" showHeader="false" title="Confirmed ROT">
+    <head>
+        <c:KendoResource ></c:KendoResource>
+    </head>
+    <body>
+        <apex:form >
+            <div id="formWrapper">
+                <!-- C00095--> 
+                <c:HPPSummary objAcc="{!Accounts[0]}" objOpp="{!opp}" objExOpp="{!ExOpp}" Product="{!Prod}" />
+                <div id="container" >
+                    <table width="100%">
+                        <tr>
+                            <td valign="top" id="sidebar">
+                                <c:HPPBOMenu oppId="{!Opp.Id}"  DirectorId="{!Opp.ProductEventDirector__c}" />
+                            </td>
+                            <td valign="top" id="contenttd">
+                                <div id="content">
+                                    <h1>ROT Confirmation</h1>
+                                    <apex:pageMessages ></apex:pageMessages>
+                                    <apex:outputPanel id="mainPageBlock">
+                                    <div style="padding:20px;">
+                                        <!-- content -->
+                                        
+                                        <apex:pageBlock >
+                                        
+                                        <apex:pageBlockSection >
+                                                
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="Date Valuation Received" />
+                                                    <apex:outputField value="{!exOpp.Valuation_received__c}"  />
+                                                </apex:pageBlockSectionItem>
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="Date Offer Letter Sent" />
+                                                    <apex:outputField value="{!exOpp.Offer_letter_sent__c}"  />
+                                                </apex:pageBlockSectionItem>
+                                              </apex:pageBlockSection>
+                                        
+                                         
+                                                
+                                               <apex:pageBlockSection >
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="PP/Value and address on offer matches valuation report" />
+                                                    <apex:inputField value="{!exOpp.PP_Address_Match__c}" required="false" />
+                                                </apex:pageBlockSectionItem>
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="Comments" />
+                                                    <apex:inputField value="{!exOpp.PP_Address_Match_Comments__c}" required="false" />
+                                                </apex:pageBlockSectionItem>
+                                              </apex:pageBlockSection>
+                                              
+                                              <apex:pageBlockSection >
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="Signed latest offer on file?" />
+                                                    <apex:inputField value="{!exOpp.Signed_latest_offer__c}" required="false" />
+                                                </apex:pageBlockSectionItem>
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="Comments" />
+                                                    <apex:inputField value="{!exOpp.Signed_latest_offer_comments__c}" required="false" />
+                                                </apex:pageBlockSectionItem>
+                                              </apex:pageBlockSection>
+                                              
+                                              <apex:pageBlockSection >
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="ROT refers to latest offer date?" />
+                                                    <apex:inputField value="{!exOpp.ROT_latest_offer_date__c}" required="false" />
+                                                </apex:pageBlockSectionItem>
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="Comments" />
+                                                    <apex:inputField value="{!exOpp.ROT_latest_offer_date_comments__c}" required="false" />
+                                                </apex:pageBlockSectionItem>
+                                              </apex:pageBlockSection>
+                                              
+                                              <apex:pageBlockSection >
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="Full name(s) on ROT matches offer?" />
+                                                    <apex:inputField value="{!exOpp.Full_name_ROT_match__c}" required="false" />
+                                                </apex:pageBlockSectionItem>
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="Comments" />
+                                                    <apex:inputField value="{!exOpp.Full_name_ROT_match_comments__c}" required="false" />
+                                                </apex:pageBlockSectionItem>
+                                              </apex:pageBlockSection>
+                                              
+                                              <apex:pageBlockSection >
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="Full address on ROT matches offer?" />
+                                                    <apex:inputField value="{!exOpp.Full_address_ROT_match__c}" required="false" />
+                                                </apex:pageBlockSectionItem>
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="Comments" />
+                                                    <apex:inputField value="{!exOpp.Full_address_ROT_match_comments__c}" required="false" />
+                                                </apex:pageBlockSectionItem>
+                                              </apex:pageBlockSection>
+                                              
+                                              <apex:pageBlockSection >
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="Finance amount on ROT matches offer letter?" />
+                                                    <apex:inputField value="{!exOpp.Finance_ROT_match__c}" required="false" />
+                                                </apex:pageBlockSectionItem>
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="Comments" />
+                                                    <apex:inputField value="{!exOpp.Finance_amount_ROT_match_comments__c}" required="false" />
+                                                </apex:pageBlockSectionItem>
+                                              </apex:pageBlockSection>
+                                              
+                                              <apex:pageBlockSection >
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="Purchase price on ROT matches offer letter" />
+                                                    <apex:inputField value="{!exOpp.Purchase_price_ROT_match__c}" required="false" />
+                                                </apex:pageBlockSectionItem>
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="Comments" />
+                                                    <apex:inputField value="{!exOpp.Purchase_price_ROT_match_comments__c}" required="false" />
+                                                </apex:pageBlockSectionItem>
+                                              </apex:pageBlockSection>
+                                              
+                                              <apex:pageBlockSection >
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="Solicitors holding signed documentation?" />
+                                                    <apex:inputField value="{!exOpp.Solicitors_holding_signed_docs__c}" required="false" />
+                                                </apex:pageBlockSectionItem>
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="Comments" />
+                                                    <apex:inputField value="{!exOpp.Solicitors_holding_signed_docs_comments__c}" required="false" />
+                                                </apex:pageBlockSectionItem>
+                                              </apex:pageBlockSection>
+                                              
+                                               <apex:pageBlockSection >
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="OS1 land registry/land charges search in date?" />
+                                                    <apex:inputField value="{!exOpp.OS1_land_registry_charges_in_date__c}" required="false" />
+                                                </apex:pageBlockSectionItem>
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="Comments" />
+                                                    <apex:inputField value="{!exOpp.OS1_land_registrycharges_indate_comments__c}" required="false" />
+                                                </apex:pageBlockSectionItem>
+                                              </apex:pageBlockSection>
+                                              
+                                               <apex:pageBlockSection >
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="Bankruptcy search in date?" />
+                                                    <apex:inputField value="{!exOpp.Bankruptcy_search_in_date__c}" required="false" />
+                                                </apex:pageBlockSectionItem>
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="Comments" />
+                                                    <apex:inputField value="{!exOpp.Bankruptcy_search_in_date_comments__c}" required="false" />
+                                                </apex:pageBlockSectionItem>
+                                              </apex:pageBlockSection>
+                                              
+                                              <apex:pageBlockSection >
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="All special conditions are met?" />
+                                                    <apex:inputField value="{!exOpp.Special_conditions_met__c}" required="false" />
+                                                </apex:pageBlockSectionItem>
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="Comments" />
+                                                    <apex:inputField value="{!exOpp.Special_conditions_met_comments__c}" required="false" />
+                                                </apex:pageBlockSectionItem>
+                                              </apex:pageBlockSection>
+                                              
+                                              <apex:pageBlockSection >
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="ROT signed by solicitors and all in order?" />
+                                                    <apex:inputField value="{!exOpp.ROT_signed_by_solicitors__c}" required="false" />
+                                                </apex:pageBlockSectionItem>
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="Comments" />
+                                                    <apex:inputField value="{!exOpp.ROT_signed_by_solicitors_comments__c}" required="false" />
+                                                </apex:pageBlockSectionItem>
+                                              </apex:pageBlockSection>
+                                              
+                                            <apex:pageBlockSection >
+                                                
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="Requested Completion Date" />
+                                                    <apex:inputField value="{!exOpp.Requested_Completion_Date__c}" required="false" />
+                                                </apex:pageBlockSectionItem>
+                                              </apex:pageBlockSection>
+                                                                                        
+                                            <apex:pageBlockSection >
+                                                
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="Date ROT Recieved" />
+                                                    <apex:inputField value="{!exOpp.Received_ROT__c}" required="true" />
+                                                </apex:pageBlockSectionItem>
+                                              </apex:pageBlockSection>
+                                            
+                                            <apex:pageBlockSection >
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="ROT Acceptable" />
+                                                    <apex:inputField value="{!exOpp.ROT_acceptable__c}" required="true" />
+                                                </apex:pageBlockSectionItem>
+                                                
+                                              </apex:pageBlockSection>
+                                              
+                                              <apex:pageBlockSection >
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="ROT Decision Date" />
+                                                    <apex:inputField value="{!exOpp.ROT_Decision_Date__c}" required="false" />
+                                                </apex:pageBlockSectionItem>
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="Comments on ROT if not acceptable" />
+                                                    <apex:inputField value="{!exOpp.ROT_comments_as_not_acceptable__c}" required="false" />
+                                                </apex:pageBlockSectionItem>
+                                              </apex:pageBlockSection>
+                                            
+                                            <apex:pageBlockButtons location="bottom">
+                                                <apex:commandButton value="ROT Accepted" action="{!complete}" rendered="{!!IsCompleted}" />
+                                                <apex:commandButton value="ROT Not Accepted" action="{!save}" rendered="{!!IsCompleted}"/>
+                                            </apex:pageBlockButtons>
+                                        </apex:pageBlock> 
+                                        
+                                        <div style="text-align: center; color: red;">
+                                            <apex:outputText value="{!pageErrorMessage}" style="color: inherit;" />
+                                        </div>
+                                    </div>
+                                    </apex:outputPanel>
+                                    
+                                    
+                         
+                                    <apex:outputPanel rendered="{!!CanComplete}">
+
+                                    
+                                    <apex:outputPanel rendered="{!ShowRefferalCases}">
+                                    
+                                    <h2>Refferal Cases</h2>
+                                    <table class="list" width="100%">
+                                    <tbody>
+                                    <tr class="headerRow"><th>Case</th><th>Subject</th><th>Detail</th><th>Satisfied</th></tr>
+                                    <apex:repeat value="{!RefferalCases}" var="cas">
+                                    <tr class="dataRow">
+                                    
+                                    <td><a href="/{!cas.id}" >{!cas.CaseNumber }</a>  </td>
+                                    <td>{!cas.Subject}</td><td><!--{!cas.detail}--></td>
+                                    <td>
+                                        {!cas.Satisfied__c} </td>
+                                    
+                                    
+                                    </tr>
+                                    <tr style="display:none;"><td colspan="6">
+                                    {!cas.BDM_Comments__c}
+                                    
+                                    </td></tr>
+                                    </apex:repeat>
+                                    </tbody>
+                                    </table>
+                                    </apex:outputPanel>
+                                    
+                                    
+                                    <apex:outputPanel rendered="{!ShowFiCases}">
+                                    <h2>Further Information Cases</h2>
+                                    <table class="list" width="100%">
+                                                                        <thead>
+                                                                            <tr class="headerRow">
+                                                                                <th class="headerRow">F.I Code</th>
+                                                                                <th class="headerRow">Detail</th>
+                                                                                <th class="headerRow">BDM Comments</th>
+                                                                                <th class="headerRow">Credit Accepted</th>
+                                                                                <th class="headerRow">Underwriter Comments</th>
+                                                                                <th class="headerRow">Action</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+
+                                                                            <apex:repeat value="{!FiCases}" var="c">
+
+                                                                                <tr>
+                                                                                    <td><a href="/{!c.id}">{!c.CaseNumber }</a>
+                                                                                    </td>
+                                                                                    <td valign="top">{!c.Further_Information__c} 
+                                                                                    </td>
+                                                                                    <td>{!c.BDM_Comments__c}</td>
+                                                                                    <td>{!c.Further_Info_Satisfied__c}
+                                                                                    </td>
+                                                                                    <td valign="top">{!c.Underwriter_Comments__c}
+                                                                                    </td>
+                                                                                    <td vlaign="top">                                                                                    
+                                                                                 
+                                                                                    </td>
+                                                                                </tr>
+                                                                            
+                                                                            </apex:repeat>
+
+                                                                        </tbody>
+                                                                    </table>
+                                    </apex:outputPanel>
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    <apex:outputPanel rendered="{!ShowConditions}">
+                                    
+                                    <h2>Special Conditions</h2>
+                                    
+                                    <table class="list" width="100%">
+                                   <thead>
+                                   <tr class="headerRow">
+                                       <th class="headerRow">Action</th>
+                                       <th class="headerRow">Ref</th>
+                                       <th class="headerRow">Condition</th>
+                                       <th class="headerRow">UW</th>
+                                       <th class="headerRow">Reat</th>
+                                       <th class="headerRow">Satisfied</th>
+                                   </tr>
+                                   </thead>
+                                   <tbody>
+                                <apex:repeat value="{!Conditions}" var="i">
+                                <tr >
+                                <td>
+                                  <a href="HPPSatisfySpecialCondition?oppid={!Opp.id}">Link</a>
+                                </td>
+                                <td>
+                                    <apex:outputLabel escape="false" value="{!i.Ref}"/>
+
+                                </td>
+                                <td>
+                                    <apex:outputLabel escape="false" value="{!i.Html}">  </apex:outputLabel>
+                                </td>
+                                <td>
+                                    <apex:inputCheckbox disabled="true" value="{!i.UW_Allowed}"/>
+                                </td>
+                                <td>
+                                    <apex:inputCheckbox disabled="true" value="{!i.Reat_Allowed}"/>
+                                </td>
+                                
+                             <td >{!if(i.Satisfied,'Yes','No')}</td>
+                                
+                                </tr>
+                                <tr>
+                                    <td colspan="6">{!i.notes}</td>
+                                </tr>
+                    
+                                 </apex:repeat>
+                                 </tbody>
+                                 </table>
+                                    
+                                    
+                                    </apex:outputPanel>
+                                    </apex:outputPanel>
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                </div>
+                                
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+                        
+        </apex:form>
+    </body>
+</apex:page>

@@ -1,0 +1,602 @@
+<apex:page standardController="Docugen_EBS_Template__c" extensions="Edit_Docugen_EBS_Template" action="{!onLoad}"   >
+    <apex:composition template="Base_Template">
+        <apex:define name="body">
+            <script type="text/javascript">
+                
+                docugenApp.controller('historyController',['$scope','docugenService',
+                    function($scope,docugenService,$rootScope){
+                        $scope.attachmentsLoaded=false;
+                        
+                        $scope.savingTemplate=false;
+                        
+                        $scope.loadAttachments=function(){
+                            docugenService.getTemplateAttachments('{!templateId}')
+                            .then(
+                                function(result){
+                                    $scope.attachments=JSON.parse($('<textarea />').html(result).text());
+                                    
+                                    $scope.currentTemplateAttachment=$scope.attachments[0];
+                                    
+                                    window.setCurrentTemplateAttachment($scope.currentTemplateAttachment);
+                                    
+                                    $scope.attachmentsLoaded=true;                                    
+                                    console.log($scope.attachments);
+                                },
+                                function(error){
+                                    //$scope.Updating = false;
+                                }
+                            );
+                        };
+                        
+                        $scope.loadAttachments();
+                        
+                        $scope.removeAttachment=function(attachmentID){
+                            docugenService.removeAttachment(attachmentID)
+                            .then(
+                                function(result){
+                                    console.log(result);
+                                    
+                                    $scope.loadAttachments();
+                                    
+                                    //$rootScope.test();
+                                    //$scope.currentTemplateAttachment=$scope.attachments[0];
+                                    
+                                },
+                                function(error){
+                                    //$scope.Updating = false;
+                                }
+                            );
+                        };
+                    }
+                ]);
+            
+                docugenApp.controller('docugenController', ['$scope','docugenService','$uibModal','$http','$timeout',
+                    function($scope,docugenService,$uibModal,$http,$timeout){
+                        
+                        $scope.$watch("docugenSettings", function(){   
+                             $scope.docugenSettings=JSON.parse($('<textarea />').html($scope.docugenSettings).text());
+                         });
+                        
+                                                            
+                        $scope.templateLoaded=false;
+                        
+                        $scope.mergeFieldsLoaded=true;
+                        
+                        $scope.currentTemplateAttachment={
+                            Name:'select file'
+                        };
+                        
+                        window.setCurrentTemplateAttachment=function(a){
+                            $scope.currentTemplateAttachment=a;
+                            $scope.refreshFields();
+                        };
+                        
+                        $scope.fieldMap={};
+                        
+                        $scope.fieldDictionaryCD={!EBSFieldNameLabelJson};
+                        $scope.fieldDictionary={};
+                        
+                        
+                        for(ix=0;ix<$scope.fieldDictionaryCD.length;ix++){
+                            var cf=$scope.fieldDictionaryCD[ix].split(',');
+                            $scope.fieldDictionary[cf[0]]=cf[1];
+                        }
+                        
+                        $scope.EBSFields=JSON.parse('{!EBSFieldsJson}');
+//                        $scope.EBSFields
+                        
+                        $scope.EBSFieldsWDesc=[];
+                        
+                        for(ix=0;ix<$scope.EBSFields.length;ix++){
+                            var cf=$scope.EBSFields[ix];
+                            $scope.EBSFieldsWDesc.push($scope.fieldDictionary[cf]+'('+cf+')');
+                        }
+                        
+                        /*$rootScope.test=function(){
+                            console.log($scope.templateLoaded);    
+                        });*/
+                        
+                        $scope.$watch("templateId", function(){
+                            
+                            
+                            console.log($scope.templateId);
+                            
+                            docugenService.getTemplateAttachments($scope.templateId)
+                            .then(
+                                function(result){
+                                    $scope.attachments=JSON.parse($('<textarea />').html(result).text());
+                                    
+                                    $scope.currentTemplateAttachment=$scope.attachments[0];
+                                    
+                                    console.log($scope.attachments);
+                                },
+                                function(error){
+                                    //$scope.Updating = false;
+                                }
+                            );
+                        
+                             docugenService.GetTemplateDetails($scope.templateId)
+                             .then(
+                                 function(result){
+                                     console.log(result);
+                                     $scope.template=result;
+                                     var jsonFieldMap= $('<textarea />').html(result.Field_Map__c).text();
+                                     $scope.fields=JSON.parse(jsonFieldMap);
+                                     console.log($scope.fieldDictionary);
+                                     for(ix=0;ix<$scope.fields.length;ix++){
+                                         console.log($scope.fields[ix]);
+                                         $scope.fields[ix].EBSField=$scope.fieldDictionary[$scope.fields[ix].EBSField]+' ('+$scope.fields[ix].EBSField+')';
+                                     }
+                                     
+                                     $scope.templateLoaded=true;
+                                     
+                                     console.log($scope.fields);
+                                     /*if(result.Success)
+                                                {               
+                                                    
+                                                }*/
+                                    },
+                                 function(error){
+                                     //$scope.Updating = false;
+                                 }
+                             );
+                        });
+                        
+                        
+                        
+                       
+                        
+                        $scope.createDuplicate=function(){
+                            docugenService.createDuplicate($scope.templateId)
+                             .then(
+                                 function(result){
+                                     console.log(result);
+                                     location.href="/apex/Edit_Docugen_EBS_Template?id="+result;
+                                    },
+                                 function(error){
+                                     //$scope.Updating = false;
+                                 }
+                             );    
+                        };
+                        
+                        $scope.addField=function(){
+                            $scope.fields.push({
+                                    EBSField:"",
+                                    WordField:""
+                            });
+                        };
+                        
+                        $scope.removeField=function(f){
+                            $scope.fields.remove(f);
+                        };
+                        
+                        $scope.save=function(){
+                            //$scope.template.Field_Map__c=$scope.fields.serialize();
+                            var flds=$scope.fields.slice(0);
+                            flds.forEach(function(v){ delete v.$$hashKey });
+                            
+                            //console.log(JSON.stringify($scope.fields));
+                            
+                            for(ix=0;ix<flds.length;ix++){
+                                var m="";
+                                if(flds[ix].EBSField || flds[ix].EBSField.length>0){
+                                    m=flds[ix].EBSField.match(/\((.*)\)/gm);
+    
+                                    if(m.length>0){
+                                    
+                                        m=m[0];
+                                        //console.log(m);
+                                        m=m.substring(1,m.length-1);
+                                    }
+                                }
+
+                                flds[ix].EBSField=m;
+                            }
+                            
+                            //console.log(flds);
+                            
+                            $scope.template.Field_Map__c=JSON.stringify(flds);
+                            
+                            $scope.savingTemplate=true;
+                            
+
+                            docugenService.saveTemplate($scope.template)
+                             .then(
+                                 function(result){
+                                     $scope.savingTemplate=false;
+                                         for(ix=0;ix<$scope.fields.length;ix++){
+                                             //console.log($scope.fields[ix]);
+                                             $scope.fields[ix].EBSField=$scope.fieldDictionary[$scope.fields[ix].EBSField]+' ('+$scope.fields[ix].EBSField+')';
+                                         }
+                                    },
+                                 function(error){
+                                 }
+                             );
+                           /* Edit_Docugen_EBS_Template.save($scope.template,function(result, event){
+                                
+                                 
+                            });*/
+                        };
+                        
+                        $scope.selectTemplateFile=function(){
+                            $("#template-file").value=null;
+                            $("#template-file").attr("value","");
+                            $("#template-file").trigger("click");    
+                        };
+                         
+                        $scope.taFocus=function(e){
+                            $timeout(function () {
+                                $(e.target).trigger("input");
+                                $(e.target).trigger("change");
+                            });
+                        };
+                        
+                        //BOC: typeahead hack
+                         $scope.opened = false;
+                        
+                         $scope.stateComparator = function (state, viewValue) {
+                             return viewValue === secretEmptyKey || (''+state).toLowerCase().indexOf((''+viewValue).toLowerCase()) > -1;
+                         };
+                         
+                         $scope.onFocus = function (e) {
+                             $timeout(function () {
+                                 $(e.target).trigger('input');
+                                 $(e.target).trigger('change'); // for IE
+                             });
+                         };
+                         
+                         $scope.open = function() {
+                             $scope.opened = true;
+                         }
+                         $scope.close = function() {
+                             $scope.opened = false;
+                         }
+                         //EOC: typeahead hack
+                         
+                        $scope.refreshFields=function(){
+                          try{
+                                  //alert($scope.docugenSettings.AzureURL+'/GetWordFelds/'+$scope.currentTemplateAttachment.Id);
+                                  //console.log($scope.currentTemplateAttachment);
+                                  $http({
+                                      method: 'GET',
+                                      url: $scope.docugenSettings.AzureURL+'/GetWordFields?id='+$scope.currentTemplateAttachment.Id+'&org='+$scope.docugenSettings.Org
+                                  }).then(function successCallback(response) {
+                                      $scope.mergeFieldsLoaded=true;
+                                      
+                                      
+                                      
+                                      $scope.flds=JSON.parse(response.data);
+                                      
+                                      $scope.fieldMap={};
+                                      angular.forEach($scope.fields,function(value,key){
+                                          var m=value.EBSField.match(/\((.*)\)/gm);
+                                          if(m.length>0){
+                                              m=m[0];
+                                              m=m.substring(1,m.length-1)
+                                          }
+                                          else{
+                                              m="";
+                                          }
+                                          $scope.fieldMap[value.WordField]=m;
+                                      }); 
+                                      
+                                      $scope.fields=[];
+                                      angular.forEach($scope.flds,function(value,key){
+                                          if($.trim(value.toLowerCase())!='letter'){
+                                              if($scope.fieldMap[value]){
+                                                  $scope.fields.push({
+                                                      EBSField:$scope.fieldDictionary[$scope.fieldMap[value]]+" ("+$scope.fieldMap[value]+")",
+                                                      WordField:value
+                                                  });
+                                              }
+                                              else{
+                                                  $scope.fields.push({
+                                                      EBSField:"",
+                                                      WordField:value
+                                                  });
+                                              }
+                                          }
+                                      });
+                                      
+                                      setTimeout(function(){
+                                          $(".ebs-field").each(function(){
+                                              if($(this).val().length==0){
+                                                  $(this).addClass("ng-invalid");
+                                                  $(this).parent().find(".invalid-icon").removeClass("ng-hide");
+                                                  $(this).parent().find(".valid-icon").addClass("ng-hide");
+                                              }
+                                          });
+                                      },1000);
+                                      
+                                      
+                                      
+                                      
+                                  }, function errorCallback(response) {
+                                      console.log(response);
+                                  });
+                              }catch(e){
+                                  console.log(e);
+                                  $scope.currentTemplateAttachment={};
+                              }  
+                            
+                        };
+                         
+                        $scope.uploadTemplateFile=function(element){
+                            $scope.mergeFieldsLoaded=false;
+                            $scope.$apply(function(scope) {
+                                 docugenService.uploadFile($scope.templateId)
+                                 .then(
+                                    function(result){
+                                        $scope.currentTemplateAttachment=JSON.parse($('<textarea />').html(result).text());
+                                        $scope.refreshFields();
+                                    },
+                                    function(error){
+                                        //$scope.Updating = false;
+                                    }
+                                );
+                             });
+                        };
+                        
+                        
+                          $scope.animationsEnabled = true;
+
+                          $scope.viewHistory = function (size) {
+                        
+                            var modalInstance = $uibModal.open({
+                              animation: $scope.animationsEnabled,
+                              templateUrl: 'myModalContent.html',
+                              controller: 'historyController',
+                              size: size,
+                              resolve: {
+                                items: function () {
+                                  return $scope.items;
+                                }
+                              }
+                            });
+                        
+                            modalInstance.result.then(function (selectedItem) {
+                              $scope.selected = selectedItem;
+                            }, function () {
+                                //$log.info('Modal dismissed at: ' + new Date());
+                            });
+                          };
+                        
+                        
+                    }
+                ]);
+            
+                
+            </script>
+           
+            
+            <div ng-controller="docugenController" class="docugen col-sm-11" ng-init="templateId='{!templateId}';docugenSettings='{!docugenSettings}'">
+                <h3>
+                    <div class="col-sm-6">
+                        Add/Edit Template <span ng-show="templateLoaded">({{template.Name}})</span>
+                    </div>
+                    <div class="col-sm-6">
+                        <span class="pull-right" style="font-size:0.9em;">Docugen<sup>+</sup></span>
+                        <a class="pull-right btn btn-default" style="padding:4px 7px !important;font-size:0.5em;margin-right:10px;" href="{{docugenSettings.TemplatesURL}}">
+                            Templates
+                        </a>
+                        <a class="pull-right btn btn-default" style="padding:4px 7px !important;font-size:0.5em;margin-right:10px;" href="{{docugenSettings.FieldsURL}}">
+                            EBS Field Config
+                        </a>
+                    </div>
+                </h3>
+                <div style="clear:both">
+                    &nbsp;    
+                </div>
+                
+
+                <div class="signal" style="margin-top:100px;" ng-hide="templateLoaded"></div>
+                <div class="panel panel-brown" style="background-color:#F2EDE9;" ng-show="templateLoaded">
+                    <div class="panel-body">
+                         <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>EBS Template</label>
+                                    <div>
+                                         <input class="form-control" type="text" ng-model="template.EBS_Template__c"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>File</label>
+                                    
+                                    <input type="file" id="template-file" style="display:none;" onchange="angular.element(this).scope().uploadTemplateFile(this)" />
+                                    <div class="input-group">
+                                        <input value="{{currentTemplateAttachment.Name}}" readonly="readonly" class="form-control" />
+                                        
+                                        <div class="input-group-btn">
+                                            <button type="button" class="btn btn-default" ng-click="selectTemplateFile()">
+                                                Upload Template
+                                            </button>
+                                            <button type="button" class="btn btn-default" ng-click="viewHistory()">
+                                                <i class="fa fa-download" aria-hidden="true" style="line-height:inherit !important"></i>
+                                            </button>
+                                        </div>                          
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                         <div style="clear:both">
+                            &nbsp;
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Last modified by</label>
+                                    <div>
+                                        {{template.LastModifiedBy.Name}}
+                                    </div>
+                                 </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Owner</label>
+                                    <div>
+                                        {{template.Owner.Name}}
+                                    </div>
+                                </div>
+                                
+                                
+                                
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="btn-group btn-group-lg pull-left">
+                                    <a ng-show="templateLoaded" class="btn-default btn" href="{{docugenSettings.TemplatesURL}}">
+                                         Back
+                                     </a>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="btn-group btn-group-lg pull-right">
+                                     <button ng-show="templateLoaded" type="button" class="btn-default btn" ng-click="createDuplicate()">
+                                         <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                         <span style="position:absolute;left:10px;top:5px;font-size:1.5em;"><i class="fa fa-files-o" aria-hidden="true"></i></span>
+                                         Duplicate
+                                     </button>
+                                     <button ng-show="templateLoaded" type="button" class="btn-primary btn" ng-click="save()">
+                                         <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                         <span ng-hide="savingTemplate" style="position:absolute;left:10px;top:5px;font-size:1.5em;"><i class="fa fa-floppy-o" aria-hidden="true"></i></span>
+                                         <div ng-show="savingTemplate"  class="signal" style="left:20px;border-color:#fff !important;"></div>
+                                         Save
+                                     </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="clear:both">
+                            &nbsp;
+                        </div>
+                    </div>
+                </div>
+                <div class="signal" style="margin-top:300px;" ng-hide="mergeFieldsLoaded"></div>
+                <div class="panel panel-default" ng-show="templateLoaded && mergeFieldsLoaded">
+                    <div class="panel-heading" style="background-color:#F2EDE9;">
+                        Field Map
+                        <!--<div class="pull-right"><button class="btn btn-default btn-xs">EBS Field Config</button></div>-->
+                    </div>
+                    <div class="panel-body">
+                        <div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Word Field</th>
+                                        <th>EBS Field</th>
+                                        <!--<th>&nbsp;</th>-->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="f in fields | orderBy:'WordField' | unique:'WordField' | filter:{ WordField: '!Letter'}" ng-class="{even:$index%2==1}">
+                                        
+                                        <td><label name="Word" style="background-color:#B3995D;color:#fff;" class="form-control" placeholder="Word field">{{f.WordField}}</label></td>
+                                        <td><ng-form name="innerForm">
+                                                <span class="input-with-icon">
+                                                    <input type="text" name="EBS" ng-model="f.EBSField" typeahead-focus-first="false" typeahead-min-length="0" typeahead-editable="false" focus-me="opened" empty-typeahead="empty-typeahead" ng-trim="false" ng-focus="onFocus($event)" placeholder="EBS field"  uib-typeahead="f for f in EBSFieldsWDesc | filter:$viewValue" class="form-control ebs-field"/>
+                                                    <span class="input-icon valid-icon" ng-show="innerForm.EBS.$valid"><i class="fa fa-check" aria-hidden="true"></i></span>
+                                                    <span class="input-icon invalid-icon" ng-show="innerForm.EBS.$invalid"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span>
+                                                </span>
+                                            </ng-form>
+                                        </td>
+                                        <!--<td width="20">
+                                            <a ng-show="false" href="#" style="color:#707070 !important;font-size:0.9em;margin-top:10px;display:inline-block;"><i class="fa fa-chevron-down" aria-hidden="true"></i></a> 
+                                            <div class="btn-group" uib-dropdown="uib-dropdown" auto-close="outsideClick" is-open="status.isopen">
+                                              <button id="single-button" type="button" class="btn btn-default" uib-dropdown-toggle="uib-dropdown-toggle" ng-disabled="disabled">
+                                                <span class="caret"></span>
+                                              </button>
+                                              <ul class="uib-dropdown-menu pull-right"  role="menu" aria-labelledby="single-button">
+                                                <li role="menuitem">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon" id="basic-addon1">Type</span>
+                                                        <select ng-model="f.DataType__c" class="form-control" aria-describedby="basic-addon1">
+                                                            <option value="text">Text</option> 
+                                                            <option value="currency">Currency</option>
+                                                            <option value="date">Date/Time</option>
+                                                        </select>
+                                                    </div>
+                                                </li>
+                                                <li class="divider" ng-show="f.DataType__c=='currency'"></li>
+                                                  <li role="menuitem" ng-show="f.DataType__c=='currency'"><input type="text" class="form-control" /></li>
+                                              </ul>
+                                            </div>
+                                        </td>-->
+                                        <td ng-show="false">
+                                            <button class="remove-btn btn btn-default" ng-click="removeField(f)"  ng-show="$index!=fields.length-1"><i class="fa fa-minus" aria-hidden="true"></i></button>
+                                            <button class="add-btn btn btn-default" ng-click="addField()" ng-show="$index==fields.length-1"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                                        </td>
+                                        
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        {{EBS}}
+                    </div>
+                </div>
+                <div>
+                    &nbsp;
+                </div>
+               
+                
+    <script type="text/ng-template" id="myModalContent.html">
+    <div class="bootstrap-container">
+        <div class="modal-header">
+            <h4 class="modal-title">File history</h4>
+        </div>
+        <div class="modal-body">
+            <div class="signal" ng-hide="attachmentsLoaded"></div>
+            <table class="table" ng-show="attachmentsLoaded">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Date Uploaded</th>
+                        <th>Uploaded by</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="f in attachments" ng-class="{even:$index%2==1}">
+                        <td><a ng-href="/servlet/servlet.FileDownload?file={{f.Id}}" target="_blank">{{f.Name}}</a></td>
+                        <td>{{f.LastModifiedDate | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                        <td>{{f.LastModifiedBy.Name}}</td>
+                        <td><a href="#" ng-click="removeAttachment(f.Id)"><i class="fa fa-times" aria-hidden="true"></i></a></td>
+                    </tr> 
+                </tbody>
+            </table>    
+        </div>
+        <div class="modal-footer">
+        </div>
+    </div>
+    </script>
+                
+
+<div id="myModal" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">File history</h4>
+      </div>
+      <div class="modal-body">
+        
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+                
+                
+            </div>
+            
+
+            
+        </apex:define> 
+        
+        
+    </apex:composition>
+</apex:page>

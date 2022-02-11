@@ -1,0 +1,78 @@
+<!--C0685-->
+<apex:page applyBodyTag="false" showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false" controller="Landing_Page_Controller">
+    <head>
+        <apex:stylesheet value="{!URLFOR($Resource.Bootstrap_3_2_0, '/css/bootstrap.min.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.Bootstrap_3_2_0, '/css/bootstrap_spacelab.min.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/css/core.css')}"/>
+    </head>
+    <c:PriceDrawForm_Header title="Prize Draw Form" />
+    <apex:form >
+    <body>
+        <div class="headerBar">
+            <div class="barContentLeft">
+                <span class="textSmallerWhiteBold">Campaign</span>
+                <span class="textSmallerWhite">: Data Collection</span>
+            </div>
+        </div>
+            <div >
+                <div style="position:absolute; z-index:2; width:100%;margin-top:-15px;margin-left:-10px;">
+                    <img class="arbLogoSmall" src="{!URLFOR($Resource.Datacollectionlogotitle)}"></img>
+                    <div style="margin-left: 115px; font-size: 40px;font-family: simpleLight; margin-top: -32px;" class="sectionTitleSmallGray engageTitle">
+                        Campaign: Data Collection
+                    </div>
+
+                    <div class="sectionTitleSmallGray engageTitle" style="height: 1px; width: calc(100% - 30px); background: rgb(184, 148, 86); margin-left: 30px; margin-top: 10px;">
+                    </div>
+                    
+                 <div >      
+                   <div >
+                      <div class="form-group">   
+                          <div class="col-sm-6">
+                              <div class="textLargeGold engageSubTitle" style="margin-top: 20px; margin-left: 40px;">
+                                  <p> Asalaamu Alaikum </p>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                    <div class="col-sm-6" >
+                      <div class="form-group">   
+                          <div class="col-sm-6" >       
+                                  
+                          </div>
+                          <div class="col-sm-6" >
+                              <div class="sectionTitle" style="margin-top: 25px; margin-left: 30px; color: #B3995D; ">
+                                  <p>Select a campaign </p>
+                                  <apex:selectList multiselect="false" size="1" value="{!selectedoption}" style="width:200px">
+                                        <apex:selectOptions value="{!CampaignName}"/>
+                                  </apex:selectList>
+                                
+                              </div>
+                                <br/>
+                              <div style="margin-top: 25px; margin-left:75px;">
+                                  <apex:commandButton styleClass="goldButton" value="GO" style="width: 100px;" action="{!display}" />
+                              </div>
+                              <div style="margin-top:300px;">
+                                    <img class="arbLogoBig" src="{!URLFOR($Resource.Datacollectionlogobig)}"></img> 
+                            </div>
+                          </div>
+                      </div>
+                  </div>
+                  </div>
+                        
+                </div>
+     
+                <div>
+                    <img style=" margin-left: 255px; margin-top: 190px;width:520px;height:400px;" src="{!URLFOR($Resource.Datacollectionsplash)}"></img>
+                </div>
+            </div>  
+
+
+              
+        <div class="footerBar">
+            <div class="barContentRight">
+                <img class="footerLogo" src="{!URLFOR($Resource.Datacollectionlogotitle)}"></img>
+            </div>
+        </div>
+    </body>
+        </apex:form>
+</apex:page>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StaticResource xmlns="http://soap.sforce.com/2006/04/metadata">
+    <cacheControl>Public</cacheControl>
+    <contentType>application/pdf</contentType>
+    <description>R&amp;F for 65% rent only fixed product 2.99% until 31 12 2018 65%</description>
+</StaticResource>

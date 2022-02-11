@@ -1,0 +1,181 @@
+<apex:page showHeader="false">
+
+
+<script>
+
+var refreshIntervalId = setInterval(function(){
+
+var element = document.getElementById('liveAgentChatLog');
+
+if (element != null)
+{
+//document.getElementById('waitingMessage').style.visibility="hidden";
+//clearInterval(refreshIntervalId );
+}
+
+
+},3000);
+
+</script>
+
+
+<!-- Add custom CSS here -->  
+
+<!-- The root element for the chat window. This element gets a CSS class dynamically applied to indicate the state of the chat window. Available states are:  
+"liveAgentStateWaiting" - indicates that the chat has not yet been answered.
+"liveAgentState" - indicates that the chat is engaged  
+"liveAgentStateStatusMessage" - indicates that a status message is being displayed to the user.  
+"liveAgentStateEnded" - indicates that the chat has ended. --> 
+
+<style>
+
+body{
+    padding: 10px;
+}
+
+#container
+{
+    -moz-border-radius:10px;
+    -webkit-border-radius:10px;
+    border-radius:10px;
+    border:8px solid #162f61;
+    padding: 20px;
+    background-image: url(https://online.islamic-bank.com/online/graphics/logos/Islamic-bank-logo.gif);
+    background-size:150px 70px;
+    background-repeat: no-repeat;
+    
+}
+
+#header
+{
+    text-align: right;
+    height: 40px;
+}
+
+h1
+{
+    font-size: 12pt;
+}
+
+.liveAgentChatElement.liveAgentEndButton, .liveAgentChatElement.liveAgentSendButton{
+    -moz-box-shadow:inset 0px 1px 0px 0px #f5978e;
+    -webkit-box-shadow:inset 0px 1px 0px 0px #f5978e;
+    box-shadow:inset 0px 1px 0px 0px #f5978e;
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #f24537), color-stop(1, #c62d1f) );
+    background:-moz-linear-gradient( center top, #f24537 5%, #c62d1f 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f24537', endColorstr='#c62d1f');
+    background-color:#f24537;
+    -moz-border-radius:3px;
+    -webkit-border-radius:3px;
+    border-radius:3px;
+    border:1px solid #d02718;
+    display:inline-block;
+    color:#ffffff;
+    font-family:arial;
+    font-size:13px;
+    font-weight:bold;
+    padding:4px 9px;
+    text-decoration:none;
+    /*text-shadow:1px 1px 0px #810e05;*/
+}
+.liveAgentChatElement.liveAgentEndButton:hover, .liveAgentChatElement.liveAgentSendButton:hover   {
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #c62d1f), color-stop(1, #f24537) );
+    background:-moz-linear-gradient( center top, #c62d1f 5%, #f24537 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#c62d1f', endColorstr='#f24537');
+    background-color:#c62d1f;
+}
+.liveAgentChatElement.liveAgentEndButton:active,.liveAgentChatElement.liveAgentSendButton.active{
+    position:relative;
+    top:1px;
+}
+
+.liveAgentState #container .modal
+{
+    display: none;
+}
+
+#liveAgentChatLog
+{
+    overflow-y: scroll;
+}
+
+.client{
+    color:  green;
+}
+
+.operator{
+    color: #162f61;    
+}
+
+#liveAgentChatLog {
+
+width: 100%;
+
+}
+
+.liveAgentChatInput
+{
+    width: 100%;
+}
+
+</style>
+
+
+
+
+
+
+
+<liveAgent:clientchat >  
+<div id="container">
+<div id="header">
+<span>
+<img src="https://{!$Label.Domain_Url}/servlet/servlet.ImageServer?oid=00D20000000MKv1&id=015D0000001oDL0" />
+</span>
+</div>
+<hr/>
+<liveAgent:clientChatAlertMessage />  
+ <liveAgent:clientChatStatusMessage reconnectingLabel="Connecting" />    
+
+
+    <div id="waitingMessage" class="modal"> 
+    <!-- You can customize this waiting message HTML -->
+    Waiting to connect
+    </div>  
+
+    <table width="100%">
+    <tr><td colspan="2"> 
+    <liveAgent:clientChatLog />
+    </td></tr>
+    
+    
+    <tr><td colspan="2">
+     <div id="chatInput" class="pod"> 
+    <liveagent:clientChatInput /> 
+    </div>
+    </td></tr>
+    <tr>
+    <td>
+    <liveAgent:clientChatSendButton label="Send"/> 
+     
+    </td><td align="right">
+    <div id="chatControls" class="pod"> 
+    <liveAgent:clientChatEndButton label="End Chat" /> 
+    </div>
+    </td></tr>
+    
+    </table>
+</div>
+</liveAgent:clientchat>  
+
+<!-- You can customize the window title with the js below --> 
+<script type="text/javascript"> 
+document.title = "My Custom Live Chat Window"; 
+
+$(document).ajaxComplete(function(event,request, settings) {
+   alert('Ajax call yo!!');
+ });
+
+</script>  
+
+</apex:page>

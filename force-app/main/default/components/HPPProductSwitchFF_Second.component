@@ -1,0 +1,201 @@
+<apex:component >
+<div>
+
+<!------
+                                                <div class="row">
+                                                    <div class="col-sm-4">
+                                                        <label class="control-label">Employment type</label>
+                                                        <div>{{app.SecondaryEmployment.EmploymentType}}</div>
+                                                    </div>
+                                                    <div class="col-sm-4" ng-show="app.Employment_Type_c == 'other'">
+                                                        <label class="control-label">Other Employment type</label>
+                                                        <div>{{app.SecondaryEmployment.Other_Employment_Type_c}}</div>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <label class="control-label">Employment status</label>
+                                                        <div>{{app.SecondaryEmployment.EmploymentStatus}}</div>
+                                                    </div>
+                                                </div>
+                                                <hr/>
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <label class="control-label">Occupation</label>
+                                                        <div>{{app.SecondaryEmployment.Occupation}}</div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <label class="control-label">Nature of employers/your business status</label>
+                                                        <div>{{app.SecondaryEmployment.NatureOfBusiness}}</div>
+                                                    </div>
+                                                </div>
+                                                <hr/>
+                                                    <c:CAA_Date title="Date employment commenced" model="app.SecondaryEmployment" field="Date_Employment_Commenced_c" NumYears="-50" req="true" />
+                                                <hr/>
+                                                
+                                                
+                                                ---------------------------------------------------- -->
+                                                
+                                                
+                                                
+                                                <div class="row">
+                                                    <div ng-class="WideInputClass()">
+                                                        <label class="control-label">Employment type</label>
+                                                        <div>                                                        
+                                                            <!--<select class="form-control" ng-model="app.PrimaryEmployment.EmploymentType" ng-options="option.Key as option.Value  for option in Data.EmploymentType" >
+                                                            </select>    -->
+                                                            <select class="form-control" ng-change="app.SecondaryEmployment.EmploymentStatus = null" ng-model="app.SecondaryEmployment.EmploymentType" ng-options="option.Key as option.Value for option in Data.EmploymentType" >
+                                                            </select>    
+                                                        </div>
+                                                    </div>
+                                                    <div ng-class="WideInputClass()" ng-show="app.SecondaryEmployment.Employment_Type_c == 'other'">
+                                                        <label class="control-label">Other Employment type</label>
+                                                        <div>{{app.SecondaryEmployment.Other_Employment_Type_c}}</div>
+                                                    </div>                                                    
+                                                </div>
+                                                <hr/>
+                                                <div class="row">
+                                                    <div ng-class="WideInputClass()">
+                                                        <label class="control-label">Employment status</label>
+                                                        <div>
+                                                            <select class="form-control" ng-model="app.SecondaryEmployment.EmploymentStatus" 
+                                                                ng-options="o as o for o in GetDepList(app.SecondaryEmployment.EmploymentType,$parent.Data.EmploymentTypeDep,app.SecondaryEmployment.EmploymentStatus)">
+                                                                
+                                                            </select>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <hr/>
+                                                <div class="row">
+                                                    <div ng-class="WideInputClass()">
+                                                        <label class="control-label">Occupation</label>
+                                                        <div>
+                                                            <input type="text" class="form-control" ng-model="app.SecondaryEmployment.Occupation"/>
+                                                        </div>
+                                                    </div>
+                                                    <div ng-class="WideInputClass()">
+                                                        <label class="control-label">Nature of employers/your business status</label>
+                                                        <div>
+                                                            <select class="form-control" ng-model="app.SecondaryEmployment.NatureOfBusiness"
+                                                                ng-options="option.Key as option.Value for option in Data.NatureBusiness" >
+                                                            </select>                                                            
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <hr/>
+                                                    <c:CAA_Date title="Date employment commenced" model="app.SecondaryEmployment" field="Date_Employment_Commenced_c" NumYears="-50" req="true" />
+                                                <hr/>
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                <div class="SectionTitle">
+    Employer Details
+</div>
+                                                
+                                                
+                                         
+                                                
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <label class="control-label">Employer name</label>
+                                                        <div>
+                                                            <input type="text" class="form-control" ng-model="app.SecondaryEmployment.EmployerName"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                               
+                                                    <c:CAA_Address title="" model="app.SecondaryEmployment"  
+                    postcode="Employer_Post_Code_c" country="Employer_Country_c" county="Employer_Address_Line_4_c"
+                    line1="Employer_Address_Line_1_c" line2="Employer_Address_Line_2_c" town="Employer_Address_Line_3_c" cid="8" required="false"/>
+                                              
+                                                
+                                                
+                                                <hr/>
+                                             
+                                                
+                                                
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <label class="control-label">Gross annual salary</label>
+                                                        <div><input type="number" class="form-control" ng-model="app.SecondaryEmployment.GrossIncome"/></div>                                                    
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <label class="control-label">Net monthly income</label>
+                                                        <div><input type="number" class="form-control" ng-model="app.SecondaryEmployment.NetIncome"/></div> 
+                                                    </div>
+                                                </div>
+                                                <hr/>
+                                                <div class="row">
+                                                    <div class="SectionTitle">
+                                                        <label class="control-label">Payments above basic salary</label>
+                                                        
+                                            
+                                                    </div>
+                                                </div>
+                                                
+                                               
+                                                <div ng-show="app.SecondaryEmployment.PaymentsAboveBasic == 'Yes' || true">
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <label>Regular bonus (annual)</label>
+                                                            <div><input class="form-control" type="number" ng-model="app.SecondaryEmployment.RegularCommission "  /></div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <label>Guaranteed commission (annual)</label>
+                                                            <div><input class="form-control" type="number" ng-model="app.SecondaryEmployment.GuaranteedCommission "  /></div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <label>Regular commission (annual)</label>
+                                                            <div><input class="form-control" type="number" ng-model="app.SecondaryEmployment.RegularCommission "  /></div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <label>Guaranteed overtime (annual)</label>
+                                                            <div><input class="form-control" type="number" ng-model="app.SecondaryEmployment.GuaranteedOvertime "  /></div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <label>Regular overtime (annual)</label>
+                                                            <div><input class="form-control" type="number" ng-model="app.SecondaryEmployment.RegularOvertime "  /></div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <label>Guaranteed shift allowance (annual)</label>
+                                                            <div><input class="form-control" type="number" ng-model="app.SecondaryEmployment.GuaranteedShiftAllowance  "  /></div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <label>Regular shift allowance (annual)</label>
+                                                            <div><input class="form-control" type="number" ng-model="app.SecondaryEmployment.RegularShiftAllowance "  /></div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <label>Car allowance (annual)</label>
+                                                            <div><input class="form-control" type="number" ng-model="app.SecondaryEmployment.CarAllowance "  /></div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <label>Large town allowance (annual)</label>
+                                                            <div><input class="form-control" type="number" ng-model="app.SecondaryEmployment.LargeTownAllowance "  /></div>
+                                                        </div>
+                                                    </div>
+                                                
+                                                </div>
+                                                
+                                                    <hr/>
+                                                    
+                                                    
+                                                <div class="row">    
+                                                    <div class="col-sm-6">
+                                                        <label class="control-label">How do you receive your salary</label>
+                                                        <div>
+                                                            <select class="form-control" ng-model="app.SecondaryEmployment.HowSalaryPaid" 
+                                                                    ng-options="option.Key as option.Value for option in Data.ReceiveSalary"/>
+                                                        </div>
+                                                    </div>                                                
+                                                    <div class="col-sm-6">
+                                                        <label class="control-label">How often are you paid</label>
+                                                        <div>
+                                                            <select class="form-control" ng-model="app.SecondaryEmployment.HowOftenPaid" 
+                                                                    ng-options="option.Key as option.Value for option in Data.PaidSalary"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+ </div>                                               
+</apex:component>

@@ -1,0 +1,175 @@
+<apex:page showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false" controller="CAA_Product_Detail_Controller">
+
+
+<apex:composition template="CAA_Template">
+        <apex:define name="body">
+<div ng-controller="controllerProductDetails">
+
+<div class="SectionHeader">
+    <div class="numberCircleReverse">1</div>
+    <div>Product Details</div>
+</div>
+<div class="PanelContents">
+
+<!--
+<div ng-show="Product.ShowTransfer">
+<div>
+    <label>What do you want to do with your profit?</label>    
+</div>
+<div>
+    <label class="radio-inline"><input type="radio" name="optWhatToDoWithProfit" value="reinvest" ng-model="Product.WhatToDoWithProfit"/>Reinvest it (into this Fixed Term Account)</label>
+    <label class="radio-inline"><input type="radio" name="optWhatToDoWithProfit" value="transfer" ng-model="Product.WhatToDoWithProfit"/>Transfer it (once every quarter)</label>
+</div>
+<hr/>
+
+<div ng-show="Product.WhatToDoWithProfit == 'transfer'">
+<div>
+    <label>Where do you want your profit transfered to?</label>
+</div>
+<div class="radio">
+    <label><input type="radio" name="optTransferTo" ng-model="Product.TransferToType" value="current"/>An existing Al Rayan Bank current account</label>
+</div>
+<div class="radio">
+    <label><input type="radio" name="optTransferTo" ng-model="Product.TransferToType" value="isa"/>An existing Al Rayan Bank Instant Access ISA</label>
+</div>
+<div class="radio">
+    <label><input type="radio" name="optTransferTo" ng-model="Product.TransferToType" value="external"/>An external current account</label>
+</div>
+
+<div class="row" ng-show="Product.TransferToType == 'external'">
+    <div class="col-sm-4">
+        <label>Account number</label>
+        <input type="test" class="form-control arbBox" ng-model="Product.TransferToAccount"/>        
+    </div>
+    <div class="col-sm-4">
+        <label>Sort code</label>
+        <input type="test" class="form-control arbBox" ng-model="Product.TransferToSortCode"/>        
+    </div>
+    <div class="col-sm-4">
+        <span class="borderCircle pull-right">?</span>
+    </div>
+   
+</div>
+ <hr/>
+</div>
+
+</div>
+
+-->
+
+
+
+
+
+<div ng-show="Product.ShowRegularPayment">
+
+<div>
+    <label>Do you want to set up regular payments to your new account?</label>
+    <span class="borderCircle pull-right" data-container="body" data-toggle="popover" data-trigger="click"
+        data-placement="left" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">?</span>
+</div>
+<div>
+    <label class="radio-inline"><input type="radio" name="optRegularPaymnent" ng-model="Product.HasRegularPayment" value="yes"/>Yes</label>
+    <label class="radio-inline"><input type="radio" name="optRegularPaymnent" ng-model="Product.HasRegularPayment" value="no"/>No</label>
+</div>
+<hr/>
+
+<div ng-show="Product.HasRegularPayment == 'yes'">
+    <div class="goldColor">
+        <strong>Please specify how much you want to pay, how often and on what date - as well as the bank account that you want the payments to be taken from.</strong>
+        This information will not be processed until your applciation has been approved and your account has been opened.
+    </div>
+    
+    <div class="row">
+        <div class="col-sm-4">
+            <label>Payment amount</label>
+            <input type="text" class="form-control arbBox" ng-model="Product.RegularPaymentAmount"/>
+        </div>
+        <div class="col-sm-4">
+            <label>Payment frequency</label>
+             <select class="form-control arbBox" ng-model="Product.RegularPaymentFrequency">
+             
+             </select>
+        </div>
+        <div class="col-sm-4">
+            <label>Regular payment date</label><span class="borderCircle pull-right" data-toggle="tooltip" data-placement="right" title="This is a Tooltip on the right hand side of the help icon.">?</span>
+            <select class="form-control arbBox" ng-model="Product.RegularPaymentDate">
+             
+             </select>
+        </div>    
+    </div>
+<hr/>
+<div class="row">
+    <div class="col-sm-4">
+        <label>Date of first payment</label>
+        <input type="text" class="form-control arbBox" ng-model="Product.RegularPaymentDay"/>
+    </div>
+    <div class="col-sm-4">
+        <label>&nbsp;</label>
+         <select class="form-control arbBox" ng-model="Product.RegularPaymentMonth">
+         
+         </select>
+    </div>
+    <div class="col-sm-4">
+        <label>&nbsp;</label><span class="borderCircle pull-right">?</span>
+        <select class="form-control arbBox" ng-model="Product.RegularPaymentYear">
+         
+         </select>
+    </div>    
+</div>
+<hr/>
+<div>
+    <input type="checkbox" ng-model="Product.HasFinalPayment"/><label>I want to specify a date for final payment</label>
+</div>
+
+
+<div class="row" ng-show="Product.HasFinalPayment">
+    <div class="col-sm-4">
+        <label>Name of the bank to debit</label>
+        <input type="text" class="form-control arbBox" ng-model="Product.FinalPaymentBank"/>
+    </div>
+    <div class="col-sm-4">
+        <label>Account number</label>
+        <input type="text" class="form-control arbBox" ng-model="Product.FinalPaymentAccountNumber"/>
+    </div>
+    <div class="col-sm-4">
+        <label>Sort code</label><span class="borderCircle pull-right">?</span>
+        <input type="text" class="form-control arbBox" ng-model="Product.FinalPaymentSortCode"/>
+    </div>    
+</div>
+
+</div>
+<hr/>
+</div>
+
+<div ng-show="ShowCompleteButton()">
+<button class="btn btnArb" >
+                       <span> <strong>Continue</strong> to Section 2
+                           <span class="fa-stack fa" >
+                      <i class="fa fa-circle-thin fa-stack-2x"></i>
+                      <i class="fa fa-chevron-right fa-stack-1x"></i>
+                    </span>
+                    </span>
+                       
+                       
+                       
+                    </button>
+</div>
+
+
+
+</div>
+</div>
+</apex:define>
+
+
+
+
+
+        <apex:define name="Menu">
+        
+  </apex:define>
+</apex:composition>              
+        
+        
+</apex:page>

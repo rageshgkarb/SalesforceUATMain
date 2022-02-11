@@ -1,0 +1,260 @@
+<!-- Case:1832636 ;BTLLC Defects; Added script for card refresh issue -->
+<apex:page showheader="false" sidebar="false" controller="MMR_App_BTLLC_Payment" doctype="html-5.0" action="{!Setup}"><!-- C0644 -->
+    <head>
+        <c:MMR_PageHeader ></c:MMR_PageHeader>    
+        <script>
+        if ( window.history.replaceState ) {
+        window.history.replaceState( null, null, window.location.href );
+        }
+        </script>  
+    </head>
+    <body>
+
+        <c:MMR_Header title="Application - Payment Details" numapps="{!numapplying}" opp="{!bopp}" />
+        <div class="container">
+            <c:MMR_App_BTLLC_Nav active="4" eventid="{!EventId}" rendered="{!!IsCompleted}" />
+            <c:MMR_App_BTLLC_Nav_Links active="4" eventid="{!EventId}" rendered="{!IsCompleted}" />
+
+
+
+            <apex:form id="aForm" styleclass="form-horizontal">
+
+                <apex:pagemessages ></apex:pagemessages>
+
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#carddetails" data-toggle="tab">Card Details</a></li>
+                    <li><a href="#otherpay" data-toggle="tab">Other Payment Details</a></li>
+                    <li><a href="#directdebit" data-toggle="tab">Direct Debit Details</a></li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div class="tab-pane active" id="carddetails">
+
+
+
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-sm-2">
+                                    <label>Card Type</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <apex:inputfield id="cardType" styleclass="form-control" value="{!card.Card_Type__c}" rendered="{!IF(card.Name=='', true, false)}" required="false" />
+                                    <apex:outputfield id="txtCardType" value="{!card.Card_Type__c}" rendered="{!not(IF(card.Name=='', true, false))}" />
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Issue Number</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <apex:inputfield styleclass="form-control" id="issueNumber" value="{!card.Issue_Number__c}" rendered="{!IF(card.Name=='', true, false)}" />
+                                    <apex:outputfield id="txtIssueNumber" value="{!card.Issue_Number__c}" rendered="{!not(IF(card.Name=='', true, false))}" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-sm-2">
+                                    <label>Card Number</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <apex:inputfield styleclass="form-control" id="cardNumber" value="{!card.Name}" rendered="{!IF(card.Name=='', true, false)}" required="false" />
+                                    <apex:outputfield id="txtCardNumber" value="{!card.Name}" rendered="{!not(IF(card.Name=='', true, false))}" />
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Security Code</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <apex:inputfield styleclass="form-control" id="cardSecurityCode" value="{!card.Security_Code_Encrypted__c}" rendered="{!IF(card.Security_Code_Encrypted__c==null, true, false)}" required="false" />
+                                    <apex:outputtext rendered="{!not(IF(card.Security_Code_Encrypted__c==null, true, false))}">&nbsp;</apex:outputtext>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-sm-2">
+                                    <label>Expiry (mm/yyyy)</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <apex:outputpanel rendered="{!IF(card.Token__c==null, true, false)}">
+                                        <apex:inputfield html-maxlength="2" styleclass="form-control" id="cardExpiryMonth" value="{!card.Expiry_Month__c}" style="width:40px;display:inline-block;" />
+                                        <apex:outputtext value=" / " />
+                                        <apex:inputfield html-maxlength="4" styleclass="form-control" id="cardExpiryYear" value="{!card.Expiry_Year_Text__c}" style="width:60px;display:inline-block;" />
+                                    </apex:outputpanel>
+
+                                    <apex:outputpanel rendered="{!IF(card.Token__c!=null, true, false)}">
+                                        <apex:outputtext rendered="{!not(IF(card.Name==null, true, false))}">{!cardExpiryDate}</apex:outputtext>
+                                    </apex:outputpanel>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-sm-2">
+                                    <label>Valid to(mm/yyyy)</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <apex:outputpanel rendered="{!IF(card.Token__c==null, true, false)}">
+                                        <apex:inputfield html-maxlength="2" styleclass="form-control" id="cardValidFromMonth" value="{!card.Valid_From_Month__c}" style="width:40px;display:inline-block;" />
+                                        <apex:outputtext value=" / " />
+                                        <apex:inputfield html-maxlength="4" styleclass="form-control" id="cardValidFromYear" value="{!card.Valid_From_Year_Text__c}" style="width:60px;display:inline-block;" />
+                                    </apex:outputpanel>
+
+                                    <apex:outputtext rendered="{!not(IF(card.Token__c==null, true, false))}">{!cardExpiryDate}</apex:outputtext>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <apex:commandbutton value="Add" styleclass="btn-danger" action="{!AddCard}" rendered="{!!IsCompleted}" />
+                        </div>
+
+                        <!-- Case: 1832636 ; BTLLC Defect to fix the delete card issue ;Start-->
+                        <apex:pageblock id="cardBlock">
+                            <apex:outputpanel rendered="{!HasCards}">
+
+                                <apex:pageblocktable id="tblCard" value="{!Cards}" var="c">
+                                    <apex:column headervalue="Select">
+                                        <apex:commandbutton value="Delete" styleclass="btn-danger" action="{!DeleteCard}" rendered="{!!IsCompleted}" rerender="cardBlock">
+                                            <apex:param name="deleteCard" value="{!c.card.id}" assignto="{!deleteCardId}" />
+                                        </apex:commandbutton>
+                                    </apex:column>
+                                    <apex:column value="{!c.card.Name}" />
+                                    <apex:column value="{!c.card.Card_Type__c}" />
+                                    <apex:column headervalue="Expiry Date" value="{!c.card.Expiry_Date_Encrypted__c}" />
+                                </apex:pageblocktable>
+
+
+                            </apex:outputpanel>
+                        </apex:pageblock>
+                        <!-- Case: 1832636 ; BTLLC Defect to fix the delete card issue ;End-->
+
+
+
+                    </div><!-- end tab 1 -->
+
+
+
+
+                    <div class="tab-pane" id="otherpay">
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-sm-2">
+                                    <label>Other payment method</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <apex:inputfield styleclass="form-control" value="{!exOpp.Other_payment_method__c}" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-sm-2">
+                                    <label>Other payment account number</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <apex:inputfield styleclass="form-control" value="{!exOpp.Other_payment_account_no__c}" />
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Other payment sortcode</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <apex:inputfield styleclass="form-control" value="{!exOpp.Other_payment_sortcode__c }" />
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div><!-- end tab 2 -->
+
+                    <div class="tab-pane" id="directdebit">
+                        <!-- start tab 3-->
+
+                        <div class="row">
+                            <apex:image url="{!$Resource.DirectDebitLogo}" />
+                        </div>
+
+                        <div class="row">
+                            <p>Instruction to your Bank or Building Society</p>
+                            <p>Please pay Al Rayan Bank PLC Direct Debits from the account detailed in this Instruction subject to the safeguards assured by the Direct Debit Guarantee. I understand that this Instruction may remain with Al Rayan Bank PLC and, if so, details will be passed electronically to my Bank/Building Society.</p>
+                            <p>Banks/Building Societies may not accept Direct Debit Instructions for some types of accounts. The setup of DD mandate can take up to 7 working days. </p>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-sm-2">
+                                    Name of Account
+                                </div>
+                                <div class="col-sm-4">
+                                    <apex:inputfield styleclass="form-control" value="{!Opp.Name_of_current_Bank_Building_Society__c}" required="false" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-sm-2">
+                                    Sort code to debit
+                                </div>
+                                <div class="col-sm-2">
+                                    <apex:inputfield styleclass="form-control" value="{!Opp.Sort_Code__c}" required="false" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-sm-2">
+                                    Account number to debit
+                                </div>
+                                <div class="col-sm-2">
+                                    <apex:inputfield styleclass="form-control" value="{!Opp.Account_Number__c}" required="false" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-sm-2">
+                                    Preferred payment day
+                                </div>
+                                <div class="col-sm-2">
+                                    <apex:inputfield styleclass="form-control" value="{!ExOpp.DDPreferredPaymentDate__c }" required="true" />
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div><!-- end tab 3-->
+                </div>
+
+
+
+                <div class="row">
+                    <apex:commandbutton styleclass="btn-danger" value="Previous" action="{!Prev}" rendered="{!!IsCompleted}" />
+                    <apex:commandbutton styleclass="btn-danger" value="Save" action="{!Save}" rendered="{!!IsCompleted}" />
+                    <apex:commandbutton styleclass="btn-danger" value="Next" action="{!Next}" rendered="{!!IsCompleted}" />
+
+                </div>
+
+
+
+
+
+
+
+
+            </apex:form>
+        </div>
+
+        <c:MMR_PageFooter ></c:MMR_PageFooter>
+
+    </body>
+</apex:page>

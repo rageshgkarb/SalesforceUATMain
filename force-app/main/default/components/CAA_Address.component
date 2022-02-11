@@ -1,0 +1,231 @@
+<apex:component controller="CAA_Date_Controller">
+    <apex:attribute name="model" type="string" description="" />
+    <apex:attribute name="title" type="string" description="" />
+    <apex:attribute name="country" type="string" description="" />
+    <apex:attribute name="postcode" type="string" description="" />
+    <apex:attribute name="line1" type="string" description="" />
+    <apex:attribute name="line2" type="string" description="" />
+    <apex:attribute name="county" type="string" description="" />
+    <apex:attribute name="town" type="string" description="" />
+    <apex:attribute name="datefield" type="string" description="" />
+    <apex:attribute name="cid" type="string" description="" />
+    <apex:attribute name="showCountryHelp" type="boolean" description="" />
+    <apex:attribute name="CountryHelp" type="string" description="" />
+    <apex:attribute name="Required" type="Boolean" description="" />
+    <apex:attribute name="RequiredCondition" type="String" description="" />
+
+    <!-- SS- AEol Requirement -->
+    <apex:attribute name="countrycode" type="string" description="" required="false" default="" />
+    <apex:attribute name="ShowCountryCode" type="boolean" description="" required="false" default="false" />
+    <apex:attribute name="ShowMoveInDate" type="boolean" description="" required="false" default="true" />
+    <apex:attribute name="HasCustomIndex" type="boolean" description="" required="false" default="false" />
+    <apex:attribute name="CustomIndex" type="integer" description="" required="false" default="0" />
+
+    <apex:outputPanel rendered="{!Not(Required)}" layout="none">
+        <div ng-controller="AddressController" ng-init="init(app,$index,{!cid},'{!$Setup.pca__PostcodeAnywhereSettings__c.pca__Key__c}');">
+            <div class="SectionTitle">{!title}</div>
+            <div class="row">
+                <div class="col-sm-4" ng-class="{ 'has-error':( myform.postcode{{$index}}{!cid}.$touched|| Submitted) && myform.postcode{{$index}}{!cid}.$invalid }">
+                    <label>Postcode</label>
+                    <input id="postcode{{$index}}{!cid}" autocomplete="pca" name="postcode{{$index}}{!cid}" class="form-control" ng-model="{!model}.{!postcode}"
+                    />
+
+                </div>
+                <div class="col-sm-4">
+                    <label>Country</label>
+                    <apex:outputPanel layout="none" rendered="{!showCountryHelp}">
+                        <span class="borderCircle pull-right" data-toggle="popover" data-placement="auto right" data-trigger="click" data-content="{!CountryHelp}">?</span>
+
+                    </apex:outputPanel>
+                    <div>{{{!model}.{!country}}}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <label> Address line 1</label>
+                    <input id="line1{{$index}}{!cid}" name="line1{{$index}}{!cid}" type="text" class="form-control" ng-model="{!model}.{!line1}"
+                    />
+                </div>
+                <div class="col-sm-4">
+                    <label>Address line 2</label>
+                    <input id="line2{{$index}}{!cid}" name="line2{{$index}}{!cid}" type="text" class="form-control" ng-model="{!model}.{!line2}"
+                    />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <label>Town</label>
+                    <input id="city{{$index}}{!cid}" name="city{{$index}}{!cid}" type="text" class="form-control" ng-model="{!model}.{!town}"
+                    />
+                </div>
+                <div class="col-sm-4">
+                    <label>County</label>
+                    <input id="county{{$index}}{!cid}" name="county{{$index}}{!cid}" type="text" class="form-control" ng-model="{!model}.{!county}"
+                    />
+                </div>
+            </div>
+        </div>
+
+        <apex:outputPanel rendered="{!datefield != '' && !ShowMoveInDate }">
+            <c:CAA_Date title="Move in date" model="{!model}" field="{!datefield}" NumYears="-120" />
+            <hr/>
+        </apex:outputPanel>
+    </apex:outputPanel>
+
+
+    <apex:outputPanel rendered="{!Required}" layout="none">
+        <div ng-controller="AddressController" ng-init="init(app,$index,{!cid},'{!$Setup.pca__PostcodeAnywhereSettings__c.pca__Key__c}', {!HasCustomIndex}, {!CustomIndex});">
+            <div class="SectionTitle">{!title}</div>
+            <div class="row">
+                <div class="col-sm-4" ng-class="{ 'has-error':( myform.postcode{{$index}}{!cid}.$touched|| Submitted) && myform.postcode{{$index}}{!cid}.$invalid }">
+                    <label class="control-label">Postcode</label>
+                    <input id="postcode{{$index}}{!cid}" autocomplete="pca" name="postcode{{$index}}{!cid}" class="form-control" ng-model="{!model}.{!postcode}"
+                        ng-required="{!RequiredCondition}" />
+                    <div class="input-validation" ng-messages="myform['postcode' + $index + '{!cid}'].$error" ng-show="myform['postcode' + $index + '{!cid}'].$touched || Submitted">
+                        <p class="alert alert-danger" ng-message="required">This field is required</p>
+                    </div>
+
+                </div>
+                <div class="col-sm-4">
+                    <label>Country</label>
+                    <apex:outputPanel layout="none" rendered="{!showCountryHelp}">
+                        <span class="borderCircle pull-right" data-toggle="popover" data-placement="auto right" data-trigger="click" data-content="{!CountryHelp}">?</span>
+                    </apex:outputPanel>
+                    <div>{{{!model}.{!country}}}
+                    </div>
+                </div>
+
+                <apex:outputPanel rendered="{!ShowCountryCode}">
+                    <!-- Country Code -->
+                    <div class="col-sm-4" ng-class="{ 'has-error':( myform.countrycode{{$index}}{!cid}.$touched|| Submitted) && myform.countrycode{{$index}}{!cid}.$invalid }">
+                        <label class="control-label">Country Code</label>
+                        <select class="form-control arbBox hidden-xs" ng-model="countrycode" ng-options="option.Key for option in Data.CountryCodes track by option.Key" ng-required="{!RequiredCondition}"
+                            name="{!model}{!countrycode}{{$parent.$index}}">
+                        </select>
+                        <div class="input-validation hidden-xs" ng-messages="myform['countrycode' + $index + '{!cid}'].$error" ng-show="myform['countrycode' + $index + '{!cid}'].$touched || Submitted">
+                            <p class="alert alert-danger" ng-message="required">This field is required</p>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+            </div>
+
+
+            <div class="row">
+
+                <div class="col-sm-4" ng-class="{ 'has-error':( myform.line1{{$index}}{!cid}.$touched|| Submitted) && myform.line1{{$index}}{!cid}.$invalid}">
+                    <label class="control-label"> Address line 1</label>
+                    <input id="line1{{$index}}{!cid}" name="line1{{$index}}{!cid}" type="text" class="form-control" ng-model="{!model}.{!line1}"
+                        ng-required="{!RequiredCondition}" />
+                    <div class="input-validation" ng-messages="myform['line1' + $index + '{!cid}'].$error" ng-show="myform['line1' + $index + '{!cid}'].$touched || Submitted">
+                        <p class="alert alert-danger" ng-message="required">This field is required</p>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <label>Address line 2</label>
+                    <input id="line2{{$index}}{!cid}" name="line2{{$index}}{!cid}" type="text" class="form-control" ng-model="{!model}.{!line2}"
+                    />
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-4" ng-class="{ 'has-error':( myform.city{{$index}}{!cid}.$touched|| Submitted) && myform.city{{$index}}{!cid}.$invalid }">
+                    <label class="control-label">Town</label>
+                    <input id="city{{$index}}{!cid}" name="city{{$index}}{!cid}" type="text" class="form-control" ng-model="{!model}.{!town}"
+                        ng-required="{!RequiredCondition}" />
+                    <div class="input-validation" ng-messages="myform['city' + $index + '{!cid}'].$error" ng-show="myform['city' + $index + '{!cid}'].$touched || Submitted">
+                        <p class="alert alert-danger" ng-message="required">This field is required</p>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <label>County</label>
+                    <input id="county{{$index}}{!cid}" name="county{{$index}}{!cid}" type="text" class="form-control" ng-model="{!model}.{!county}"
+                    />
+                </div>
+            </div>
+        </div>
+
+        <apex:outputPanel rendered="{!datefield != '' }">
+            <!--<c:CAA_Date title="Move in date" model="{!model}" field="{!datefield}" NumYears="-50" req="{!RequiredCondition}"/>-->
+            <apex:outputPanel rendered="{!ShowMoveInDate}">
+                <div ng-controller="DateController" ng-init="init({!model},'{!datefield}','{!RequiredCondition}',-120)">
+
+                    <div class="row">
+                        <div class="col-xs-8">
+                            <label>Move in date </label>
+                        </div>
+                        <div class="col-xs-4">
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-4" ng-class="{ 'has-error': myform['{!model}{!datefield}_day' + $parent.$index].$invalid && ($parent.Submitted || myform['{!model}{!datefield}_day' + $parent.$index].$touched) }">
+
+                            <select class="form-control arbBox hidden-xs" ng-model="day" ng-options="option.key as option.value  for option in days"
+                                ng-required="{!RequiredCondition}" name="{!model}{!datefield}_day{{$parent.$index}}">
+                            </select>
+
+                            <select class="form-control arbBox visible-xs" ng-model="day" ng-options="option.key as option.value  for option in daysSM"
+                                ng-required="{!RequiredCondition}" name="{!model}{!datefield}_day1{{$parent.$index}}">
+                            </select>
+                            <div class="input-validation hidden-xs" ng-messages="myform['{!model}{!datefield}_day' + $parent.$index].$error" ng-show="myform['{!model}{!datefield}_day' + $parent.$index].$touched || Submitted">
+                                <p class="alert alert-danger" ng-message="required">This field is required</p>
+                            </div>
+                            <div class="input-validation visible-xs" ng-messages="myform['{!model}{!datefield}_day1' + $parent.$index].$error" ng-show="myform['{!model}{!datefield}_day1' + $parent.$index].$touched || Submitted">
+                                <p class="alert alert-danger" ng-message="required">Required</p>
+                            </div>
+                        </div>
+                        <div class="col-xs-4" ng-class="{ 'has-error': required && !month && ($parent.Submitted || myform['{!model}{!datefield}_month' + $parent.$index].$touched)}">
+
+                            <select class="form-control arbBox hidden-xs" ng-model="month" ng-options="option.key as option.value  for option in months"
+                                ng-required="{!RequiredCondition}" name="{!model}{!datefield}_month{{$parent.$index}}">
+                            </select>
+                            <select class="form-control arbBox visible-xs" ng-model="month" ng-options="option.key as option.value  for option in monthsSM"
+                                ng-required="{!RequiredCondition}" name="{!model}{!datefield}_month1{{$parent.$index}}">
+                            </select>
+                            <div class="input-validation hidden-xs" ng-messages="myform['{!model}{!datefield}_month' + $parent.$index].$error" ng-show="myform['{!model}{!datefield}_month' + $parent.$index].$touched || Submitted">
+                                <p class="alert alert-danger" ng-message="required">This field is required</p>
+                            </div>
+                            <div class="input-validation visible-xs" ng-messages="myform['{!model}{!datefield}_month1' + $parent.$index].$error" ng-show="myform['{!model}{!datefield}_month1' + $parent.$index].$touched || Submitted">
+                                <p class="alert alert-danger" ng-message="required">Required</p>
+                            </div>
+
+                        </div>
+                        <div class="col-xs-4" ng-class="{ 'has-error': required && !year && ($parent.Submitted || myform['{!model}{!datefield}_year' + $parent.$index].$touched)}">
+
+                            <select class="form-control arbBox hidden-xs" ng-model="year" ng-options="option.key as option.value  for option in years"
+                                ng-required="{!RequiredCondition}" name="{!model}{!datefield}_year{{$parent.$index}}">
+                            </select>
+                            <!--<apex:selectOptions value="{!Years}"></apex:selectOptions>               -->
+                            <select class="form-control arbBox visible-xs" ng-model="year" ng-options="option.key as option.value  for option in yearsSM"
+                                ng-required="{!RequiredCondition}" name="{!model}{!datefield}_year1{{$parent.$index}}">
+                            </select>
+                            <div class="input-validation hidden-xs" ng-messages="myform['{!model}{!datefield}_year' + $parent.$index].$error" ng-show="myform['{!model}{!datefield}_year' + $parent.$index].$touched || Submitted">
+                                <p class="alert alert-danger" ng-message="required">This field is required</p>
+                            </div>
+                            <div class="input-validation visible-xs" ng-messages="myform['{!model}{!datefield}_year1' + $parent.$index].$error" ng-show="myform['{!model}{!datefield}_year1' + $parent.$index].$touched || Submitted">
+                                <p class="alert alert-danger" ng-message="required">Required</p>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="input-validation" ng-show="IsInValid()">
+                        <p class="alert alert-danger">Please enter a valid date</p>
+                    </div>
+                </div>
+                <hr/>
+            </apex:outputPanel>
+        </apex:outputPanel>
+    </apex:outputPanel>
+
+</apex:component>

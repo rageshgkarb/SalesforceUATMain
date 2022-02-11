@@ -1,0 +1,277 @@
+<apex:page controller="HPPEventAIPController" sidebar="false" showHeader="false" title="Applicants">
+<head>
+<apex:includeScript value="{!$Resource.pca__LookupComponent}"/>
+<apex:includeScript value="{!$Resource.pca__EditPageLauncher}"/>
+<apex:includeScript value="{!$Page.pca__EditPageSettings}"/>
+
+</head>
+<body>
+<c:KendoResource ></c:KendoResource>
+<apex:form >
+
+
+<div id="formWrapper">
+<div class="header" >
+<h1>{!Opp.Name} - {!Acc.Name} - AIP</h1>
+</div>
+
+
+
+<div id="container" >
+
+<table width="100%">
+<tr>
+
+<td valign="top" id="contenttd">
+<div  id="topNav">
+
+<ul>
+<li ><apex:commandLink action="{!ProductDetails}" >Product Details</apex:commandLink></li>
+<li class="active">
+<span>
+Applicants
+</span>
+
+</li>
+<li class="k-header"><span>{!Accounts[0].name}</span></li>
+
+<apex:outputPanel rendered="{!Opp.Number_of_People_Applying__c> 1 && Prod!=null}">
+<li ><span>{!Accounts[1].name}</span></li>
+</apex:outputPanel>
+
+
+
+<apex:outputPanel rendered="{!Opp.Number_of_People_Applying__c> 2 && Prod!=null}">
+<li class="k-header"><span>{!Accounts[2].name}</span></li>
+
+</apex:outputPanel>
+<apex:outputPanel rendered="{!Opp.Number_of_People_Applying__c> 3}">
+<li class="k-header"><span>{!Accounts[3].name}</span></li>
+</apex:outputPanel>
+
+<li class="k-header"><span>AIP Confirmation</span></li>
+</ul>
+
+</div>
+
+
+
+
+
+
+
+<h2>Applicants</h2>
+
+<apex:pageMessages ></apex:pageMessages>
+
+
+<apex:pageBlock >
+<apex:pageBlockTable value="{!Applicants}" var="item" id="criteriaTable">
+                
+   
+         
+            <apex:column >
+            <apex:facet name="header">No.</apex:facet>
+             <apex:outputLabel value="{!item.Applicant_Number__c}"> </apex:outputLabel>
+         </apex:column>
+          <apex:column >
+            <apex:facet name="header">EBS ID</apex:facet>
+             <apex:outputLabel value="{!item.Prospect_Customer__r.EBS_ID__c}"> </apex:outputLabel>
+         </apex:column>
+                <apex:column >
+            <apex:facet name="header">Title</apex:facet>
+             <apex:outputLabel value="{!item.Prospect_Customer__r.Salutation}"> </apex:outputLabel>
+         </apex:column>
+         
+          <apex:column >
+            <apex:facet name="header">First Name</apex:facet>
+             <apex:outputLabel value="{!item.Prospect_Customer__r.FirstName}"> </apex:outputLabel>
+         </apex:column>
+         
+                   <apex:column >
+            <apex:facet name="header">Last Name</apex:facet>
+             <apex:outputLabel value="{!item.Prospect_Customer__r.LastName}"> </apex:outputLabel>
+         </apex:column>
+         
+           <apex:column >
+            <apex:facet name="header">Date of Birth</apex:facet>
+             
+         
+    <apex:outputText value="{0,date,dd'/'MM'/'yyyy}">
+    <apex:param value="{!item.Prospect_Customer__r.Date_of_Birth__c}" />
+     </apex:outputText>
+             
+             
+         </apex:column>
+         
+               <apex:column >
+            <apex:facet name="header">Remove</apex:facet>
+            <apex:outputLabel value="Primary Applicant" rendered="{!item.Applicant_Number__c  == 1}"></apex:outputLabel>
+            
+            <apex:commandLink styleClass="redBtn" action="{!delItem}" value="Del"  immediate="true" rendered="{!item.Applicant_Number__c != 1}">
+                <apex:param name="whichLine" value="{!item.Applicant_Number__c}" assignTo="{!whichLine}"/>
+            </apex:commandLink>
+         </apex:column>
+                     
+
+
+                     
+</apex:pageBlockTable>
+
+<div style="padding: 20px;" >
+<h2>Add additional applicant</h2>
+<apex:outputPanel >
+<table width="100%">
+
+
+
+<tr>
+<td valign="top" width="50%">
+<div style="background-color:#eee;width:300px;padding:20px;min-height:200px;">
+<h3>Look up existing customer</h3><br/><br/>
+<apex:inputField value="{!ap.AccountLookup__c}"/>
+<br/>
+<p>Please enter the full name of the customer</p><br/>
+<apex:commandButton value="Add existing customer" action="{!LookupApplicant}"/>
+</div>
+</td>
+
+<td >
+    <div style="background-color:#eee;width:400px;padding:20px;min-height:200px;">
+    <h3>Add new prospect/customer</h3>
+    <table class="detailList">
+
+    
+    <tr>
+        <td class="labelCol">Title</td>
+        <td class="dataCol">
+        <apex:selectList value="{!TempTitle}">
+            <apex:selectOptions value="{!Titles}"></apex:selectOptions>
+        </apex:selectList>
+        
+        </td>
+    </tr>
+    <tr>
+        <td class="labelCol">First Name</td>
+        <td class="dataCol"><apex:inputText value="{!TempFirstName}" label="First Name"/></td>
+    </tr>
+    <tr>
+        <td class="labelCol">Last Name</td>
+        <td class="dataCol"><apex:inputtext value="{!TempLastName}" label="Last Name"/></td>
+    </tr>
+    <tr>
+        <td class="labelCol">Date of birth</td>
+        <td class="dataCol"><apex:inputField value="{!TempAccount.Date_of_Birth__c}" label="Date of birth"/></td>
+    </tr>
+    </table>
+    <apex:commandButton value="Add new prospect/customer" action="{!AddApplicant}"/>
+    
+    </div>
+</td>
+</tr>
+
+
+
+<tr>
+<td></td>
+
+<td>
+
+<apex:outputPanel rendered="{!ShowExisting}">
+
+A customer with these details has been found.
+
+<apex:pageBlockTable value="{!ExistingAccounts}" var="exa" id="existingaccounttable">
+                   
+         
+            <apex:column >
+            <apex:facet name="header">EBS ID</apex:facet>
+             <apex:outputLabel value="{!exa.EBS_ID__c}"> </apex:outputLabel>
+         </apex:column>
+         
+          <apex:column >
+            <apex:facet name="header">SFDC ID</apex:facet>
+            <apex:outputLabel value="{!exa.SFDC_ID__c}"> </apex:outputLabel>
+         </apex:column>
+         
+                <apex:column >
+            <apex:facet name="header">Title</apex:facet>
+             <apex:outputLabel value="{!exa.Salutation}"> </apex:outputLabel>
+         </apex:column>
+         
+          <apex:column >
+            <apex:facet name="header">First Name</apex:facet>
+             <apex:outputLabel value="{!exa.FirstName}"> </apex:outputLabel>
+         </apex:column>
+         
+                   <apex:column >
+            <apex:facet name="header">First Name</apex:facet>
+             <apex:outputLabel value="{!exa.LastName}"> </apex:outputLabel>
+         </apex:column>
+         
+         
+         
+              
+                     
+
+
+                     
+</apex:pageBlockTable>
+</apex:outputPanel>
+
+</td>
+</tr>
+
+</table>
+</apex:outputPanel>
+</div>
+
+
+
+
+
+</apex:pageBlock>
+
+<apex:commandButton value="Previous" styleClass="ROButton" action="{!ProductDetails}"/>
+<apex:commandButton value="Next" styleClass="ROButton" action="{!Applicant1}"/>
+</td></tr>
+
+</table>
+
+</div>
+
+
+
+
+</div>
+<script type="text/javascript">
+$(document).ready(function() { 
+
+var now = new Date();
+var startYear=now.getFullYear()-100;
+var endYear=now.getFullYear();
+var optionsString=''; 
+if(startYear<endYear){
+    for(i=startYear;i<endYear+1;i++){
+        optionsString += "<option value=\""+i+"\">"+i+"</option>";
+       
+    } 
+    $('#calYearPicker').html(optionsString);
+} 
+//$('#sidebarDiv #hideMyParent').parent().parent().hide();
+});
+
+
+$(".dateFormat").hide();
+
+</script>
+<apex:outputPanel rendered="{!IsCompleted}">
+<script>
+SetReadOnly();
+
+</script>
+</apex:outputPanel>
+  </apex:form>
+  </body>
+
+</apex:page>

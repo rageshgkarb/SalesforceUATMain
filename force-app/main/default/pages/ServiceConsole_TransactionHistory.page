@@ -1,0 +1,36 @@
+<apex:page controller="ServiceConsole_TransactionHistController" showHeader="false" sidebar="false" tabStyle="Task">
+	<script src="/support/console/28.0/integration.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		function openSubTab(recid, recname) {
+		 	if(!sforce.console.isInConsole()){
+				window.parent.location.replace('/'+recid);
+			}else{
+		    	sforce.console.getEnclosingPrimaryTabId(function(result) {
+		    		sforce.console.openSubtab(result.id, '/'+recid , true, recname, null);
+		    	});
+			}
+		}
+	</script>
+	
+	<apex:form >
+		<apex:pageBlock title="{!$ObjectType.Account_with_IBB__c.LabelPlural}" id="accountsTableBlock">
+			<apex:pageBlockTable value="{!accountsWithIBB}" var="accountWithIBB" rendered="{!accountsWithIBB != null && accountsWithIBB.size > 0}">
+				<apex:column headerValue="{!$ObjectType.Account_with_IBB__c.Fields.Name.Label}">
+					<a href='' onclick="javascript:openSubTab('{!accountWithIBB.Id}'); return false;" style="cursor:pointer;"><apex:outputText value="{!accountWithIBB.Name}" /></a>
+				</apex:column>
+				<apex:column headerValue="{!$ObjectType.Account_with_IBB__c.Fields.Available_Balance__c.Label}" value="{!accountWithIBB.Available_Balance__c}" />
+				<apex:column headerValue="Transaction History" style="text-align: center; width: 1%;">
+					<apex:commandButton value="Transaction History" onclick="openSubTab('apex/TransactionHistory?id={!accountWithIBB.Id}'); return false;" />
+				</apex:column>
+			</apex:pageBlockTable>
+			
+			<apex:outputText escape="false" rendered="{!accountsWithIBB != null && accountsWithIBB.size > 0}">
+				<div style="padding-top: 5px;">
+					<apex:commandLink action="{!getMoreAccounts}" value="Show {!showMoreAccountsValue} more »" id="moreAccountsLink" reRender="accountsTableBlock" rendered="{!accountsRowLimit < totalAccounts}"/>
+					<apex:outputText value="  |  " rendered="{!accountsRowLimit < totalAccounts}" />
+			        <apex:commandLink action="{!showAllAccounts}" value="Show All ({!totalAccounts}) »" id="allAccountsLink" reRender="accountsTableBlock" rendered="{!accountsRowLimit < totalAccounts}"/>
+		        </div>
+	        </apex:outputText>
+		</apex:pageBlock>
+	</apex:form>
+</apex:page>

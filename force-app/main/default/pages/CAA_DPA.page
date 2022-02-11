@@ -1,0 +1,60 @@
+<apex:page applyBodyTag="false" showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false" controller="CAABaseEventController">
+
+<style>
+    .border{
+        border:1px solid #ccc;
+    }
+
+</style>
+
+    <apex:composition template="CAA_Template">
+        <apex:define name="body">
+            <div class="row">
+                <div class="col-sm-12">
+                    Terms and Conditions
+                </div>            
+            </div> 
+            <div class="row">
+                <div class="col-sm-12">
+                    To start your application, please agree to the terms and conditions below:
+                </div>            
+            </div>  
+            
+            <div class="row">
+                <div class="col-sm-12 border">
+                    <strong>Data Protection Statement and Marketing Consent</strong><br/><br/> 
+
+                    <strong>DATA PROTECTION</strong><br/>
+                    In accordance with the Data Protection Act 1998, Al Rayan Bank PLC is registered as a Data Controller on the public register of Data Controllers as maintained by the Information Commissioner. Any information which you provide to us will be added to our database and used to administer your account, for statistical analysis, for debt collection and fraud prevention. We may provide your information to third parties who are involved in the delivery of our products and services, however we will not provide your information to third parties for marketing purposes. If you would like to see a copy of the details we hold on you, please contact us. <br/>
+                    <br/>
+                    <strong>MARKETING</strong><br/>
+                    We may also use the information you have provided to send you communications we feel may be of interest to you. Such communications may include details of special offers, our products and services and general information updates.
+                </div>            
+            </div>
+            
+            <apex:form >
+            <div class="row">
+                <div class="col-sm-12">
+                    Please tick this box if you agree to the above statements <apex:inputCheckbox />
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-sm-12">
+                    Please indicate if you DO NOT wish to be contacted by Al Rayan Bank by any of the following
+                </div>
+                <div class="col-sm-12">
+                    Email <apex:inputCheckbox title="Email" label="Email" /> Mail <apex:inputCheckbox title="Mail" label="Mail" /> Phone <apex:inputCheckbox title="Phone" label="Phone"/> SMS <apex:inputCheckbox title="SMS" label="SMS" />
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-sm-12">
+                    <apex:commandButton value="Next" />
+                </div>
+            </div>
+            
+            </apex:form>
+        </apex:define>
+    </apex:composition>
+</apex:page>

@@ -1,0 +1,57 @@
+<apex:page applyBodyTag="false" showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false">
+
+        <div class="verticalScroller" ng-controller="controllerTillManagement" ng-init="VaultTransferOut_Init()" style="overflow: auto; height: 100%; margin-top: 15px;">
+            <div id="header">Vault Transfer Out</div>
+			
+			<div class="col-md-4" >
+				<label>Send to:</label>
+				<select id="tillInput" class="form-control" ng-model="tillToTransferTo" ng-options="item.TillId as item.TillName for item in Tills" ng-disabled="tillToTransferTo"></select>
+				<a ng-click="tillToTransferTo=''" ng-show="tillToTransferTo">Clear</a>
+			</div>
+            <div class="col-md-4" >
+                <label>Currency:</label>
+                <select id="ccyInput" class="form-control" ng-model="ccyToTransfer" ng-options="item.FXCurrency as item.FXCurrency for item in Currencies" ng-disabled="ccyToTransfer"></select>
+                <a ng-click="ccyToTransfer=''" ng-show="ccyToTransfer">Clear</a> 
+            </div>
+            
+            <div ng-show="tillToTransferTo && ccyToTransfer" style="font-size: large; font-weight: 600;">Currency: {{ccyToTransfer}}</div>
+            <table class="table table-striped" id="Denominations" style="margin-top:0px;" ng-show="tillToTransferTo && ccyToTransfer" >
+                <thead>
+                    <tr>
+                        <th class="col-sm-4">
+                        </th>
+                        <th class="col-sm-4">
+                            Number of Notes/Coins
+                        </th>
+                        <th class="col-sm-4">
+                            Total Selected Value
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="itemRow" ng-repeat="denomitem in Denominations.TransactionDenonminations track by denomitem.FormattedDenominationValue" ng-if="denomitem.DenominationCurrency==ccyToTransfer" ng-class-Even="'BranchItemOdd'" style="padding:5px;margin:0px;">
+                        <td class="col-sm-4">
+                            {{denomitem.FormattedDenominationValue}}
+                        </td>
+                        <td class="col-sm-4">
+                            <input type="number" name="denomitem.NumberSelected" ng-model="denomitem.NumberSelected" min="0" />
+                        </td>
+                        <td class="col-sm-4">
+                            {{denomitem.DenominationValue * denomitem.NumberSelected | number : 2}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div style="background: #F4F4F4; margin: 0; width: calc(100% - 5px); padding: 20px; height: 172px;">
+             	<div class="col-sm-4 text-right">
+                    <label ng-show="tillToTransferTo && ccyToTransfer">Password:</label> 
+	            </div>
+				<div class="col-sm-4 col-md-3" >
+					<input class="form-control" type="password" ng-model="userPassword" ng-show="tillToTransferTo && ccyToTransfer" />
+				</div>
+                <div style="float: left; margin-left: 10px; margin-top: 5px;" align="center" ng-show="(Response_Success==false)&&(tillToTransferTo)">{{Response_StatusDescription}}</div>
+                <button id="TillTransferOut" class="goldButton" style="float: right; padding-left:30px !important; padding-right:30px !important; padding-top:17px !important; padding-bottom:17px !important;" ng-click="VaultTransferOut_Execute()" ng-disabled="(working==true)||(!(tillToTransferTo  && ccyToTransfer))" ng-show="tillToTransferTo && ccyToTransfer">Vault Transfer Out</button>
+            </div>
+        </div>
+
+</apex:page>

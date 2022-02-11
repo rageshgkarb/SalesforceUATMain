@@ -1,0 +1,805 @@
+<!-- C00096 2013-10-16 SHow problems with AJE calls
+ Remove sort code for internal
+ Cater for non card AJE calls  -->
+<!-- C00187 2014-04-02 Payment none comments not saving -->
+<apex:page controller="HPPEventTakeCardPaymentSwitch" sidebar="false" showheader="false" title="Take Card Payment" action="{!Setup}" doctype="html-5.0" standardstylesheets="false">
+    <apex:composition template="HPPProductSwitchTemplate">
+        <apex:define name="include">
+            <script>
+                hppApp.controller('HPPEventTakeCardPaymentController', ['$scope', '$window', '$timeout','serviceHPPEventTakeCardPayment','serviceApplication',
+            function($scope, $window, $timeout,serviceHPPEventTakeCardPayment,serviceApplication) 
+            {
+            $scope.cardTypes = [];
+            $scope.cardTypes.push({"key":'', "value":'Please select'});
+            $scope.cardTypes.push({"key":'Visa Debit', "value":'Visa Debit'});
+            $scope.cardTypes.push({"key":'Electron', "value":'Electron'});
+            $scope.cardTypes.push({"key":'Maestro', "value":'Maestro'});
+            $scope.cardTypes.push({"key":'MasterCard Debit', "value":'MasterCard Debit'});
+            $scope.cardTypes.push({"key":'MasterCard', "value":'MasterCard'});
+            $scope.cardTypes.push({"key":'Visa', "value":'Visa'});
+    
+            $scope.TakePayment = function()
+            {
+                
+                serviceApplication.LoadShow('Processing...');
+                               
+                $scope.Errors = null;
+                var data = {'IsRemainderAdminFee' : false, 'OppId' : $scope.OppId, 'SelectedCardId' : $scope.SelectedCard.CardId, 'PaymentValue' : $scope.Data.AdminFee};
+    
+                serviceHPPEventTakeCardPayment.TakePayment(data)
+                    .then(
+                        function(result){
+            
+                            if(result.Success)
+                            {
+                    $scope.AJEOk = result.AJEOk;
+                    $scope.AdminFeeTaken = true;
+                    $scope.PaymentStatus = result.PaymentStatus;
+                            }
+                            else
+                            {
+                    $scope.Errors = result.Errors;
+                            }
+                serviceApplication.LoadHide(false);
+                        },
+                        function(error){
+                            $scope.State = 'ERROR';
+                serviceApplication.LoadHide(false);
+                        }
+                       );
+    
+            }
+    
+            $scope.TakeOtherPayment = function()
+            {
+                serviceApplication.LoadShow('Processing...');
+                $scope.Errors = null;
+                
+                if($scope.Data.Payment.InternalAccount == '') $scope.Data.Payment.InternalAccount = null;
+    
+                serviceHPPEventTakeCardPayment.TakeOtherPayment($scope.OppId, false, $scope.Data.Payment,$scope.Data.AdminFee)
+                    .then(
+                        function(result){
+            
+                            if(result.Success)
+                            {
+                    $scope.AdminFeeTaken = true;
+    
+                            }
+                            else
+                            {
+                    $scope.Errors = result.Errors;
+                            }
+                serviceApplication.LoadHide(false);
+                        },
+                        function(error){
+                            $scope.State = 'ERROR';
+                serviceApplication.LoadHide(false);
+                        }
+                       );
+            }
+            
+            $scope.ResendAJE = function()
+            {
+                serviceApplication.LoadShow('Sending to Host...');
+                $scope.Errors = null;
+                
+    
+                serviceHPPEventTakeCardPayment.ResendAJE($scope.OppId, false, $scope.EventLogId)
+                    .then(
+                        function(result){
+            
+                            if(result.Success)
+                            {
+                    $scope.AJEOk = result.AJEOk;
+                    serviceApplication.LoadHide(false);
+    
+                            }
+                            else
+                            {
+                    $scope.Errors = result.Errors;
+                    serviceApplication.LoadHide(false);
+                            }
+                
+                        },
+                        function(error){
+                            $scope.State = 'ERROR';
+                serviceApplication.LoadHide(false);
+                        }
+                       );
+            }
+            
+    
+            $scope.Complete = function()
+            {
+                serviceApplication.LoadShow('Processing...');
+                $scope.Errors = null;
+                
+    
+                serviceHPPEventTakeCardPayment.Complete($scope.OppId, false, $scope.EventLogId)
+                    .then(
+                        function(result){
+            
+                            if(result.Success)
+                            {
+                    $window.location.href = result.Url.FormatURL();
+    
+                            }
+                            else
+                            {
+                    $scope.Errors = result.Errors;
+                    serviceApplication.LoadHide(false);
+                            }
+                
+                        },
+                        function(error){
+                            $scope.State = 'ERROR';
+                serviceApplication.LoadHide(false);
+                        }
+                       );
+            }
+    
+    
+    
+    
+    
+            $scope.Save = function()
+                        {                   
+                $scope.SaveCardErrors = null;
+                serviceApplication.LoadShow('Processing...');
+                $scope.NewCard.ContactId = $scope.ContactId;
+                $scope.NewCard.AccountId = $scope.AccountId;
+       
+                serviceHPPEventTakeCardPayment.SaveCard($scope.NewCard)
+                    .then(
+                        function(result){
+                            if(result.Success)
+                            {
+                     
+                     $scope.NewCard.CardId = result.CardId;
+                     $scope.NewCard.CardNumber = result.CardName;
+    
+                    $scope.SelectedCard = $scope.NewCard;
+                        
+                            $scope.Data.Cards.push($scope.NewCard); 
+                            
+                            $scope.NewCard = {};   
+                            $scope.ShowNewCard = false;  
+    
+                            }
+                            else
+                            {
+                    $scope.SaveCardErrors = result.Errors;
+                            }
+                serviceApplication.LoadHide(false);
+                        },
+                        function(error){
+                serviceApplication.LoadHide(false);
+                            $scope.State = 'ERROR';
+                        }
+                       );
+    
+    
+    
+    
+                                                
+                        
+                        }
+                        
+                        $scope.SelectCard = function(card)
+                        {
+                            $scope.SelectedCard = card;
+                        }
+                        
+                        $scope.CreateNewCard = function()
+                        {
+                            $scope.NewCard = {};
+                            $scope.NewCard.BillingStreet = $scope.Data.Address.BillingStreet;
+                            $scope.NewCard.BillingCity = $scope.Data.Address.BillingCity;
+                            $scope.NewCard.BillingCounty = $scope.Data.Address.BillingCounty;
+                            $scope.NewCard.BillingPostCode = $scope.Data.Address.BillingPostCode;
+                            $scope.NewCard.BillingCountry = $scope.Data.Address.BillingCountry;
+                            
+                            $scope.ShowNewCard = true;
+                $scope.SaveCardErrors = null;
+                        }
+    
+    
+                    
+        $scope.SaveNewCard = function(){
+    
+    
+            
+    
+            serviceHPPEventTakeCardPayment.SaveCard(md)
+                    .then(
+                        function(result){
+                            if(result.Success)
+                            {
+        
+    
+                            }
+                            else
+                            {
+    
+                            }
+                        },
+                        function(error){
+                            $scope.State = 'ERROR';
+                        }
+                       );
+    
+    
+        };
+    
+    
+    }]);
+    
+    
+    
+    hppApp.service('serviceHPPEventTakeCardPayment', ['$q', '$rootScope', function ($q, $rootScope) {
+       this.SaveCard= function(data)
+        {
+            var deferred = $q.defer();
+        Visualforce.remoting.timeout = 120000;
+            HPPEventTakeCardPaymentSwitch.SaveCard(data,function(result, event){
+                if(event.status){
+                    deferred.resolve(result);
+                }
+                else {
+                    deferred.reject(event);
+                }     
+            });
+            return deferred.promise;
+        }
+
+    this.TakePayment= function(data)
+        {
+            var deferred = $q.defer();
+        Visualforce.remoting.timeout = 120000;
+            HPPEventTakeCardPaymentSwitch.TakePayment(data,function(result, event){
+                if(event.status){
+                    deferred.resolve(result);
+                }
+                else {
+                    deferred.reject(event);
+                }     
+            });
+            return deferred.promise;
+        }
+
+    this.TakeOtherPayment= function(id,isRemainder,data,value)
+        {
+            var deferred = $q.defer();
+        Visualforce.remoting.timeout = 120000;
+            HPPEventTakeCardPaymentSwitch.TakeOtherPayment(id,isRemainder,data,value,function(result, event){
+                if(event.status){
+                    deferred.resolve(result);
+                }
+                else {
+                    deferred.reject(event);
+                }     
+            });
+            return deferred.promise;
+        }
+
+    this.Complete= function(id,isRemainder,logId)
+        {
+            var deferred = $q.defer();
+        Visualforce.remoting.timeout = 120000;
+            HPPEventTakeCardPaymentSwitch.completeTheEvent(id,isRemainder,logId,function(result, event){
+                if(event.status){
+                    deferred.resolve(result);
+                }
+                else {
+                    deferred.reject(event);
+                }     
+            });
+            return deferred.promise;
+        }
+        
+        this.ResendAJE= function(id,isRemainder)
+        {
+            var deferred = $q.defer();
+        Visualforce.remoting.timeout = 120000;
+            HPPEventTakeCardPaymentSwitch.ResendAJE(id,isRemainder,function(result, event){
+                if(event.status){
+                    deferred.resolve(result);
+                }
+                else {
+                    deferred.reject(event);
+                }     
+            });
+            return deferred.promise;
+        }
+
+
+
+
+
+
+   }]);
+            
+            </script>
+        
+        
+        
+        
+            <style>
+                #NewCard .control-label{
+                    text-align: right;
+                }
+                
+                .my-panel{
+                    padding:20px;
+                    background-color: #f5f5f5;
+                    margin-top:10px;
+                }
+            </style>
+        </apex:define>
+        
+        
+    
+    
+    
+
+
+        
+     
+        
+
+<!--
+    <apex:stylesheet value="{!URLFOR($Resource.HPP_Includes, '/css/css.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.HPP_Includes, '/css/wait.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.HPP_Includes, '/css/structure.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.HPP_Includes, '/css/modal.css')}"  />
+
+
+                 <apex:includeScript value="{!URLFOR($Resource.HPP_Includes, '/js/controller/controller_core.js')}"  />
+        
+        <apex:includeScript value="{!URLFOR($Resource.HPP_Includes, '/js/controller/controller_hpp_event_takecard_payment.js')}"  />
+        <apex:includeScript value="{!URLFOR($Resource.HPP_Includes, '/js/service/service_hpp_event_take_card_payment.js')}"  />
+    -->    
+         
+        
+        <apex:define name="header">
+           <c:HPP_Header title="Product Switch" numapps="1" opp="{!Opp}" />
+        </apex:define>
+        <apex:define name="menu">
+            <c:HPP_Angular_Menu oppid="{!Opp.Id}" directorid="{!DirectorID}">
+            </c:HPP_Angular_Menu>
+        </apex:define>
+        <apex:define name="body">        
+        
+
+
+   <apex:form >
+
+    <div style="100%;padding:10px;"  ng-controller="HPPEventTakeCardPaymentController" ng-init="Data = {
+                                                                                                                    
+                                                                                                                    'AdminFee':{!extendedOpp.AdminFeeValue__c},
+                                                                                                                    
+                                                                                                                    'Cards':{!CardDataJson }, 
+                                                                                                                    'InternalAccounts':{!InternalAccounts},                                                                                                                                                                                                                                      
+                                                                                                                     
+                                                                                                                     'Payment':{
+                                                                                                                                'Method': '{!extendedOpp.Payment_Method__c}',
+                                                                                                                                'OtherPaymentMethod' : '{!extendedOpp.Other_payment_method__c}',
+                                                                                                                                'NoneComments' : '{!NoneComments}',
+                                                                                                                                'ExternalComments' : '{!ExternalComments}',
+                                                                                                                                'InternalAccount' : ''                                                                                                                              
+                                                                                                                                
+                                                                                                                               },
+                                                                                                                     'Address':{
+                                                                                                                                     'BillingStreet' : '{!BillingStreet}',
+                                                                                                                                     'BillingCity' : '{!BillingCity}',
+                                                                                                                                     'BillingCounty' : '{!BillingCounty}',
+                                                                                                                                     'BillingPostCode' : '{!BillingPostCode}',
+                                                                                                                                     'BillingCountry' : '{!BillingCountry}'
+                                                                                                                                 }
+                                                                                                                     
+                                                                                                                  };
+                                                                                                           
+                                                                                                           AJEOk = {!AJEOk};
+                                                                                                           
+                                                                                                           AccountId ='{!Acc.Id}'; ContactId='{!Acc.PersonContactId}'; OppId='{!Opp.id}';                                                                                                       
+                                                                                                           AdminFeeTaken = {!IsAdminFeeTaken};
+                                                                                                           IsCompleted = {!IsCompleted};
+                                                                                                           IsRemainder = false;
+                                                                                                           EventLogId = '{!eventId}'">
+                                
+                                <div class="container" style="height:100%">
+                                    <div class="row" style="height:100%">
+                                        <div class="col-md-12" style="height:100%;">
+                                            <div class="PanelContents" style="height:100%;" >
+                                <div class="verticalScrollSection" style="height:calc(100%);">
+                                 <div class="verticalSection">
+                                
+                                
+                                    <div class="SectionTitle">Take Card Payment</div>
+                                           
+                                                                     
+                                    
+                                    
+                                    
+                                 
+                                    
+                                    
+                                    
+                                    
+                                    <!-- new content start -->
+                                    
+                                            <div class="row">
+                                                <div class="col-sm-3">
+                                                    <label>Product Switch Fee</label>  
+                                                </div>
+                                                <div class="col-sm-3">                                                  
+
+                                                    <apex:outputpanel rendered="{!adminFeeIsEditable}">
+                                                        <input type="number" class="form-control" ng-model="Data.AdminFee" />
+                                                    </apex:outputpanel>
+
+                                                    <apex:outputpanel rendered="{!NOT(adminFeeIsEditable)}">
+                                                        £{{Data.AdminFee}}
+                                                    </apex:outputpanel>                                                   
+
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <label>Payment Method</label>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <select class="form-control" id="PaymentMethod-noKendo" ng-model="Data.Payment.Method" ng-hide="AdminFeeTaken">
+                                                        <option value="">Please select</option>
+                                                        <option value="Card">Card</option>
+                                                        <option value="Other">Other Payment Method</option>
+                                                        <option value="None">None</option>
+                                                    </select>
+                                                    
+                                                    <span ng-show="AdminFeeTaken">
+                                                        {{Data.Payment.Method}}
+                                                    </span>
+                                                    
+                                                </div>
+                                            </div>
+                                            
+                                            <div ng-show="Data.Payment.Method == 'None'">
+                                                <div class="row" >
+                                                    <div class="col-sm-3 col-sm-offset-6">
+                                                        <label class="control-label">Payment Confirmed by Other Method</label>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <input type="checkbox" ng-model="Data.Payment.ConfirmedOther" ng-hide="AdminFeeTaken"/>
+                                                        <span ng-show="AdminFeeTaken">{{Data.Payment.ConfirmedOther ? 'Yes' : 'No'}}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-3 col-sm-offset-6">
+                                                        <label class="control-label">Comments</label>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <textarea class="form-control" ng-model="Data.Payment.NoneComments" ng-hide="AdminFeeTaken"/>
+                                                        <span ng-show="AdminFeeTaken">{{Data.Payment.NoneComments}}</span>
+                                                    </div>
+                                                </div>
+                                                
+                                                
+                                             
+                                                
+                                            </div>
+                                                                                        
+                                            
+                                            <div class="row" ng-show="Data.Payment.Method == 'Other'">
+                                                <div class="col-sm-3 col-sm-offset-6">
+                                                    <label class="control-label">Other Payment Method</label>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <select class="form-control" id="OtherPaymentMethod-noKendo" ng-model="Data.Payment.OtherPaymentMethod" ng-hide="AdminFeeTaken">
+                                                        <option value="">Please select</option>
+                                                        <option value="Internal Transfer">Internal Transfer</option>
+                                                        <option value="External Transfer">External Transfer</option>                                                   
+                                                    </select>
+                                                    <span ng-show="AdminFeeTaken">{{Data.Payment.OtherPaymentMethod}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="row" ng-show="Data.Payment.Method == 'Other' && Data.Payment.OtherPaymentMethod == 'Internal Transfer'">
+                                                <div class="col-sm-3 col-sm-offset-6">
+                                                    <label class="control-label">Account Number</label>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <select ng-options="option.Key as option.Value  for option in Data.InternalAccounts" ng-hide="AdminFeeTaken" class="form-control" id="InternalAccount-noKendo" ng-model="Data.Payment.InternalAccount" ng-show="Data.InternalAccounts && Data.InternalAccounts > 0">
+                                                                                                                                                                  
+                                                    </select>
+                                                    <span ng-show="AdminFeeTaken">{{Data.InternalAccount}}</span>
+                                                    
+                                                    <div class="alert alert-danger" ng-show="!Data.InternalAccounts || Data.InternalAccounts.length == 1">
+                                                        There are no internal accounts 
+                                                    </div>                                                    
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row" ng-show="Data.Payment.Method == 'Other' && Data.Payment.OtherPaymentMethod == 'External Transfer'">
+                                                <div class="col-sm-3 col-sm-offset-6">
+                                                    <label class="control-label">Comments</label>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <textarea class="form-control" ng-model="Data.Payment.ExternalComments" ng-hide="AdminFeeTaken"/>                                                        
+                                                    <span ng-show="AdminFeeTaken">{{Data.Payment.ExternalComments}}</span>
+                                                </div>
+                                            </div>
+                                            
+                                            
+                                            
+                                            
+                                           <!-- card details and payment buttons --> 
+                                            
+                                           <div ng-hide="AdminFeeTaken">
+
+                                            
+                                            <div class="row" ng-show="Data.Payment.Method == 'Other'">
+                                                <div style="text-align:center;" ng-show="(Data.Payment.OtherPaymentMethod == 'Internal Transfer' && Data.Payment.InternalAccount) || (Data.Payment.OtherPaymentMethod == 'External Transfer' && Data.Payment.ExternalComments)">
+                                                        <button type="button" ng-click="TakeOtherPayment()" style="width:150px;display:inline;" class="btn btn-default">Take Payment</button>
+                                            </div>
+                                             
+                                            
+                                            </div>
+                                            
+                                            <div class="row" ng-show="Data.Payment.Method == 'None'">
+                                                <div style="text-align:center;" ng-show="(Data.Payment.ConfirmedOther && Data.Payment.NoneComments)">
+                                                        <button type="button" ng-click="TakeOtherPayment()" style="width:150px;display:inline;" class="btn btn-default">Take Payment</button>
+                                                </div>                                     
+                                            
+                                            </div>
+
+
+                                            <div ng-show="Data.Payment.Method == 'Card'">
+
+                                                
+                                                
+                                                <div id="SelectCard" ng-show="!ShowNewCard" class="my-panel">
+                                                    
+                                                    <div style="text-align:center;">
+                                                            <button type="button" style="width:100px;display:inline;width:150px;" ng-click="CreateNewCard()" class="btn btn-default">New Card</button>
+                                                    </div>
+                                                    
+                                                    <div>
+                                                        <table class="table">
+                                                            <thead>
+                                                            <tr>
+                                                                <th>Action</th><th>Card Number</th><th>Card Type</th><th>Expiry Date</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr ng-repeat="card in Data.Cards">
+                                                                    <td><a href="#{{card.CardId}}" ng-click="SelectCard(card)">Select Card</a></td>
+                                                                    <td>{{card.CardNumber}}</td>
+                                                                    <td>{{card.CardType}}</td>
+                                                                    <td>******</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+    
+    
+                                                <div id="CardDetails" ng-show="SelectedCard && !ShowNewCard" class="my-panel">
+                                                    <label>Selected Card Details</label>
+                                                
+                                                    <div class="row">
+                                                        <label class="control-label col-sm-2 col-sm-offset-1">Card Number</label>
+                                                        <div class="col-sm-3">
+                                                            {{SelectedCard.CardNumber}}
+                                                        </div>
+                                                    </div>   
+                                                    <div class="row">
+                                                        <label class="control-label col-sm-2 col-sm-offset-1">Card Type</label>
+                                                        <div class="col-sm-3">
+                                                            {{SelectedCard.CardType}}
+                                                        </div>
+                                                    </div> 
+                                                    <div style="text-align:center;">
+                                                        <button type="button" ng-click="TakePayment()" style="width:150px;display:inline;" class="btn btn-default">Take Payment</button>
+                                                    </div>                                            
+                                                </div>
+    
+    
+    
+                                                <div id="NewCard" ng-show="ShowNewCard" class="my-panel">
+                                                    <div>
+                                                        <label>New Card Details</label>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <div class="row">                                                                                                                        
+                                                                <label class="col-sm-4 control-label">Billing Street</label>
+                                                                <div class="col-sm-5">
+                                                                    <input type="text" class="form-control" ng-model="NewCard.BillingStreet"/>                                                                  
+                                                                </div>                                                          
+                                                            </div>
+                                                            <div class="row">                                                                                                                        
+                                                                <label class="col-sm-4 control-label">Billing City</label>
+                                                                <div class="col-sm-5">
+                                                                    <input type="text" class="form-control" ng-model="NewCard.BillingCity"/>                                                                  
+                                                                </div>                                                          
+                                                            </div>
+                                                            <div class="row">                                                                                                                        
+                                                                <label class="col-sm-4 control-label">Billing County</label>
+                                                                <div class="col-sm-5">
+                                                                    <input type="text" class="form-control" ng-model="NewCard.BillingCounty"/>                                                                  
+                                                                </div>                                                          
+                                                            </div>
+                                                            <div class="row">                                                                                                                        
+                                                                <label class="col-sm-4 control-label">Billing Country</label>
+                                                                <div class="col-sm-5">
+                                                                     
+                                                                    <input type="text" class="form-control" ng-model="NewCard.BillingCountry"/>                                                              
+                                                                </div>                                                          
+                                                            </div>
+                                                            <div class="row">                                                                                                                        
+                                                                <label class="col-sm-4 control-label">Billing Post Code</label>
+                                                                <div class="col-sm-5">
+                                                                    <input type="text" class="form-control" ng-model="NewCard.BillingPostCode"/>                                                                  
+                                                                </div>                                                          
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="row">
+                                                                <label class="col-sm-4 control-label">Card Currency</label>
+                                                                <div class="col-sm-5">
+                                                                <select class="form-control" id="CardCurrency-noKendo" ng-model="NewCard.CardCurrency">
+                                                                        <option>GBP</option>
+                                                                        <option>EUR</option>
+                                                                        <option>USD</option>
+                                                                    </select>
+                                                                 </div>
+                                                            </div>
+                                                        
+                                                            <div class="row">                                                            
+                                                                    <label class="col-sm-4 control-label">Card Type</label>
+                                                                    <div class="col-sm-5">
+                                                                    <select class="form-control" id="CardType-noKendo" ng-model="NewCard.CardType">
+                                                                        <option>Visa Debit</option>
+                                                                        <option>Electron</option>
+                                                                        <option>Maestro</option>
+                                                                        <option>MasterCard Debit</option>
+                                                                        <option>MasterCard</option>
+                                                                        <option>Visa</option>
+                                                                    </select>
+                                                                    </div>
+                                                                
+                                                            </div>
+                                                            
+                                                            <div class="row">                                                            
+                                                                    <label class="col-sm-4 control-label">Issue Number</label>
+                                                                    <div class="col-sm-5">
+                                                                        <input type="text" class="form-control" ng-model="IssueNumber"/>                                                                  
+                                                                    </div>
+                                                                
+                                                            </div>
+                                                            <div class="row">                                                            
+                                                                    <label class="col-sm-4 control-label">Card Number</label>
+                                                                    <div class="col-sm-5">
+                                                                        <input type="text" class="form-control" ng-model="NewCard.CardNumber"/>                                                                  
+                                                                    </div>
+                                                                
+                                                            </div>
+                                                            <div class="row">                                                            
+                                                                    <label class="col-sm-4 control-label">Security Code</label>
+                                                                    <div class="col-sm-5">
+                                                                        <input type="text" class="form-control" ng-model="NewCard.SecurityCode"/>                                                                  
+                                                                    </div>
+                                                                
+                                                            </div>
+                                                            
+                                                            <div class="row">                                                            
+                                                                    <label class="col-sm-4 control-label">Expiry Date</label>
+                                                                    <div class="col-sm-5">
+                                                                        <input type="text" style="width:50px;display:inline;" class="form-control" ng-model="NewCard.ExpiryMonth"/>    
+                                                                        /                                                              
+                                                                        <input type="text" style="width:80px;display:inline;" class="form-control" ng-model="NewCard.ExpiryYear"/>
+                                                                    </div>                                                            
+                                                            </div>
+                                                            
+                                                            <div class="row">                                                            
+                                                                    <label class="col-sm-4 control-label">Valid From</label>
+                                                                    <div class="col-sm-5">
+                                                                        <input type="text" style="width:50px;display:inline;" class="form-control" ng-model="NewCard.FromMonth"/>    
+                                                                        /                                                              
+                                                                        <input type="text" style="width:80px;display:inline;" class="form-control" ng-model="NewCard.FromYear"/>
+                                                                    </div>                                                            
+                                                            </div>
+                                                            
+                                                            
+                                                            
+                                                        </div>
+                                                   
+                                                    </div>
+                                                    
+                                                    <div  ng-show="SaveCardErrors" class="alert alert-danger">
+                                                        <ul>
+                                                            <li ng-repeat="error in SaveCardErrors" >{{error}}</li>
+                                                        </ul>
+                                                    </div>
+                                                    
+                                                    <div style="text-align:center;">
+                                                        <button style="width:100px;display:inline;" type="button" class="btn btn-default" ng-click="Save()">Save</button>
+                                                        <button style="width:100px;display:inline;" type="button" class="btn btn-default" ng-click="ShowNewCard = false;">Cancel</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            </div>
+                                            
+                                            <div class="alert alert-success" ng-show="AdminFeeTaken" style="text-align:center;margin-top:20px;">
+                                                <div ng-show="PaymentStatus != 2">
+                                                    Payment has been taken
+                                                </div>
+                                                
+                                                 <div ng-show="PaymentStatus == 2">
+                                                    Payment has been suspended
+                                                </div>
+                                                <div ng-show="PaymentStatus == 2" class="alert alert-warning">
+                                                    <!--The card payment attempt has been suspended. Please raise a case for payments.-->
+
+                                                      The card payment attempt has been suspended and a case will now be raised for payments. Please ensure case is completed. 
+                                                  
+                                                   <!--C0638-->                                                  
+                                                   
+                                                    <div> Please select the type of case you would like to generate (suspend cancel / suspend release): &nbsp;  
+                                                        <apex:selectList style="font-style:normal;" id="CaseType" value="{!CaseTypeSelected}">
+                                                            <apex:selectOption itemLabel="Suspended-Cancel" itemValue="Suspended-Cancel"/>
+                                                            <apex:selectOption itemLabel="Suspended-Release" itemValue="Suspended-Release"/>
+                                                        </apex:selectList>
+                                                    </div>
+                                                    
+                                                    <div  style="text-align:center;">
+                                                            <apex:commandButton style="width:100px;display:inline;font-weight:normal" styleClass="k-button" value="Create Case" action="{!CreateCase}"></apex:commandButton>
+                                                    </div>
+                                               
+                                                   <!--C0638 end -->
+
+                                                </div>                                 
+                                            </div>
+                                      
+                                            <div style="text-align:center;margin-top:20px;" ng-show="AdminFeeTaken">
+                                            <div  class="alert alert-success" ng-show="AJEOk == true">
+                                                    AJE has been sent to EBS
+                                                </div>  
+                                                
+                                                <div  class="alert alert-warning" ng-show="AJEOk == false">
+                                                    AJE has not been sent to EBS
+                                                    <div>
+                                                        <button type="button" class="btn btn-default" ng-click="ResendAJE()">Send to Host</button>
+                                                    </div>
+                                                </div>      
+                                            </div>
+                                            
+                                            
+                                            
+                                            
+                                            <div  ng-show="Errors" class="alert alert-danger" style="margin-top:10px;">
+                                                        <ul>
+                                                            <li ng-repeat="error in Errors" >{{error}}</li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                        
+                                            
+                                            <div style="text-align:center;margin-top:20px;" ng-show="!IsCompleted && AdminFeeTaken && (AJEOk || Data.Payment.Method == 'None' )">
+                                                <button type="button" ng-click="Complete()" class="btn btn-default" style="width:150px;display:inline;">Complete Event</button>
+                                            </div>
+                                        </div>
+                                            <!-- new content end -->
+                                    </div>
+                                    </div>
+                                    </div>
+                                    </div>
+                                    </div>
+                                      
+            <!--<c:HPP_Loading ></c:HPP_Loading>-->
+                              
+                                </div>
+        </apex:form> 
+        </apex:define>
+        <apex:define name="Menu">
+        </apex:define>
+    </apex:composition>
+</apex:page>

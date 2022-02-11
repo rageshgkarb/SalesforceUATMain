@@ -1,0 +1,125 @@
+<!-- C00108 Get some product switching information -->
+
+<apex:page controller="HPPSummaryControllerNew" sidebar="false" showHeader="false" title="Application complete" action="{!Setup}" doctype="html-5.0" standardstylesheets="false">
+    <apex:composition template="HPPProductSwitchTemplate">
+        <apex:define name="include">
+           
+        </apex:define>
+        
+        
+        <apex:define name="header">
+           <c:HPP_Header title="Welcome letter" numapps="1" opp="{!Opp}" />
+        </apex:define>
+        <apex:define name="menu">
+            <c:HPP_Angular_Menu oppid="{!Opp.Id}" directorid="{!DirectorID}">
+            </c:HPP_Angular_Menu>
+        </apex:define>
+        <apex:define name="body">
+        
+        <div style="height:100%" ng-init="WelcomeLetterId='{!WelcomeLetterId}';
+                                                                         OfferLetterId='{!OfferLetterId}';
+                                                                         Risk='{!Risk}';
+                                                                         FISId='{!FisID}';
+                                                                         Docs = {!getJs}   
+        "> <!-- controller -->
+            <div class="container" style="height:100%">
+                <div class="row" style="height:100%">
+                    <div class="col-md-12" style="height:100%;">
+                        <div class="PanelContents" style="height:100%;" >
+                            <div class="verticalScrollSection" style="height:calc(100%);">
+                                <div class="verticalSection">
+                                    <div class="SectionTitle">Application complete</div>
+                                    
+                                    
+                                       <div class="SectionTitle">
+                                           Documents
+                                       </div>
+                                       
+                                       
+                                       <div ng-repeat="item in Docs" style="font-size:14px;">
+                                           <div ng-show="item.Id">
+                                               <a href="{{item.Url}}{{item.Id}}" target="_blank">
+                                                   <span>
+                                                      <i class="fa fa-2x" ng-class="item.IconClass"></i>
+                                                        </span>
+                                                   {{item.Title}}</a>
+                                           </div>
+                                           <div ng-hide="item.Id">
+                                               <span style="color:#e29f9f;">
+                                                      <i class="fa fa-ban fa-2x"></i>
+                                                        </span>
+                                                   {{item.Title}} - Could not find document
+                                               
+                                           </div>
+                                         
+                                       </div>
+                                       
+                                       <!--
+                                       <div style="font-size:14px;">
+                                       <div class="row" style="padding-top:10px;">
+                                           
+                                           <div class="col-sm-6">
+                                               <div ng-show="FISId">
+                                                   <a href="/servlet/servlet.FileDownload?file={{FISId}}" target="_blank">
+                                                   <span>
+                                                      <i class="fa fa-file-word-o fa-2x"></i>
+                                                        </span>
+                                                   FIS</a>
+                                               </div>
+                                               <div ng-hide="FISId">
+                                                   
+                                                   <span style="color:#e29f9f;">
+                                                      <i class="fa fa-ban fa-2x"></i>
+                                                        </span>
+                                                   FIS - Could not find document
+                                               </div>
+                                           </div>                                           
+                                       </div>
+                                       
+                                       
+                                       
+                                       
+                                       
+                                       <div class="row" style="padding-top:10px;">                                     
+                                           <div class="col-sm-6">
+                                               <a href="{{Risk}}" target="_blank">
+                                               <span>
+                                                  <i class="fa fa-file-pdf-o fa-2x"></i>
+                                                    </span> 
+                                               Risk and features document</a>
+                                           </div>
+                                       </div>  
+                                       <div class="row" style="padding-top:10px;">                                          
+                                           <div class="col-sm-6">
+                                               <a href="/servlet/servlet.FileDownload?file={{OfferLetterId}}" target="_blank">
+                                               <span>
+                                                  <i class="fa fa-file-word-o fa-2x"></i>
+                                                    </span> 
+                                               Offer letter</a>
+                                           </div>
+                                       </div>
+                                       <div class="row" style="padding-top:10px;">
+                                           
+                                           <div class="col-sm-6">
+                                               <a href="/servlet/servlet.FileDownload?file={{WelcomeLetterId}}" target="_blank">
+                                               <span>
+                                                  <i class="fa fa-file-word-o fa-2x"></i>
+                                                    </span> 
+                                               Welcome letter</a>
+                                           </div>
+                                       </div>
+                                       </div>
+                                       -->
+                                         <hr/>
+                                         <c:HPP_Post_Completion_Action oppID="{!opp.id}"  />
+                                                              
+                               </div>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>        
+        </div>
+    </apex:define>
+</apex:composition>
+</apex:page>

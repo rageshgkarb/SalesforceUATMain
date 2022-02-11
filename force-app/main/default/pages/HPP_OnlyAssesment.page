@@ -1,0 +1,458 @@
+<apex:page showheader="false" sidebar="false" doctype="html-5.0" standardstylesheets="false" controller="HPP_OnlyAssesment">
+    <apex:composition template="HPPProductSwitchTemplate">
+        <apex:define name="include">
+        <link rel="stylesheet" type="text/css" href="//services.postcodeanywhere.co.uk/css/address-3.40.css" />
+        <script type="text/javascript" src="//services.postcodeanywhere.co.uk/js/address-3.40.js"></script>
+        <apex:includeScript value="//cdnjs.cloudflare.com/ajax/libs/datejs/1.0/date.min.js"/>
+        
+        
+        
+            <script>
+            
+                $(function () {
+                      $('[data-toggle="popover"]').popover()
+                    })
+            
+            
+                hppApp.controller('controllerSuit', ['$scope', '$location', '$timeout','serviceSuit',
+                                    function ($scope, $location, $timeout, serviceSuit)
+                {
+                
+                    $scope.ToggleApplicantFullscreen = false; 
+                
+                   
+                    $scope.ShowNext = function()
+                    {
+                        if(!$scope.Data) return false;
+                                            
+                        if($scope.Data.Customer_prompt_for_execution_only_c == 'No') return true;
+                        if(!$scope.Data.Customer_prompt_for_execution_only_c) return false;
+                        
+                        if(!$scope.Data.Debt_Consolidation_main_purpose_c) return false;
+                        if($scope.Data.Debt_Consolidation_main_purpose_c == 'Yes') return false;
+                        
+                        if(!$scope.Data.Mortgage_professional_c || !$scope.Data.Income_exceed_300k_c || !$scope.Data.Assets_over_3m_c) return false;
+                        
+                        if($scope.Data.Mortgage_professional_c == 'No' && $scope.Data.Income_exceed_300k_c == 'No' && $scope.Data.Assets_over_3m_c == 'No') return false;
+                        
+                        if(!$scope.Data.Execution_Only_Reason_c || !$scope.Data.Require_advice_c) return false;
+                        
+                        return true;
+                    }
+                    
+
+                    $scope.Complete= function(){
+                        if(!$scope.OppId) return null;
+                        //serviceApplication.LoadShow('Processing...');
+                        serviceSuit.Complete($scope.Data,$scope.OppId)
+                        .then(
+                            function(result)
+                            {
+                                if(result.Success)
+                                {
+                                    $scope.SuccessMessage = 'Completed';                       
+
+                                    if(result.URL)
+                                    {
+                                        $window.location.href = result.URL.FormatURL();
+                                    }
+                                    else
+                                    {
+                        //serviceApplication.LoadHide(false);
+                                    }
+                                }
+                                else
+                                {
+                                    //serviceApplication.LoadHide(false);
+                                    $scope.ErrorMessage = result.Error;
+                                }
+                            },
+                            function(error){
+                    //serviceApplication.LoadHide(false);
+                                $scope.ErrorMessage = error;
+                            }
+                           );
+                    }
+               
+               
+
+                    $scope.GetData= function(){
+                        if(!$scope.OppId) return null;
+                        //serviceApplication.LoadShow('Processing...');
+                        serviceSuit.GetData($scope.OppId)
+                        .then(
+                            function(result){
+                                if(result.Success)
+                                {
+                        $scope.SuccessMessage = 'Completed';
+                        $scope.Data = result.Data;
+
+                                    if(result.URL)
+                                    {
+                                        $window.location.href = result.URL.FormatURL();
+                                    }
+                                    else
+                                    {
+                        //serviceApplication.LoadHide(false);
+                                    }
+                                }
+                                else
+                                {
+                        //serviceApplication.LoadHide(false);
+                        $scope.ErrorMessage = result.Error;
+                                }
+                            },
+                            function(error){
+                    //serviceApplication.LoadHide(false);
+                                $scope.ErrorMessage = error;
+                            }
+                           );
+                    }
+
+
+                 }]);
+
+
+                hppApp.service('serviceSuit', ['$q', '$rootScope', function ($q, $rootScope) {
+                       this.GetData= function(id)
+                        {
+                            var deferred = $q.defer();
+                        Visualforce.remoting.timeout = 120000;
+                            HPP_OnlyAssesment.GetData(id,function(result, event){
+                                if(event.status){
+                                    deferred.resolve(result);
+                                }
+                                else {
+                                    deferred.reject(event);
+                                }
+                            },{ buffer: false, escape: false, timeout: 120000});
+                            return deferred.promise;
+                        }
+                        
+                        this.Complete= function(data,id)
+                        {
+                            var deferred = $q.defer();
+                        Visualforce.remoting.timeout = 120000;
+                            HPP_OnlyAssesment.Complete(data,id,function(result, event){
+                                if(event.status){
+                                    deferred.resolve(result);
+                                }
+                                else {
+                                    deferred.reject(event);
+                                }
+                            },{ buffer: false, escape: false, timeout: 120000});
+                            return deferred.promise;
+                        }
+
+                   }]);
+
+
+            </script>
+            <style>
+            
+                
+            
+                ul#tab-headers li {
+                    display: inline;
+                    border: 1px solid #aaa;
+                    padding: 5px;
+                    padding-left:10px;
+                    padding-right:10px;
+                    background-color: #808080;
+                    color: #fff;
+                }
+                
+                ul#tab-headers li.active {
+                    background-color:rgb(179,153,93);                    
+                }
+                
+                ul#applicant-headers li {
+                    display: inline;
+                    border: 1px solid #aaa;
+                    padding: 5px;
+                    padding-left:10px;
+                    padding-right:10px;
+                    background-color: #808080;
+                    font-size:16px;
+                    color: #fff;
+                }
+                
+                ul#applicant-headers li.active{
+                    background-color:rgb(179,153,93);                 
+                }
+                
+                
+                #tab-headers2{
+                    padding-left:0px;
+                }
+                
+                
+                ul#tab-headers2 li {
+                   
+                    border: 1px solid #aaa;
+                    padding: 5px;
+                    background-color: #808080;
+                    color: #fff;
+                }
+                
+                #myScrollspy.affix{
+                    position:fixed;
+                    top:0px;
+                    z-index:999;
+                }
+                
+                
+                .budget-item-query{
+                    background-color: #f2dede;
+                }
+                
+                .budget-item-okk{
+                    background-color: #dff0d8;
+                }                
+                
+                .arbInputBox.form-control {
+                    background-color: rgb(243,243,243);
+                    padding-top: 8px;
+                    padding-bottom: 8px;
+                    padding-left: 12px;
+                    padding-right: 12px;
+                    height: inherit;
+                }
+                
+                .budgetItem{
+                    border: 1px solid #aaa;
+                }
+                
+                .panel{
+                    padding:0px;
+                }
+                
+                .panel-default>.panel-heading {                
+                     background-color: rgb(179,153,93);
+                     color: rgb(255,255,255);
+                     font-size: 18px;
+                }
+                
+                .panel-default>.panel-heading a:hover {
+                    color:#fff;
+                }
+                
+                
+                .SectionHeader {
+                    padding: 10px;
+                    background-color: rgb(179,153,93);
+                    color: rgb(255,255,255);
+                    font-size: 18px;
+                    margin-bottom: 3px;
+                }
+                
+                .function-item{
+                    float:left;
+                    padding-left:15px;
+                    padding-right:15px;
+                    padding-top: 5px;
+                    padding-bottom:5px;
+                    background-color: #808080;
+                    font-size:14px;
+                    color: #fff;
+                }
+                
+                .function-item.active{
+                    background-color: rgb(179,153,93);
+                }
+                
+                
+                
+                
+                
+                
+                #tab-headers2.affix{
+                position:fixed;
+                top:20px;
+                width:200px;    
+                }
+                
+                .SectionTitle {
+    color: rgb(179,153,93);
+    font-size: 20px;
+    font-weight: bold;
+    padding-bottom: 10px;
+}
+                
+            </style>
+        </apex:define>
+        <apex:define name="header">
+           <c:MMR_Header title="Product Suitability" numapps="1" opp="{!Opp}" />
+        </apex:define>
+        <apex:define name="menu">
+            <c:HPP_Angular_Menu oppid="{!opp.id}" directorid="{!DirectorID}">
+            </c:HPP_Angular_Menu>
+        </apex:define>
+        <apex:define name="body">
+            <div ng-controller="controllerSuit" style="height:100%;" ng-init="EventLogId=''; OppId='{!opp.id}';GetData();">
+                <div class="container" style="height:100%;">
+                   <div class="row" style="height:100%;">
+                    <div class="col-md-12" style="height:100%;">
+                        
+                        
+                        
+                        <div class="PanelContents" style="height:100%">  
+                            <div ng-hide="Data">
+                                <img src="//c.cs86.visual.force.com/resource/1464991645000/CategoryApp/app/assets/712.gif" style="position: relative;left: 45%;margin-top: 20%; width: 6%;  background: #f3f3f3;"/>
+                            </div>
+                            
+                            <div class="verticalScrollSection" style="height:100%;" ng-show="Data">
+                            
+                            
+                            <div class="verticalSection">
+                                <div class="SectionTitle">Product suitability</div>
+                                
+                                
+                                <div class="row" ng-show="ErrorMessage ">
+                                    {{ErrorMessage}}                                
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <label>Has the customer prompted for execution only?</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="radio-inline">
+                                            <input name="optPrompted" ng-model="Data.Customer_prompt_for_execution_only_c" type="radio" value="Yes"/>Yes
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input name="optPrompted" ng-model="Data.Customer_prompt_for_execution_only_c" type="radio" value="No"/>No
+                                        </label>
+                                    
+                                    </div>
+                                </div>
+                                
+                                
+                                <div ng-show="Data.Customer_prompt_for_execution_only_c == 'Yes'">
+                                <div class="row" ng-show="Data.Customer_prompt_for_execution_only_c == 'Yes'">
+                                    <div class="col-sm-6">
+                                        <label>Is the main purpose of the HPP, Debt Consolidation?</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="radio-inline">
+                                            <input name="optPurpose" ng-model="Data.Debt_Consolidation_main_purpose_c" type="radio" value="Yes"/>Yes
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input name="optPurpose" ng-model="Data.Debt_Consolidation_main_purpose_c" type="radio" value="No"/>No
+                                        </label>                                     
+                                    </div>
+                                </div>
+                                
+                                
+                                
+                                
+                                <div ng-show="Data.Debt_Consolidation_main_purpose_c == 'No'">
+                                <div class="row" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="top" 
+                                        data-content="An applicant has to have completed at least 12 months mortgage advice within the last 10 years.">
+                                    <div class="col-sm-6">
+                                        <label>Has any applicant ever been a mortgage professional for a period exceeding 12 months?</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="radio-inline">
+                                            <input name="optProfessional" ng-model="Data.Mortgage_professional_c" type="radio" value="Yes"/>Yes
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input name="optProfessional" ng-model="Data.Mortgage_professional_c" type="radio" value="No"/>No
+                                        </label>                                  
+                                    </div>
+                                </div>
+                                
+                                <div class="row" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="top" 
+                                        data-content="Total net income to include all salary components including basic salary, bonus, overtime, pension,  etc.">
+                                    <div class="col-sm-6">
+                                        <label>Does any applicant’s income exceed £300,000 net per annum?</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="radio-inline">
+                                            <input name="optHighIncome" ng-model="Data.Income_exceed_300k_c" type="radio" value="Yes"/>Yes
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input name="optHighIncome" ng-model="Data.Income_exceed_300k_c" type="radio" value="No"/>No
+                                        </label>                             
+                                    </div>
+                                </div>
+                                
+                                <div class="row" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="top" 
+                                        data-content="Net assets can include any asset of the customer such as savings, houses, cars, artwork, shares, etc.">
+                                    <div class="col-sm-6">
+                                        <label>Does any applicant have net assets of over £3m?</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="radio-inline">
+                                            <input name="optAssets" ng-model="Data.Assets_over_3m_c" type="radio" value="Yes"/>Yes
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input name="optAssets" ng-model="Data.Assets_over_3m_c" type="radio" value="No"/>No
+                                        </label>                           
+                                    </div>
+                                </div>
+                                
+                               
+                                
+                                <div class="row" ng-show="Data.Mortgage_professional_c == 'Yes' || Data.Income_exceed_300k_c == 'Yes' || Data.Assets_over_3m_c == 'Yes'">
+                                    <div class="col-sm-6">
+                                        <label>Reason for execution only</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <textarea class="form-control" ng-model="Data.Execution_Only_Reason_c" rows="3">
+                                        
+                                        </textarea>
+                                    </div>
+                                </div>
+                                
+                                <div class="row" ng-show="Data.Mortgage_professional_c == 'Yes' || Data.Income_exceed_300k_c == 'Yes' || Data.Assets_over_3m_c == 'Yes'">
+                                    <div class="col-sm-6">
+                                        <label>Would you require advice on choosing a HPP product</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="radio-inline">
+                                            <input name="optAdvice" ng-model="Data.Require_advice_c" type="radio" value="Yes"/>Yes
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input name="optAdvice" ng-model="Data.Require_advice_c" type="radio" value="No"/>No
+                                        </label> 
+                                       
+                                    </div>
+                                </div>
+                                
+                             
+                                
+                                
+                                
+                                </div>
+                                
+                                <div class="form-group eligible" ng-show="Data.Debt_Consolidation_main_purpose_c == 'Yes' || (Data.Assets_over_3m_c == 'No' && Data.Income_exceed_300k_c == 'No' && Data.Mortgage_professional_c == 'No')">
+                                <div class="panel panel-danger">
+                                    <div class="panel-body">
+                                    <div class="col-sm-12">
+                                    Based on the information you have supplied, you are not eligible to undertake the execution only process
+                                    </div>
+                                    </div>
+                                </div>
+                                </div>
+                                
+                                </div>
+                                   
+                                 <div class="text-center">
+                                    <button class="btn btnArb" ng-click="Complete()" ng-show="ShowNext()">Next</button>
+                                </div>
+                                   
+                            </div>
+                        </div>
+                        
+                    </div>
+              </div>
+                 
+                      </div>
+                      </div>
+            </div>
+        </apex:define>
+        <apex:define name="Menu">
+        </apex:define>
+    </apex:composition>
+</apex:page>

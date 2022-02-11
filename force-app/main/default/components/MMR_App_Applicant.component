@@ -1,0 +1,172 @@
+<apex:component allowdml="true">
+    <apex:attribute description="Applicant no" name="ApplicantNo" type="String" required="true" />
+    <apex:attribute description="Acc" name="Acc" type="Account" required="true" />
+    <apex:attribute description="Type" name="Type" type="String" required="true" />
+    <apex:attribute description="Name" name="Name" type="String" required="true" /> <!-- C0644 BTL Ltd Co. changes -->
+    <div class="col-md-6">
+        <div class="row">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h2>{!Type} {!ApplicantNo} - {!Name}</h2>
+                </div>
+                <div class="panel-body">
+
+
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            Additional Personal Questions
+                        </div>
+                        <div class="panel-body">
+                            <div class="col-sm-12">
+                                <!-- Garnet - START  -->
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>
+                                                Face-to-Face Contact
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield required="true" value="{!acc.Face_to_face_Contact__c}" styleclass="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Garnet END  -->
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>
+                                                Country of birth
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield required="true" value="{!acc.Country_of_Birth__c}" styleclass="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>
+                                                Country of residence
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield required="true" value="{!acc.Country_of_Residence__c}" styleclass="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>
+                                                UK residency status
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield value="{!acc.UK_residency_status__c}" styleclass="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>
+                                                Country of Nationality
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield required="true" value="{!acc.Country_of_nationality__c}" styleclass="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>
+                                                School name
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield required="true" value="{!acc.School_name_security_question__c}" styleclass="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>
+                                                Mother's maiden name
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield required="true" value="{!acc.Mother_s_family_name_security_question__c}" styleclass="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <apex:outputpanel rendered="{!!(Type=='Director')}"> <!-- C0644 BTL Ltd Co. changes -->
+                        <div class="panel panel-info">
+                            <div class="panel-heading">Current Account Details  </div>
+                            <div class="panel-body">
+                                <div class="col-sm-12">
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <div class="col-sm-6">
+                                                <label for="">Date current account opened</label>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <apex:inputfield required="false" value="{!Acc.Date_of_current_account_opened__c}" styleclass="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <div class="col-sm-6">
+                                                <label for="">Name of main bank</label>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <apex:inputfield required="false" value="{!Acc.Name_of_where_main_bank_accounts_held__c}" styleclass="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <div class="col-sm-6">
+                                                <label for="">Current account number</label>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <apex:inputfield required="false" value="{!Acc.Other_account_number__c}" styleclass="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <div class="col-sm-6">
+                                                <label for="">Current account sort code</label>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <apex:inputfield required="false" value="{!Acc.Other_bank_sort_code__c}" styleclass="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </apex:outputpanel>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</apex:component>

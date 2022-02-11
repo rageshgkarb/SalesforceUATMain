@@ -1,0 +1,44 @@
+<apex:page applyBodyTag="false" showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false">
+
+        <div class="verticalScroller" ng-controller="controllerTillManagement" ng-init="CloseTill_Init()" style="overflow: auto; height: 100%; margin-top: 15px;">
+            <div id="header">Close Till</div>
+
+			<div class="col-md-4"  ng-show="Stage=='Initial'">
+				<select id="tillInput" class="form-control" ng-model="tillIdToClose" ng-options="item.TillId as item.TillName for item in Tills"></select>
+			</div>
+
+            <div ng-show="Stage=='Final'">
+                <input type="checkbox" name="ChequeBinFlagSelected" ng-model="ChequeBinFlag" style="margin: 20px; transform: scale(1.5,1.5)" />Do you want to perform the Cheque Bin Function?<br />
+            </div>
+            
+            <div style="background: #F4F4F4; margin: 0; width: calc(100% - 5px); padding: 20px; height: 172px;">
+                
+				<div class="row">
+					<div class="col-sm-2" >
+	                    <label ng-show="Stage=='Final'">Authorisor:</label> 
+	                 </div>
+	                 <div class="col-sm-4" >
+	                     <select class="form-control" ng-model="Authorisor" ng-options="item.Name for item in TillAuthorisors.Authorisors" ng-disabled="Authorisor" ng-show="Stage=='Final'">
+	                            <option>{{item.Name}}</option>
+	                     </select>
+	                     <a ng-click="Authorisor=''" ng-show="Stage=='Final'">Clear</a>
+	                 </div>
+				</div>
+				
+				<div class="row">
+                <div class="col-sm-2">
+                    <label ng-show="Stage=='Final'">Password:</label> 
+                </div>
+                <div class="col-sm-4" >
+                    <input class="form-control" type="password" ng-model="Authorisor.Password" ng-show="Stage=='Final'" />
+                </div>
+				</div>
+				
+                <div style="float: left; margin-left: 10px; margin-top: 10px; color:red;" align="center" ng-show="Response_Success==false">{{Response_StatusDescription}}</div>
+                <button id="CloseTIll_Select" class="goldButton" style="float: right; padding-left:30px !important; padding-right:30px !important; padding-top:17px !important; padding-bottom:17px !important;" ng-click="CloseTIll_Select()" ng-show="Stage=='Initial'" >Select Till</button>
+
+                <button id="CloseTill" class="goldButton" style="float: right; padding-left:30px !important; padding-right:30px !important; padding-top:17px !important; padding-bottom:17px !important;" ng-click="CloseTill_Execute()" ng-show="Stage=='Final'" >Close Till</button>
+            </div>
+        </div>
+
+</apex:page>

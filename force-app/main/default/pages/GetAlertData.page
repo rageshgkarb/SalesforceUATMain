@@ -1,0 +1,17 @@
+<apex:page controller="GetAlertDataController" action="{!onLoad}" showHeader="false" sidebar="false" standardStylesheets="false">
+ <apex:includeScript value="{!URLFOR($Resource.JQuery, 'jquery-1.11.3.min.js')}"  />
+ 
+            <script>
+            $(document).ready(function(){
+                var data=$.parseJSON('{!lstAlerts}');
+                var html="";
+                alert(data.length);
+                for(i=0;i<data.length;i++){
+                    html+=data[i]+"<br/>";
+                }
+                $("#data").html(html);
+           });
+            </script>
+            <div id="data">
+            </div>
+</apex:page>

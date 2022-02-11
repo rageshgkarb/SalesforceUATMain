@@ -1,0 +1,548 @@
+<apex:page showHeader="false" sidebar="false" docType="html-5.0" controller="BAA_Director_Details_Controller" action="{!Setup}">
+    <head>       
+        <c:BAA_Resource ></c:BAA_Resource>
+        <apex:include pageName="pca__Component"/>     
+    </head>     
+    <body>
+    
+        <c:BAA_Header objOpp="{!BaseOpportunity}" title="Shareholder Details"></c:BAA_Header>
+        <div class="container">
+        <div class="row">
+                <div class="col-md-4 col-lg-3">
+                    <apex:form >
+                    <c:BAA_Menu oppId="{!BaseOpportunity.Id}"  DirectorId="{!BaseOpportunity.ProductEventDirector__c}" />
+                    </apex:form>
+                </div>            
+                <div class="col-md-8 col-lg-9">
+        
+        
+            <apex:form >
+            <div class="row">
+                <div class="col-xs-12">
+                    <c:BAA_Applicants_Nav eventId="{!EventId}" Applicants="{!AppAccs}" Page="B" AccountId="{!AccountId}" />
+                </div>
+            </div>
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        Personal Details
+                    </div>
+                    <div class="panel-body">                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Title</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputField styleClass="form-control" required="true" value="{!Acc.Salutation}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>First Name</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputField styleClass="form-control" required="true" value="{!Acc.FirstName}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Middle Name</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputField styleClass="form-control" required="false" value="{!Acc.Middle_Name__pc}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Last Name</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputField styleClass="form-control" required="true" value="{!Acc.LastName}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Other Name</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputField styleClass="form-control" required="false" value="{!Acc.Any_other_name_known_by_past_present__c}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Gender</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputField styleClass="form-control" required="true" value="{!Acc.Gender__c}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- -->                       
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Date of birth</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputField styleClass="form-control" required="true" value="{!Acc.Date_of_Birth__c}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Relationship Status</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputField styleClass="form-control" required="true" value="{!Acc.Marital_Status__c}"/>
+                                    </div>
+                                </div>
+                            </div>                            
+                        </div>                                                                      
+                        <!-- -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Town of Birth</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputField styleClass="form-control" required="true" value="{!Acc.Town_of_Birth__c}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Country of Birth</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputField styleClass="form-control" required="true" value="{!Acc.Country_of_Birth__c}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Number of Dependent Children</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputField styleClass="form-control" required="false" value="{!Acc.No_of_depenents__c}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Passport Number (Non UK)</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputField styleClass="form-control" required="false" value="{!Acc.Passport_No__c}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Country of Issue (Non UK Passport)</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputField styleClass="form-control" required="false" value="{!Acc.Country_of_Issue__c}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Do you have dual nationality?</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputField styleClass="form-control" required="false" value="{!Acc.Dual_Nationality_Held__c}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>  
+                        
+                        
+                        <!-- -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Home Tel No. Incl STD</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputField styleClass="form-control" required="true" value="{!Acc.Home_Telephone_No__c}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Mobile Tel No. Incl STD</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputField styleClass="form-control" required="true" value="{!Acc.Phone}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Personal Email Address</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputField styleClass="form-control" required="true" value="{!Acc.PersonEmail}"/>
+                                    </div>
+                                </div>
+                            </div> 
+                            <!-- C00233 -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>UK Citizen ?</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputField styleClass="form-control" required="true" value="{!Acc.UK_Citizen__c}"/>
+                                    </div>
+                                </div>
+                            </div> 
+                            <!-- C00233 end -->                                  
+                        </div>
+                        
+                        
+                        
+                        <!-- --> 
+                    </div> <!-- close panel body -->
+                </div> <!-- close panel -->
+                
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        Security Questions
+                    </div>
+                    <div class="panel-body">                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Mother Maiden Name</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputField styleClass="form-control" required="false" value="{!Acc.Mother_s_family_name_security_question__c}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>School Name</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputField styleClass="form-control" required="false" value="{!Acc.School_name_security_question__c}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- close panel body -->
+                </div> <!-- close panel -->
+                
+                
+                
+                
+                
+                
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        Residential Address
+                    </div>
+                    <div class="panel-body">                        
+                        <!-- -->
+                        <div class="panel panel-info">
+                            <div class="panel panel-heading">Current Address</div>
+                            <div class="panel-body">
+                                <!-- -->
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <div class="col-sm-6">
+                                                <label for="" >Current Address Post Code</label>
+                                            </div>                
+                                            <div class="col-sm-6">
+                                                <apex:inputField id="addrPostCode" value="{!Acc.BillingPostalCode}" styleClass="form-control"  />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">  
+                                         <div class="form-group">
+                                            <div class="col-sm-5">
+                                                <label for="">Customer address</label>
+                                            </div>
+                                            
+                                            <div class="col-sm-7">
+                                                <apex:inputField id="addrStreet" value="{!Acc.BillingStreet}"  styleClass="form-control"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">            
+                                        <div class="form-group">
+                                            <div class="col-sm-6">
+                                                <label for="">Current Address City</label>
+                                            </div>                            
+                                            <div class="col-sm-6">
+                                                <apex:inputField id="addrCity" value="{!Acc.BillingCity}"  styleClass="form-control"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <div class="col-sm-5">
+                                                <label for="">Current Address Country</label>
+                                            </div>
+                                            
+                                            <div class="col-sm-7">
+                                                <apex:inputField id="addrCountry" value="{!Acc.BillingCountry}"  styleClass="form-control"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <div class="col-sm-6">
+                                                <label>Residential Date Moved to Address</label>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <apex:inputField styleClass="form-control" required="true" value="{!Acc.Date_moved_to_address__c}"/>
+                                            </div>
+                                        </div>
+                                    </div>                            
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- -->
+                        
+                        
+                        
+                        
+                    </div><!-- close panel body -->
+                </div><!-- close panel -->
+                
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        Relationship
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Director</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputField styleClass="form-control" required="true" value="{!Relationship.Is_Director__c}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Signatory</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputField styleClass="form-control" required="true" value="{!Relationship.Is_Signatory__c}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Shareholder</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputField styleClass="form-control" required="true" value="{!Relationship.Is_Shareholder__c}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label  rel="popover" data-html="true" data-trigger="hover"  data-placement="top"   data-content="<div style='width:100%;'>
+                                <h3>Shareholder percentage</h3>
+                                <br/><br/>
+                                If shareholding is 25% or above, please collate KYC documents from Shareholder
+                                </div>"
+                                
+                                >Shareholder percentage <span style="font-size:16px;color:#162f61;" class="glyphicon glyphicon-info-sign"></span></label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputField styleClass="form-control" required="false" value="{!Relationship.Shareholder_Percentage__c}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Position Held</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputField styleClass="form-control" required="true" value="{!Relationship.Position_Held__c}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- close panel -->
+                
+                
+                <div class="panel panel-primary">
+                    <div class="panel-heading">Marketing</div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-12">
+                            <a href="javascript:void(0)"
+                                        onclick="doMC();"><b>Data Protection Statement and
+                                                Marketing Consent</b> </a>
+                            </div>
+                        </div>
+                    
+                    <!--
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Do you agree to IBB contacting you regarding future products?</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputField styleClass="form-control" required="true"
+                                            value="{!acc.Marketing_Consent__c}"
+                                            id="IBBConsent" />
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                        
+                        
+                        
+                       
+                        
+                        <div class="row">
+                    <div class="col-sm-6">
+                        <label >Please indicate if you 'Do not' wish to be contacted by IBB by any of the following</label>
+                    </div>
+                    <div class="col-sm-6 inputlabel">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="checkbox">
+                                    <label>
+                                      <apex:inputCheckbox value="{!HasEmail}"/> Email
+                                    </label>
+                                  </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="checkbox">
+                                    <label>
+                                      <apex:inputCheckbox value="{!HasMail}"/> Mail
+                                    </label>
+                                </div>
+                            </div>
+                               
+                               
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="checkbox">
+                                    <label>
+                                      SMS<apex:inputCheckbox value="{!HasSMS}"/> 
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="checkbox">
+                                    <label>
+                                      <apex:inputCheckbox value="{!HasPhone}"/> Phone
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+</div>
+                        
+                        -->
+                        
+                    </div>
+                </div>
+                
+                
+                
+                
+                
+
+                
+                <div class="row">
+                    <apex:commandButton styleClass="btn-success" value="Save" action="{!Save}" rendered="{!!IsCompleted}"/>
+                </div>
+                
+                
+                
+                
+                
+            </apex:form>
+            </div>
+            </div>
+        </div>
+        
+        
+<script>
+            function doMC(){
+    
+    var winURL = "{!URLFOR($Resource.MarketingConsent)}";
+    //alert(winURL);
+    window.open(winURL,"_blank","height=500,width=600");
+}
+</script>        
+    </body>
+</apex:page>

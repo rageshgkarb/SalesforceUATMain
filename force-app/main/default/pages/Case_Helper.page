@@ -1,0 +1,106 @@
+<apex:page applyBodyTag="false" standardController="Case" extensions="CaseHelperController" docType="html-5.0" showHeader="false" standardStylesheets="false">
+    <base href="{!URLFOR($Resource.CategoryApp, 'app/')}" />
+    <script src="lib/angular.js"></script>
+    <apex:remoteObjects >
+        <apex:remoteObjectModel name="Case_Question__mdt" jsShorthand="CaseQuestion" fields="Level__c,Question__c"></apex:remoteObjectModel>
+        <apex:remoteObjectModel name="Case_Record_Type__mdt" jsShorthand="CaseRecordType" fields="IsActive__c,Record_Type_Name__c"></apex:remoteObjectModel>
+        <apex:remoteObjectModel name="Case_Type_Helper__c" jsShorthand="CaseTypeHelper" fields="Internal_Staff__c,Is_Active__c,Option__c,Parent__c,RecordType__c,Display_Order__c"></apex:remoteObjectModel>
+    </apex:remoteObjects>
+    <head>
+
+    
+
+    <link rel="stylesheet" type="text/css" href="css/normal.css"/>
+    <link rel="stylesheet" type="text/css" href="css/button.css"/>
+    <link rel="stylesheet" href="css/style.css"/>
+    <link rel="stylesheet" href="css/angular-material.css"/>
+    <link rel="stylesheet" href="{!URLFOR($Resource.BootstrapInside)}" />
+        
+    
+    <script src="{!URLFOR($Resource.ngbootstrap)}"></script>
+    <script src="lib/angular-router.js"></script>
+    </head>
+    
+    <body ng-app="caseApp"  class="ng-cloak">
+
+    <ui-view></ui-view>
+    
+    
+    </body>
+    <script src="lib/angular-sanitize.js"></script>
+    <script src="lib/angular-animate.js"></script>
+    <script src="lib/angular-aria.js"></script>
+    <script src="lib/angular-material.js"></script>
+    
+    <script src="{!URLFOR($Resource.CategoryApp, '/app/app.js')}"></script>
+    <script src="Case_Category/questionCtrl.js"></script>
+    <script src="Case_Category/questionFactory.js"></script>
+    <script src="Case_Category/categoryDirective.js"></script>
+    <script>
+    Visualforce.remoting.Manager.invokeAction(
+        '{!$RemoteAction.CaseHelperController.getWebFormFieldIdOfCase}',
+        function (result, event) {
+            //alert('result:'+result);
+            if(result){             
+                window.WebFormFieldIdOnCase = result;              
+            }
+        });
+        
+    window.baseUrl="{!LEFT($currentPage.URL, FIND( '/apex', $currentPage.URL))}";
+    window.accountId="{!($currentPage.parameters.def_account_id)}";
+    window.staffNotFound="{!($currentPage.parameters.def_contact_id)}";
+    window.caseRecord={!caseRecordTypes};
+    
+    Visualforce.remoting.Manager.invokeAction(
+        '{!$RemoteAction.CaseHelperController.getInternalStaffContact}',
+        function (result, event) {
+            if(result){
+                window.staffFound = result.Id;
+                window.accountIdStaff = result.AccountId;
+            }
+        });
+    </script>
+    
+    <script type="text/ng-template" id="myModalContent.html">
+        <div class="bootstrap-container">
+            <div class="modal-header">
+                <button aria-label="Close" class="close pull-right" type="button" style="border:0 !important;" ng-click="cancel()"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">SMS Disclaimer</h4>
+
+            </div>
+            <div class="modal-body">
+                <p ng-bind-html="disclaimerMessage">
+                   
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-primary btn" ng-click="ok()">
+                    Agree
+                </button>
+                <button class="btn btn-default" type="button" ng-click="cancel()">Disagree</button>
+            </div>
+        </div>
+    </script>
+    <script>
+        angular.module("caseApp").controller('detailsController',['$scope','$uibModalInstance','params',
+            function($scope,$uibModalInstance,params){
+                
+                $scope.disclaimerMessage=params.disclaimerMessage;
+                $scope.ok = function () {
+                    //alert("next");
+                    params.agreeFunc();
+                    $uibModalInstance.dismiss('cancel');
+                    //$uibModalInstance.close($scope.selected.item);
+                };
+                
+                $scope.cancel = function () {
+                    params.disagreeFunc();
+                    $uibModalInstance.dismiss('cancel');
+                };
+                
+               
+            }
+        ]);
+    </script>
+
+</apex:page>

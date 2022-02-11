@@ -1,0 +1,6 @@
+<apex:page applyBodyTag="false" showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false">
+<!-- Begin Default Content REMOVE THIS -->
+<h1>Parent > Child</h1>
+This is your new Apex Page: Teller_Test_AngularChild
+<a ui-sref="Parent">back to parent</a>
+</apex:page>

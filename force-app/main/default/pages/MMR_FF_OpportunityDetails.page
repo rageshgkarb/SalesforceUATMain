@@ -1,0 +1,211 @@
+<!--
+  @description       : 
+  @author            : anuradha.dabhadkar@alrayanbank.co.uk
+  @group             : 
+  @last modified on  : 12-30-2021
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<apex:page showHeader="false" sidebar="false" controller="MMR_FF_OpportunityDetails" action="{!Setup}">
+<head>
+<c:MMR_PageHeader ></c:MMR_PageHeader>  
+<style>
+.nav-pills>li>a {
+    font-size:14px;
+}
+.headings{
+    font-size: 13px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+.btnrow{
+    margin-top: 8px;
+}
+.budgetrow2{
+width: 400px;
+}
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 80%;
+  margin-top: 30px;
+  margin-left: 10%;
+  margin-right: 10%;
+  table-layout: fixed;
+  background-color: #dddddd;
+}
+
+td:nth-child(even){
+  border: 1px solid #080808;
+  text-align: center;
+  padding: 8px;
+  width:20%;
+}
+
+td:nth-child(odd){
+  border: 1px solid #080808;
+  text-align: left;
+  padding: 8px;
+  width:60%;
+}
+
+
+.Table2{
+    table-layout: fixed;
+    margin-right: 70%;
+    width: 30%
+    background-color: #ffffff;
+}
+
+</style> 
+<script>
+    function ShowAffordableCalculation(){
+        var divVal = document.getElementById('AffordabilityCalculation');  
+        console.log('***'+divVal);
+        divVal.style= 'display:block';  
+    }
+</script>
+</head>
+<body>
+    <c:MMR_Header title="Budget Planner" numapps="{!NumApplying }" opp="{!bopp}" hide="{!IsCredit}"/>
+    <div class="container">
+        <c:MMR_FF_Nav EventId="{!eventid}" active="7" activesection="B" rendered="{!!IsCredit && !IsCompleted}"/>
+        <c:MMR_FF_Nav_Links EventId="{!eventid}" active="7" activesection="B" rendered="{!!IsCredit && IsCompleted}"/>
+        
+        <c:MMR_Credit_Nav EventId="{!eventid}" active="7" activesection="B" rendered="{!IsCredit}"/>
+        <apex:form id="aForm" styleClass="form-horizontal">
+            <div class="panel panel-primary">
+                <ul class="nav nav-pills nav-justified">
+                    <li ><a href="/apex/MMR_FF_HPP_BudgetPlanner?id={!EventId}">Budget Planner</a></li>
+                    <li class="active"><a href="#">Opportunity Summary</a></li>   
+                </ul>
+                <div class="panel-body">
+                    <div class="col-sm-12">
+                        <apex:outputPanel id="AffordabilityCalculation">
+                            <table>
+                                <tr colspan="4">
+                                    <td style="width:25%;text-align:center;"><label>Total Monthly Net Income</label></td>
+                                    <td style="width:25%;text-align:center;"><label>Gross Annual Income</label></td>
+                                    <td style="width:25%;text-align:center;"><label>Unstressed Rental Rate</label></td>
+                                    <td style="width:25%;text-align:center;"><label>Stressed Rental Rate</label></td>
+                                </tr>
+                                <tr>
+                                    <td style="width:25%;text-align:center;">£{!affordability.TotalNetMonthlyIncome__c}</td>
+                                    <td style="width:25%;text-align:center;">£{!affordability.TotalGrossIncome__c}</td>
+                                    <td style="width:25%;text-align:center;">{!ExOpp.Unstressed_Rental_Rate__c}</td>
+                                    <td style="width:25%;text-align:center;">{!ExOpp.Stressed_Rental_Rate__c}</td>
+                                </tr>
+                            </table>
+                            <table>
+                                <tr>
+                                    <td><label>Total Financial Commitments/Personal Debts</label></td>
+                                    <td><apex:outputField value="{!affordability.Total_Financial_Commitments_Personal_Deb__c}"></apex:outputField></td>
+                                </tr>
+                                <tr>
+                                    <td><label>Total Household ONS Expenditure</label></td>
+                                    <td><apex:outputField value="{!affordability.Total_Household_ONS_Expenditure__c}"></apex:outputField></td>
+                                </tr>
+                                <tr>
+                                    <td><label>Total ONS Household Expenditure Including Financial Commitments</label></td>
+                                    <td><apex:outputField value="{!affordability.Total_ONS_incl_Financial_Commitment__c}"></apex:outputField></td>
+                                </tr>
+                            </table>
+                            <table>
+                                <tr>
+                                    <td><label>Total Household Declared Basic Expenditure</label></td>
+                                    <td><apex:outputField value="{!affordability.Total_Basic_Expenditure__c}"></apex:outputField></td>
+                                </tr>
+                                <tr>
+                                    <td><label>Total Household Declared Discretionary Expenditure</label></td>
+                                    <td><apex:outputField value="{!affordability.Total_Discretionary_Expenditure__c}"></apex:outputField></td>
+                                </tr>
+                                <tr>
+                                    <td><label>Total Declared Household Expenditure Including Financial Commitments </label></td>
+                                    <td><apex:outputField value="{!affordability.Total_Declared_Inc_Financial_Commitment__c}"></apex:outputField></td>
+                                </tr>
+                            </table>
+                            <table>
+                                <tr>
+                                    <td><label>Total Household Net Monthly Income</label></td>
+                                    <td><apex:outputText value="£{!affordability.TotalNetMonthlyIncome__c}"></apex:outputText></td>
+                                </tr>
+                                <tr>
+                                    <td><label>Total Declared Household Net Monthly Disposable Income</label></td>
+                                    <td><apex:outputField value="{!affordability.Total_Declared_Household_Net_Monthly_Dis__c}"></apex:outputField></td>
+                                </tr>
+                            </table>
+                            <table>
+                                <tr>
+                                    <td><label>Total Household Net Monthly Income</label></td>
+                                    <td><apex:outputText value="£{!affordability.TotalNetMonthlyIncome__c}"></apex:outputText></td>
+                                </tr>
+                                <tr>
+                                    <td><label>Total ONS Household Net Disposable Monthly Income</label></td>
+                                    <td><apex:outputField value="{!affordability.Total_ONS_Net_Month_Disposable_inc__c}"></apex:outputField></td>
+                                </tr>
+                            </table>
+                            <table>
+                                <tr>
+                                    <td><label>Monthly Disposable Income to use</label></td>
+                                    <td><apex:outputText value="£{!MonthlyDisposableIncome}"></apex:outputText></td>
+                                </tr>
+                            </table>
+                            <table>
+                                <tr>
+                                    <td><label>Maximum Stressed Affordable Amount</label></td>
+                                    <td><apex:outputField value="{!affordability.Maximum_Stressed_Affordable_Amount__c}"></apex:outputField></td>
+                                </tr>
+                                <tr>
+                                    <td><label>Maximum Unstressed Affordable Amount</label></td>
+                                    <td><apex:outputField value="{!affordability.Maximum_Unstressed_Affordable_Amount__c}"></apex:outputField></td>
+                                </tr>
+                                <tr>
+                                    <td><label>Unstressed Minimum  finance Term for requested Finance Amount</label></td>
+                                    <td><apex:outputField value="{!affordability.Unstressed_Min_Finance_Term__c}"></apex:outputField></td>
+                                </tr>
+                                <tr>
+                                    <td><label> Stressed Minimum  finance Term for requested Finance Amount</label></td>
+                                    <td><apex:outputField value="{!affordability.Stressed_Min_Finance_Term__c}"></apex:outputField></td>
+                                </tr>
+                                <tr>
+                                    <td><label> Unstressed Maximum payment Amount for requested Finance Amount / Term</label></td>
+                                    <td><apex:outputField value="{!affordability.Unstressed_Max_Payment_Amt_Term__c}"></apex:outputField></td>
+                                </tr>
+                                <tr>
+                                    <td><label> Stressed Maximum payment Amount for requested Finance Amount / Term</label></td>
+                                    <td><apex:outputField value="{!affordability.Stressed_Max_Payment_Amt_Term__c}"></apex:outputField></td>
+                                </tr>
+                                <tr>
+                                    <td><label>FTI</label></td>
+                                    <td><apex:outputText value="{!bopp.FTI__c}"></apex:outputText></td>
+                                </tr>
+                            </table>
+                            
+                            <apex:outputPanel id="RunAffordability">
+                                <table style="border: 0px ;margin-left: 60%;margin-right: 10%; width: 30%">
+                                    <tr>
+                                        <td style="border: 0px ;width:15%;background-color: #FFFFFF;"></td>
+                                        <td style="border: 0px ;text-align:center ;width:15%;background-color: #FFFFFF;" ><label>Affordability Result</label></td> 
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 0px ;width:15%;text-align:right; background-color: #FFFFFF;"><label>Stressed</label></td>  
+                                        <td style="border: 1px solid #080808;width:15%;text-align:center;background-color: #dddddd;"><apex:outputText value="{!StressedAffordabilityResult}"></apex:outputText></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 0px ;width:15%;text-align:right; background-color: #FFFFFF;"><label>Unstressed</label></td>  
+                                        <td style="border: 1px solid #080808;width:15%;text-align:center;background-color: #dddddd;"><apex:outputText value="{!UnstressedAffordabilityResult}"></apex:outputText></td>
+                                    </tr>
+                                </table>
+                            </apex:outputPanel>
+                    </apex:outputPanel>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <apex:commandButton styleClass="btn btn-primary"  value="Previous" action="{!Prev}" rendered="{!!IsCredit && !IsCompleted}"/>
+                <apex:commandButton styleClass="btn btn-danger"  value="Complete" action="{!Complete}" rendered="{!!IsCredit && !IsCompleted}"/>
+            </div>
+        </apex:form>
+    </div>
+    
+</body>
+</apex:page>

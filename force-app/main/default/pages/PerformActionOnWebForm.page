@@ -1,0 +1,608 @@
+<apex:page applyBodyTag="false" controller="ActionToPerformFromWebDataForm" docType="html-5.0" showHeader="false" standardStylesheets="false">
+
+    <head>
+        <base href="{!URLFOR($Resource.CategoryApp, 'app/')}" />
+        <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css' />
+        <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css' />
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" type="text/css" href="css/normal.css" />
+        <link rel="stylesheet" type="text/css" href="css/button.css" />
+        <link rel="stylesheet" href="css/style.css" />
+        <link rel="stylesheet" href="css/angular-material.css" />
+        <style type="text/css">
+            .form-title{
+                color: #828282;
+                text-align: center;
+            }
+            .form-box{
+                width: 750px;
+                height: 500px;
+                position: relative;
+                margin: auto;
+                padding: 20px 20px;
+            }
+            
+            .tbl-theme-1-box,
+            .tbl-theme-2-box {
+                /*padding: 0 20px;*/
+                border: 1px solid #c8c5c5;
+                border-radius: 4px;
+                padding-bottom: 10px;
+                background-color: #f5f4f0;
+                margin-top: 20px;
+            }
+            .tbl-theme-1-box{
+                max-height:150px;
+                overflow:auto;
+            }
+            .tbl-theme-2-box{
+                height:80px;
+                text-align: center;
+                padding:20px 10px 0px 10px;
+            }
+            .sub-content {
+                margin-top: 25px;
+            }
+
+            .title-2 {
+                color: #828282;
+                font-size: 13px;
+            }
+            .options-group {
+                display: inline-block;
+                margin-left: 20px;
+            }
+            .options-group input[type="radio"] {
+                margin-right: 10px;
+            }
+            .options-group label {
+                margin-right: 10px;
+            }
+            .action-title{
+                font-weight: bold;
+            }
+
+            table.tbl-theme-1 thead tr th {
+                color: #c8c5c5;
+                font-weight: normal;
+                font-size: 14px;
+                padding: 0px 20px;
+                text-align: left;
+            }
+            table.tbl-theme-1 tbody tr td {
+                padding: 10px 20px;
+                font-weight: bold;
+                color: #76777a;
+            }
+            .tbl-theme-1 a {
+                text-decoration: none;
+                color: #76777a;
+            }
+            a.link-theme {
+                color: #cc9f52;
+                cursor:pointer;
+                text-decoration:underline;
+            }
+            .view-more{
+                margin-top:10px;
+                padding-left: 10px;
+            }
+            .text-center{
+                text-align: center;
+            }
+            .w100{
+                width: 100%;
+            }
+            .m-top-15{
+                margin-top:15px;
+            }
+            .h100{
+                height: 100%;
+            }
+            #commandButtonDiv .button{
+                padding-left: 10px !important;
+                padding-right: 10px !important;
+            }
+			input#finishButton {
+                float: none;
+                display: inline-block;
+            }
+            
+            .goal-edit-box{
+                width: 400px;
+                height: 500px;
+                position: relative;
+                margin: auto;
+                padding: 30px 30px;
+            }
+            .input-text-theme-1{
+                border:none;
+                border-bottom: 1px solid #D3D3D4;
+                background-color: initial;
+                background-repeat: no-repeat !important;
+                background-position: 2px 2px;
+                padding: 7px 0px;
+            }
+            .field-row{
+                padding: 20px;   
+            }
+            .field-index {
+                position: absolute;
+                display: inline-block;
+                height: 27px;
+                width: 27px;
+                border: 1px solid #d3d3d3;
+                border: 1px solid #828282;
+                border-radius: 50%;
+                text-align: center;
+                line-height: 27px;
+                margin-top: 5px;
+            }
+            .goal-name-box .field-index {
+                margin-top: 35px;
+            }
+            .goal-name-box md-input-container{
+                padding-bottom: 0px;
+            }
+            .field-box {
+                display: inline-block;
+                margin-left: 45px;
+                width: 100%;
+            }
+            .w100{
+                width: 100%;
+            }
+            .w50{
+                width: 50%;
+            }
+            .goal-label,
+            .date-box,
+            .goal-date{
+                display: inline-block;
+                width: 49%;
+            }
+            .goal-label{
+                color: #828282;
+            }
+            .date-icon{
+                position: absolute;
+                margin-left: -30px;
+                margin-top: 10px;
+            }
+            .btn-theme-1{
+                background: #cc9f52;
+                color:#000;
+                height: 40px;
+            }
+            md-datepicker {
+                background: transparent;
+            }
+            .progress-msg-panel{
+            	position:relative;
+            }
+            .loader-msg{
+                position: absolute;
+                margin-top: 20px;
+                width: 100%;
+                text-align: center;  
+                margin-left: auto;
+                margin-right: auto;
+                margin-top: 22%;
+            }
+            .loader-obj{
+                display: inherit;
+                position: relative;
+                margin-top: 15%;
+                width: 6%;  
+                background: #f3f3f3;
+                background: transparent;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .submit-box{
+                text-align: center;
+            }
+            .submit-btn{
+                margin:auto;
+                float: none;
+            }
+            md-input-container:not(.md-input-invalid).md-input-focused .md-input{
+                border-color: #7D7B7B;
+            }
+            md-input-container.md-default-theme:not(.md-input-invalid).md-input-focused .md-input, md-input-container:not(.md-input-invalid).md-input-focused .md-input{
+                border-color: #7D7B7B;
+            }
+            .md-default-theme .md-datepicker-input-container.md-datepicker-focused, .md-datepicker-input-container.md-datepicker-focused{
+                border-color: #7D7B7B;
+            }
+            md-input-container.md-default-theme:not(.md-input-invalid).md-input-focused label, md-input-container:not(.md-input-invalid).md-input-focused label{
+                color: #525151;
+            }
+            input[type=button][disabled]{
+                opacity: 0.5;
+            }
+        </style>
+        <script src="lib/angular.js"></script>
+        <script src="lib/angular-sanitize.js"></script>
+        <script src="lib/angular-animate.js"></script>
+        <script src="lib/angular-aria.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-messages.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.js"></script>
+        <script src="lib/angular-material.js"></script>
+    </head>
+
+    <body ng-app="webFormApp" ng-controller="WebFormCtrl" ng-cloak="">
+        <apex:form >
+            <div class="headerContainer">
+                <div class="headerBox">
+                    <div class="backImg">
+                        <a href="/a3A/o" class="backImg"><img src="assets/back.png" style="vertical-align:middle" /><span>HOME</span>
+                        </a>
+                    </div>
+                    <div><img src="assets/Al_Rayan_Logo_100x172.gif" class="logo" /></div>
+                </div>
+            </div>
+            <div class="container h100">
+                <apex:outputPanel id="progressMsgPanel" layout="block" styleClass="progress-msg-panel">
+                            <div class="loader"  ng-if="loader">
+                                <img src="assets/712.gif" class="loader-obj" />
+                            </div>
+                            <div class="loader-msg">
+                            	<apex:actionStatus startText="Processing..." stopText="" id="searchStatus" />
+                            </div>
+                        </apex:outputPanel>
+                <div class="form-box" ng-if="!loader">
+                    
+                    <!--<apex:selectRadio value="{!action}">
+                        <apex:selectOptions value="{!items}"/>
+                    </apex:selectRadio><p/>
+                    <apex:commandButton value="Submit" action="{!submit}"  reRender="searchResultblock" status="searchStatus"/>
+                    <apex:actionStatus startText="Searching..." stopText="" id="searchStatus"/>
+                    <apex:commandButton html-ng-click="createCaseJS();"  value="Create Case" id="createCaseCommandButton" ></apex:commandButton> 
+                    <br/>
+                                            <apex:actionSupport event="onclick" action="{!getSelected}" status="buttonStatus" >
+                                                <apex:param name="accountid" value="{!acc.id}"/>
+                                            </apex:actionSupport>
+                     <apex:column value="{!acc.EBS_ID__c}"/> 
+                     
+                     rendered="{!displayButtonsWithoutAccount}"
+                     
+                     <apex:actionFunction name="proceedWithoutAccount" action="{!proceedWithoutAccount}" reRender="commandButtonBlock" >
+                            <apex:param name="whetherToProceed" value="" />
+                    </apex:actionFunction>  
+                     -->
+                    <apex:outputPanel id="searchResultblock" layout="none">
+                        <apex:outputPanel rendered="{!If(accountSearchResult.size > 0,true,false)}" layout="none">
+                            <div class="form-title">
+                                {!accountSearchResult.size} RECORD(S) FOUND!
+                            </div>
+                        </apex:outputPanel>
+                        <!-- <apex:outputlabel value="{!accountSearchResult.size} RECORD(S) FOUND!" rendered="{!If(accountSearchResult.size > 0,true,false)}" /> -->
+                        <apex:outputPanel layout="none" rendered="{!If(accountSearchResult !=null && accountSearchResult.size>0,true,false)}">
+                            <apex:outputPanel styleClass="tbl-theme-1-box" layout="block">
+                                <apex:pageBlock title="" rendered="{!If(accountSearchResult !=null && accountSearchResult.size>0,true,false)}">
+                                    <apex:pageblockSection >
+                                        <apex:pageBlockTable styleClass="tbl-theme-1" value="{!accountSearchResult}" var="acc" width="100%" id="accTable">
+                                            <apex:column headerValue="">
+                                                <input ng-model="acc.selectedAcc" type="radio" name="accountIDs" id="{!acc.id}" value="{!acc.id}"></input>
+                                            </apex:column>
+                                            <apex:column value="{!acc.EBS_ID__c}" headerValue="EBS ID"/>
+                                            <apex:column value="{!acc.FirstName}" headerValue="FIRST NAME"/>
+                                            <apex:column value="{!acc.LastName}" headerValue="LAST NAME"/>
+                                            <apex:column value="{!acc.Date_of_Birth__c}" headerValue="DOB"/>
+                                            <apex:column value="{!acc.PersonEmail}" headerValue="EMAIL"/>
+                                            
+                                          	<!--<apex:column >
+                                                <apex:outputLink target="_top" value="/{!acc.id}"> view more in same window </apex:outputLink>
+                                          	</apex:column> 
+                                          	
+                                          	<apex:column >
+                                                <apex:outputLink target="_blank" value="/{!acc.id}"> view more in a new window or tab </apex:outputLink>
+                                          	</apex:column>--> 
+                                          	
+                                        </apex:pageBlockTable>
+                                    </apex:pageBlockSection>
+                                </apex:pageBlock>
+                            </apex:outputPanel>
+                            <div class="view-more">
+                                <a ng-click="viewMore();" class="link-theme">View Selected User's Details</a>
+                            </div>
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                    <input type="hidden" value="{!accountSearchResult.size}" id='accountSize' />
+                    
+                    <apex:outputPanel id="noMatchingRecordPanel" rendered="{!If(accountSearchResult !=null && accountSearchResult.size==0,true,false)}">
+                        <div class="form-title">SORRY! NO RCORDS FOUND!</div>
+                        <div class="tbl-theme-2-box">
+                            <div class="title-2">NO CUSTOMER RECORD EXISTS IN THE SYSTEM MATCHING SEARCH CRITERIA.</div>
+                            <div class="sub-content">
+                                <span class="title-2">Do you still want to proceed?</span>
+                                <div class="options-group">
+                                    <label class="title-2">
+                                        <input type="radio" name="proceedWithoutAccount" value="yes" onclick="proceedWithoutAccoutJS();" />Yes
+                                    </label>
+                                    <label class="title-2">
+                                        <input type="radio" name="proceedWithoutAccount" value="no" onclick="proceedWithoutAccoutJS();" />No
+                                    </label>
+                                </div>
+                            </div>
+                         
+                        </div>
+                        <!-- <table border="1">
+                            <tr>
+                                <td>
+                                    <apex:outputText value="NO CUSTOMER RECORD EXISTS IN THE SYSTEM MATCHING SEARCH CRITERIA." />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <apex:outputText value="Do you still want to proceed?" />
+                                    <input type="radio" name="proceedWithoutAccount" value="yes" onclick="proceedWithoutAccoutJS();">Yes</input>
+                                    <input type="radio" name="proceedWithoutAccount" value="no" onclick="proceedWithoutAccoutJS();">No</input>
+                                </td>
+                            </tr>
+                        </table> -->
+                    </apex:outputPanel>
+                    <apex:actionFunction name="createCase" action="{!createCase}" status="searchStatus" reRender="progressMsgPanel">
+                        <apex:param name="selectedAccountId" value="" />
+                    </apex:actionFunction>
+                    <apex:actionFunction name="checkCustomerLiabilitiesEligibility" action="{!checkCustomerLiablitiesEligibility}" status="searchStatus" reRender="progressMsgPanel">
+                        <apex:param name="selectedAccountId" value="" />
+                    </apex:actionFunction>
+                    <apex:actionFunction name="checkHPPCAAEligibility" action="{!checkHPPCAAEligibility}" status="searchStatus" reRender="progressMsgPanel">
+                        <apex:param name="selectedAccountId" value="" />
+                    </apex:actionFunction>
+                    <!-- Action status block -->
+                    <br/>
+                    <div id="commandButtonDiv" class="text-center">
+                        <apex:outputPanel id="commandButtonBlock">
+                            <apex:outputlabel styleClass="title-2 action-title" value="-Select From Below Actions-" />
+                            <br/>
+                            <table class="w100 m-top-15">
+                                <tr>
+                                    <td>
+                                        <input class="button btn-theme-1" type="button" ng-click="createCaseJS();" value="Create Case" id="createCaseCommandButton"></input>
+                                    </td>
+                                    <td>
+                                        <input class="button btn-theme-1"  type="button" ng-click="checkCustomerLiabilitiesEligibilityJS();" value="Customer Liabilities Eligibility" id="checkCustomerLiablitiesEligibilityCmdBtn"></input>
+                                    </td>
+                                    <td>
+                                        <input class="button btn-theme-1"  type="button" ng-click="checkHPPCAAEligibilityJS();" value="HPP CAA Eligibility" id="checkHPPCAAEligibilityCmdBtn"></input>
+                                    </td>
+                                </tr>
+                            </table>
+                        </apex:outputPanel>
+                    </div>
+                    <div id="commandButtonFnish">
+                        <br/>
+                        <table class="w100 text-center">
+                            <tr>
+                                <td>
+                                    <input class="button btn-theme-1"  type="button" ng-click="onClickFinish();" value="Finish" id="finishButton"></input>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+                                    <a id="virtualLink" target="_blank"></a>
+        </apex:form>
+    </body>
+    <script>
+                angular.module('webFormApp',['ngMaterial','ngMessages']);
+                angular.module('webFormApp').controller('WebFormCtrl', function($scope) {
+                    $scope.acc = {};
+                    $scope.eventFire = function eventFire(el, etype){
+                      if (el.fireEvent) {
+                        el.fireEvent('on' + etype);
+                      } else {
+                        var evObj = document.createEvent('Events');
+                        evObj.initEvent(etype, true, false);
+                        el.dispatchEvent(evObj);
+                      }
+                    };
+                    $scope.viewMore = function(){
+                        if($scope.acc.selectedAcc){
+                            //window.location = 'https://'+window.location.hostname+'/'+$scope.selectedAcc;
+                            document.getElementById('virtualLink').href='https://'+window.location.hostname+'/'+$scope.acc.selectedAcc;
+                            $scope.eventFire(document.getElementById('virtualLink'),'click')
+                        }
+                        else{
+                            alert('Please select account.');
+                        }
+                    };
+                    $scope.QueryString = function () {
+                      // This function is anonymous, is executed immediately and 
+                      // the return value is assigned to QueryString!
+                      var query_string = {};
+                      var query = window.location.search.substring(1);
+                      var vars = query.split("&");
+                      for (var i=0;i<vars.length;i++) {
+                        var pair = vars[i].split("=");
+                            // If first entry with this name
+                        if (typeof query_string[pair[0]] === "undefined") {
+                          query_string[pair[0]] = decodeURIComponent(pair[1]);
+                            // If second entry with this name
+                        } else if (typeof query_string[pair[0]] === "string") {
+                          var arr = [ query_string[pair[0]],decodeURIComponent(pair[1]) ];
+                          query_string[pair[0]] = arr;
+                            // If third or later entry with this name
+                        } else {
+                          query_string[pair[0]].push(decodeURIComponent(pair[1]));
+                        }
+                      } 
+                      return query_string;
+                    }();
+                    $scope.onClickFinish = function () {
+                        window.location = 'https://'+window.location.hostname+'/'+$scope.QueryString.webDataFormId;
+                    }
+                    $scope.createCaseJS= function() {
+                        //alert('In createCaseJS method.');
+                        try {
+                            //window.isAccountSelectedJS();
+                            //alert(isAccountSelectedJS());
+                            var isRadioButtonChecked = isAccountSelectedJS();
+                            //alert('isRadioButtonChecked :' + isRadioButtonChecked);
+                            var accountSize = document.getElementById('accountSize').value;
+                
+                            if ((isRadioButtonChecked == 'false') && (accountSize != 0)) {
+                                alert('Please select account.')
+                                    //return false;
+                            } else {
+                                $scope.loader=true;
+                                var accountId = getSelectedAccountJS();
+                                //alert('accountId : ' +accountId);
+                                createCase(accountId);
+                            }
+                
+                            //= isAccountSelectedJS();
+                            //alert(isAccountSelected);
+                
+                            /*var accountIDs = document.getElementsByName('accountIDs');
+                                for(var i = 0; i < accountIDs.length; i++){
+                                    if(accountIDs[i].checked){
+                                        isAccountSelected='true';
+                                        break; 
+                                    }
+                                }*/
+                        } catch (err) {
+                            alert('Error in method - createCase.');
+                        }
+                    }
+                    $scope.checkCustomerLiabilitiesEligibilityJS = function() {
+                        try {
+                            var isRadioButtonChecked = isAccountSelectedJS();
+                            //alert('isRadioButtonChecked :' + isRadioButtonChecked);
+                            var accountSize = document.getElementById('accountSize').value;
+                
+                            if ((isRadioButtonChecked == 'false') && (accountSize != 0)) {
+                                alert('Please select account.')
+                            } else {
+                                $scope.loader=true;
+                                var accountId = getSelectedAccountJS();
+                                //alert('accountId : ' +accountId);
+                                // REDIRECT TO Customer Liabilities Eligibility
+                                checkCustomerLiabilitiesEligibility(accountId);
+                            }
+                        } catch (err) {
+                            alert('Error in method - checkCustomerLiabilitiesEligibility.');
+                        }
+                    }
+                
+                    $scope.checkHPPCAAEligibilityJS = function () {
+                        try {
+                            var isRadioButtonChecked = isAccountSelectedJS();
+                            //alert('isRadioButtonChecked :' + isRadioButtonChecked);
+                            var accountSize = document.getElementById('accountSize').value;
+                
+                            if ((isRadioButtonChecked == 'false') && (accountSize != 0)) {
+                                alert('Please select account.')
+                            } else {
+                                $scope.loader=true;
+                                var accountId = getSelectedAccountJS();
+                                //alert('accountId : ' +accountId);
+                                // REDIRECT TO Customer Liabilities Eligibility
+                                checkHPPCAAEligibility(accountId);
+                            }
+                        } catch (err) {
+                            alert('Error in method - checkHPPCAAEligibilityJS.');
+                        }
+                    }
+                });
+        
+                //old JS
+                function isAccountSelectedJS() {
+                    //alert('In isAccountSelectedJS method.');
+                    var isRecordSelected = 'false';
+            
+                    try {
+                        var accountIDs = document.getElementsByName('accountIDs');
+                        for (var i = 0; i < accountIDs.length; i++) {
+                            if (accountIDs[i].checked) {
+                                isRecordSelected = 'true';
+                                break;
+                            }
+                        }
+            
+                        //alert('isRecordSelected :' + isRecordSelected);
+                    } catch (error) {
+                        alert('Error in method - isAccountSelected.');
+                    }
+            
+                    return isRecordSelected;
+                }
+            
+                function getSelectedAccountJS() {
+                    var accountID = 'blank';
+            
+                    try {
+                        //alert('In get getSelectedAccount');
+                        var accountIDs = document.getElementsByName('accountIDs');
+            
+                        for (var i = 0; i < accountIDs.length; i++) {
+                            if (accountIDs[i].checked) {
+                                accountID = accountIDs[i].value;
+                                break;
+                            }
+                        }
+            
+                        //alert(accountID);
+                        //createCase(accountID);
+            
+                    } catch (error) {
+                        alert('Error in method - getSelectedAccount.');
+                    }
+            
+                    return accountID;
+                }
+            
+                
+            
+                function proceedWithoutAccoutJS() {
+                    var stillWantToProceedValues;
+                    var stillWantToProceed;
+                    try {
+                        //alert(document.getElementsByName('proceedWithoutAccount'));
+                        stillWantToProceedValues = document.getElementsByName('proceedWithoutAccount');
+                        for (var i = 0; i < stillWantToProceedValues.length; i++) {
+                            if (stillWantToProceedValues[i].checked) {
+                                stillWantToProceed = stillWantToProceedValues[i].value;
+                                break;
+                            }
+                        }
+                        //alert('stillWantToProceed :' + stillWantToProceed);
+                        //proceedWithoutAccount(stillWantToProceed);
+                        if (stillWantToProceed == 'yes') {
+                            document.getElementById('commandButtonDiv').style.display = 'block';
+                            document.getElementById('commandButtonFnish').style.display = 'none';
+                        } else {
+                            document.getElementById('commandButtonDiv').style.display = 'none';
+                            document.getElementById('commandButtonFnish').style.display = 'block';
+                        }
+                    } catch (err) {
+                        alert('Error in method - proceedWithoutAccout.');
+                    }
+                }
+            
+                function displayCommandButtonJS() {
+                    try {
+                        //alert('In displayCommandButtonJS');
+                        //alert(document.getElementById('accountSize'));
+                        var accountSize = document.getElementById('accountSize').value;
+                        //alert('accountSize :' +accountSize);
+            
+                        if (accountSize != '0')
+                            document.getElementById('commandButtonDiv').style.display = 'block';
+                        else
+                            document.getElementById('commandButtonDiv').style.display = 'none';
+            
+                        document.getElementById('commandButtonFnish').style.display = 'none';
+                    } catch (err) {
+                        alert('Error in method - displayCommandButtonJS.');
+                    }
+                }
+            
+                
+                window.onload = displayCommandButtonJS();
+            </script>
+</apex:page>

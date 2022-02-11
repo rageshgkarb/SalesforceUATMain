@@ -1,0 +1,863 @@
+<!-- C1070: Page re-write -->
+<apex:page standardController="Account" extensions="AccountViewingReasonCE" id="thePage" action="{!autoRedirectPage}" applyBodyTag="false" standardStylesheets="false">
+   
+    <style type="text/css">
+        
+        .outer td.oRight {
+            padding: 0px 0px 0px 0px;
+        }
+        
+        .redBtn {   
+            margin-right: 2px;
+            border-radius: 0px !important;
+            border-width: 0px !important;
+            display:inline-block !important;
+            color:#ffffff !important;
+            font-family:calibri light !important;
+            font-size:13px !important;
+            font-weight:normal !important;
+            padding:7px 12px !important;
+            text-decoration:none !important;
+            background-color:#b3995d !important;
+            border: none !important;
+            background-image: none !important;
+        }
+    .redBtn:hover   {
+        background-color:#333333 !important;
+    }
+    .redBtn:active {
+        position:relative !important;
+    }
+    .showErrorMessageStyle{
+        background-color:#F2A7A7 !important;
+        font-family:calibri light !important;
+        font-size:13px !important;
+        padding:7px 12px !important;
+    }     
+    .title
+    {
+        font-size:26px; !important;
+        font-family: calibri light;     
+    }
+        
+        .subTitle
+        {
+            font-size:24px; !important;
+            font-family: calibri light; 
+            color: #B2B2B4;
+        }
+        
+        .tileTextSmaller
+        {
+            font-size:14px; !important;
+            font-family: calibri light; 
+            color: #9c9c9c;
+        }
+        
+        .tileTextSmall
+        {
+            font-size:19px; !important;
+            font-family: calibri light; 
+            color: white;
+        }
+        
+        .tileText
+        {
+            font-size:22px; !important;
+            font-family: calibri light; 
+            color: #9c9c9c;
+        }
+        
+        .tileTitle
+        {
+            font-size:14px; !important;
+            font-family: calibri light; 
+            color: #9c9c9c;
+        }
+        
+        .itemTitle
+        {
+            font-size:16px; !important;
+            font-family: calibri light; 
+            color: #A0A0A0;
+        }
+        
+        .sectionTitle
+        {
+            font-size:20px; !important;
+            font-family: calibri light; 
+            color: #b3995d !important;
+            margin-left: 5px !important;
+        }
+        
+        .whiteLabel
+        {
+            color: white !important;
+            font-size:14px; !important;
+            font-family: calibri light;
+        }
+        
+        .cRequiredBlock
+        {           
+            width: 3px;
+            float: left;
+            background: #B80000 !important;
+            margin-left: 5px;
+            margin-top: 5px;
+            height 29px !important;
+        }
+        
+        .sectionDetail
+        {
+            color: black !important;
+            font-size:12px; !important;
+            font-family: calibri light;
+            margin-left: 10px !important;
+        }
+        
+        
+        table 
+        {
+            border-collapse: collapse;
+        }
+
+        tr {
+            border-bottom: 1px solid #E9E9E9;
+            line-height: 30px;
+        }
+    
+        tr:last-child {
+            border-bottom: 0;
+        }
+        
+        #navlist li
+        {
+            display: inline;
+            list-style-type: none;
+            margin-left:0;
+            font-size:12px; !important;
+            font-family: arial !important; 
+        }
+        
+        .LastUpdateGreen
+        {
+            margin-left:7px; 
+            height: 100px; float: 
+            left; width: 115px; 
+            background:#78c678;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .LastUpdateRed
+        {
+            margin-left:7px; 
+            height: 100px; float: 
+            left; width: 115px; 
+            background:#e15757;
+            overflow: hidden;
+            position: relative;
+            cursor:pointer;
+        }
+        
+        .LastUpdateRed:hover
+        {
+            box-shadow: 0px 0px 10px #888888;
+            background: #499bea; /* Old browsers */
+            background: -moz-linear-gradient(top,  #499bea 0%, #207ce5 100%); /* FF3.6+ */
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#499bea), color-stop(100%,#207ce5)); /* Chrome,Safari4+ */
+            background: -webkit-linear-gradient(top,  #499bea 0%,#207ce5 100%); /* Chrome10+,Safari5.1+ */
+            background: -o-linear-gradient(top,  #499bea 0%,#207ce5 100%); /* Opera 11.10+ */
+            background: -ms-linear-gradient(top,  #499bea 0%,#207ce5 100%); /* IE10+ */
+            background: linear-gradient(to bottom,  #499bea 0%,#207ce5 100%); /* W3C */  
+        }
+        
+        .LastUpdateBlue
+        {
+            margin-left:7px; 
+            height: 100px; float: 
+            left; width: 115px; 
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0px 0px 10px #888888;
+            background: #499bea; /* Old browsers */
+            background: -moz-linear-gradient(top,  #499bea 0%, #207ce5 100%); /* FF3.6+ */
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#499bea), color-stop(100%,#207ce5)); /* Chrome,Safari4+ */
+            background: -webkit-linear-gradient(top,  #499bea 0%,#207ce5 100%); /* Chrome10+,Safari5.1+ */
+            background: -o-linear-gradient(top,  #499bea 0%,#207ce5 100%); /* Opera 11.10+ */
+            background: -ms-linear-gradient(top,  #499bea 0%,#207ce5 100%); /* IE10+ */
+            background: linear-gradient(to bottom,  #499bea 0%,#207ce5 100%); /* W3C */  
+        }
+        
+        .LastUpdateRed:hover #tile-content
+        {
+            left: 0px;
+            position: absolute;
+            transition: 0.3s;           
+        }
+        
+        #tile-content 
+        {         
+            left: -115px;
+            width: 230px;
+            position: absolute;
+            transition: 0.3s;           
+        }
+                
+        #waitIndicator > rect
+        {           
+            fill: white;
+        }
+        
+        #waitIndicator
+        {           
+            visibility: hidden;
+            position: absolute;
+            bottom: 0px;
+            left: 0px;
+            margin: 10px;
+        }
+                
+        
+        
+    </style>
+
+    <apex:pageBlock rendered="{!!notPortalUser}">
+    <!-- is portal user -->
+    Account Redirect page: {!ProfileName}
+    </apex:pageBlock>
+    
+    <apex:outputPanel id="panel">
+
+        <div >
+                
+            <!-- Header -->
+            <div style="width:100%; position: relative;">
+                <div style="background-color: #b3995d;">
+                <label class="whiteLabel" style="line-height: 35px; margin-left:10px;">Prospects/Customers&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;Account Viewing</label>
+                </div>
+                <div style="height:60px; background: white;">
+                    <div style="margin-left:15px;">  
+                        <apex:image onClick="history.go(-1);" width="30" height="30" style="float:left;margin-top:15px;" url="{!URLFOR($Resource.AccountViewResource,'/AccountHolderReview/images/back.png')}" ></apex:image>
+                        <label class="title" style="color: #B2B2B4; margin-left: 15px; float: left; margin-top:13px;">Account:</label>
+                        
+                        <div class="title" style="margin-left: 5px; float: left; margin-top:13px;">     
+                         <apex:outputText id="txtAccountNameSalutation" value="{!Account.Salutation}. " rendered="{!not(isblank(Account.Salutation))}" />
+                         <apex:outputText id="txtAccountName" value="{!Account.Name}" />&nbsp; 
+                         <apex:outputText id="txtEBSId" value="({!Account.EBS_ID__c})" />
+                        </div>
+                    </div>
+                </div>            
+            </div>
+    
+    
+        <div style="display:table;">
+            
+        
+        <div style="display:table-row;">
+    
+        <!--Overview panel-->
+        <div style="background-color:#F4F4F4; width: 375px; height: 100%; display:table-cell; position: relative;">
+            <apex:form >
+            <div style="margin-top: 15px; margin-left:10px;">            
+            
+                <div>
+                <label class="subTitle" style="margin-left: 5px;">Overview</label>
+                </div>
+                
+                <div style="margin-left: 7px; margin-top:10px;">
+                    
+                    <div style="display: inline-block;">
+                    <div style="width: 5px; height: 145px; background:{!IF(Account.Status__c == 'Customer', '#78c678', IF(Account.Status__c == 'Dormant', '#EDD100', IF(Account.Status__c == 'Prospect', '#6caada', '#9c9c9c')))}; float:left;"></div>
+                    <apex:image width="145" height="145" style="float:left;" url="{!IF(accountImage != '', accountImage, URLFOR($Resource.AccountViewResource,'/AccountHolderReview/images/user2.png')) }" alt="{!URLFOR($Resource.AccountViewResource,'/AccountHolderReview/images/user2.png')}"></apex:image> 
+                    <div style="float: left; margin-left: 7px; width: 195px;">
+                    
+                    <!--Status-->
+                    <div style="height: 69px;">                        
+                        <div style="background:{!IF(Account.Status__c == 'Customer', '#78c678', IF(Account.Status__c == 'Dormant', '#EDD100', IF(Account.Status__c == 'Prospect', '#6caada', '#9c9c9c')))}; height:69px; float: left; width: 5px;"></div>  
+                        <div style="float: left; background:#fdfdfd; width: 180px; height: 69px;">  
+                        <div style="margin-right: 20px; margin-top: 12px;">
+                        <apex:outputText value="{!IF(Account.Status__c == '', 'None' , Account.Status__c)}" styleClass="tileText" style="float: right; color:{!IF(Account.Status__c == 'Customer', '#78c678', IF(Account.Status__c == 'Dormant', '#EDD100', IF(Account.Status__c == 'Prospect', '#6caada', '#9c9c9c')))};"/>
+                        <apex:outputText value="Status" styleClass="tileTitle" style="line-height:10px; clear: both; float:right; display: block; position: relative;"></apex:outputText>
+
+<!-- C0768 GS 18/07/2019 Commenting out PEP and Risk Rating text fields appearing on page -->
+<!--                         <apex:outputText value="{!Account.Pep__c}" rendered="true"/> -->
+<!--                         <apex:outputText value="{!Account.Customer_Risk_Rating__c}" rendered="true"/> -->
+
+                        </div>
+                        <apex:image style="height: 30px; margin-top: 9px; margin-left: 20px;" url="{!URLFOR($Resource.AccountViewResource,'/AccountHolderReview/images/status.png')}" ></apex:image>
+                        </div>
+                    </div>
+                        
+                    <!--Alerts-->
+                    <div style="height: 69px; margin-top: 7px;">                        
+                        <div style="background:{!IF(lstAlerts.size == 0, '#78c678', IF(lstAlerts.size < 1, '#EDD100', IF(lstAlerts.size > 1, '#e15757', '#EDD100')))}; height:69px; float: left; width: 5px;"></div>  
+                        <div style="float: left; background:#fdfdfd; width: 180px; height: 69px;">  
+                        <div style="margin-right: 20px; margin-top: 12px;">
+                        <apex:outputText value="{!lstAlerts.size}" styleClass="tileText" style="float: right; color:{!IF(lstAlerts.size == 0, '#78c678', IF(lstAlerts.size < 1, '#EDD100', IF(lstAlerts.size > 1, '#e15757', '#EDD100')))};"/>
+                        <apex:outputText value="Alerts" styleClass="tileTitle" style="line-height:10px; clear: both; float:right; display: block; position: relative;"></apex:outputText>
+                        </div>
+                        <apex:image style="height:36px; margin-top: 6px; margin-left: 18px;" url="{!URLFOR($Resource.AccountViewResource,'/AccountHolderReview/images/alerts.png')}" ></apex:image>
+                        </div>
+                    </div>
+                        
+                    </div>
+                    </div>                          
+
+                    <div style="display:inline-block; margin-top:7px;">
+                        
+                    <!--  Signature -->
+                    <div style="height: 45px; float: left;"> 
+                        <div style="background:#9c9c9c; height:100px; float: left; width: 5px;"></div> 
+                        <div style="float: left;">
+                        <div style="height: 75px; width: 215px; background:#cacaca;">
+                            <apex:image rendered="{!IF(signatureImage != null && signatureImage != '' && signatureImage != 'null', true, false)}" value="{!signatureImage}" style="height:75px;width:215px"/>
+                        </div>                      
+                        <div style="background: #fdfdfd; border-right-style: solid; border-bottom-style: solid; border-left-style: solid;border-width: 1px;border-color: #dadada;">
+                            <apex:outputText value="Signature" styleClass="tileTitle" style="line-height:25px; margin-left: 5px;"></apex:outputText>
+                        </div>
+                        </div>
+                        <!-- <hr style="height: 10px; border: 0; box-shadow: inset 0 12px 12px -12px rgba(0,0,0,0.6); margin-top:-28px;"/> -->
+                    </div> 
+                    
+                    <!--  Last update -->                   
+                    <div id="divLastUpdate" class="{!IF(account.Contact_Details_Last_Update__c == NULL, 'LastUpdateRed', IF(IsContactDetailsUpdateExpired == false, 'LastUpdateGreen', 'LastUpdateRed'))}"
+                            onclick="updateContactLastUpdateDateToToday()">  
+                        <label class="whiteLabel" style="margin-left: 7px;margin-top: 5px;">Last update</label>
+                        <div style="text-align: center; width:115px; height: 30px; margin-top:5px;">
+                            <div id="tile-content">
+                                <div style="float:left; width: 115px">
+                                    <apex:outputText styleClass="whiteLabel" value="Update to Today?"></apex:outputText>
+                                </div>
+                                <div style="float:left; width: 115px">
+                                    <label id="spanLastUpdateDate" class="tileTextSmall">{!IF(account.Contact_Details_Last_Update__c == NULL, 'None', LastUpdateDateFormatted)}</label>
+                                </div>                              
+                            </div>
+                            
+                            <div>
+                                <svg id="waitIndicator" width="40" height="8">
+                                  <rect width="8" height="8" x="0" y="0" rx="3" ry="3">
+                                    <animate attributeName="width" values="0;8;8;8;0" dur="1000ms" repeatCount="indefinite"/>
+                                    <animate attributeName="height" values="0;8;8;8;0" dur="1000ms" repeatCount="indefinite"/>
+                                    <animate attributeName="x" values="4;0;0;0;4" dur="1000ms" repeatCount="indefinite"/>
+                                    <animate attributeName="y" values="4;0;0;0;4" dur="1000ms" repeatCount="indefinite"/>
+                                  </rect>
+                                  <rect width="8" height="8" x="25" y="0" rx="3" ry="3">
+                                    <animate attributeName="width" values="0;8;8;8;0" begin="200ms" dur="1000ms" repeatCount="indefinite"/>
+                                    <animate attributeName="height" values="0;8;8;8;0" begin="200ms" dur="1000ms" repeatCount="indefinite"/>
+                                    <animate attributeName="x" values="20;15;15;15;20" begin="200ms" dur="1000ms" repeatCount="indefinite"/>
+                                    <animate attributeName="y" values="4;0;0;0;4" begin="200ms" dur="1000ms" repeatCount="indefinite"/>
+                                  </rect>
+                                  <rect width="8" height="8" x="50" y="0" rx="3" ry="3">
+                                    <animate attributeName="width" values="0;8;8;8;0" begin="400ms" dur="1000ms" repeatCount="indefinite"/>
+                                    <animate attributeName="height" values="0;8;8;8;0" begin="400ms" dur="1000ms" repeatCount="indefinite"/>
+                                    <animate attributeName="x" values="35;30;30;30;35" begin="400ms" dur="1000ms" repeatCount="indefinite"/>
+                                    <animate attributeName="y" values="4;0;0;0;4" begin="400ms" dur="1000ms" repeatCount="indefinite"/>
+                                  </rect>
+                                </svg>  
+                            </div>
+                            
+                        
+                            </div>
+                        <div>
+                            <apex:image width="18" height="18" style="float:right;margin-top:11px; margin-right:7px;" url="{!URLFOR($Resource.AccountViewResource,'/AccountHolderReview/images/date.png')}" ></apex:image>  
+                        </div>
+                    </div>
+                    </div>
+                    
+                    <!--  Last viewed by -->
+                    <div style="display:inline-block; margin-top:15px; width:343px;">
+                        <div>
+                        <hr style="border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.2); border-bottom: 1px solid rgba(255, 255, 255, 0.3)"/>
+                        </div>
+                        <div>
+                        <div>
+                            <label class="itemTitle">Last Viewed</label>
+                         </div>
+                         <div style="height: 45px; float: left; margin-top: 5px;"> 
+                            <div style="background:#9c9c9c; height:64px; float: left; width: 5px;"></div>  
+                            <div style="float: left; height: 64px; width: 338px; background:#fdfdfd;">
+                                <div style="float: left; height: 64px; width: 64px; overflow: hidden;">
+                                    <img src="{!lastViewedBy.SmallPhotoUrl}" alt="{!lastViewedBy.Name}" style="height:64px;" />
+                                </div>
+                                <div style="float: left; margin-left:20px; margin-top:15px;">
+                                    <div>
+                                     <label class="tileTextSmaller" style="color: #9c9c9c; line-height: 12px;"><i>User: </i>{!lastViewedBy.Name}</label>
+                                     </div>
+                                     <div>
+                                        <label class="tileTextSmaller" style="color: #9c9c9c;"><i>At: </i></label>
+                                        <apex:outputPanel >
+                                            <span class="tileTextSmaller" style="color: #9c9c9c;">
+                                                <apex:outputField value="{!lastAudit.Date_time__c}" />
+                                            </span>
+                                        </apex:outputPanel>
+                                        
+                                     </div>
+                                </div>
+                            </div>                      
+                        </div>  
+                        </div>
+                    </div>
+                                             
+                    <!--Centre content-->
+                    <div style="min-height:180px; height:100%;"></div>
+                                        
+                    <!--Reason For Viewing-->
+                    <div style="display:inline-block; width: 345px; bottom: 0; position: absolute; margin-bottom: 20px;">
+                        <div>
+                        <hr style="border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.2); border-bottom: 1px solid rgba(255, 255, 255, 0.3)"/>
+                        <div style="margin-left:5px;">
+                         <label class="itemTitle">Reason for Viewing</label>
+                        </div>
+                        <div>
+                            <div class="cRequiredBlock" style="height: 29px !important"></div>
+                            <apex:inputField value="{!acc.Record_Access_Reason__c}" style="margin: 5px 5px 5px 0px; width:330px; height:30px; font-family:calibri light;" required="true" onchange="checkIfValidationRequired(this);" id="reason"/>
+                             <b  style="display:none;" id="errorMessage">Error: Please update last profile update value</b>
+                        </div>
+                        <div style="float:right; margin-right: 5px;" id="submitSection">
+                            <input type="button" class="redBtn" value="CANCEL" onClick="history.go(-1);"></input>
+                           
+                                <apex:commandButton styleClass="redBtn" value="SUBMIT" onclick="validateAndSubmit();" id="submitButtonC" rerender="none"/>
+                            
+                        </div>
+                        <div style="float:right; margin-right: 5px;display:none" id="idVerificationSection" >
+                            <input type="button" class="redBtn" value="CANCEL" onClick="history.go(-1);"></input>
+                             
+                            <apex:commandButton value="PROCEED WITH ID VERIFICATION" onclick="idVerificationStart();"  id="idv" styleClass="redBtn"  rerender="panel"/>
+                        </div>
+                        
+                        </div>
+                       
+                    </div>  
+                    
+                </div>
+            </div>
+            <apex:actionFunction action="{!submitReason}" name="submitform" rerender="panel" />
+            </apex:form>
+        </div>
+
+        <!--  Details panel -->
+        <div style="height: 100%; display:table-cell;">
+            <apex:form id="formId">
+            <div style="margin-top: 15px; margin-left:20px; width: 97%;">
+                 <div>
+                    <label class="subTitle" style="margin-left: 5px;">Details</label>
+                </div>
+                
+                <!--Alerts-->
+                <div style="margin-top:15px; margin-left:10px;">
+                    <label class="sectionTitle">Alerts</label>
+                    <apex:outputText styleClass="sectionTitle" value="({!lstAlerts.size})" />
+                    <div class="sectionDetail">                 
+                        <table>
+                                <colgroup>
+                                   <col span="1" style="width: 50px;"></col>
+                                   <col span="1" style="width: 75px;"></col>
+                                   <col span="1" style="width: 200px;"></col>
+                                </colgroup>
+                            <apex:repeat value="{!lstAlerts}" var="alert" >
+                                  <tr>
+                                    <td>
+                                        <div style="margin-top:3px; margin-left:5px;">
+                                        <!--added IF condition for Vulnerable customer alert changes BRD-->
+                                        <apex:image height="40px" url="{!IF(alert.Alert_Type__c == 'Security' || alert.Alert_Type__c == 'FCU', URLFOR($Resource.AccountViewResource,'/AccountHolderReview/images/stop.png'),
+                                                                         IF(alert.Alert_Type__c == 'Warning', URLFOR($Resource.AccountViewResource,'/AccountHolderReview/images/warning.png'),
+                                                                         IF(alert.Alert_Type__c == 'General', URLFOR($Resource.AccountViewResource,'/AccountHolderReview/images/info.png'),
+                                                                         IF(alert.Alert_Type__c == 'Vulnerable Customer', URLFOR($Resource.AccountViewResource,'/AccountHolderReview/images/Vulnerable_customer.png'), ''))))}"></apex:image>
+                                        </div>
+                                    </td>
+                                    <!-- C0740: Dormancy Reactivation for High Risk & PEP Customers - Start -->
+                                    <!-- <td style="color: #8C8C8C ;font-weight:{!IF(Account.Status__c == 'Dormant' && (Account.Customer_Risk_Rating__c == 'High'||Account.Pep__c == true), 'bold', 'normal')};"><i>{!alert.Alert_Type__c}</i></td>        -->
+                                    
+                                    <td style="color: #8C8C8C ;font-weight:{!IF(alert.Alert_Type__c == 'Security' || alert.Alert_Type__c == 'FCU' || alert.Real_Time_Alert_Type__c == 'Dormant High Risk / PEP', 'bold', 'normal')};width:150px"><i>{!alert.Alert_Type__c}</i></td> <!-- width:150px added for VC Record alert changes BRD -->
+
+                                    <!--C0757: Nature And Purpose Alert - Start -->
+                                    <!-- <td style="color:{!IF((Account.Status__c == 'Dormant' && (Account.Customer_Risk_Rating__c == 'High' || Account.Pep__c == true)) || alert.Name == 'Nature And Purpose Missing', '#FF0000', '#8C8C8C')};font-weight:{!IF((Account.Status__c == 'Dormant' && (Account.Customer_Risk_Rating__c == 'High' || Account.Pep__c == true)) || alert.Name == 'Nature And Purpose Missing', 'bold', 'normal')};width:500px"><apex:outputLabel value="{!SUBSTITUTE(JSENCODE(alert.Alert__c), '\\n', '<br/>')}" escape="false"/ ></td>   -->
+
+                                    <td style="color:{!IF(alert.Alert_Type__c == 'Security' || alert.Alert_Type__c == 'FCU' || alert.Real_Time_Alert_Type__c == 'Dormant High Risk / PEP' || alert.Real_Time_Alert_Type__c == 'Risk Fields' || alert.Real_Time_Alert_Type__c == 'Nature and Purpose' || alert.Real_Time_Alert_Type__c == 'Source of Funds', '#FF0000', '#8C8C8C')};font-weight:{!IF(alert.Alert_Type__c == 'Security' || alert.Alert_Type__c == 'FCU' || alert.Real_Time_Alert_Type__c == 'Dormant High Risk / PEP' || alert.Real_Time_Alert_Type__c == 'Risk Fields' || alert.Real_Time_Alert_Type__c == 'Nature and Purpose' || alert.Real_Time_Alert_Type__c == 'Source of Funds', 'bold', 'normal')};width:500px"><apex:outputLabel value="{!SUBSTITUTE(JSENCODE(alert.Alert__c), '\r\n', '<br/>')}" escape="false"/ >
+                                    
+                                    <!-- VC Record Alert changes - Start -->
+                                    <div style="display: {!IF((alert.Alert_Type__c == 'Vulnerable Customer'), 'block', 'none')};">
+                                    Vulnerability Type:&nbsp;  <apex:outputText value="{!SUBSTITUTE(alert.Vulnerable_Customer__c, ';', ', ')}"/>
+                                    </div>
+                                    <!-- VC Record Alert changes - End-->
+                                    
+                                    </td>
+
+                                    <!--C0757: Nature And Purpose Alert - End-->
+                                    <!-- C0740: Dormancy Reactivation for High Risk & PEP Customers - End -->
+                                  </tr>                     
+                            </apex:repeat>      
+                        </table>
+                    </div>
+                </div>
+                <!-- C0786 ;CMS; Start -->
+                <table>
+                    <colgroup>
+                        <col span="1" style="width: 150px;"></col>
+                        <col span="1"></col>
+                    </colgroup>                     
+                    <tr>
+                        <td style="color:#8C8C8C;"><i>Repond Case Number:</i></td>     
+                        <td><apex:outputField value="{!acc.Respond_Case_Number__c}"/></td>
+                    </tr> 
+                      
+                    <tr>
+                        <td style="color:#8C8C8C;"><i>Respond Case Status:</i></td>       
+                        <td><apex:outputField value="{!acc.Respond_Case_Status__c}"/></td>
+                    </tr>
+                </table> 
+                            
+                <div id="navlist">
+                    <ul>
+                       <!--<li><apex:commandbutton styleClass="redBtn" value="Open Complaints" action="{!RedirectToRespond}"  rerender="formId,showErrorMessage"/></li>-->
+                       <li><apex:commandLink styleClass="redBtn" value="Open Complaints"  action="{!RedirectToRespond}" target="{!if((acc.Respond_Case_URL__c != null),'_blank','_self')}" rerender="{!if((acc.Respond_Case_URL__c != null),'','formId,showErrorMessage')}"/></li>
+                    </ul>
+                </div>
+                <div id="navlist">
+                    <ul>
+                        <li><apex:commandbutton styleClass="redBtn" value="Refresh Complaints Status" action="{!RefreshStatus}" rerender="formId,showErrorMessage"/></li>
+                    </ul>
+                </div>
+                <apex:outputPanel id="showErrorMessage" rendered="{!showErrorMessage != '' }">       
+                    <div Class="showErrorMessageStyle">
+                        <b>Error:</b><br/>
+                            {!showErrorMessage}
+                        </div>
+                </apex:outputPanel>
+                <!--C0786 ;CMS;End-->
+                <!-- Personal Info -->
+                 <div style="margin-top:15px; margin-left:10px;">
+                    <label class="sectionTitle">Personal Information</label>
+                    <div class="sectionDetail">     
+                        <table>
+                                <colgroup>
+                                   <col span="1" style="width: 150px;"></col>
+                                   <col span="1"></col>
+                                </colgroup>                     
+                                  <tr>
+                                    <td style="color:#8C8C8C;"><i>Address:</i></td>     
+                                    <td>{!Account.BillingStreet},  {!Account.Customer_Address_District__c}, {!Account.BillingCity}, {!Account.BillingPostalCode}</td>
+                                  </tr> 
+                                  
+                                  <tr>
+                                    <td style="color:#8C8C8C;"><i>Date of Birth:</i></td>       
+                                    <td><apex:outputField value="{!Account.Date_of_Birth__c}"/></td>
+                                  </tr>
+                                  
+                                  <tr>
+                                    <td style="color:#8C8C8C;"><i>Town of Birth:</i></td>       
+                                    <td>{!Account.Town_of_Birth__c}</td>
+                                  </tr>
+                                  
+                                  <tr>
+                                    <td style="color:#8C8C8C;"><i>Country of Birth:</i></td>        
+                                    <td>{!Account.Country_of_Birth__c}</td>
+                                  </tr>
+                                  
+                                  <tr>
+                                    <td style="color:#8C8C8C;"><i>Mother Maiden Name:</i></td>      
+                                    <td>{!Account.Mother_s_family_name_security_question__c}</td>
+                                  </tr>
+                                  
+                                  <tr>
+                                    <td style="color:#8C8C8C;"><i>School Name:</i></td>     
+                                    <td>{!Account.School_name_security_question__c}</td>
+                                  </tr>
+                        </table>                
+                    </div>
+                </div>
+                
+                <!--Contact-->
+                 <div style="margin-top:15px; margin-left:10px;">
+                    <label class="sectionTitle">Contact</label>
+                        <div class="sectionDetail">     
+                        <table>
+                                <colgroup>
+                                   <col span="1" style="width: 20%;"></col>
+                                   <col span="1" style="width: 80%;"></col>
+                                </colgroup>                     
+                                  <tr>
+                                    <td style="color:#8C8C8C;"><i>Telephone:</i></td>       
+                                    <td>{!Account.Home_Telephone_No__c}</td>
+                                  </tr> 
+                                  
+                                  <tr>
+                                    <td style="color:#8C8C8C;"><i>Alternate Telephone:</i></td>     
+                                    <td>{!Account.Phone}</td>
+                                  </tr> 
+                                  
+                                  <tr>
+                                    <td style="color:#8C8C8C;"><i>Mobile:</i></td>      
+                                    <td>{!Account.PersonMobilePhone}</td>
+                                  </tr>
+                                  
+                                  <tr>
+                                    <td style="color:#8C8C8C;"><i>Email:</i></td>       
+                                    <td>{!Account.PersonEmail}</td>
+                                  </tr>
+                        </table>                
+                    </div>
+                </div>
+                
+                <!--Products-->
+                 <div style="margin-top:15px; margin-left:10px;">
+                    <label class="sectionTitle">Products</label>
+                    <div class="sectionDetail">     
+                        <table>
+                                <colgroup>
+                                   <col span="1" style="width: 40%;"></col>
+                                   <col span="1" style="width: 60%;"></col>
+                                </colgroup>                     
+                                  <tr>
+                                    <td style="color:#8C8C8C;"><i>Recommended Products:</i></td>        
+                                    <td> {!Account.Experian_Reference_Number__c}</td>
+                                  </tr> 
+                        </table>                
+                    </div>
+                </div>
+                
+                <!--Marketing--><!-- C0697 -->
+                 <div style="margin-top:15px; margin-left:10px;">
+                    <label class="sectionTitle">Marketing</label>
+                    <div class="sectionDetail"> 
+                        <table>
+                                <colgroup>
+                                   <col span="1" style="width: 30%;"></col>
+                                </colgroup>                     
+                                  <tr>
+                                    <td>
+                                        <div>Please tick the appropriate box(es) so we know how our customer would prefer us to contact them.</div>
+                                    </td>
+                                  </tr> 
+                        </table>                            
+                        <div id="navlist">
+                            <ul name="MktPrefs">
+                                <!-- C0737 Start -->
+                                <li><apex:inputCheckbox value="{!HasNewsletter}" title="Newsletter" id="HasNewsletter" styleClass="HasNewsletter" onclick="onPrefSelected()" /> E-Newsletter </li>
+                                <li><apex:inputCheckbox value="{!HasEmail}" title="Email" id="HasEmail" styleClass="HasEmail" onclick="onPrefSelected()" /> Email </li>
+                                <li><apex:inputCheckbox value="{!HasMail}" title="Post" id="HasMail" styleClass="HasMail" onclick="onPrefSelected()" /> Post </li>
+                                <li><apex:inputCheckbox value="{!HasSMS}" title="SMS" id="HasSMS" styleClass="HasSMS" onclick="onPrefSelected()" /> SMS </li>
+                                <li><apex:inputCheckbox value="{!HasPhone}" title="Phone" id="HasPhone" styleClass="HasPhone" onclick="onPrefSelected()" /> Phone </li>
+                                <!-- C0737 End -->
+                            </ul>
+                        </div>
+                        <div id="navlist">
+                            <ul>
+                                <li>If the customer would prefer NOT to receive any marketing information, please tick here: <!-- C0737 Start --><apex:inputCheckbox value="{!HasNone}" title="HasNone" id="HasNone" styleClass="HasNone" onclick="checkNoContact(this)"/><!-- C0737 End --></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- C0737 Start --> 
+                    <apex:outputPanel id="errmsg">
+                       <apex:pageMessages />
+                    </apex:outputPanel>                             
+                    <!-- C0737 End -->
+                </div>
+                <hr/>
+                <div style="margin-top:15px; margin-left:10px;">
+                    <label class="sectionTitle">Data Profile</label>
+                    <div class="sectionDetail"> 
+                        <table>
+                                <colgroup>
+                                   <col span="1" style="width: 30%;"></col>
+                                </colgroup>                     
+                                  <tr>
+                                    <td>
+                                        <div>If we have received a request from a customer NOT TO USE their data profile to help us identify other customers likely to be interested in our finance products, please tick the box below.</div>
+                                    </td>
+                                  </tr> 
+                        </table>                            
+                        <div id="navlist">
+                                <ul>
+                                    <li><apex:inputCheckbox value="{!NoProfiling}" title="NoProfiling"/> <b><u>Do not</u></b> use this customers data profile.</li>
+                            </ul>
+                        </div>
+                        <div id="navlist">
+                                <ul>
+                                    <!--C0737 Start-->
+                                    <li><apex:commandButton styleClass="redBtn" value="SAVE" action="{!saveMarketingPreferences}" reRender="txtMarketPrefList,errmsg"/></li>
+                                    <!--C0737 End-->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="height: 40px;"></div>
+            </div>
+            </apex:form>
+        </div>
+
+        
+        </div>
+        
+        
+        
+        </div>
+        
+</div>
+</apex:outputPanel>
+    
+    <script>
+    var previousOnload = window.onload; 
+    var selectedValue;
+    window.onload = function() { 
+    if (previousOnload) { 
+        previousOnload(); 
+    } 
+        console.log('User Role:'+'{!$UserRole.Name}');
+          console.log('{!$Label.Roles_for_ID_V}'.includes('{!$UserRole.Name}'));
+            console.log('{!$Label.Roles_for_ID_V}');
+        //{!$User.LastName} == 'Raiyan'
+        var error = document.getElementById("errorMessage");
+         error.style = 'display:none';  
+    } 
+    
+    function validateAndSubmit(){
+        if('{!$Label.Roles_for_ID_V}'.includes('{!$UserRole.Name}')  && '{!$CurrentPage.parameters.securitycheck}'.length && '{!$CurrentPage.parameters.securitycheck}' == 'Pass'){ 
+             var lastupdate = document.getElementById("spanLastUpdateDate");
+             console.log('**lastupdate **'+lastupdate.textContent);  
+             if(lastupdate.textContent == 'None'){
+                 console.log('Last Update required.');
+                 var error = document.getElementById("errorMessage");
+                 error.style = 'display:block;color:red;';                 
+             }else{
+                var error = document.getElementById("errorMessage");
+                error.style = 'display:none'; 
+                submitform();
+            }  
+        }else{
+            var error = document.getElementById("errorMessage");
+            error.style = 'display:none'; 
+            submitform();
+        }
+    }
+    
+    function checkIfValidationRequired(data){
+        
+        
+        console.log('Reason:'+data.value);
+        console.log('test button {!$CurrentPage.parameters.securitycheck}');
+        selectedValue = data.value;
+        var lastupdate = document.getElementById("spanLastUpdateDate");
+        console.log('**lastupdate **'+lastupdate.textContent);
+        
+        if('{!$Label.Roles_for_ID_V}'.includes('{!$UserRole.Name}') && !'{!$CurrentPage.parameters.securitycheck}'.length){ 
+            if((selectedValue == 'Customer call' || selectedValue == 'Customer Call Outbound')){
+                var button = document.getElementById("idVerificationSection");
+                button.style = 'display:block;float: right;';
+                var startbutton = document.getElementById("submitSection");                
+                startbutton.style = 'display:none';
+                
+            }else{
+                var button = document.getElementById("submitSection");
+                button.style = 'display:block;float: right;';
+                var startbutton = document.getElementById("idVerificationSection");
+                startbutton.style = 'display:none';
+                
+            }
+        }
+    }
+    
+    function idVerificationStart(){
+        console.log('Id Verification'+selectedValue);
+        var outbound = false;
+        if(selectedValue  == 'Customer Call Outbound')
+            outbound = true;
+        window.open('/apex/IdVerification?id={!$CurrentPage.parameters.id}&outbound='+outbound,'_self');
+    }
+    //C0737 Start
+        function onPrefSelected(){
+            var Enewsletter = document.getElementsByClassName("HasNewsletter");
+            var Email = document.getElementsByClassName("HasEmail");
+            var Mail = document.getElementsByClassName("HasMail");
+            var SMS = document.getElementsByClassName("HasSMS");
+            var Phone = document.getElementsByClassName("HasPhone");
+            if((Enewsletter && Enewsletter[0].checked) || (Email && Email[0].checked) || (Mail && Mail[0].checked) || (SMS && SMS[0].checked) || (Phone && Phone[0].checked)){
+                var None = document.getElementsByClassName("HasNone");
+                None[0].checked = false
+            } 
+        }
+        //C0737 End
+        function checkNoContact(element)
+        {
+            var nocontact = element.checked;
+
+            if(nocontact)
+            {
+                var list = document.getElementsByName("MktPrefs"); // The <ul> tag containing the Marketing Pref checkboxes
+                var children = list[0].children;
+                for(var i=0;i<children.length;i++)
+                {
+                    // Should be an <li> so firstChild will be the checkbox
+                    var el=children[i]
+                    el.firstChild.checked = false;
+                }
+            }
+        }
+
+        function updateContactLastUpdateDateToToday()
+        {
+            if(document.getElementById("divLastUpdate").className == "LastUpdateRed")
+            {
+                document.getElementById("waitIndicator").style.visibility = "visible";
+                document.getElementById("divLastUpdate").className = "LastUpdateBlue";
+
+                Visualforce.remoting.Manager.invokeAction
+                (
+                    '{!$RemoteAction.AccountViewingReasonCE.UpdateContactLastUpdateDateToToday}',
+                    '{!Account.Id}',
+                    function(result, event)
+                    {
+                        if(event.status)
+                        {
+                            var currentDate = new Date();
+                            var day = currentDate.getDate();
+                            var month = currentDate.getMonth() + 1;
+                            var monthString = '';
+                            if(month < 10)
+                            {
+                                monthString = '0' + month;
+                            }
+                            var year = currentDate.getFullYear();
+                            document.getElementById("divLastUpdate").className = "LastUpdateGreen";
+                            document.getElementById("spanLastUpdateDate").innerHTML = day + "/" + monthString + "/" + year;
+                        }
+                        else
+                        {
+                            document.getElementById("divLastUpdate").className = "LastUpdateRed";
+                        }
+
+                        document.getElementById("waitIndicator").style.visibility = "hidden";
+                    }
+                );
+            }
+        };
+    </script>
+    
+    <script>
+        function addLoadEvent(func) 
+        {
+            
+            var oldonload = window.onload;
+            if (typeof window.onload != 'function') 
+            {
+                window.onload = func;
+            } 
+            else 
+            {
+                window.onload = function() 
+                {
+                    if (oldonload) 
+                    {
+                        oldonload();
+                    }
+                    func();
+                }
+            }
+        }
+
+        //addLoadEvent(fetchImages_AF);
+    </script>
+
+</apex:page>

@@ -1,0 +1,393 @@
+<apex:page showHeader="false" sidebar="false" docType="html-5.0" controller="BAA_Mandates" action="{!Setup}">
+    <head>       
+        <c:BAA_Resource ></c:BAA_Resource>
+        <div id="BAA_AccountNumber" style="display: none;">{!Opp.Account_With_IBB__r.Name}</div>
+    </head>
+
+    <c:BAA_PopupLoad />
+    <body>    
+        <c:BAA_Header objOpp="{!BaseOpportunity}" title="Mandates"></c:BAA_Header>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-lg-3">
+                    <apex:form >
+                    <c:BAA_Menu oppId="{!BaseOpportunity.Id}"  DirectorId="{!BaseOpportunity.ProductEventDirector__c}" />
+                    </apex:form>
+                </div>            
+                <div class="col-md-8 col-lg-9" ng-app="mandateApp" ng-controller="controllerMandates" ng-init="LoadMandatesAndSignatories()" ng-cloak="ng-cloak">       
+                    
+                    <div id="MandateView" ng-show="CurrentView == 'View'">  
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">Signatories</h4>
+                            </div>
+
+                            <div class="panel-body">
+                                <div class="" style=" overflow: auto;">
+                                    <table class="table-hover table table-bordered" id="Signatories" style="margin-top:0px; width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 10%; background: #A9A9A9;">EBS Id</th>
+
+                                                <th style="width: 15%; background: #A9A9A9;">Primary Account Holder</th>
+
+                                                <th style="width: 20%; background: #A9A9A9;">Customer Name</th>
+
+                                                <th style="width: 20%; background: #A9A9A9;">Relationship to Primary Applicant</th>
+
+                                                <th style="width: 20%; background: #A9A9A9;">Relationship Type</th>
+
+                                                <th style="width: 10%; background: #A9A9A9;">Signatory Group</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>                                         
+                                            <tr ng-repeat="item in response.signatories" style="padding:5px;margin:0px;">
+                                                <td>
+                                                    <a href="/{{item.ProspectCustomerId}}" target="_blank">{{item.CustomerEBSId}}</a>
+                                                </td>
+                                                <td style="text-align: center">
+                                                    {{item.PrimaryAccountHolder}}
+                                                </td>
+                                                <td>
+                                                    {{item.CustomerName}}
+                                                </td>
+                                                <td>
+                                                    {{item.RelationshipToPrimaryApplicant}}
+                                                </td>
+                                                <td>
+                                                    {{item.RelationshipType}}
+                                                </td>
+                                                <td style="text-align: center">
+                                                    {{item.SignatoryGroup}}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <apex:outputPanel rendered="{!!IsCompleted}">
+                                        <div class="col-xs-1.5 btn-lg btn btn-success" style=" padding: 10px;" ng-click="CurrentView ='AccountEdit'">Update Signatory Groups</div>
+                                    </apex:outputPanel>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">Mandates</h4>
+                            </div>
+
+                            <div class="panel-body">
+                                <div>
+                                    <table class="table-hover table table-bordered" id="Mandates" style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 20%; background: #A9A9A9;">Limit</th>
+                                                <th style="background: #A9A9A9;">Mandate Rule</th>
+                                                <th style="background: #A9A9A9;"></th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <tr ng-repeat="item in response.mandates | orderBy:sortBy:reverse" style="padding:5px;margin:0px;">                                         
+                                                <td>{{item.MandateLimit |
+                                                currency:item.CcySymbol}}</td>
+
+                                                <td>{{item.Grouping}}</td>
+
+                                                <td>
+                                                    <apex:outputPanel rendered="{!!IsCompleted}">
+                                                        <button class="btn btn-success" style="float:right" ng-click="GotoMandateEdit(item.MandateId)">Edit</button> 
+                                                        <button class="btn btn-success" style="float:right" ng-click="DeleteMandate(item.MandateId)">Delete</button>
+                                                    </apex:outputPanel>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <apex:outputPanel rendered="{!!IsCompleted}">
+                                        <div class="col-xs-1 btn-lg btn btn-success" style="padding:10px;" ng-click="CurrentView = 'NewMandate'">New Mandate</div>
+                                    </apex:outputPanel>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="functionfooter">
+                            <div class="panel">
+                                <div>
+                                    <apex:form >
+                                        <apex:commandButton styleClass="col-xs-1 btn-lg btn btn-success" style="padding:10px;" value="Save" rendered="{!!IsCompleted}" action="{!Save}"/>
+                                        <apex:commandButton styleClass="col-xs-1.5 btn-lg btn btn-success" style="padding:10px;" value="Complete" rendered="{!!IsCompleted}" action="{!Complete}"/>
+                                    </apex:form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="MandateEdit" ng-show="CurrentView == 'Edit'">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">New Mandate</h4>
+                            </div>
+                            <div class="panel-body">
+                                <div>
+                                    <form id="mandateHeader" name="mandateHeaderFrom" class="form-inline" role="form" style="padding: 10px; padding-bottom: 20px;" ng-submit="SaveMandateRule()">
+                                        <div class="form-group" style="margin-right: 20px;">
+                                            <label class="control-label">Currency</label>
+                                            <input class="form-control" id="AccountCurrency" name="responseMandate.Ccy" ng-disabled="true" ng-model="responseMandate.Ccy" type="text"></input>                                               
+                                        </div>
+                                         <div class="form-group">
+                                             <label class="control-label">Limit</label>
+                                             <input class="form-control" id="MandateLimitId" ng-required="true" name="responseMandate.MandateLimit" ng-model="responseMandate.MandateLimit" type="number" min="1"></input>
+                                         </div>
+                                    </form>
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">Add a Mandate Rule</h4>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="col-md-4">
+                                                <form class="form-horizontal" role="form" ng-submit="AddMandateRule()">
+                                                    <div class="radio">
+                                                        <label>
+                                                            <input type="radio" name="MandateRuleType" value="signatory" ng-model="mandateRuleForm.ruleType">Signatory {{mandateRuleForm.isSignatory}}</input>
+                                                        </label>
+                                                    </div>
+                                                    <div class="radio">
+                                                        <label>
+                                                            <input type="radio" name="MandateRuleType" value="signatoryGroup" ng-model="mandateRuleForm.ruleType">Signatory Group</input>
+                                                        </label>
+                                                    </div>
+                                                    <div class="radio">
+                                                        <label>
+                                                            <input type="radio" name="MandateRuleType" value="relationship" ng-model="mandateRuleForm.ruleType">Relationship Type</input>
+                                                        </label>
+                                                    </div>
+                                                    
+                                                    <div class="col-xs-12" style="height:20px;"></div>
+                                                    
+                                                     <div id="SignatoryEntry">
+                                                         <div class="form-group" ng-show="mandateRuleForm.ruleType == 'signatory'">
+                                                             <label class="col-md-4 control-label">Signatory</label>
+                                                             <div class="col-md-8">
+                                                                 <select id="signatoryInput" class="form-control" ng-required="mandateRuleForm.ruleType == 'signatory'" ng-model="mandateRuleForm.signatory" ng-options="sig.Label for sig in responseMandate.SignatoryTypes" ng-disabled="mandateRuleForm.ruleType == 'relationship'">
+                                                                     <option value=""></option>
+                                                                 </select>
+                                                             </div>
+                                                         </div>
+                                                     </div>
+
+                                                     <div id="SignatoryGroupEntry">
+                                                        <div class="form-group" ng-show="mandateRuleForm.ruleType == 'signatoryGroup'">
+                                                            <label class="col-md-4 control-label">Signatory Group</label>
+                                                            <div class="col-md-8">
+                                                             <select id="signatoryGroupInput" class="form-control" ng-required="mandateRuleForm.ruleType == 'signatoryGroup'" ng-model="mandateRuleForm.signatoryGroup" ng-options="sig.Label for sig in responseMandate.SignatoryGroupTypes" ng-disabled="mandateRuleForm.ruleType != 'signatoryGroup'">
+                                                                 <option value=""></option>
+                                                             </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group" ng-show="mandateRuleForm.ruleType == 'signatoryGroup'">
+                                                             <label class="col-md-4 control-label">No from Group</label>
+                                                             <div class="col-md-8">
+                                                                 <input id="noFromGroupInput" type="number" min="1" class="form-control" name="nofromgroup" ng-required="mandateRuleForm.ruleType == 'signatoryGroup'"
+                                                                        ng-model="mandateRuleForm.nofromgroup"  ng-disabled="mandateRuleForm.ruleType != 'signatoryGroup'"/>
+                                                             </div>
+                                                         </div>
+                                                     </div>
+
+                                                     <div id="RelationshipTypeEntry" ng-show="mandateRuleForm.ruleType == 'relationship'">
+                                                         <div class="form-group">
+                                                             <label class="col-md-4 control-label">Relationship Type</label>
+                                                             <div class="col-md-8">
+                                                                 <select id="relationshipTypeInput" class="form-control" ng-required="mandateRuleForm.ruleType == 'relationship'" ng-model="mandateRuleForm.relationshiptype" ng-options="rt.Label for rt in responseMandate.RelationshipTypes"  ng-disabled="mandateRuleForm.ruleType != 'relationship'">
+                                                                     <option value=""></option>
+                                                                 </select>
+                                                             </div>
+                                                         </div>
+                                                         <div class="form-group">
+                                                             <label class="col-md-4 control-label">No from Group</label>
+                                                             <div class="col-md-8">
+                                                                 <input id="noFromGroupInput" type="number" min="1" class="form-control" name="nofromgroup" ng-required="mandateRuleForm.ruleType == 'relationship'"
+                                                                        ng-model="mandateRuleForm.nofromgroup"  ng-disabled="mandateRuleForm.ruleType != 'relationship'"/>
+                                                             </div>
+                                                         </div>
+                                                    </div>
+                                                    <div class="form-group">                                
+                                                         <div class="col-md-12">
+                                                             <button type="submit" value="Add" class="btn btn-success pull-right">Add</button>
+                                                         </div>
+                                                     </div>                                                 
+                                                 </form>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div style="overflow:auto;">
+                                                    <table class="table-hover table table-bordered">
+                                                        <thead>
+                                                             <th style="background: #A9A9A9; width:30%;">Signatory</th>
+                                                             <th style="background: #A9A9A9;">Signatory Group</th>
+                                                             <th style="background: #A9A9A9;">Relationship Type</th>
+                                                             <th style="background: #A9A9A9;">No from Group</th>
+                                                             <th style="background: #A9A9A9;"></th>
+                                                        </thead>
+                                                        <tbody>
+                                                             <tr ng-repeat="mi in responseMandate.MandateItems track by $index">
+                                                                 <td>{{mi.Signatory}}</td>
+                                                                 <td>{{mi.SignatoryGroup}}</td>
+                                                                 <td>{{mi.RelationshipType}}</td>
+                                                                 <td>{{mi.NoFromGroup}}</td>
+                                                                 <td>
+                                                                     <input class="btn btn-success" ng-click="RemoveMandateRule($index)" type="button" value="Remove"></input>
+                                                                 </td>
+                                                             </tr>
+                                                        </tbody>
+                                                 </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="functionfooter">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <button class="btn btn-success" style="padding:10px;" ng-click="CurrentView = 'View'">Cancel</button>   
+                                                <button form="mandateHeader" type="submit" class="btn btn-success" style="padding:10px;">Save</button>
+                                            </div>
+                                        </div>
+                                    </div> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="MandateAccountHolderEdit" ng-show="CurrentView == 'AccountEdit'">
+                        
+                         <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">Update Signatory Groups</h4>
+                            </div>
+
+                            <div class="panel-body">
+                                <div style=" overflow: auto;">
+                                    <table class="table-hover table table-bordered" id="Signatories" style="margin-top:0px;" >
+                                        <thead>
+                                            <tr>
+                                                <th style="background: #A9A9A9;">
+                                                    EBS Id
+                                                </th>
+                                                <th style="background: #A9A9A9;">
+                                                    Primary Account Holder
+                                                </th>
+                                                <th style="background: #A9A9A9;">
+                                                    Customer Name
+                                                </th>
+                                                <th style="background: #A9A9A9;">
+                                                    Relationship to Primary Applicant
+                                                </th>
+                                                <th style="background: #A9A9A9;">
+                                                    Relationship Type
+                                                </th>
+                                                <th style="background: #A9A9A9;">
+                                                    Signatory Group
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        
+                                        <tr class="itemRow" ng-repeat="item in response.SignatoryList track by item.ProspectCustomerId" style="padding:5px;margin:0px;">
+                                            <td>
+                                                <a href="/{{item.ProspectCustomerId}}" target="_blank">{{item.CustomerEBSId}}</a>
+                                            </td>
+                                            <td>
+                                                {{item.PrimaryAccountHolder}}
+                                            </td>
+                                            <td>
+                                                {{item.CustomerName}}
+                                            </td>
+                                            <td>
+                                                {{item.RelationshipToPrimaryApplicant}}
+                                            </td>
+                                            <td>
+                                                {{item.RelationshipType}}
+                                            </td>
+                                            <td>                                                                
+                                                <select id="signatoryGroupInput" class="dropdown" ng-model="item.SignatoryGroup" ng-options="sig.Value as sig.Label for sig in response.SignatoryGroupList">
+                                                    <option value=""></option>
+                                                </select>   
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="functionfooter" >
+                                    <div class="row">
+                                        <div class="col-sm-10">
+                                            <button id="CancelButton" class="btn btn-success" style="padding: 10px;"  ng-click="CurrentView = 'View'">Cancel</button>
+                                            <button id="SaveButton" class="btn btn-success" style="padding: 10px;" ng-click="SaveSignatories()">Save Account Holders</button>
+                                        </div>
+                                    </div>
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
+
+            </div>
+            </div>
+        </div>
+
+        <script>
+
+        function SignatureRequired()
+        {
+            var sel = $('.sigRequired');
+            if(sel.val() == 'More than two signatures')
+            {
+                $('.sigHowMany').show();
+            }
+            else
+            {
+                $('.sigHowMany').hide();
+            }
+
+            if(sel.val() == 'Any one signature')
+            {
+                $('.showCard').show();
+            }
+            else
+            {
+                $('.showCard').hide();
+            }
+        }
+
+        function SignatureCompulsory()
+        {
+            var sel = $('.sigIsCompulsory');
+            if(sel.val() == 'Yes')
+            {
+                $('.sigCompulsory').show();
+            }
+            else
+            {
+                $('.sigCompulsory').hide();
+            }
+        }
+
+        $('.sigRequired').change(function(){                       
+            SignatureRequired();
+        });
+        $('.sigIsCompulsory').change(function(){                       
+            SignatureCompulsory();
+        });
+
+        $(function(){
+            SignatureRequired();
+            SignatureCompulsory();
+        })
+            
+        //Manually bootstrap angular app to ensure it is loaded when page is rendered
+        angular.element(document).ready(function() {
+            if(angular.element('#MandateView').scope() == undefined)
+            {
+                angular.bootstrap(document, ['mandateApp']);
+            }
+        });
+
+        </script>
+
+
+    </body>
+</apex:page>

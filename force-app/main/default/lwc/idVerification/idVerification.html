@@ -1,0 +1,267 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 11-29-2021
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+
+    <!-- <div class="slds-box slds-theme--default">
+        <iframe src={siteURL} height="100px" width="150px"></iframe>
+    </div> -->
+
+    <!-- Tab links -->
+
+  
+  <!-- Tab content -->
+    <div class="slds-card-Main" style="background-color:rgb(164 189 214);">
+   
+        <p id="action" class="slds-box slds-text-heading_small">
+            <lightning-icon icon-name="standard:environment_hub" alternative-text="Approved" title="Approved"></lightning-icon>
+            <b style="padding-left: 8px;">Id Verification</b>          
+        </p>
+    </div>
+   
+  <template if:false={outbounddisplay}>
+  <div  class="tabcontent">
+    <b><a onclick={setsecurity} id="PSNVerified" value= "PSN verfied">PSN verfied</a>
+    </b>
+  </div>
+
+  <div  class="tabcontent">
+    <b><a onclick={setsecurity} id="ManualPSN" value="Manual PSN verfied">Manual PSN verfied</a>
+    </b>
+  </div>
+  
+  <div  class="tabcontent">
+    <b><a onclick={setsecurity} id="ManualVerification">Manual verfictaion</a>
+    </b>
+  </div>
+  
+  <div class="tabcontent">
+    <b>
+        <a onclick={setsecurity} id="ApplicationVerification">Application verfication</a>
+    </b>
+  </div>
+</template>
+<template if:true={outbounddisplay}>
+    <div  class="tabcontent">
+        <b><a onclick={setsecurity} id="outbound" value= "Outbound Call">Outbound Call Verification</a>
+        </b>
+    </div>
+</template>
+<br/><br/>
+
+  <template if:true={displayDetails}>
+    <div class="slds-card-Main" style="background-color:rgb(187 203 218);padding-left:20px;">
+    
+        <br/>
+        <lightning-icon icon-name="standard:case" alternative-text="Appeal Section" title="Appeal Section"></lightning-icon>
+        <b style="padding-left: 8px;">{securityType}</b>  
+
+        <lightning-layout>
+            <!-- <lightning-layout-item padding="around-small" size="4">
+               
+                <b><lightning-input label="Overall Score" value={score} type="number" variant="standard" disabled=True></lightning-input></b>-->
+                <!--<lightning-formatted-text  value={score} variant="standard"></lightning-formatted-text>-->   
+            <!-- </lightning-layout-item> -->
+
+            <lightning-layout-item padding="around-small" size="6" >
+               
+                <b><lightning-input label="Detail" value={overallResult.value} type="text" variant="standard" disabled=True ></lightning-input></b>
+                <!--<lightning-formatted-text  value={score} variant="standard"></lightning-formatted-text>-->   
+            </lightning-layout-item>
+            
+            
+            <template if:true={overallResult.red}>
+                <lightning-layout-item padding="around-small" size="6">
+                
+                    <b style="color:rgb(107, 109, 112);">Security Status<lightning-input  class="textInput"  value={overallResult.secuityStatus} type="text" variant="standard" disabled=True ></lightning-input></b>
+                    <!--<lightning-formatted-text  value={score} variant="standard"></lightning-formatted-text>-->   
+                </lightning-layout-item>
+            </template>
+
+            <template if:false={overallResult.red}>
+                <lightning-layout-item padding="around-small" size="6">
+                
+                    <b><lightning-input label="Security Status" value={overallResult.secuityStatus} type="text" variant="standard" disabled=True></lightning-input></b>
+                    <!--<lightning-formatted-text  value={score} variant="standard"></lightning-formatted-text>-->   
+                </lightning-layout-item>
+            </template>
+            
+           
+        </lightning-layout>
+        <template if:true={overallResult.showButton}>
+            <center>
+                <lightning-button variant="brand" label="Complete Verification and proceed to Account" icon-name="utility:save" icon-position="center" onclick={saveForm}></lightning-button>
+            </center>
+        </template>
+       
+        <lightning-layout>
+            <lightning-layout-item padding="around-small" size="6">
+            <b><table class="customers" style="width: 100%;">
+            <tr>
+                <th>All Available Question are Mandatory</th>
+                <th>Customer Information</th>
+                <th></th>
+            </tr>
+            <template  for:each={section1} for:item="ques" for:index="index">
+                <tr key={ques.Id}><td>
+                    <div >
+                        <lightning-formatted-text value={ques.Question__c}></lightning-formatted-text><template if:true={ques.available}> <b style="Color:rgb(216, 45, 45)">[Available]</b></template>
+                        
+                    </div>
+                </td>
+                <td>
+                    <div >
+                        <lightning-formatted-text value={ques.fieldValue}></lightning-formatted-text>
+                        
+                    </div>
+                    
+                </td>
+                    
+                    <td>
+                        <lightning-layout-item padding="around-small" size="6" >
+                            <template if:false={ques.available}>
+                                <lightning-combobox
+                                name={index}
+                                label="Outcome?"
+                                value={appealValue}
+                                placeholder="--None--"
+                                options={appealOptions}
+                                onchange={handleSection1Change} read-only="true" ></lightning-combobox>
+                            </template>
+                            <template if:true={ques.available}>
+                                <lightning-combobox
+                                name={index}
+                                label="Outcome?"
+                                value={appealValue}
+                                placeholder="--None--"
+                                options={appealOptions}
+                                onchange={handleSection1Change}></lightning-combobox>
+                            </template>
+                        </lightning-layout-item>
+
+                    </td>
+                </tr>
+            </template>
+        </table></b></lightning-layout-item><br/>
+    <template if:false={outbounddisplay}>
+        <lightning-layout-item padding="around-small" size="6">
+        <b><table class="customers" style="width: 100%;margin-left: 5px;">
+            <tr>
+                <th>Ask 2 questions from below:</th>
+                <th>Customer Information</th>
+                <th></th>
+            </tr>
+            <template  for:each={section2} for:item="ques" for:index="index">
+                <tr key={ques.Id}><td>
+                    <div >
+                        <lightning-formatted-text value={ques.Question__c}></lightning-formatted-text><template if:true={ques.available}> <b style="Color:rgb(216, 45, 45)">[Available]</b></template>
+                        
+                    </div>
+                </td>
+                <td>
+                    <div >
+                        <lightning-formatted-text value={ques.fieldValue}></lightning-formatted-text>
+                        
+                    </div>
+                    
+                </td>
+                    
+                    <td>
+                        <lightning-layout-item padding="around-small" size="6">
+                            <template if:false={ques.available}>
+                                <lightning-combobox
+                                name={index}
+                                label="Outcome?"
+                                value={appealValue}
+                                placeholder="--None--"
+                                options={appealOptions}
+                                onchange={handleSection2Change} read-only="true"></lightning-combobox>
+                            </template>
+                            <template if:true={ques.available}>
+                                <lightning-combobox
+                                name={index}
+                                label="Outcome?"
+                                value={appealValue}
+                                placeholder="--None--"
+                                options={appealOptions}
+                                onchange={handleSection2Change}></lightning-combobox>
+                            </template>
+                        </lightning-layout-item>
+
+                    </td>
+                </tr>
+               
+            </template>
+            <tr>
+                <th colspan="2">Additional Question:</th>
+                <th></th>
+            </tr>
+            <tr><td colspan="2">
+                <div >
+                    <lightning-formatted-text value={accountSpecific.question}></lightning-formatted-text><template if:true={accountSpecific.available}> <b style="Color:rgb(216, 45, 45)">[Available]</b></template>
+                    
+                </div>
+            </td>
+                
+                <td>
+                    <lightning-layout-item padding="around-small" size="6">
+                        <template if:false={accountSpecific.available}>
+                            <lightning-combobox
+                            name={index}
+                            label="Outcome?"
+                            value={appealValue}
+                            placeholder="--None--"
+                            options={appealOptions}
+                            onchange={handleAccountSpecificChange} read-only="true"></lightning-combobox>
+                        </template>
+                        <template if:true={accountSpecific.available}>
+                            <lightning-combobox
+                            name={index}
+                            label="Outcome?"
+                            value={appealValue}
+                            placeholder="--None--"
+                            options={appealOptions}
+                            onchange={handleAccountSpecificChange}></lightning-combobox>
+                        </template>
+                    </lightning-layout-item>
+
+                </td>
+            </tr>
+            <tr>
+                <th colspan="3">Opportunities</th>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <div class="slds-scrollable_y">
+                        <template if:true={data}>
+                            <lightning-datatable data={data}
+                                                 columns={columns}
+                                                 key-field="id"
+                                                 sorted-by={sortBy}
+                                                 sorted-direction={sortDirection}
+                                                 onsort={handleSortdata}
+                                                 hide-checkbox-column="true" style="table-layout:fixed;width: 98% !important; "></lightning-datatable>
+                        </template>
+                    </div>
+            
+                    
+                </td>
+            </tr>
+        </table></b></lightning-layout-item><br/></template>
+       
+        
+    
+        
+            
+        
+    </lightning-layout><br/><br/>
+
+   
+    
+    </div>
+  </template>
+</template>

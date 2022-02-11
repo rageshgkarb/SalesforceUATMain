@@ -1,0 +1,281 @@
+<apex:page controller="HPPValuationReviewController" sidebar="false" showHeader="false" action="{!Setup}" >
+    <head>
+        <c:KendoResource ></c:KendoResource>
+    </head>
+    <body>
+        <apex:form >
+            <div id="formWrapper">
+                
+                <c:HPPSummary objAcc="{!Accounts[0]}" objOpp="{!opp}" objExOpp="{!ExOpp}" Product="{!Prod}" />
+                <div id="container" >
+                    <table width="100%">
+                        <tr>
+                            <td valign="top" id="sidebar">
+                                <c:HPPBOMenu oppId="{!Opp.Id}"  DirectorId="{!Opp.ProductEventDirector__c}" />
+                            </td>
+                            <td valign="top" id="contenttd">
+                                <div id="content">
+                                    <h1>Valuation Review</h1>
+                                    <apex:pageMessages ></apex:pageMessages>
+                                    
+                                    <div style="padding-top:20px;">
+                                         <h3>Valuation Report</h3>
+                                         <div class="pbBody">
+     
+                                             <table class="list" width="100%">
+                                                 <thead>
+                                                    <tr class="headerRow">                  
+                                                        <th class="headerRow">Document</th>
+                                                    </tr>
+                                                 </thead>
+                                                 <tbody>
+                                                    <apex:repeat value="{!atts}" var="a">
+                                                        <tr>
+                                                            <td><a target="_blank" href="/servlet/servlet.FileDownload?file={!a.id}"> {!a.name}</a></td>
+                                                        </tr>
+                                                     </apex:repeat>
+                                                 </tbody>
+                                             </table>
+                                        </div>
+                                    </div>
+        
+                                    <div style="padding-top:20px;">
+                                        <h3>Security Address</h3>
+             
+                                             <table width="100%">
+                                                 <tr>
+                                                     <td> New property street</td>
+                                                     <td class="box">{!Opp.New_property_street__c}</td>
+                                                     <td>New property country</td>
+                                                     <td class="box">{!Opp.New_property_country__c}</td>
+                                                 </tr>
+                                                 <tr>
+                                                     <td>New property city</td>
+                                                     <td class="box">{!Opp.New_property_city__c}</td>
+                                                     <td>New property postcode</td>
+                                                     <td class="box">{!Opp.New_property_postcode__c}</td>
+                                                 </tr>
+                                             </table>        
+                                    </div>    
+        
+                                    <div style="padding-top:20px;">
+                                        <h3>Valuation Fields</h3>        
+                                        <table width="100%">
+                                            <tr>
+                                                <td width="20%">Property type</td>
+                                                <td width="30%">{!ValReport.Property_Type__c}</td>
+                                                <td>Residential Dwelling</td>
+                                                <td>{!ValReport.Residential_Dwelling__c}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Property location type</td>
+                                                <td>{!ValReport.Property_Location_Type__c}</td>
+                                                <td>Parking</td>
+                                                <td>{!ValReport.Parking__c}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Tenure</td>
+                                                <td>{!ValReport.Property_Tenure__c}</td>
+                                                <td>How Many Parking Spaces</td>
+                                                <td>{!ValReport.How_Many_Parking_Spaces__c}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Unexpired term</td>
+                                                <td>{!ValReport.Unexpired_Term__c}</td>
+                                                <td>Garage</td>
+                                                <td>{!ValReport.Garage__c}</td> 
+                                            </tr>
+                                            <tr>
+                                                <td>Year Built</td>
+                                                <td>{!ValReport.Year_Built__c}</td>
+                                                <td>Level of Market Demand for Property</td>
+                                                <td>{!ValReport.Rate_Market_Demand_for_Property__c}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Walls</td>
+                                                <td>{!ValReport.Walls__c}</td>
+                                                <td>Service/Maintenance Charges</td>
+                                                <td>{!ValReport.Service_Maintenance_Charges__c}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Roof</td>
+                                                <td>{!ValReport.Roof__c}</td>
+                                                <td>Ground Rent</td>
+                                                <td>{!ValReport.Ground_Rent__c}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Floor Number</td>
+                                                <td>{!ValReport.Floor_Number__c}</td>
+                                                <td>Market value present condition</td>
+                                                <td> 
+                                                    <apex:outputText value="£{0, number, ###,##0}">
+                                                        <apex:param value="{!ValReport.Market_Value_Present_Condition__c}"/>
+                                                     </apex:outputText>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td width="20%">Number of bedrooms</td>
+                                                <td width="30%">{!ValReport.Number_of_Bedrooms__c}</td>
+                                                <td>Market value after repairs/completion</td>
+                                                <td>
+                                                    <apex:outputText value="£{0, number, ###,##0}">
+                                                       <apex:param value="{!ValReport.Market_Value_After_Repairs_Completion__c}"/>
+                                                     </apex:outputText>
+                                                </td> 
+                                            </tr>
+                                            <tr>
+                                                <td>Number of floors</td>
+                                                <td>{!ValReport.Number_of_Floors__c}</td>
+                                                <td>Building reinstatement value</td>
+                                                <td>
+                                                    <apex:outputText value="£{0, number, ###,##0}">
+                                                           <apex:param value="{!ValReport.Building_reinstatement_value__c}"/>
+                                                     </apex:outputText>
+                                                
+                                                </td>
+                                            </tr>
+                                                    
+                                            <tr>
+                                                <td colspan="2"></td>
+                                                <td>Fair Market Rental (pcm)</td>
+                                                <td>
+                                                    <apex:outputText value="£{0, number, ###,##0}">
+                                                       <apex:param value="{!ValReport.Fair_Market_Rental_pcm__c}"/>
+                                                     </apex:outputText>                                
+                                                </td>                 
+                                            </tr>
+                                        </table>
+                                    </div> 
+                                 </div> 
+                                 
+                                 
+                                 <div style="padding:20px;">
+                                     <h3>Review Section</h3>
+                                         <apex:pageBlock >
+                                             <table width="70%">
+                                                 <tbody>
+                                                     <tr class="dataRow">
+                                                         <td>
+                                                             Valuation Review Completed By:
+                                                         </td>
+                                                         <td>
+                                                             <apex:inputField value="{!opp.Valuation_review_completed_by__c}"/>
+                                                             
+                                                         </td>
+                                                     </tr>
+                                                     <tr class="dataRow">
+                                                         <td>
+                                                             Valuation Review Completed Date:
+                                                         </td>
+                                                         <td>
+                                                             <apex:inputField value="{!opp.Valuation_review_date__c}"/>
+                                                             
+                                                         </td>
+                                                     </tr>
+                                                     <tr class="dataRow">
+                                                         <td>
+                                                             Valuation Review Further Reports Required:
+                                                         </td>
+                                                         <td>
+                                                             <apex:inputField value="{!opp.Further_reports_required__c}"/>
+                                                             
+                                                         </td>
+                                                     </tr>
+                                                     <tr class="dataRow">
+                                                         <td>
+                                                             Valuation Review Comments:
+                                                         </td>
+                                                         <td>
+                                                             <apex:inputTextarea rows="4" style="width:100%;" value="{!opp.Valuation_review_comments__c}"/>
+                                                             
+                                                         </td>
+                                                     </tr>
+                                                 </tbody>
+                                             </table>
+                                             
+                                             <!-- C0068 start -->
+   <div style="padding-top:20px;">
+       <h3>Signed Application and Documents</h3>
+    
+           <apex:pageBlock >
+                <table width="50%">
+                    <tbody>
+                        <tr class="dataRow">
+                            <td>
+                             Has the signed application form been received?
+                            </td>
+                            <td>
+                               <apex:inputField required="true" value="{!ExOpp.Application_form_signed__c}"/>
+                                                             
+                            </td>
+                        </tr>
+                        <tr class="dataRow">
+                            <td>
+                             Have the supporting documents been received?
+                            </td>
+                            <td>
+                                <apex:inputField required="true" value="{!ExOpp.Documents_Received__c}"/>
+                                                             
+                            </td>
+                         </tr>
+                         <tr class="dataRow">
+                            <td>
+                             Date application and documents received?
+                         </td>
+                         <td>
+                              <apex:inputField required="true" value="{!ExOpp.All_customer_documents_recieved__c}"/>
+                                                             
+                        </td>
+                        </tr>
+                     </tbody>
+                     </table>   
+                     </apex:pageBlock>   
+                     </div>     
+ 
+ 
+<div style="padding: 20px;">
+<h3>Comments for underwriter</h3>
+<apex:inputField style="width: 100%;" value="{!Opp.SellerBDM_Case_Summary__c}"/>
+        
+</div>
+                                                
+                     <!-- C0068 end -->                                                    
+                                             
+                                             
+                                             <div style="padding-top: 20px;">
+                                                <apex:commandButton styleClass="blueBtn" value="Save" rendered="{!!IsCompleted}" action="{!Save}" />&nbsp;
+                                                 <!-- C0586 Start-->
+                                                 <apex:outputpanel rendered="{!ShowBTLIAAReRunButton }">
+                                                     Income Assisted Application Deficit = {!DeficitInIAA}<br />
+                                                     <apex:commandbutton value="ReRun Affordability - Income Assisted Application" styleclass="redBtn" action="{!DoReRunAffordibility}" />
+
+                                                 </apex:outputpanel>
+                                                 <apex:commandbutton value="ReRun Affordability" styleclass="redBtn" action="{!DoAffordibility}" rendered="{!!IsCompleted && !ShowUWButton && !ShowBTLIAAReRunButton && !ShowBTLIAAFailMessage }" />
+                                                 <apex:outputpanel rendered="{!ShowBTLIAAFailMessage}">
+                                                     Application cannot continue as Buy-to-Let Income Assisted Application Budget Planner is in Deficit
+                                                 </apex:outputpanel>
+
+                                                 <apex:commandbutton styleclass="redBtn" value="Submit to Underwriting" rendered="{!!IsCompleted && ShowUWButton}" action="{!Complete}" />
+                                                 <!-- C0586 End-->
+                                            </div>     
+                                             
+                                         </apex:pageBlock>
+                                             
+                                         
+                                         
+                                 
+                                 
+                                 
+                                 </div>
+                                 
+                                 
+                                 
+                                 
+                               </td>     
+                            </tr>
+                        </table>
+                     </div>
+                 </div>
+             </apex:form> 
+        </body> 
+</apex:page>

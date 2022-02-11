@@ -1,0 +1,213 @@
+<apex:page controller="HPPEventAIPController" sidebar="false" showHeader="false" title="Applicant Details">
+<head>
+<c:ExternalKendo ></c:ExternalKendo>
+</head>
+<body>
+
+<apex:form >
+<div id="headertop">
+    
+    <div id="ibbMotto">Banking you can <strong>believe</strong> in</div>
+    
+    <div class="headerLogo">
+        <a href="http://www.islamic-bank.com/"><img alt="IBB logo image" height="94" src="http://www.islamic-bank.com/graphics/shim.gif" title="Home page link" width="200"/></a>
+    </div>
+    
+    <div style="clear:both;"></div>
+</div>
+<div id="formWrapper" >
+<div class="header" >
+<h1>{!Acc.Name} - Agreement in Principle</h1>
+</div>
+
+
+
+
+
+<div id="container" >
+
+<table width="100%">
+<tr>
+
+<td valign="top" id="contenttd">
+<div  id="topNav">
+<ul>
+<li ><apex:commandLink action="{!ProductDetails}" >Product Details</apex:commandLink></li>
+<li><span>Applicants</span></li>
+<li class="k-header"><span>{!Accounts[0].name}</span></li>
+
+<apex:outputPanel rendered="{!Opp.Number_of_People_Applying__c> 1 && Prod!=null}">
+<li ><span>{!Accounts[1].name}</span></li>
+</apex:outputPanel>
+
+
+
+<apex:outputPanel rendered="{!Opp.Number_of_People_Applying__c> 2 && Prod!=null}">
+<li class="k-header"><span>{!Accounts[2].name}</span></li>
+
+</apex:outputPanel>
+<apex:outputPanel rendered="{!Opp.Number_of_People_Applying__c> 3}">
+<li class="k-header"><span>{!Accounts[3].name}</span></li>
+</apex:outputPanel>
+
+<li class="active"><span>AIP Confirmation</span></li>
+</ul>
+
+</div>
+
+<br/><br/>
+<apex:outputPanel id="mainPageBlock">
+<div style="padding: 20px">
+
+
+<div class="inputArea">                   
+<h2>Documents</h2>
+
+<div class="gridLayoutContainer">
+<div>
+
+    <table class="gridLayout">
+        <tbody>
+               <tr>
+               <td>
+               Many thanks for completing the Agreement in Principle questionnaire; based on the information you have provided, we have generated the below documents.
+               <br> </br>
+               </td>
+               </tr>
+                  <tr>
+                      <td>
+                          <apex:commandButton value="Create Financial Information Statement" reRender="mainPageBlock" onclick="ShowDocumentLoad()" oncomplete="HideDocumentLoad()" action="{!CreateDoc}" rendered="{!!DocLinkCreated}"/>
+                          <apex:outputtext escape="false" value="{!DocLink}" rendered="{!DocLinkCreated}"></apex:outputtext>
+                      </td>    
+                      <td>
+                         
+                      </td>              
+                  </tr>
+                  <tr>
+                      <td>
+                          <apex:outputLink value="{!KeyFactsLink}" rendered="true" target="_blank"><b>Risk and Features Document Download</b></apex:outputLink>
+                      </td>
+                      <td>
+                  
+                      </td>                  
+                  </tr>
+                  <tr>
+                      <td>
+                          <apex:outputLink value="{!IDDLink}" rendered="true" target="_blank"><b>Initial Disclosure Document Download</b></apex:outputLink> <br> </br>
+                          These documents are for your own records, you do not need to do anything else. <br> </br>
+                          We will contact you within the next 48 hours to complete your application.  If you would like to discuss your application with us, you can contact us on 0845 145 1200, Monday to Friday from 9am to 7pm and Saturday from 9am to 1pm.   
+                          
+                      </td>
+                      <td>
+                      
+                      </td>
+                  </tr>
+                  
+                  <tr>
+                      <td>
+                          <apex:outputtext escape="false" value="{!AIPLetterLink}" rendered="{!IsCompleted}" ></apex:outputtext>
+                      </td>
+                      <td>
+                          
+                      </td>
+                  
+                  </tr>
+                  <tr>
+                      <td>
+                          <apex:commandButton styleClass="redBtn" value="Complete Application" action="{!CompleteAIP}" rendered="{!IsCompleted}"/>
+
+                      </td>
+                      <td>
+                                                </td>
+                  </tr>
+                                  
+        </tbody>
+    </table>
+</div>
+</div>
+</div>    
+
+
+
+<br/><br/>
+
+
+<br/><br/>
+
+</div>
+
+
+
+</apex:outputPanel>
+</td></tr>
+</table>
+
+</div>
+
+<div id="fade"></div>
+<div id="overlay">
+Generating document...
+<br/>
+<br/>
+This may take a few seconds.
+
+</div>
+
+
+<div style="text-align:right">
+    <apex:commandButton value="Previous" styleClass="ROButton blueBtn" action="{!LastApp}"/>
+</div>
+
+
+<style type="text/css">
+#overlay {
+    display: none; /* ensures it’s invisible until it’s called */
+    position: absolute; /* makes the div go into a position that’s absolute to the browser viewing area */
+    left: 25%; /* positions the div half way horizontally */
+    top: 25%; /* positions the div half way vertically */
+    padding: 25px; 
+    border: 2px solid black;
+    background-color: #ffffff;
+    width: 50%;
+    height: 50%;
+    z-index: 100; /* makes the div the top layer, so it’ll lay on top of the other content */
+}
+#fade {
+    display: none;  /* ensures it’s invisible until it’s called */
+    position: absolute;  /* makes the div go into a position that’s absolute to the browser viewing area */
+    left: 0%; /* makes the div span all the way across the viewing area */
+    top: 0%; /* makes the div span all the way across the viewing area */
+    background-color: #ccc;
+    -moz-opacity: 0.7; /* makes the div transparent, so you have a cool overlay effect */
+    opacity: .70;
+    filter: alpha(opacity=70);
+    width: 100%;
+    height: 100%;
+    z-index: 90; /* makes the div the second most top layer, so it’ll lay on top of everything else EXCEPT for divs with a higher z-index (meaning the #overlay ruleset) */
+}
+</style>
+
+
+
+<script>
+function ShowDocumentLoad()
+{
+    $('#overlay').show('slow');
+    $('#fade').show('slow');
+}
+
+function HideDocumentLoad()
+{
+    $('#overlay').hide('slow');
+    $('#fade').hide('slow');
+}
+
+</script>
+
+
+
+</div>
+  </apex:form>
+  </body>
+
+</apex:page>

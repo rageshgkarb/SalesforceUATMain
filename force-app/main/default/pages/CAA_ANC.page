@@ -1,0 +1,79 @@
+<apex:page showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false" controller="CAA_Core_Controller" action="{!AncSetup}">
+
+
+<apex:composition template="CAA_Template">
+    <apex:define name="include">
+        <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/controller/controller_anc.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/service/service_anc.js')}"/>
+    </apex:define>
+
+
+        <apex:define name="body">
+        
+        <div ng-controller="controllerANC" ng-init="AccountId='{!AccountId}';EBSId='{!AncEbsId }';Firstname='{!AncFirstName}';Lastname='{!AncLastName}';"> <!--ctl -->
+         
+        <div class="row">
+
+<div class="col-md-9">
+        
+
+<div class="SectionHeader" style="margin-bottom:18px;">
+    
+    <div>ANC <span ng-show="AccountId"> - {{Firstname}} {{Lastname}}</span></div>
+</div>
+
+<div class=""/>
+
+
+ 
+<div class="PanelContents">
+
+    <div class="row">
+        <label class="control-label col-sm-6">
+            Seller
+        </label>
+        <div class="col-sm-6">
+            {!$User.Firstname} {!$User.LastName}
+        </div>       
+    </div>
+
+    <div class="row">
+        <label class="control-label col-sm-6">
+            Decision Engine
+        </label>
+        <div class="col-sm-6">
+            <select class="form-control" ng-model="DEType">           
+                <option value="ANC-HPP" >HPP</option>
+                <option value="ANC-Current" >Current Account</option>
+                <option value="ANC-Saving">Saving Account</option>
+            </select>
+        </div>       
+    </div>
+    
+    <div class="row" ng-show="DEType && !EBSId">
+        <div class="col-sm-12">
+            <button class="btn btnArb" ng-click="Create()">Next</button>
+        </div>
+    </div>
+    
+    <div class="row" ng-show="EBSId">
+        <div class="col-sm-12" style="padding-top:30px;">
+            <div class="alert alert-danger">Customer is already setup on EBS - {{EBSId}}</div>
+        </div>
+    </div>
+    
+
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="rightcol visible-md visible-lg" id="sidebar" >    
+</div>
+
+</div>
+</div> <!-- row -->
+</div> <!-- ctl -->
+
+</apex:define>
+</apex:composition>
+</apex:page>

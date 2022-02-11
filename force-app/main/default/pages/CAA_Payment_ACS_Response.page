@@ -1,0 +1,7 @@
+<apex:page standardStylesheets="false" sidebar="false" showHeader="false" action="{!ACSResponse}" controller="CAA_Payment_Controller">
+
+<script>
+parent.uploadDone('','');
+</script>
+
+</apex:page>

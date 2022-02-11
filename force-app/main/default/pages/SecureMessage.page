@@ -1,0 +1,624 @@
+<apex:page controller="SecureMessaging_Controller" applyBodyTag="false" applyHtmlTag="false" standardStylesheets="false" sidebar="false" showHeader="false" action="{!Setup}">
+
+<apex:composition template="IFM_Template">
+        
+        <apex:define name="include">
+            <script>
+            hppApp.controller('secureMessageController', ['$scope', '$timeout','serviceApplication','$window','serviceSecureMessage',
+                    function($scope, $timeout,serviceApplication,$window,serviceSecureMessage) {
+                            $scope.currentPage = 0;
+                            $scope.pageSize = 100;
+                            $scope.SubCategory = {};
+                            $scope.Category = '';
+
+                            $scope.AccountMaint = [
+                            'Change of Address','Change of contact details','Change of Verification details-adding payee','Closure of Account ','Direct Debit query','Order Card and pin','Standing Order Query','','','','','','','',
+                            ];
+
+
+                            $scope.numberOfPages=function(){
+                                return Math.ceil($scope.Cases.length/$scope.pageSize);
+                            }
+
+                            $scope.chooseCategory = function(item,cat){
+                                $scope.Category = cat;
+                                $scope.SubCategory = item;
+                            }
+
+                            $scope.SubCategories = function()
+                            {
+                                if(!$scope.Category) return [];
+
+                                for(var i =0; i< $scope.CategoryTypes.length; i++)
+                                {
+                                    if($scope.Category == $scope.CategoryTypes[i].Name)
+                                        return $scope.CategoryTypes[i];
+                                }
+                            }
+
+                            $scope.UpdateViewed = function(objCase)
+                            {
+                                if(!objCase.NewMessages ||  objCase.NewMessages == 0 ) return;
+
+                                serviceSecureMessage.UpdateLastViewed(objCase.Id, $scope.SessionId)
+                                .then(
+                                    function(result){
+
+                                            objCase.NewMessages = 0;
+
+                                    },
+                                    function(error){
+
+                                    }
+                                   );
+
+                            }
+
+                            $scope.AddComment = function(caseId )
+                            {
+                                if(!$scope.NewComment || !caseId) return;
+
+                                serviceApplication.LoadShow('Processing...');
+                                serviceSecureMessage.AddComment(caseId, $scope.NewComment, $scope.SessionId)
+                                .then(
+                                    function(result){
+
+                                        $scope.NewComment = null;
+                                        $scope.Cases = result.Messages;
+                                        $scope.Error = result.Error;
+                                        $scope.Reply = false;
+                                        serviceApplication.LoadHide(true);
+                                    },
+                                    function(error){
+                                        serviceApplication.LoadHide(true);
+                                        $scope.ErrorMessage = error;
+                                    }
+                                   );
+                            }
+
+
+                            $scope.DeleteTheCase = function(caseId)
+                            {
+                                serviceApplication.LoadShow('Processing...');
+                                serviceSecureMessage.DeleteCase(caseId, $scope.SessionId)
+                                .then(
+                                    function(result){
+                                        if(result)
+                                        {
+                                            $scope.Cases = result.Messages;
+                                            $scope.DeleteCase = false;
+                                            $scope.Cases = result.Messages;
+                                            $scope.SelectedRow = null;
+                                        }
+
+                                        $scope.Error = result.Error;
+                                        serviceApplication.LoadHide(true);
+                                    },
+                                    function(error){
+                                        serviceApplication.LoadHide(true);
+                                        $scope.ErrorMessage = error;
+                                    }
+                                   );
+                            }
+
+                            $scope.AddCase = function()
+                            {
+                                $scope.NewCase.Category = $scope.Category.Name;
+
+                                if($scope.SubCategory)
+                                    $scope.NewCase.SubCategory = $scope.SubCategory.Name;
+
+                                serviceApplication.LoadShow('Processing...');
+                                console.log('NewCase:'+JSON.stringify($scope.NewCase));
+                                serviceSecureMessage.AddCase($scope.NewCase, $scope.SessionId)
+                                .then(
+                                    function(result){
+                                        if(result.Success)
+                                        {
+                                            $scope.Cases = result.Messages;
+                                            $scope.SelectedRow = 0;
+                                            $scope.NewCase = {};
+                                            //$scope.FormEdit = false;
+                                            $scope.ShowConfirm = true;
+
+                                            $scope.Category = null;
+                                            $scope.SubCategory = null;
+                                        }
+
+                                        $scope.Error = result.Error;
+                                        serviceApplication.LoadHide(true);
+                                    },
+                                    function(error){
+                                        serviceApplication.LoadHide(true);
+                                        $scope.ErrorMessage = error;
+                                    }
+                                   );
+                            }
+
+
+                    }])
+
+
+                    angular.module("hppApp").service('serviceSecureMessage', ['$q', '$rootScope', function ($q, $rootScope) {
+
+                        this.UpdateLastViewed = function(id, SessionId)
+                        {
+                            var deferred = $q.defer();
+                            SecureMessaging_Controller.UpdateLastViewed (id, SessionId,function(result, event){
+                                if(event.status){
+                                    deferred.resolve(result);
+                                }
+                                else {
+                                    deferred.reject(event);
+                                }
+                            },{ buffer: false, escape: false, timeout: 30000} );
+                            return deferred.promise;
+                        }
+
+                        this.AddCase= function(date, SessionId)
+                        {
+                            var deferred = $q.defer();
+                            SecureMessaging_Controller.AddCase(date, SessionId,function(result, event){
+                                if(event.status){
+                                    deferred.resolve(result);
+                                }
+                                else {
+                                    deferred.reject(event);
+                                }
+                            },{ buffer: false, escape: false, timeout: 30000} );
+                            return deferred.promise;
+                        }
+
+                        this.DeleteCase= function(caseId, SessionId)
+                        {
+                            var deferred = $q.defer();
+                            SecureMessaging_Controller.DeleteCase(caseId, SessionId,function(result, event){
+                                if(event.status){
+                                    deferred.resolve(result);
+                                }
+                                else {
+                                    deferred.reject(event);
+                                }
+                            },{ buffer: false, escape: false, timeout: 30000} );
+                            return deferred.promise;
+                        }
+
+                        this.AddComment = function(caseId, comment, SessionId)
+                        {
+                            var deferred = $q.defer();
+                            SecureMessaging_Controller.AddComment (caseId,comment, SessionId,function(result, event){
+                                if(event.status){
+                                    deferred.resolve(result);
+                                }
+                                else {
+                                    deferred.reject(event);
+                                }
+                            },{ buffer: false, escape: false, timeout: 30000} );
+                            return deferred.promise;
+                        }
+
+                    }]);
+
+
+
+
+
+
+
+
+            </script>
+            
+            <style>
+                .message-header{
+                    font-weight:bold;
+                    color: rgb(102, 102, 102);
+                    padding:4px;
+                    border-bottom: solid 2px rgb(221, 221, 221);
+ 
+                }
+                
+                .message-container{
+                
+                }
+            
+                .message-item{
+                    padding:4px;                    
+                    color: rgb(102, 102, 102);
+                    border-bottom: solid 1px rgb(221, 221, 221);
+                    border-top: solid 1px rgb(221, 221, 221);
+                    cursor: pointer;
+                }
+                
+                .message-item.even{
+                    background-color:rgb(241, 241, 241);
+                }
+                
+                .message-item.unread{
+                    font-weight: bold;
+                }
+                
+                .message-selected{
+                    background-color: rgb(179,153,93) !important;
+                    color: #fff;
+                }
+                
+                .message-comment{
+                
+                }
+                
+                .user-message{
+                    font-weight:bold;
+                }
+                
+                
+                .message-comment.even{
+                   /* background-color:rgb(243, 235, 217);*/
+                   border-top:2px solid rgb(243, 235, 217);
+                }
+
+                .subCategory {
+                    padding:3px;
+                    cursor:pointer;
+                }
+
+                .subCategory:hover {
+                    text-decoration:underline;
+                }
+                
+                
+                body{
+                    font-size:12px !important;
+                    padding-top:10px;
+                  
+                }
+                
+                .numberCircleMsg {
+                    border-radius: 50%;
+                    behavior: url(PIE.htc); /* remove if you don't care about IE8 */
+                    display: inline-block;
+                    width: 25px;
+                    height: 25px;
+                    padding: 4px;
+                
+                    background: rgb(179,153,93);
+                    /* border: 1px solid #666;*/
+                    color: #fff;
+                    text-align: center;
+                
+                    font: 14px Arial, sans-serif;
+                }
+                
+                .PanelContents > .row
+                {
+                    margin-left:0px;
+                   
+                }
+                
+                .regionWaitBackground{
+                    height: 100%;
+                }
+                
+                @media (max-width: 767px)
+                {
+                    .mobileLabel{
+                        display: inline-block !important;
+                        width:120px;
+                    }
+                }
+                
+               
+                
+            </style>
+            
+        </apex:define>
+
+
+        <apex:define name="body">
+        
+        
+       
+        <div ng-controller="secureMessageController" ng-init="SessionId='{!cookieSessionId}';Cases={!jsonMessages}; CategoryTypes={!jsonCategory};" style="padding-top:10px;"> 
+
+        
+            <div class="container" style="height:100%;">
+                <div  style="height:100%">
+                    <div  style="">
+                        <div class="PanelContents" style="" >
+                            <div class="verticalScrollSection-" style="height:calc(100%);">
+                                <div class="verticalSection-" style="background-color:#fff;">
+                                    
+                                    
+                                    
+                                    <button class="btn btn-default" ng-hide="FormEdit || ShowConfirm" ng-click="FormEdit = true"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Write message</button>
+                                   
+                            
+                                    <div>
+                                    
+                                    
+                                    <div ng-show="ShowConfirm">
+                                        <div class="SectionTitle">Thank you.</div>
+                                        
+                                        <p>We have received your secure message.</p>
+                                        <p>We will review your request shortly; it may be necessary for us to contact you to discuss your requirements in more details.</p>
+                                        
+                                        <div class="text-center">
+                                            <button type="button" class="btn btn-default" ng-click="ShowConfirm=false;FormEdit=false;">Ok</button>
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                    
+                                    <div ng-show="FormEdit && !ShowConfirm">
+                                    
+                                    <div class="row" ng-hide="SubCategory.Name">
+                                        <div class="col-sm-12">
+                                            <label>Type of message</label>
+                                        </div>
+                                        <div class="col-sm-12">                                         
+                                            <div class="col-sm-12">To help us deal with your message more efficiently, please select a subject;</div>
+                                            <div class="col-sm-4" ng-repeat="item in CategoryTypes">
+                                                <label style="font-weight:bold;" >{{item.Name}}</label>
+                                                <div ng-repeat="it in item.Items" class="subCategory" ng-click="chooseCategory(it,item)">{{it.Name}}</div>
+                                                <!--<input name="optAccountType" ng-change="$parent.SubCategory=null;" ng-model="$parent.Category" type="radio" ng-value="item"  />-->
+                                            </div>
+                                        </div>
+                                               
+                                    </div>
+                                    
+                               
+                                    
+                                    <div ng-show="SubCategory.Name">
+                                        <button class="btn btn-default" ng-click="SubCategory = false">Choose a different subject</button> 
+                                        <div>
+                                            <label>Subject</label>
+                                        </div>
+                                        
+                                        <div>
+                                            <input type="text" readonly="readonly" ng-model="SubCategory.Name" class="form-control"/>
+                                            <!--<select class="form-control" ng-model="SubCategory" ng-options="it as it.Name for it in Category.Items">                                            
+                                            </select>-->
+                                            
+                                        </div>
+                                    </div>
+                                    
+                               
+                                        <div class="row" ng-show="SubCategory.ShowAccount">
+                                            <div class="col-sm-12">
+                                                <label>Account number</label> <span ng-hide="NewCase.AccountNo" >(*required)</span>
+                                                <div>
+                                                   <input class="form-control" style="max-width:200px;" maxlength="15" type="text" ng-model="NewCase.AccountNo" /> 
+                                                </div>
+                                            </div>
+                                        </div>
+                         
+                                        <div style="margin-top:10px;padding:20px;background-color:rgb(243,243,243)" ng-show="SubCategory.Description">
+                                            {{SubCategory.Description}}
+                                        </div>
+                                       
+                                        
+                                        <div class="row" ng-show="SubCategory.Name">
+                                            <div class="col-sm-12">
+                                                <label>Reason for request</label> <span ng-hide="NewCase.Description" >(*required)</span>
+                                                <div>
+                                                   <textarea class="form-control" ng-model="NewCase.Description" rows="12"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div style="padding-top:10px;" ng-show="SubCategory.Name">
+                                            <button class="btn btn-default" ng-show="FormEdit" ng-click="FormEdit = false;SubCategory = false;">Cancel</button>                                    
+                                            <button class="btn btn-default" ng-show="FormEdit" ng-disabled="!SubCategory || (!NewCase.AccountNo && SubCategory.ShowAccount) || !NewCase.Description " ng-click="AddCase()">Submit</button>
+                                        </div>
+                                    </div>
+                               
+                                    
+                                    <div ng-hide="FormEdit" style="font-size:12px;">
+                            
+                                        <div ng-show="SelectedRow != null" class="row" style="padding-bottom:20px;padding-top:20px;">
+                                            <div class="col-sm-6">
+                                                <button class="btn btn-default" ng-click="SelectedRow = null">
+                                                    <i class="fa fa-backward" aria-hidden="true"></i> <span> Back to messages</span>
+                                                </button>
+                                            </div>
+                                            <div class="col-sm-6 text-right" style="padding-right:0px;">
+                                                <button class="btn btn-default" ng-disabled="SelectedCase.Status != 'Open'" ng-click="DeleteCase = false;Reply = true;">
+                                                <i class="fa fa-reply" aria-hidden="true"></i><span> </span>
+                                                </button>
+                                                <button class="btn btn-default" ng-click="DeleteCase = true;Reply = false;" ng-disabled="SelectedCase.Status == 'Open'">
+                                                    <i class="fa fa-trash" aria-hidden="true"></i><span> </span>
+                                                </button>
+                                            </div>                               
+                                        </div>
+                                    
+                                        <div class="row message-header hidden-xs" >                                            
+                                            <div class="col-sm-1">
+                                            Ref
+                                            </div>
+                                            <div class="col-sm-1">
+                                            Status
+                                            </div>
+                                            <div class="col-sm-6">
+                                            Subject
+                                            </div>
+                                            <div class="col-sm-2">
+                                            <span ng-hide="SelectedCase">Messages</span>
+                                            </div>
+                                            <div class="col-sm-2" style="padding-right:0px;" >
+                                            Date
+                                            </div>
+                                        </div>
+                                          
+                                            <div ng-repeat="item in Cases" class="message-container"  >
+                                            
+                                            <div class="row message-item" ng-class="{'unread': item.NewMessages > 0, 'message-selected' : $index == $parent.SelectedRow}" ng-class-even="'even'" 
+                                            
+                                            ng-click="UpdateViewed(item);$parent.SelectedRow=$index; $parent.SelectedCase=item;$parent.DeleteCase=false;"
+                                            ng-hide="$parent.SelectedRow != null && $index != $parent.SelectedRow">
+                                            
+                                            <div class="col-sm-1" >
+                                            <label class="visible-xs mobileLabel" >Case number</label>
+                                            
+                                            {{item.CaseNumber}}
+                                            </div>
+                                            
+                                            <div class="col-sm-1">
+                                            <label class="visible-xs mobileLabel">Status</label>
+                                            {{item.Status}}
+                                            </div>
+                                            
+                                            <div class="visible-xs col-sm-6"> 
+                                            <label class="visible-xs mobileLabel" >Created Date</label>
+                                            {{item.CreatedDate}}
+                                            </div>
+                                            
+                                            <div class="col-sm-6"> 
+                                            <label class="visible-xs" >Subject</label>
+                                            {{item.Subject}}
+                                            
+                                            
+                                          
+                                            </div>
+                                            
+                                            
+                                            
+                                            
+                                            <div class="col-sm-2">
+                                            
+                                            <div class="numberCircleMsg" ng-hide="item.NewMessages == 0">{{item.NewMessages}}</div>                                
+                                            
+                                          
+                                            </div>
+                                            <div class="col-sm-2 hidden-xs" style="padding-right:0px;">
+                                            
+                                        
+                                            
+                                            
+                                            
+                                            {{item.CreatedDate }}
+                                            
+                                            </div>
+                                            
+                                            </div>
+                                            
+                                            <div ng-show="SelectedRow==$index" style="min-height:200px;" class="row">
+                                            <div class="col-sm-2 " ng-show="false">
+                                            
+                                            <div ng-show="false">
+                                            <button class="btn btn-default" ng-show="item.Status == 'Open'" ng-click="$parent.DeleteCase = false;$parent.Reply = true;">
+                                                <i class="fa fa-reply" aria-hidden="true"></i><span> </span>
+                                            </button>
+                                       
+                                            
+                                    
+                                            <button class="btn btn-default" ng-click="$parent.DeleteCase = true;$parent.Reply = false;" ng-show="item.Status == 'Open'">
+                                                <i class="fa fa-trash" aria-hidden="true"></i><span> </span>
+                                            </button>
+                                            </div>
+                                            
+                                            
+                                            </div>
+                                                                                        <div class="col-sm-12">
+                                          
+                                           
+                                                 <div ng-show="$parent.Reply">
+                                                     <div class="SectionTitle">Reply</div>
+                                                     <div style="padding-top:10px;">
+                                                         <textarea rows="8" class="form-control" ng-model="$parent.NewComment"/>
+                                                         <div class="text-center" style="padding-top:10px;">
+                                                             <button class="btn btn-default" ng-click="$parent.Reply= false;">
+                                                                <i class="fa fa-trash" aria-hidden="true"></i><span> Disacrd</span>
+                                                            </button>
+                                                          
+                                                             <button class="btn btn-default" ng-click="AddComment(item.Id)">
+                                                                 Send
+                                                             </button>
+                                                             
+                                                         </div>
+                                                     </div>
+                                                 </div>  
+                                           
+                                           <div ng-show="$parent.DeleteCase">
+                                               <div class="SectionTitle">Delete message</div>
+                                           
+                                                <div class="alert alert-danger text-center"  style="margin-top:10px;">
+                                                    Do you want to delete this message?
+                                                    
+                                                    <div style="padding-top:10px;">
+                                                        <button class="btn btn-default" ng-click="DeleteTheCase (item.Id)">Yes</button>
+                                                        <button class="btn btn-default" ng-click="$parent.DeleteCase=false">No</button>
+                                                    </div>    
+                                                    
+                                                </div>
+                                            </div>
+                                            
+                                            
+                                            <div class="row">
+                                            <div class="col-sm-12" style="padding:0px;">
+                                            <table class="table hidden-xs" style="font-size:12px;margin-top:30px;">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="padding-left:20px;">Message</th>
+                                                        <th width="100px">From</th>
+                                                        <th width="126px">Date</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr ng-repeat="comment in item.Comments" class="message-comment" ng-class-even="'even'">
+                                                        <td style="white-space: pre-wrap;padding-left:20px;">{{comment.Body}}</td>
+                                                        <td>{{comment.UserName}}</td>
+                                                        <td>{{comment.CreatedDate }}</td>                                                    
+                                                    </tr>
+                                                </tbody> 
+                                            </table>   
+                                            </div>
+                                            </div>        
+                                            </div>
+                                            
+                                            <div ng-repeat="comment in item.Comments" style="padding:5px;border-top:1px solid rgb(243, 235, 217)" class="message-comment visible-xs" ng-class="{'user-message': item.UserName=='Al Rayan Bank'}" ng-class-even="'even'" >
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                <label>From: </label> {{comment.UserName}}
+                                               
+                                                </div>
+                                                <div class="col-xs-12">
+                                                <label>Date: </label> {{comment.CreatedDate}}
+                                              
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row">
+                                                <div class="col-xs-12" style="white-space: pre-line;">
+                                                    {{comment.Body}}
+                                                </div>
+                                            </div>
+                                            </div>
+                                            
+                                            
+                                            </div>
+                                            
+                                            
+                                            
+                                            
+                                            </div>
+                                    
+                                    
+                                        
+                                        
+                                     
+                                                                       
+                                    </div>                              
+                                    </div>  
+                                   
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>  
+                 
+        </div>
+         
+    </apex:define>
+</apex:composition>
+</apex:page>

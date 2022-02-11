@@ -1,0 +1,373 @@
+<apex:component >
+<style>
+      .progressCol{
+          /*background-color:#fff;*/
+          /*padding: 18px;*/
+          padding-top:20px;
+      
+      }
+      
+      
+      body { padding-top: 70px; }
+      
+      
+      
+      .PanelContainer{
+      
+      }
+      
+      
+      .navbar-default {
+          background-color: #fff;
+          background-image: none;
+          /*height:80px;*/
+      }
+      
+      .loginbutton{
+          background-color: rgb(173,153,93);
+      }
+      
+      
+      .panel-default>.panel-heading {
+          background-color: rgb(169,169,169);
+          color: #fff;
+      }
+      
+      .PanelContents{
+          margin-bottom:30px;
+          padding:20px;
+          background-color:#fff;
+      }
+      
+      .LoginContainer{
+          background-color: rgb(30,30,30);
+          color:#fff;
+          padding:15px;
+      }
+      
+
+
+
+    .border-right{
+        border-right: solid 1px rgb(200,200,200);
+    }
+
+
+    /* contact us */
+    #next-steps{
+        padding-top:10px;
+    }
+    
+    p.contact-title {
+        font-size:16px;
+    }
+
+    p.contact-title {
+        font-size:16px;
+    }
+    
+    p.contact-title  strong {
+        font-size:18px;
+    }
+
+
+
+
+
+
+
+.panel-primary>.panel-heading {
+    color: #ffffff;
+    background-color: rgb(30,30,30);
+    border-color: rgb(30,30,30);
+}
+
+.panel-primary {
+    border-color: rgb(30,30,30);
+}
+
+
+.panel-heading .accordion-toggle{
+    content: "\e114";
+}
+
+.panel-heading .accordion-toggle:after {
+    /* symbol for "opening" panels */
+    font-family: 'Glyphicons Halflings';  /* essential for enabling glyphicon */
+    content: "\e114";    /* adjust as needed, taken from bootstrap.css */
+    float: right;        /* adjust as needed */
+    color: grey;         /* adjust as needed */
+}
+.panel-heading .accordion-toggle.collapsed:after {
+    /* symbol for "collapsed" panels */
+    content: "\e080";    /* adjust as needed, taken from bootstrap.css */
+}
+
+
+.navbar-brand{
+    height:86px;
+}
+
+
+
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+body > .container {
+  padding: 60px 15px 0;
+}
+.container .text-muted {
+  margin: 20px 0;
+}
+
+.footer > .container {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+code {
+  font-size: 80%;
+}
+
+    input[type="radio"]:checked+label{ font-weight: bold; }
+      
+      body{
+          font-family:Arial;
+          
+      }
+      
+      .arbHeader{
+          border-top: solid 5px rgb(30,30,30);
+      }
+      
+      @media (min-width: 768px)
+    .container {
+        width: 100%;
+    }
+      
+     @media (min-width: 1200px)
+        .container{
+        max-width: 992px;
+        }
+
+    
+    .SectionHeader{
+        padding: 20px;
+        background-color: rgb(179,153,93);
+        color: rgb(255,255,255);
+        font-size: 24px;
+        margin-bottom:3px;
+
+    }
+    
+    .SectionContainer{
+        padding-left: 20px;
+        padding-right: 20px;
+        background-color: rgb(243,243,243);
+        padding-top:15px;
+        padding-bottom:10px;
+        margin-top: 10px;
+    }
+    
+    .SectionTitle{
+        color: rgb(179,153,93);
+        font-size: 20px;
+        font-weight: bold;
+        padding-bottom: 10px;
+    }
+    
+    .SectionBreak{
+        margin-left: -15px;
+        margin-right: -15px;
+        border: 2px solid rgb(243,243,243);  
+        margin-top:10px;
+        margin-bottom:10px;      
+    }
+    
+    .arrow_box{
+        padding-top: 18px;
+        padding-bottom: 18px;
+        padding-left:10px;
+        background-color: rgb(255,255,255);
+        margin:10px;
+        margin-right:0px;
+        font-size: 14px;
+        color: rgb(179,153,93);
+        font-weight: bold;
+        height: 100%;
+    }
+    
+    .arrow_box:after {
+        left: calc(100% - 15px);
+        top: 50%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+        border-color: rgba(255, 255, 255, 0);
+        border-left-color: #fff;
+        border-width: 14px;
+        margin-top: -14px;
+    }
+    
+    .SectionSubHeader{
+        background-color: rgb(165,165,165);
+        padding-left:20px;
+        padding-right:20px;
+        padding-top:15px;
+        padding-bottom:15px;
+        
+        
+        color: #fff;
+        font-weight:bold;
+        font-size: 18px;
+    }
+    
+    .SectionSubHeader .row {
+        padding-left:15px;
+        font-size: 14px;
+        font-weight: normal;
+    }
+    
+    .SectionSubHeader .link{
+        font-size: 14px;
+        font-weight: normal;
+        color: #ddd;
+    }
+    
+    .SectionSubHeader .link a{
+        color: #ddd;
+        text-decoration: underline;
+        
+    }
+    
+    .ProductSelectionContainer{
+        background-color: #fff;
+        padding:20px;
+    }
+    
+    .darkGreyColor{
+        color: rgb(165,165,165);
+    }
+    .darkGreyBack{
+        color: rgb(165,165,165);
+    }
+    
+    .brightGreyBack{
+        background-color: rgb(237,237,237);
+    }
+    
+    .panel-heading.active{
+        background-color: rgb(165,165,165);
+        color: #fff;
+        font-weight: bold;
+    }
+    
+    .goldColor{
+        color: rgb(179,153,93);
+    }
+    
+    
+    
+    
+    
+    
+    
+    .tooltip-inner{
+        background-color:rgb(179,153,93);
+    }
+
+    
+    
+    
+    .DPAText{
+        color:#fff;
+        padding:20px;
+        background-color: rgb(165,165,165);
+    }
+    
+    .btnArb{
+        text-shadow:none;
+        background-color: rgb(179,153,93);
+        color: #fff;        
+    }
+    
+    .btnArb-danger{
+        text-shadow:none;
+        background-color: rgb(235,94,80);
+        color: #fff;        
+    }
+    
+    .alert-danger{
+        background-color: rgb(235,94,80);
+        color: #fff;   
+    }
+    
+    
+ .navbar-toggle {
+    float: left;
+}
+
+.navbar-default .navbar-toggle {
+    border-color: #333;
+    background-color:#333;
+    border-radius: 0px;
+    margin-top:0px;
+}   
+
+.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
+    background-color: #333;
+    border-color: #333;
+}
+
+.collapse.in {
+    padding-left:0px;
+    padding-right:0px; 
+    padding-bottom:10px;
+}
+
+.navbar-collapse.collapsing {
+    padding-left:0px;
+    padding-right:0px; 
+    padding-bottom:10px;
+}
+    
+    
+.row .label {
+    margin-bottom:5px;
+}
+    
+  
+
+.label{
+ 
+}
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+  
+
+        
+        
+  </style>
+ 
+  
+</apex:component>

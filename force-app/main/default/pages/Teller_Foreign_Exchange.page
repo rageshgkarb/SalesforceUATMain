@@ -1,0 +1,227 @@
+<apex:page applyBodyTag="false" showHeader="false" sidebar="false" docType="html-5.0" standardStylesheets="false">
+    <style>
+        td {
+            border-collapse: collapse;
+        }
+        
+        .ccyHeader {
+            min-height: 60px;
+            border: lightgrey solid 1px;
+            box-shadow: 1px 1px 5px lightgray;
+            /*width: 100%;*/
+            height: 100%;
+            margin: 1px;
+        }
+        
+        .fxCard {
+            margin-left: 0px !important;
+            width: 100%;
+            height: 90px;
+            border: lightgrey solid 1px;
+            padding: 0px !important;
+            box-shadow: 1px 1px 2px lightgray;
+        }
+        
+        th {
+            min-width: 110px;
+        }
+        
+        .CalcCcySelect > span > .md_group > span > span > .k-select {
+            background: rgb(244, 244, 244);
+            padding: 1.5px;
+        }
+        
+        .flagImage {
+            float: left;
+            margin-top: 14px;
+            margin-left: 14px;
+            height: 30px;
+            width: 30px;
+            opacity: 0.9;
+        }
+        
+        .fxRatesTableItem {
+            border-bottom: solid 1px rgb(244, 244, 244);
+        }
+        
+        .CcyAmount > span > .md_group > input {
+            text-align: right;
+        }
+        
+        .block-screen{
+            background-color:rgba(0,0,0,0.8);
+            position:fixed;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+            z-index:999;
+            color:#ff0000;
+        }
+        
+        /* C0566 */
+        .headerBar{
+            position:relative;
+            z-index:1000;
+        }
+        /* C0566 */
+    </style>
+
+
+
+
+    <div style="height: calc(100% - 4px); width: 100%;" ng-controller="controllerForeignExchange" ng-init="Initialise()">
+        <div class="pageTitleContainer">
+            <div style="float: left;">
+                <span class="pageTitleGray">Foreign Exchange</span>
+            </div>
+        </div>
+        <!--C0566-->
+
+        <div class="block-screen" ng-show="isExpired">
+            <table width="100%" height="100%">
+                <tr>
+                    <td width="100%" height="100%" valign="center" align="center">
+                <b>Error!</b> FX rates are out of date, they have been last updated on {{lastModified | date :  "dd/MM/y"}}
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!--C0566-->
+        <div class="pageStructure">
+            <div class="pageContentContainer">
+                <div style="float:left; height:100%; width:40%; border-right: solid 1px lightgray;">
+                    <div style="height:30px; padding:15px; background:white; position: relative;">
+                        <div class="pageSubTitleGray" style="float:left;">Calculator</div>
+                        <div style="position: absolute; right: 16px; top: 3px;">
+                            <c:Teller_Material_Select className="kendoFXBranch" labelText="BRANCH" width="auto" show="true" disabled="false" datasource="Branches" ngmodelProperty="SelectedBranchNumber" modelPropertyToWatch="SelectedBranchNumber" fieldtextname="BranchName" fieldvaluename="BranchNumber"></c:Teller_Material_Select>
+                        </div>
+                    </div>
+                    <div style="width:calc(100% - 30px); height: calc(100% - 70px); margin:15px; position:relative; margin-top:30px;">
+
+                        <div class="fxCard">
+                            <div style="float:left; width:50%; height:100%;">
+                                <div style="padding:10px;">
+                                    <img class="flagImage" style="margin-top: 20px;" ng-style="FromCcy.Currency == null && {'visibility': 'collapse'}" ng-src="{{getCurrencyThumbnail(FromCcy.Currency)}}"></img>
+                                    <div class="CalcCcySelect" style="float:left; margin-left: 10px; margin-top:10px;">
+                                        <c:Teller_Material_Select className="kendoFromCcy" labelText="FROM" width="120px" show="true" disabled="false" datasource="ExchangeRates" ngmodelProperty="FromCcy.Currency" modelPropertyToWatch="FromCcy.Currency" fieldtextname="FXCurrency" fieldvaluename="FXCurrency" onChange="onCurrencyChanged(e, 'FromCcy', 'kendoFromCcy')"></c:Teller_Material_Select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="float:right; width:50%; height:100%;">
+                                <div style="padding:10px;">
+                                    <div class="CcyAmount" style="float:right; font-size:16pt; margin-top:12px; margin-right:10px;">
+                                        <c:Teller_Material_Input type="text" labelText="AMOUNT" disabled="false" modelProperty="FromCcy.Amount" show="true" width="165px" currencySymbol="FromCcy.Symbol" currencySymbolPadding="15px" arbInputFilter="number" arbInputFilterArgs="2" arbInputFilterOnLeave="true"
+                                            arbSelectOnClick="true"></c:Teller_Material_Input>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="fxCard" style="margin-top: 7px;">
+                            <div style="float:left; width:50%; height:100%;">
+                                <div style="padding:10px;">
+                                    <img class="flagImage" style="margin-top: 20px;" ng-style="ToCcy.Currency == null && {'visibility': 'collapse'}" ng-src="{{getCurrencyThumbnail(ToCcy.Currency)}}"></img>
+                                    <div class="CalcCcySelect" style="float:left; margin-left: 10px; margin-top:10px;">
+                                        <c:Teller_Material_Select className="kendoToCcy" labelText="TO" width="120px" show="true" disabled="false" datasource="ExchangeRates" ngmodelProperty="ToCcy.Currency" modelPropertyToWatch="ToCcy.Currency" fieldtextname="FXCurrency" fieldvaluename="FXCurrency" onChange="onCurrencyChanged(e, 'ToCcy', 'kendoToCcy')"></c:Teller_Material_Select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="float:right; width:50%; height:100%;">
+                                <div style="padding:10px;">
+                                    <div class="CcyAmount" style="float:right; font-size:16pt; margin-top:12px; margin-right:10px;">
+                                        <c:Teller_Material_Input type="text" labelText="AMOUNT" disabled="false" modelProperty="ToCcy.Amount" show="true" width="165px" currencySymbol="ToCcy.Symbol" currencySymbolPadding="15px" arbInputFilter="number" arbInputFilterArgs="2" arbInputFilterOnLeave="true"
+                                            arbSelectOnClick="true"></c:Teller_Material_Input>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--circle-->
+                        <button class="goldButton" ng-disabled="DisableCalculate()" ng-click="Calculate()" style="left: calc(50% - 35px); top: 53px; width: 80px; height: 80px; -webkit-border-radius: 40px !important; border-radius: 40px !important; background: #b3995d; position:absolute !important; box-shadow: 1px 1px 5px lightgray; outline:none;">
+                            <img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_convert.png')}" style="height: 50px;-webkit-filter: invert(1);filter: invert(1);margin-left: 1px;margin-top: 1px;"></img>
+                        </button>
+
+                        <div class="sectionTitleSmallGray" style="width:100%; margin-top:25px;">Details</div>
+                        <!--<div style="width:100%; height:60px; background: #f7f7f7; margin-top:10px;">
+                            <div style="padding: 15px; padding-top:20px;">
+                                <div style="float:left;">Raw Amount:</div>
+                                <div class="CcyAmount" style="float:right; margin-top:-20px;">
+                                    <c:Teller_Material_Input type="text" labelText="" modelProperty="ToCcy.RawAmount" width="100%" show="true" disabled="true" styleMarginBottom="0px" currencySymbol="ToCcy.Symbol" currencySymbolPadding="15px" arbInputFilter="number" arbInputFilterArgs="2"></c:Teller_Material_Input>
+                                </div>
+                            </div>
+                        </div>-->
+                        <div style="width:100%; height:60px; background: #f7f7f7; margin-top:5px;">
+                            <div style="padding: 15px; padding-top:20px;">
+                                <div style="float:left;">Cash Calculated Amount:</div>
+                                <div class="CcyAmount" style="float:right; margin-top:-20px;">
+                                    <c:Teller_Material_Input type="text" labelText="" modelProperty="ToCcy.TillAmount" width="100%" show="true" disabled="true" styleMarginBottom="0px" currencySymbol="ToCcy.Symbol" currencySymbolPadding="15px" arbInputFilter="number" arbInputFilterArgs="2"></c:Teller_Material_Input>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="width:100%; height:60px; background: #f7f7f7; margin-top:5px;">
+                            <div style="padding: 15px; padding-top:20px;">
+                                <div style="float:left;">Cash Remainder Amount:</div>
+                                <div class="CcyAmount" style="float:right; margin-top:-20px;">
+                                    <c:Teller_Material_Input type="text" labelText="" modelProperty="ToCcy.RemainderAmount" width="100%" show="true" disabled="true" styleMarginBottom="0px" currencySymbol="ToCcy.RemainderCurrencySymbol" currencySymbolPadding="15px" arbInputFilter="number" arbInputFilterArgs="2"></c:Teller_Material_Input>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="fxCard" ng-show="ToCcy.NotificationMsg != ''" style="width:100%; height:auto; max-height: 180px;background: #f7f7f7; margin-top:5px; padding:10px !important;">
+                            <div class="textGold">Notification:</div>    
+                            <div style="height: auto; max-height: 180px; margin: 10px;">
+                                <div class="textDarkGray verticalScroller" style="height: auto; max-height: 120px; overflow-y: auto; white-space: pre-line">{{ToCcy.NotificationMsg}}</div>
+                            </div>
+                        </div>
+
+                        <button class="goldButton" style="position: absolute !important; bottom: 0; right: 0; outline:none;" ng-disabled="DisableCashExchange" ng-click="gotoFXCashExchange()">Cash Exchange</button>
+                    </div>
+                </div>
+                <div style="float:left; height:100%; width:59%;">
+                    <div class="pageSubTitleGray" style="height:30px; padding:15px; background:white;">
+                        Rates
+                    </div>
+                    <div ng-cloak="ng-cloak" style="width:calc(100% - 30px); margin:15px; margin-top:30px; position: relative;">
+                        <div class="ccyHeader" style="min-height: auto; height: calc(100% - 104px); width:40px; position: absolute; background: rgb(244,244,244); margin-top:102px;">
+                            <div class="textGold" style="padding: 10px; font-size: 8pt; font-weight: BOLD; transform: rotate(-90deg); transform-origin: 0% 0%; width: 600px; margin-top: 65px; margin-left: 2px;">WE BUY</div>
+                        </div>
+                        <div style="display: inline-block; margin-left: 42px;">
+                            <div class="ccyHeader" style="min-height: auto; background: rgb(244,244,244); margin-left: 111px;">
+                                <div class="textGold" style="padding: 10px; font-size: 8pt; font-weight: BOLD; padding-left: 15px;">WE SELL</div>
+                            </div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <div class=""></div>
+                                        </th>
+                                        <th ng-repeat="ccy in RatesTableHeaders">
+                                            <div class="ccyHeader">
+                                                <img class="flagImage" ng-src="{{getCurrencyThumbnail(ccy)}}"></img>
+                                                <div class="textBlack" style="float:left; margin-top:20px; margin-left:10px;">{{ccy}}</div>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="ccy in RatesTableHeaders">
+                                        <td>
+                                            <div class="ccyHeader">
+                                                <img class="flagImage" ng-src="{{getCurrencyThumbnail(ccy)}}"></img>
+                                                <div class="textBlack" style="float:left; margin-top:20px; margin-left:10px;">{{ccy}}</div>
+                                            </div>
+                                        </td>
+                                        <td ng-repeat="ccyInfo in RatesTableBody" ng-if="ccy == ccyInfo.BuyCurrency" class="fxRatesTableItem">
+                                            <div ng-click="onClickRateItem(ccyInfo)" style="cursor: pointer;">
+                                                <div ng-style="ccyInfo.BuyCurrency == ccyInfo.SellCurrency && {'color': 'lightgray'}" style="margin-right: 15px; text-align: right; font-size: 12pt;" class="textGold tileTitleTextBold">{{ccyInfo.ExchangeRate}}</div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</apex:page>

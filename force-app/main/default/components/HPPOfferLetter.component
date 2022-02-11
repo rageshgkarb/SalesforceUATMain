@@ -1,0 +1,50 @@
+<apex:component >
+    <apex:attribute description="Opp" name="Opp" type="Opportunity" required="true" />
+    <apex:attribute description="ExOpp" name="ExOpp" type="HPP_extended_opportunity__c" required="true" />
+    <apex:attribute description="RCEFailed" name="RCEFailed" type="boolean" />
+    <apex:attribute description="DocLink" name="DocLink" type="string" />
+    <apex:attribute description="DocLinkCreated" name="DocLinkCreated" type="boolean" />
+    <apex:attribute description="IsCompleted" name="IsCompleted" type="boolean" />
+    <apex:attribute description="OfferLetterExpired" name="OfferLetterExpired" type="boolean" />
+    <apex:attribute description="NewLetterCreated" name="NewLetterCreated" type="boolean" />
+  
+    <div id="content">
+        <h1>Offer Letter</h1>
+    
+        <apex:outputpanel id="mainPageBlock">
+            <div style="padding:20px;">
+                <!-- content -->
+    
+                
+                <div>
+                    <apex:outputtext escape="false" value="{!DocLink}" rendered="{!DocLinkCreated  && NewLetterCreated }" />
+                </div>
+    
+                <br /><br />
+    
+                <apex:outputpanel rendered="{!(DocLinkCreated && opp.Attachment_Offer_Letter__c!=null) && NewLetterCreated }">
+                    <div>
+                        <table>
+                            <tr>
+                                <td>
+                                    Date Offer Letter Sent
+                                </td>
+                                <td>
+                                    <apex:inputfield required="true" value="{!exopp.Offer_letter_sent__c}" />
+                                </td>
+                            </tr>
+                        </table>
+    
+                        
+                    </div>
+                </apex:outputpanel>
+    
+    
+    
+            </div>
+        </apex:outputpanel>
+    </div>
+    
+  
+  
+</apex:component>

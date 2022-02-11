@@ -1,0 +1,120 @@
+<apex:component >
+
+<div ng-controller="controllerScannerCapture" class="verticalScroller" ng-init="Initiate()" style="height: 100%; overflow-y: auto; overflow-x: hidden; margin-right: -7px;">
+
+
+	<!-- Menu -->
+	<div class="cameraContainer" ng-show="!SelectedOption">
+		<ul class="accountFunctionRootsContainer textSmallWhite">
+			
+			<li class="accountFunctionRoot accountFunctionRootNormal" ng-click="SelectedOption = 'Scan'">
+				<div class="accountFunctionRootContent">
+					Scan
+				</div>
+				<img class="tileIconLocation" src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_scan.png')}"></img>
+			</li>
+
+			<li class="accountFunctionRoot accountFunctionRootNormal" ng-click="SelectedOption = 'DragDrop'">
+				<div class="accountFunctionRootContent">
+					Image File
+				</div>
+				<img class="tileIconLocation" src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_images.png')}"></img>
+			</li>
+
+			<li class="accountFunctionRoot accountFunctionRootNormal" ng-click="SelectedOption = 'Signature'">
+				<div class="accountFunctionRootContent">
+					Signature
+				</div>
+				<img class="tileIconLocation" src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_sign.png')}"></img>
+			</li>
+			
+		</ul>
+	</div>
+
+	<!-- Scanner -->
+	<div class="cameraContainer" ng-show="SelectedOption == 'Scan'">
+		<div id="dwtcontrolContainer"></div>
+	</div>
+
+	<!-- Drag Drop -->
+	<div class="cameraContainer dragdropContainer" id="dragdropContainer" ng-show="!Captured && SelectedOption == 'DragDrop'">		
+		<div style="text-align: center;">
+			<img src="/resource/1426752007000/Teller_Includes/Teller_Includes/media/btn_images.png" style="opacity: 0.2;height: 80px; margin-top: 180px;"></img>
+			<div class="pageSubTitleGray"> Drag &amp; drop image here</div>
+		</div>
+	</div>
+
+	<!-- Signature -->
+	<div class="cameraContainer" ng-show="!Captured && SelectedOption == 'Signature'">	
+		<canvas id="signaturePad" class="signature-write-container" height="220" width="600"></canvas>
+		<div class="pageSubTitleGray" style="position:  absolute; top: 421px; left: 306px;">Sign here</div>
+	</div>
+	
+	<!-- Crop container -->
+	<div ng-show="Captured && !Cropped && SelectedOption != 'Scan'" id="cameraContainer" class="cropcontainer cameraContainer">
+		<div class="signature-overlay">
+			<div class="signature-overlay-inner">
+			</div>
+		</div>
+		<img id="canvasImg"></img>
+	</div>
+
+	<!-- Final image -->
+	<div ng-show="Cropped && SelectedOption != 'Scan'" class="cropcontainer cameraContainer">
+		<img id="croppedImg" class="croppedImg signature-croppedImg"></img>
+	</div>
+
+	<canvas ng-show="false" id="snapshotCanvas" width="640" height="480"></canvas>
+
+	<div style="height: calc(100% - 540px);">
+		<!-- Left buttons -->
+		<div style="float: left; margin-top: 15px;" ng-show="SelectedOption">	
+			<div class="toolbarButton" ng-click="GoBack()" ng-show="!Captured">
+				<div class="imgCircle">
+					<img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/grid.png')}"></img>
+				</div>
+				<div class="textSmallestDarkGray caption">MENU</div>
+			</div>
+
+			<div class="toolbarButton" ng-click="GoBack()" ng-show="Captured">
+				<div class="imgCircle">
+					<img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_back_arrow.png')}"></img>
+				</div>
+				<div class="textSmallestDarkGray caption">BACK</div>
+			</div>
+		</div>
+
+		<!-- Right buttons -->
+		<div style="float: right; margin-top: 15px; margin-right: 25px;" ng-show="SelectedOption">
+			<div ng-show="!Captured && SelectedOption == 'Scan'" class="toolbarButton" ng-click="AcquireImage()">
+				<div class="imgCircle">
+					<img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_scan.png')}"></img>
+				</div>
+				<div class="textSmallestDarkGray caption">SCAN</div>
+			</div>
+			<div ng-show="Captured && !Cropped" class="toolbarButton js-crop" ng-click="Crop()">
+				<div class="imgCircle">
+					<img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_crop.png')}"></img>
+				</div>
+				<div class="textSmallestDarkGray caption">CROP</div>
+			</div>
+			
+			<div ng-show="SelectedOption == 'Signature'" class="toolbarButton" ng-click="ClearSignature()">
+				<div class="imgCircle">
+					<img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_undo.png')}"></img>
+				</div>
+				<div class="textSmallestDarkGray caption">CLEAR</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="dialogButtons" style="position: initial; margin-bottom: 0px; clear:  both; float: right; margin-top:  10px;">
+		<div class="goldButton" ng-click="Close()">CANCEL</div>
+		<div class="goldButton" ng-show="Cropped || SelectedOption == 'Signature'" ng-click="Save()">SAVE</div>
+	</div>
+	
+
+</div>
+
+
+</apex:component>

@@ -1,0 +1,23 @@
+@charset "UTF-8";
+/* CSS Document for contrast menu links default colours */
+.contrast p span { display:block; float:left; padding:0 0 0 0; }
+.contrast p span.colour a { 
+	border:1px solid #000000; 
+	line-height:1; 
+	padding:2px 5px;
+	border-right:none;
+	display:block;
+}
+.contrast p span.label { margin-right:5px;}
+.contrast p span.colour.default a { border:1px solid #000000; }
+
+.contrast p span.bp { background-color:#FFCCFF; }
+	#header .contrast p span.bp a { color:#000000; }
+.contrast p span.by { background-color:#FFF000; }
+	#header .contrast p span.by a { color:#000000; }
+.contrast p span.gb { background-color:#000000; }
+	#header .contrast p span.gb a { color:#00F700; }
+.contrast p span.wbl { background-color:#0000C4; }
+	#header .contrast p span.wbl a { color:#FFFFFF; }
+.contrast p span.default { background-color:#FFFFFF; }
+	#header .contrast p span.default a { color:#0033CC; }

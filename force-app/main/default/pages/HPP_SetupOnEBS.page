@@ -1,0 +1,152 @@
+<!-- C00108 Get some product switching information -->
+
+<apex:page controller="HPP_EventSetupOnEBSController" sidebar="false" showHeader="false" title="Generate Offer Letter" action="{!Setup}" doctype="html-5.0" standardstylesheets="false">
+    <apex:composition template="HPPProductSwitchTemplate">
+        <apex:define name="include">
+            <script>
+                hppApp.controller('offerLetterController', ['$scope', '$timeout','serviceApplication','serviceOffer','$window',
+                    function($scope, $timeout,serviceApplication,serviceOffer,$window) {
+                        
+                        
+                         $scope.Complete= function()
+                        {
+                            if(!$scope.EventLogId) return null;
+                            serviceApplication.LoadShow('Processing...');
+                            serviceOffer.Complete($scope.EventLogId)
+                            .then(
+                                function(result){
+                                    if(result.Success)
+                                    {                                       
+                                        if(result.URL)
+                                        {
+                                            $window.location.href = result.URL;                                                                                              
+                                        }
+                                        else
+                                        {
+                                              serviceApplication.LoadHide(true);   
+                                        }
+                                    }
+                                    else
+                                    {
+                                        $scope.Error = result.Error;
+                                        serviceApplication.LoadHide(true);  
+                                    }
+                                                                         
+                                },
+                                function(error){
+                                    serviceApplication.LoadHide(true);
+                                    $scope.ErrorMessage = error;
+                                }
+                               );
+                        }   
+                        
+                        $scope.SetupOnEBS= function()
+                        {
+                            if(!$scope.OppId) return null;
+                            serviceApplication.LoadShow('Processing...');
+                            serviceOffer.SetupOnEBS($scope.EventLogId, $scope.OppId)
+                            .then(
+                                function(result){
+                                    if(result.Success)
+                                    {
+                                        $scope.SetupOk = true;                                        
+                                    }
+                                    
+                                        $scope.Error = result.Error;
+                                        serviceApplication.LoadHide(true);  
+                                    
+                                                                         
+                                },
+                                function(error){
+                                    serviceApplication.LoadHide(true);
+                                    $scope.ErrorMessage = error;
+                                }
+                               );
+                        }                        
+                        
+                    }]);
+                    
+                    
+                    angular.module("hppApp").service('serviceOffer', ['$q', '$rootScope', function ($q, $rootScope) {
+                                                
+                        this.SetupOnEBS = function(id, oppId)
+                        {
+                            var deferred = $q.defer();
+                            HPP_EventSetupOnEBSController.SetupOnEBS(id,oppId,function(result, event){
+                                if(event.status){
+                                    deferred.resolve(result);
+                                }
+                                else {
+                                    deferred.reject(event);
+                                }     
+                            },{ buffer: false, escape: false, timeout: 30000} );
+                            return deferred.promise;
+                        }
+                        
+                        this.Complete = function(id)
+                        {
+                            var deferred = $q.defer();
+                            HPP_EventSetupOnEBSController.Complete(id,function(result, event){
+                                if(event.status){
+                                    deferred.resolve(result);
+                                }
+                                else {
+                                    deferred.reject(event);
+                                }     
+                            },{ buffer: false, escape: false, timeout: 30000} );
+                            return deferred.promise;
+                        }
+                        
+                        
+                     }]);
+                    
+            </script>
+        </apex:define>
+        
+        
+        <apex:define name="header">
+           <c:HPP_Header title="Setup on EBS" numapps="1" opp="{!Opp}" />
+        </apex:define>
+        <apex:define name="menu">
+            <c:HPP_Angular_Menu oppid="{!Opp.Id}" directorid="{!DirectorID}">
+            </c:HPP_Angular_Menu>
+        </apex:define>
+        <apex:define name="body">
+        
+        <div style="100%" ng-controller="offerLetterController" ng-init="OppId='{!Opp.id}';EventLogId='{!eventId}';"> <!-- controller -->
+            <div class="container" style="height:100%">
+                <div class="row" style="height:100%">
+                    <div class="col-md-12" style="height:100%;">
+                        <div class="PanelContents" style="height:100%;" >
+                            <div class="verticalScrollSection" style="height:calc(100%);">
+                                <div class="verticalSection">
+                                    <div class="SectionTitle">Setup on EBS</div>
+                                    
+                                    <div class="text-center">
+                                        <div class="alert alert-success" ng-show="SetupOk == true">
+                                            <label>Setup on EBS</label>
+                                        </div>
+                                        <div class="alert alert-danger" ng-show="Error">
+                                            <label>{{Error}}</label>
+                                        </div>
+                                        
+                                        <div>
+                                            <button type="button" ng-show="!SetupOk" class="btn btn-default" ng-click="SetupOnEBS()">Setup on EBS</button>
+                                            <button type="button" ng-show="SetupOk" class="btn btn-default" ng-click="Complete()">Complete</button>
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                                                       
+                                                                    
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>        
+        </div>
+    </apex:define>
+</apex:composition>
+</apex:page>

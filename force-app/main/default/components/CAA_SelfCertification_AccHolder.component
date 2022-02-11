@@ -1,0 +1,261 @@
+<apex:component >
+    <apex:attribute name="YPSA" type="Boolean" description="" />
+    <apex:attribute name="CurrentAccount" type="Boolean" description="" />
+    <apex:attribute name="FTD" type="Boolean" description="" />
+    <apex:attribute name="Model" type="String" description="" />
+    <apex:attribute name="IsGuest" type="Boolean" description="" />
+
+
+    <div ng-if="$index == 0 || !{!YPSA}">
+
+
+    <div class="panel-heading" role="tab" id="heading{{$index}}">
+        <h4 class="panel-title">
+        <!--C0750: CAA Quick Wins Starts-->
+            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{$index}}" aria-expanded="false" aria-controls="collapse{{$index}}" style="text-decoration:none;">
+                <apex:outputPanel rendered="{!YPSA}">
+                    {{$index === 0 ? "Young Person" : "Guardian " + ($index) }}
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{!Not(YPSA)}">
+                   <!-- Applicant {{serialNo1[$index]}} -->
+                    <button class="btn btnArb" style="padding: 5px 12px;">
+                        <span>
+                            <strong class="ng-binding">Applicant {{serialNo1[$index]}}</strong>
+                            <span class="fa-stack fa">
+                                <i class="fa fa-circle-thin fa-stack-2x"></i>
+                                <i class="fa fa-chevron-right fa-stack-1x"></i>
+                            </span>
+                        </span>
+                    </button>
+                </apex:outputPanel>
+               <!-- - {{app.FirstName}} , {{app.LastName}} -->
+            </a>
+        <!--C0750: CAA Quick Wins Ends-->    
+        </h4>
+    </div>
+     <!-- C0701  -->
+
+    <div id="collapse{{$index}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{{$index}}" >
+     <!-- C0701  -->
+        <div class="panel-body">
+
+            <fieldset>
+            <!--C0750: CAA Quick Wins Starts-->
+                <div ng-if="false">
+            <!--C0750: CAA Quick Wins Ends-->    
+                <div class="SectionTitle">Account Holder Details</div>
+                <hr/>
+
+                <div class="row" ng-class="{ 'has-error': Submitted && myform.optTitle{{$index}}.$invalid }">
+                    <div class="col-sm-12">
+                        <div>
+                            <label class="control-label">Title</label>
+                            <span class="borderCircle pull-right" data-toggle="popover" data-placement="auto right" data-trigger="click" data-content="The title that you are most commonly known by.">?</span>
+                        </div>
+                        <div>
+                            <label ng-repeat="title in Data.Title" ng-hide="{!YPSA} && $parent.$index==0" class="radio-inline">
+                                <input type="radio" ng-required="!app.Salutation && (!{!YPSA} || $parent.$index!=0 )" name="optTitle1{{$parent.$index}}"
+                                    ng-model="app.Salutation" value="{{title.Key}}" />{{title.Value}}</label>
+                            <label ng-show="{!YPSA} && $parent.$index==0" ng-repeat="title in Data.TitleYPSA" class="radio-inline">
+                                <input type="radio" ng-required="!app.Salutation && {!YPSA} && $parent.$index==0" name="optTitle2{{$parent.$index}}" ng-model="app.Salutation"
+                                    value="{{title.Key}}" />{{title.Value}}</label>
+                        </div>
+                        <div>
+                            <c:CAA_InputError field="optTitle1" />
+                        </div>
+                        <div>
+                            <c:CAA_InputError field="optTitle2" />
+                        </div>
+                    </div>
+                </div>
+                <hr/>
+                <div class="row">
+                    <div class="col-sm-4" ng-class="{ 'has-error': (myform.FirstName{{$index}}.$touched || Submitted ) && myform.FirstName{{$index}}.$invalid }">
+                        <label class="control-label">First names(s)</label>
+                        <input class="form-control arbBox" ng-model="app.FirstName" name="FirstName{{$index}}" id="FirstName{{$index}}" ng-required="!app.EBS_ID_c"
+                        />
+                        <c:CAA_InputError field="FirstName" />
+                    </div>
+                    <div class="col-sm-4" ng-class="{ 'has-error': (myform.LastName{{$index}}.$touched || Submitted) && myform.LastName{{$index}}.$invalid }">
+                        <label class="control-label">Surname</label>
+                        <input class="form-control arbBox" ng-model="app.LastName" name="LastName{{$index}}" id="LastName{{$index}}" ng-required="!app.EBS_ID_c"
+                        />
+                        <c:CAA_InputError field="LastName" />
+                    </div>
+                </div>
+                <hr/>
+
+                <div class="SectionTitle">Background</div>
+                <!-- DOB -->
+                <c:CAA_Date title="Date of birth" model="app" field="Date_of_birth_c" NumYears="-120" req="true" />
+                <div>
+                    <div class="alert alert-danger" ng-show="DOBCheck($index) == 'tooold'">
+                        The maximum age to open this type of account is 16
+                    </div>
+                    <div class="alert alert-danger" ng-show="DOBCheck($index) == 'tooyoung'">
+                        The minimum age to open this type of account is 16
+                    </div>
+                </div>
+                <hr/>
+                <!-- Town of Birth -->
+                <div ng-class="{ 'has-error': (myform.Town_of_Birth_c{{$index}}.$touched || Submitted) && myform.Town_of_Birth_c{{$index}}.$invalid }">
+                    <div>
+                        <label class="control-label">Town of birth</label>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <input class="form-control arbBox" ng-model="app.Town_of_Birth_c" name="Town_of_Birth_c{{$index}}" id="Town_of_Birth_c{{$index}}"
+                                ng-required="!app.EBS_ID_c" />
+                            <c:CAA_InputError field="Town_of_Birth_c" />
+                        </div>
+                    </div>
+                </div>
+                <!-- Country of Birth -->
+                <div ng-class="{ 'has-error':( myform.Country_of_birth_c{{$index}}.$touched|| Submitted) && myform.Country_of_birth_c{{$index}}.$invalid }">
+                    <div>
+                        <label class="control-label">Country of birth</label>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <select class="form-control arbBox" ng-model="app.Country_of_birth_c" ng-required="!app.EBS_ID_c" name="Country_of_birth_c{{$index}}"
+                                ng-options="option.Key as option.Value  for option in Data.CountriesOfBirth">
+                            </select>
+                            <c:CAA_InputError field="Country_of_birth_c" />
+                        </div>
+                    </div>
+                </div>
+                <hr/>
+                <!-- Nationality -->
+                <div ng-class="{ 'has-error':( myform.Country_of_nationality_c{{$index}}.$touched|| Submitted) && myform.Country_of_nationality_c{{$index}}.$invalid }">
+                    <div>
+                        <label class="control-label">Nationality</label>
+                        <span class="borderCircle pull-right" data-toggle="popover" data-placement="auto right" data-trigger="click" data-content="The nationality stated on your primary passport.">?</span>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <select class="form-control arbBox" ng-model="app.Country_of_nationality_c" name="Country_of_nationality_c{{$index}}" ng-required="!app.EBS_ID_c"
+                                ng-options="option.Key as option.Value  for option in Data.Nationality">
+                            </select>
+                            <c:CAA_InputError field="Country_of_nationality_c" />
+                        </div>
+                    </div>
+                </div>
+                <hr/>
+                <!-- Billing Address -->
+                <div id="currentAddress{{$index}}">
+                    <c:CAA_Address title="Permanent Address" model="app" dateField="Date_moved_to_address_c" showCountryHelp="true" CountryHelp="The country that your primary address is located in."
+                        postcode="BillingPostalCode" country="BillingCountry" county="BillingState" line1="BillingStreet" line2="Customer_Address_District_c"
+                        town="BillingCity" cid="0" required="false" RequiredCondition="!app.EBS_ID_c" ShowMoveInDate="false" ShowCountryCode="false"
+                        countrycode="Country_Code__c" HasCustomIndex="true" CustomIndex="0" />
+                </div>
+                
+                <hr/>
+
+                <!-- Person Mailing Address -->
+                <div id="currentAddress{{$index}}">
+                    <c:CAA_Address title="Person Mailing Address" model="app" showCountryHelp="true" CountryHelp="The country that your primary address is located in."
+                        postcode="PersonMailingPostalCode" country="PersonMailingCountry" county="PersonMailingState" line1="PersonMailingStreet"
+                        line2="Customer_Prev_Previous_Address_District_c" town="PersonMailingCity" cid="2" required="false" RequiredCondition="!app.EBS_ID_c"
+                        ShowMoveInDate="false" HasCustomIndex="true" CustomIndex="2" />
+                </div>
+                </div>
+                <div ng-init="tinCount = initTinCount($index)" ng-hide="{!YPSA} && $index!=0">
+                <!--C0750: CAA Quick Wins Starts-->
+                    <div class="SectionBreak" style="display:none;" />
+                    
+                    <!--<div class="SectionTitle">Tax Residency &amp; Citizenship Information</div>
+                    <div>
+                        <span>For the purpose of taxation, please state which country you're a resident for tax purposes and include
+                            your Tax Identification Number (TIN) or an equivalent of a TIN in that country. It is mandatory that
+                            you include your TIN (or equivalent, such as National Insurance Number ). </span>
+                    </div>
+                    <div class="SectionBreak" />-->
+                    <!--C0750: CAA Quick Wins Ends-->
+
+
+
+                    <c:CAA_USTaxInfo SectionName="Tax Information" model="app" YPSA="{!YPSA}" ShowUSPerson="true" USPersonPropertyName="US_Person_Check_c"
+                                     HasTinPropertyName="US_Do_you_have_a_TIN_c" TinReasonCodePropertyName="US_Tin_Reason_Code_c"
+                                     TinReasonBPropertyName="US_TIN_Reason_B_explanation_c" TinPropertyName="US_Tin_c"/>
+
+<hr/>
+                <div >
+                    <div class="row" ng-class="{ 'has-error':( myform.NonUkTax{{$index}}.$touched|| Submitted) && myform.NonUkTax{{$index}}.$invalid }">
+                        <div class="col-sm-12">
+                            <div>
+                                <label>Are you resident for tax purposes in any country other than the UK?</label>
+                            </div>
+                            <div>
+                                <label class="radio-inline">
+                                    <input type="radio" ng-required="!({!model}.NonUkTax)" ng-model="{!model}.NonUkTax"
+                                           name="NonUkTax{{$index}}" value="Yes" />Yes</label>
+                                <label class="radio-inline">
+                                    <input type="radio" ng-required="!({!model}.NonUkTax)" ng-model="{!model}.NonUkTax"
+                                           name="NonUkTax{{$index}}" value="No" />No</label>
+                            </div>
+                            <c:CAA_InputError field="NonUkTax{{$index}}" />
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+                    <div ng-if="app.NonUkTax == 'Yes'">
+                        <hr/>
+
+                    <c:CAA_TaxResAndCitInfo SectionName="Additional Tax Information" cid="1" model="app" YPSA="{!YPSA}"  USPersonPropertyName="US_Person_Check_c"
+                        CountryTaxResidencyPropertyName="TIN1_Country_Tax_Residence_c" HasTinPropertyName="TIN_1_Check_c" TinReasonCodePropertyName="TIN_1_reason_code_c"
+                        TinReasonBPropertyName="TIN_1_reason_B_explanation_c" TinPropertyName="TIN_1_c" />
+
+
+                    <div ng-if="tinCount >= 2 || app.TIN_2_Check_c">
+                        <div class="SectionBreak" />
+                        <c:CAA_TaxResAndCitInfo SectionName="Additional Tax Information" cid="2" model="app" YPSA="{!YPSA}" USPersonPropertyName="US_Person_Check_c" CountryTaxResidencyPropertyName="TIN2_Country_Tax_Residence_c"
+                            HasTinPropertyName="TIN_2_Check_c" TinReasonCodePropertyName="TIN_2_reason_code_c" TinReasonBPropertyName="TIN_2_reason_B_explanation_c"
+                            TinPropertyName="TIN_2_c"  />
+                    </div>
+
+                    <div ng-if="tinCount >= 3 || app.TIN_3_Check_c">
+                        <div class="SectionBreak" />
+                        <c:CAA_TaxResAndCitInfo SectionName="Additional Tax Information" cid="3" model="app" YPSA="{!YPSA}" USPersonPropertyName="US_Person_Check_c" CountryTaxResidencyPropertyName="TIN3_Country_Tax_Residence_c"
+                            HasTinPropertyName="TIN_3_Check_c" TinReasonCodePropertyName="TIN_3_reason_code_c" TinReasonBPropertyName="TIN_3_reason_B_explanation_c"
+                            TinPropertyName="TIN_3_c" />
+
+                    </div>
+
+                    <div ng-if="tinCount >= 4 || app.TIN_4_Check_c">
+                        <div class="SectionBreak" />
+                        <c:CAA_TaxResAndCitInfo SectionName="Additional Tax Information" cid="4" model="app" YPSA="{!YPSA}" USPersonPropertyName="US_Person_Check_c" CountryTaxResidencyPropertyName="TIN4_Country_Tax_Residence_c"
+                            HasTinPropertyName="TIN_4_Check_c" TinReasonCodePropertyName="TIN_4_reason_code_c" TinReasonBPropertyName="TIN_4_reason_B_explanation_c"
+                            TinPropertyName="TIN_4_c" />
+                    </div>
+
+                    <div ng-if="tinCount >= 5 || app.TIN_5_Check_c">
+                        <div class="SectionBreak" />
+                        <c:CAA_TaxResAndCitInfo SectionName="Additional Tax Information" cid="5" model="app" YPSA="{!YPSA}" USPersonPropertyName="US_Person_Check_c" CountryTaxResidencyPropertyName="TIN5_Country_Tax_Residence_c"
+                            HasTinPropertyName="TIN_5_Check_c" TinReasonCodePropertyName="TIN_5_reason_code_c" TinReasonBPropertyName="TIN_5_reason_B_explanation_c"
+                            TinPropertyName="TIN_5_c" />
+                    </div>
+
+                    <hr/>
+                    <div class="pull-right">
+                        <button class="btn btnArb" ng-click="tinCount = tinCount + 1" ng-show="checkTin(tinCount,$index)">
+                            <span>
+                                Add more Tax Residency details
+                            </span>
+                        </button>&nbsp;&nbsp;&nbsp;
+                        <button class="btn btnArb" ng-click="removeTin(tinCount,$index);tinCount = tinCount - 1;" ng-show="tinCount > 1 || app.TIN_2_Check_c">
+                            <span>
+                                Remove Tax Residency details
+                            </span>
+                        </button>
+                    </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+
+    </div>
+</apex:component>

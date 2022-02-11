@@ -1,0 +1,145 @@
+<apex:page showheader="false" sidebar="false" doctype="html-5.0" standardstylesheets="false" controller="CAA_RM_Controller" action="{!RM_Init}">
+    <!-- C0592 -->
+    <apex:composition template="CAA_Template">
+        <apex:define name="include">
+            <apex:includescript value="{!URLFOR($Resource.CAA_Includes, '/js/controller/controller_rm.js')}" />
+            <apex:includescript value="{!URLFOR($Resource.CAA_Includes, '/js/service/service_rm.js')}" />
+            <apex:includescript value="{!URLFOR($Resource.CAA_Includes, '/js/service/service_ebs.js')}" />
+            <apex:includescript value="https://cdnjs.cloudflare.com/ajax/libs/datejs/1.0/date.min.js" />
+            <!-- Kendo UI Styles -->
+            <apex:stylesheet value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/styles/kendo.common.min.css')}" />
+            <apex:stylesheet value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/styles/kendo.material.min.css')}" />
+            <apex:stylesheet value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/styles/kendo.dataviz.min.css')}" />
+            <apex:stylesheet value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/styles/kendo.dataviz.material.min.css')}" />
+            <apex:stylesheet value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/styles/kendo.material.mobile.min.css')}" />
+            <!-- Kendo UI -->
+            <apex:includescript value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/js/kendo.all.min.js')}" />
+            <apex:includescript value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/js/cultures/kendo.culture.en-GB.min.js')}" />
+        </apex:define>
+        <apex:define name="body">
+            <div ng-controller="controllerRMDetails" ng-init="EventLogId= '{!EventLogId}';SessionId='{!SessionId}'; YPSA=false; isRMT=false;isABranch={!(IsABranch && !IsGuest)};isEDD=false;canEDD=false;">
+                <form name="myform" novalidate="novalidate" ng-hide="Duplicates && {!IsGuest}">
+                    <div class="row">
+                        <div class="col-md-9" style="padding-bottom:10px;">
+                            <div class="SectionHeader">
+                                <div class="numberCircleReverse">4</div>
+                                <div>Further details</div>
+                            </div>
+                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="false">
+                                <!--C0750: CAA Quick Wins Starts-->
+                                <div class="panel panel-default" ng-repeat="app in Data.Applicants track by app.Id" on-finish-render="ngRepeatFinished" ng-init="SerialNo=['One', 'Two', 'Three', 'Four', 'Five']">
+                                    <c:CAA_RM_BasicInformation model="app" ypsa="false" currentaccount="{!IsCurrentAccount}" ftd="{!IsFTD}" isguest="{!IsGuest}" />
+                                </div>
+                                <!--C0750: CAA Quick Wins Ends-->
+                                <apex:outputpanel rendered="{!IsABranch}">
+                                    <div class="panel panel-default" ng-hide="{!!IsABranch} && !isBranch">
+                                        <c:CAA_RM_BranchOverride model="Data.Applicants[0]" ypsa="false" currentaccount="{!IsCurrentAccount}" ftd="{!IsFTD}" isguest="{!IsGuest}" />
+                                    </div>
+                                </apex:outputpanel>
+                            </div>
+
+
+                            <apex:outputpanel rendered="{!Not(IsGuest) && false}">
+                                <!-- Debug only -->
+                                <div>
+                                    Submit clicked : {{Submitted}}
+                                </div>
+                                <div>
+                                    Form valid : {{myform.$valid}}
+                                </div>
+                            </apex:outputpanel>
+                            <div>
+                                <div class="alert alert-danger visible-xs" ng-show="myform.$invalid">
+                                    There is missing required information
+                                </div>
+                                <button class="btn btnArb" ng-click="Submitted = true;Complete()" ng-hide="HideComplete()">
+                                    <span>
+                                        <strong>Continue</strong>
+                                        <span class="fa-stack fa">
+                                            <i class="fa fa-circle-thin fa-stack-2x"></i>
+                                            <i class="fa fa-chevron-right fa-stack-1x"></i>
+                                        </span>
+                                    </span>
+                                </button>
+                            </div>
+                            
+                        </div>
+                        <div class="col-md-3">
+                            <div class="rightcol" id="sidebar">
+                                <c:CAA_Progress stage="4" rendered="{!IsGuest}"></c:CAA_Progress>
+                                <apex:outputpanel rendered="{!Not(IsGuest)}">
+                                    <div ng-show="!isRMT && canEDD">
+                                        <button class="btn btnArb" ng-click="isEDD=true;canEDD=false;">Adhoc EDD</button>
+                                    </div>
+                                </apex:outputpanel>
+                                <div class="alert alert-warning" ng-show="RMAlertText">
+                                    <i class="fa fa-thumb-tack"></i>
+                                    {{RMAlertText}}
+                                </div>
+                                <div class="alert alert-danger" ng-show="ErrorAlertText">
+                                    <i class="fa fa-thumbs-down" aria-hidden="true"></i>
+                                    {{ErrorAlertText}}
+                                </div>
+                                <div style="display:none">
+                                    {{ShowErrors()}}
+                                </div>
+                                <div ng-repeat="app in Data.Applicants" ng-show="Submitted && !Duplicates">
+                                    <div class="alert alert-success" ng-show="app.Valid"><i class="fa fa-check"></i> {{app.FirstName}} {{app.LastName}}</div>
+                                    <div class="alert alert-danger" ng-hide="app.Valid"><i class="fa fa-close"></i> {{app.FirstName}} {{app.LastName}} <br /> is missing required information</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </apex:define>
+    </apex:composition>
+    <script>
+
+
+
+    $(function() {
+
+
+
+
+
+
+    $('#applicant-accordion').on('show.bs.collapse', function (e) {
+        var prev = $(e.target).prev('.panel-heading');
+
+        var find = prev.find('.panel-title');
+
+         $(e.target).prev('.panel-heading').addClass('active');
+    });
+
+    $('#applicant-accordion').on('hide.bs.collapse', function (e) {
+        //$(this).prev('.panel-heading').not($(e.target)).removeClass('active');
+
+        $(e.target).prev('.panel-heading').removeClass('active');
+    });
+
+    });
+
+
+    </script>
+
+
+
+
+    <script>
+            caaApp.directive('onFinishRender', function ($timeout) {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attr) {
+            if (scope.$last === true) {
+                $timeout(function () {
+                scope.$emit('ngRepeatFinished');
+                });
+            }
+        }
+    }
+
+      });
+    </script>
+</apex:page>

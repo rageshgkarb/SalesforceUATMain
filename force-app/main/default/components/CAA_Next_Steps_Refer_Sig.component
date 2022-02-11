@@ -1,0 +1,81 @@
+<apex:component >
+<apex:attribute name="ProductName" type="String" description=""/>
+<apex:attribute name="OppReference" type="String" description=""/>
+
+<div class="SectionTitle">
+  Thank you for your application for a {!ProductName}
+</div>
+
+<div>
+  Unfortunately, we are unable to proceed with your application, until we receive your signed application form.
+</div>
+<div class="SectionBreak"/>
+<div>
+  <div class="SectionTitle">
+      What you need to do next                          
+  </div>
+  
+  <div class="row">
+      <div class="col-sm-4">
+          <div class="clearfix" style="padding-bottom:10px;">
+          <span class="circle-dark circle-lg pull-left">1</span>
+          </div>
+          
+          <div>
+              <strong>Make a note </strong>of your reference number
+          </div>
+          
+          <div>
+              It is: <strong>{!OppReference}</strong>
+          </div>                                  
+          
+      </div>
+      <div class="col-sm-4">
+        
+          <div class="clearfix" style="padding-bottom:10px;">
+              <span class="circle-dark circle-lg pull-left">2</span>
+          </div>
+          
+          <div>
+              Download your account documents from the downloads section below
+          </div>
+      
+          
+          
+      </div>
+      <div class="col-sm-4">
+          <div class="clearfix" style="padding-bottom:10px;">
+          <span class="circle-dark circle-lg pull-left">3</span>
+          </div>
+          
+          <div>
+              Please print and sign the application form.
+          </div>
+          <br/>
+           <div>
+              Please return the signed application form to the below FREEPOST address:
+          </div>
+          <br/>
+          <div>
+              FREEPOST
+          </div>
+          <div>
+              Al Rayan Bank PLC
+          </div>
+          <div>
+              FPN 3258
+          </div>
+          <div>
+              PO Box 12461
+          </div>
+          <div>
+              Birmingham
+          </div>
+          <div>
+              B16 6AQ
+          </div>
+      </div>
+  </div>
+</div>
+
+</apex:component>

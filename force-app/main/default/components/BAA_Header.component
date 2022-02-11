@@ -1,0 +1,99 @@
+<apex:component layout="none" controller="HPPCAA_SummaryController">
+<apex:attribute name="Title" type="String" description=""/>
+
+<apex:attribute name="objOpp" type="opportunity" description="" assignTo="{!Opp}"/>
+
+<apex:attribute name="Hide" type="Boolean" description=""/>    
+    
+     <style>
+    .navbar{
+         margin-bottom: 0px;
+         }
+         </style>
+    
+    
+<apex:outputPanel rendered="{!!Hide}" layout="none">
+    <nav class="navbar navbar-default" role="navigation" >
+    <div class="navbar-header" style="width:100%;"  >
+        <a class="navbar-brand" href="#"><span style="color:#FFFFFF;"><h2>{!Opp.Name} - {!Title}</h2></span></a>
+        
+        
+        <div style="text-align: right;padding-right:10px;padding-top:5px;color:#fff;">
+                        <div>
+                            <apex:outputPanel rendered="{!Opp.IsPreRewind__c}"><b>Pre Submission Rewind</b></apex:outputPanel>                        
+                        </div>
+                        <div>
+                            <apex:outputPanel rendered="{!Opp.IsPostRewind__c}"><b>Post Submission Rewind</b></apex:outputPanel>                        
+                        </div> 
+                        <div>
+                            <apex:outputPanel rendered="{!LatestRewind != null}">
+                           
+                            <a style="color:#fff;text-decoration:bold;" href="/{!LatestRewind.id}">Last rewind by {!LatestRewind.Createdby.name} - {!LatestRewind.Name}</a>
+                            </apex:outputPanel>                        
+                        </div> 
+                                           
+                    </div>
+        
+    </div>
+    </nav>
+</apex:outputPanel>   
+
+
+
+<apex:outputPanel rendered="{!Opp != null && !hide}" layout="none">
+<div class="panel panel-default">
+<div class="panel-body">
+<div class="container">
+<div class="row">
+    <div class="col-sm-6 col-md-3">
+       <label>Organisation Name</label> 
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <apex:outputField value="{!opp.account.name}"/>
+    </div>
+    <div class="col-sm-6 col-md-3">
+       <label>Organisation Type</label> 
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <apex:outputField value="{!opp.account.Organisation_type__c}"/>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6 col-md-3">
+       <label>Product</label> 
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <apex:outputField value="{!opp.IBB_Product__r.name}"/>
+    </div>
+    <div class="col-sm-6 col-md-3">
+       <label>Contact Name</label> 
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <apex:outputField value="{!opp.account.Contact_Name__c}"/>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6 col-md-3">
+       <label></label> 
+    </div>
+    <div class="col-sm-6 col-md-3">
+        
+    </div>
+    <div class="col-sm-6 col-md-3">
+       <label>Stage</label> 
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <apex:outputField value="{!opp.StageName}"/>
+    </div>
+</div>
+</div>
+</div>
+
+</div>
+</apex:outputPanel>
+ 
+    
+   
+  
+    
+</apex:component>

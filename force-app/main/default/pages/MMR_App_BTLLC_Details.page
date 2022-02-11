@@ -1,0 +1,316 @@
+<apex:page showheader="false" sidebar="false" controller="MMR_App_BTLLC_ApplicationDetails" doctype="html-5.0" action="{!Setup}"><!-- C0644 -->
+    <head>
+        <c:MMR_PageHeader ></c:MMR_PageHeader>
+    </head>
+    <body>
+
+        <c:MMR_Header title="Application - Application Details" numapps="{!numapplying}" opp="{!bopp}" hide="{!IsCredit}" />
+        <div class="container">
+            <c:MMR_App_BTLLC_Nav active="0" eventid="{!EventId}" rendered="{!!IsCredit && !IsCompleted}" />
+            <c:MMR_App_BTLLC_Nav_Links active="0" eventid="{!EventId}" rendered="{!!IsCredit && IsCompleted}" />
+            <c:MMR_FF_BTLLC_Credit_Nav eventid="{!eventid}" activesection="C" active="0" rendered="{!IsCredit}" />
+
+
+            <apex:form id="aForm" styleclass="form-horizontal">
+
+                <apex:pagemessages ></apex:pagemessages>
+
+
+
+                <!--panel start-->
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        Property Details
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-sm-6 col-md-3">
+                                        <label>Are you paying full market value for the property?</label>
+                                    </div>
+                                    <div class="col-sm-6 col-md-3">
+                                        <apex:inputfield styleclass="form-control" value="{!ExOpp.Paying_full_value__c}" required="true" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-sm-6 col-md-3">
+                                        <label>Tenure</label>
+                                    </div>
+                                    <div class="col-sm-6 col-md-3">
+                                        <apex:inputfield id="tenure" styleclass="tenure form-control" value="{!ExOpp.Tenure__c}" required="true" />
+                                    </div>
+                                    <div class="col-sm-6 col-md-3">
+                                        <label>If the property is less than 10 years old does it have a guarantee?</label>
+                                    </div>
+                                    <div class="col-sm-6 col-md-3">
+                                        <apex:inputfield styleclass="form-control" value="{!ExOpp.Property_guarantee__c }" required="false" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row tenureItem">
+                                <div class="form-group">
+                                    <div class="col-sm-6 col-md-3">
+                                        <label>Remaining leasehold term</label>
+                                    </div>
+                                    <div class="col-sm-6 col-md-3">
+                                        <apex:inputfield styleclass="form-control" value="{!ExOpp.Remaining_leasehold_term__c}" />
+                                    </div>
+                                    <div class="col-sm-6 col-md-3">
+                                        <label>Full lease term</label>
+                                    </div>
+                                    <div class="col-sm-6 col-md-3">
+                                        <apex:inputfield styleclass="tenure form-control" value="{!ExOpp.Full_lease_term__c}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-sm-6 col-md-3">
+                                        <label>Property type</label>
+                                    </div>
+                                    <div class="col-sm-6 col-md-3">
+                                        <apex:inputfield styleclass="PropType form-control" value="{!ExOpp.Property_Type__c}" required="true" />
+                                    </div>
+                                    <div class="col-sm-6 col-md-3">
+                                        <label>Property details</label>
+                                    </div>
+                                    <div class="col-sm-6 col-md-3">
+                                        <apex:inputfield styleclass="form-control" id="propType2noKendo" value="{!ExOpp.Property_details__c}" required="true" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-sm-6 col-md-3">
+                                        <label>Additional property information</label>
+                                    </div>
+                                    <div class="col-sm-6 col-md-3">
+                                        <apex:inputfield styleclass="form-control" value="{!Opp.Misc_property_info__c}" required="false" />
+                                    </div>
+                                    <div class="col-sm-6 col-md-3">
+                                        <label>No. of bedrooms</label>
+                                    </div>
+                                    <div class="col-sm-6 col-md-3">
+                                        <apex:inputfield styleclass="form-control" value="{!ExOpp.No_of_bedrooms__c}" required="true" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row flatItem">
+                                <div class="form-group">
+                                    <div class="col-sm-6 col-md-3">
+                                        <label>If a flat, how many storeys high</label>
+                                    </div>
+                                    <div class="col-sm-6 col-md-3">
+                                        <apex:inputfield styleclass="form-control" value="{!ExOpp.If_a_flat_how_many_storeys_high__c}" />
+                                    </div>
+                                    <div class="col-sm-6 col-md-3">
+                                        <label>What floor is the flat located on</label>
+                                    </div>
+                                    <div class="col-sm-6 col-md-3">
+                                        <apex:inputfield styleclass="form-control" value="{!ExOpp.What_floor_is_the_flat_located_on__c}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-sm-6 col-md-3">
+                                        <label>Is the property above a commercial premises?</label>
+                                    </div>
+                                    <div class="col-sm-6 col-md-3">
+                                        <apex:inputfield styleclass="form-control" value="{!ExOpp.Is_property_above_commercial_premise__c}" required="true" />
+                                    </div>
+                                    <div class="col-sm-6 col-md-3">
+                                        <label>Is the property ex local authority?</label>
+                                    </div>
+                                    <div class="col-sm-6 col-md-3">
+                                        <apex:inputfield styleclass="form-control" value="{!ExOpp.Is_the_property_expublic_sector__c}" required="true" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-sm-6 col-md-3">
+                                        <label>Are you buying from a family member</label>
+                                    </div>
+                                    <div class="col-sm-6 col-md-3">
+                                        <apex:inputfield styleclass="buyfam form-control" value="{!ExOpp.Are_you_buying_from_a_family_member__c}" required="true" />
+                                    </div>
+                                    <div class="col-sm-6 col-md-3 buyfamItem">
+                                        <label>Is there an element of Gift involved?</label>
+                                    </div>
+                                    <div class="col-sm-6 col-md-3 buyfamItem">
+                                        <apex:inputfield styleclass="form-control" value="{!ExOpp.Is_there_an_element_of_Gift_involved__c}" required="false" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-sm-6 col-md-3">
+                                        <label>Is the property shared ownership?</label>
+                                    </div>
+                                    <div class="col-sm-6 col-md-3">
+                                        <apex:inputfield styleclass="form-control" value="{!ExOpp.Shared_ownership__c}" required="true" />
+                                    </div>
+                                    <div class="col-sm-6 col-md-3">
+                                        &nbsp;
+                                    </div>
+                                    <div class="col-sm-6 col-md-3">
+                                        &nbsp;
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-sm-6 col-md-3">
+                                        <label>Construction type of roof </label>
+                                    </div>
+                                    <div class="col-sm-6 col-md-3">
+                                        <apex:inputfield styleclass="form-control" value="{!ExOpp.Construction_Type_Roof__c}" required="true" />
+                                    </div>
+                                    <div class="col-sm-6 col-md-3">
+                                        <label>Construction type of walls</label>
+                                    </div>
+                                    <div class="col-sm-6 col-md-3">
+                                        <apex:inputfield styleclass="form-control" value="{!ExOpp.Construction_type_walls__c}" required="true" />
+                                    </div>
+                                </div>
+                            </div>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6 col-md-3">
+                                            <label>Will the property be let on a standard AST agreement?</label>
+                                        </div>
+                                        <div class="col-sm-6 col-md-3">
+                                            <apex:inputfield styleclass="ast form-control" value="{!ExOpp.Will_property_be_let_using_AST__c}" />
+                                        </div>
+                                        <div class="col-sm-6 col-md-3 astItem">
+                                            <label>Please state the length of the AST</label>
+                                        </div>
+                                        <div class="col-sm-6 col-md-3 astItem">
+                                            <apex:inputfield styleclass="form-control" value="{!ExOpp.Length_of_AST__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6 col-md-3">
+                                            <label>If 'Buy to Let' refinancing have you owned property for more than 12 months?</label>
+                                        </div>
+                                        <div class="col-sm-6 col-md-3">
+                                            <apex:inputfield required="false" styleclass="form-control" value="{!Opp.If_BTL_financing_owned_property_12mths__c  }" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6 col-md-3">
+                                            <label>How many Buy to Let properties do you own?</label>
+                                        </div>
+                                        <div class="col-sm-6 col-md-3">
+                                            <apex:inputfield styleclass="form-control" value="{!Opp.How_many_BTL_Properties_do_you_own__c }" />
+                                        </div>
+                                        <div class="col-sm-6 col-md-3">
+                                            <label>Will the property be let to family or to a company?</label>
+                                        </div>
+                                        <div class="col-sm-6 col-md-3">
+                                            <apex:inputfield styleclass="form-control" value="{!ExOpp.Property_let_to_family_or_company__c}" required="false" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6 col-md-3">
+                                            <label>What type of Buy to Let do you require?</label>
+                                        </div>
+                                        <div class="col-sm-6 col-md-3">
+                                            <apex:inputfield required="true" styleclass="form-control" value="{!Opp.What_type_of_Buy_to_Let_do_you_require__c   }" />
+                                        </div>
+                                        <div class="col-sm-6 col-md-3">
+                                            <label>Estimated actual monthly rental income?</label>
+                                        </div>
+                                        <div class="col-sm-6 col-md-3">
+                                            <apex:inputfield styleclass="form-control" value="{!Opp.Estimated_actual_monthly_rental_income__c  }" required="true" />
+                                        </div>
+                                    </div>
+                                </div>
+                            <apex:outputpanel rendered="{!IsRefinance}">
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6 col-md-3">
+                                            <label>If refinancing, when was the property purchased?</label>
+                                        </div>
+                                        <div class="col-sm-6 col-md-3">
+                                            <apex:inputfield styleclass="form-control" value="{!Opp.Refinance_date_property_purchased__c}" required="false" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </apex:outputpanel>
+
+
+
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <apex:commandbutton styleclass="btn-danger" value="Save" action="{!Save}" rendered="{!!IsCompleted || IsCredit }" />
+                <apex:commandbutton styleclass="btn-danger" value="Next" action="{!GoAddApp}" rendered="{!!IsCredit && !IsCompleted}" />
+
+
+                <script>
+    function PropType()
+{
+    var value = $("select.PropType").val();
+    FadeInputContains(value,'Flat','flatItem');
+}
+
+function Tenure()
+{
+    var value = $("select.tenure").val();
+    FadeInput(value,'Leasehold','tenureItem');
+}
+$("select.tenure").change(Tenure);
+$("select.PropType").change(PropType);
+$("select.buyfam").change(BuyFam);
+$("select.ast").change(AST);
+
+function BuyFam()
+{
+    var value = $("select.buyfam").val();
+    FadeInput(value,'Yes','buyfamItem');
+}
+
+function AST()
+{
+    var value = $("select.ast").val();
+    FadeInput(value,'Yes','astItem');
+}
+
+
+$(document).ready(function(){
+BuyFam();
+AST();
+Tenure();
+PropType();
+
+});
+
+
+                </script>
+
+
+
+
+
+            </apex:form>
+
+        </div>
+    </body>
+</apex:page>

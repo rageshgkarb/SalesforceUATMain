@@ -1,0 +1,5 @@
+<apex:page standardController="IBB_Product_Set__c" recordsetVar="IBB_Product_Set__cs" extensions="RedirectCE" id="thePage" action="{!redirectIBBProductSetListPage}" showHeader="false" sidebar="false">
+
+  Account Redirect page: {!ProfileName}
+  
+</apex:page>

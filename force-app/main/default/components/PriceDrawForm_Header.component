@@ -1,0 +1,153 @@
+<!--C0685-->
+<apex:component >
+
+<apex:attribute name="Title" type="String" description=""/>
+
+<apex:attribute name="Hide" type="Boolean" description=""/>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+
+.requiredInput{
+    border-left: solid 5px red;
+}
+
+.form-group{
+    margin-bottom:5px;
+}
+
+.form-control{
+    height:25px;
+    padding:0px 0px 0px 12px;   
+}
+    
+    @font-face {
+        font-family: 'simpleLight';
+        src: url('../fonts/Roboto-Thin.woff');
+    }
+
+    @font-face {
+        font-family: 'simple';
+        src: url('../fonts/Roboto-Light.woff');
+    }
+
+    @font-face {
+        font-family: 'simpleMedium';
+        src: url('../fonts/Roboto-Regular.woff');
+    }
+
+    @font-face {
+        font-family: 'simpleBold';
+        src: url('../fonts/Roboto-Medium.woff');
+    }
+
+
+    .textLargeGold {
+        color: #B3995D;
+        font-family: simple;
+        font-size: 28px;
+    }
+
+    .SubTitle {
+        font-size: 20px !important;
+    }
+
+    .sectionTitleSmallGray {
+        color: #8E8E8E;
+        font-family: simpleMedium;
+        font-size: 16px;
+        font-weight: normal;
+        margin-bottom: 0px !important;
+    }
+
+    .campaignTitle {
+        font-size: 30px !important;
+    }
+
+    .arbLogoSmall {
+        height: 60px;
+        margin: 30px;
+        margin-bottom: 5px;
+    }
+
+    .arbLogoBig {
+        width: 280px;
+        padding: 40px;
+        position: absolute;
+        bottom: 0;
+    }
+
+    .footerBar {
+        position: absolute;
+        height: 37px;
+        width: 100%;
+        bottom: 0;
+        background: #D3D3D3;
+    }
+
+    .barContentRight {
+        line-height: 35px;
+        float: right;
+    }
+
+    .footerLogo {
+        width: 100px;
+        vertical-align: middle;
+        margin-right: 10px;
+    }
+
+    .headerBar {
+        background-color: #b3995d;
+        width: 100%;
+        height: 40px;
+    }
+
+    .barContentLeft {
+        line-height: 35px;
+        float: left;
+        margin-left: 15px;
+    }
+
+    .textSmallerWhiteBold {
+        color: white;
+        font-family: simpleBold;
+        font-size: 14px;
+        vertical-align: middle;
+    }
+
+    .textSmallerWhite {
+        color: white;
+        font-family: simpleMedium;
+        font-size: 14px;
+        vertical-align: middle;
+        font-weight: normal;
+    }
+
+    .goldButton {
+        margin-right: 2px;
+        border-radius: 0px !important;
+        border-width: 0px !important;
+        display: inline-block !important;
+        color: #ffffff !important;
+        font-family: simpleMedium !important;
+        font-size: 14px !important;
+        font-weight: normal !important;
+        padding: 7px 12px !important;
+        text-decoration: none !important;
+        background-color: #b3995d !important;
+        border: none !important;
+        background-image: none !important;
+        cursor: pointer;
+    }
+
+</style>
+
+    <!--<nav class="navbar navbar-default" role="navigation" >
+    <div class="navbar-header" style="width:100%;padding-left:40%;"  >
+        <a class="navbar-brand" href="#"><span style="color:#FFFFFF;"><h3> {!Title}</h3></span></a>
+    </div>
+    </nav>-->
+
+
+
+</apex:component>

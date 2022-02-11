@@ -1,0 +1,5 @@
+<apex:page standardController="Lead" extensions="RedirectCE" id="thePage" action="{!redirectViewPage}" showHeader="false" sidebar="false">
+
+  Lead Redirect page: {!ProfileName}
+  
+</apex:page>

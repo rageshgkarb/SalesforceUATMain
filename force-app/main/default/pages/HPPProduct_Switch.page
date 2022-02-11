@@ -1,0 +1,681 @@
+<apex:page showheader="false" sidebar="false" doctype="html-5.0" standardstylesheets="false" controller="HPP_ProductSwitch" action="{!Setup}">
+<apex:composition template="HPPProductSwitchTemplate">
+        <apex:define name="include">
+        <script>
+    //angular.module("hppApp",[]);
+
+    angular.module("hppApp").controller("ProdSwitchController", ["$scope","$sce","servicePage","$window", "serviceApplication",
+            function($scope,$sce,servicePage,$window,serviceApplication) {
+    
+    
+        $scope.GetData = function(oppId)
+        {
+            if(!oppId) return;
+        
+            servicePage.GetData(oppId)
+                    .then(
+                        function(result){                    
+                            $scope.Data = result.Data;    
+                            //$scope.DProducts= result.Products;                    
+                        },
+                        function(error){
+                            
+                        }             
+                    ); 
+        }
+        
+        $scope.SelectProduct = function()
+        {   
+            $scope.ProductSelected = true;            
+            $scope.GeneratingFIS = true;              
+            
+            servicePage.UpdateProduct($scope.OppId, $scope.SelectedProduct.Id, $scope.SelectionNotes)
+                    .then(
+                        function(result){    
+                            var i = 1;                
+                            //$scope.Data = result.Data;    
+                            //$scope.DProducts= result.Products;  
+                            
+                            //$scope.RunRCE($scope.OppId);
+                            $scope.CreateStubs();                  
+                        },
+                        function(error){
+                            $scope.GeneratingFIS = false;
+                        }             
+                    ); 
+        }
+        
+        $scope.CreateStubs = function()
+        {   
+            servicePage.CreateStubs ($scope.OppId)
+                    .then(
+                        function(result){    
+                            $scope.RunRCE ();
+                        },
+                        function(error){
+                            $scope.GeneratingFIS = false;
+                        }             
+                    ); 
+        }
+        
+        $scope.RunRCE = function()
+        {   
+            servicePage.RunRCE($scope.OppId)
+                    .then(
+                        function(result){    
+                            var i = 1;                
+                            //$scope.Data = result.Data;    
+                            //$scope.DProducts= result.Products;  
+                            $scope.GenerateFIS();
+                                       
+                        },
+                        function(error){
+                            $scope.GeneratingFIS = false;
+                        }             
+                    ); 
+        }
+        
+        $scope.GenerateFIS = function()
+        {   
+            servicePage.GenerateFIS($scope.OppId, $scope.SelectedProduct.DocugenId)
+                    .then(
+                        function(result){    
+                        
+                            if(result.Success)
+                            {
+                                $scope.AttachmentIDFis = result.AttachmentId;
+                            }
+                        
+                        
+                            var i = 1;                
+                            //$scope.Data = result.Data;    
+                            //$scope.DProducts= result.Products;  
+                            $scope.GeneratingFIS = false;
+                                       
+                        },
+                        function(error){
+                            var g = 1;
+                            $scope.GeneratingFIS = false;
+                        }             
+                    ); 
+        }
+        
+        $scope.Complete = function()
+        {
+            serviceApplication.LoadShow('Processing...');
+            servicePage.Complete($scope.EventLogId)
+                    .then(
+                        function(result){                        
+                            if(result.Success)
+                            {
+                                if(result.URL)
+                                {
+                                    $window.location.href = result.URL;
+                                }
+                                else
+                                {
+                                    serviceApplication.LoadHide(true); 
+                                }
+                            } 
+                            else
+                            {
+                                serviceApplication.LoadHide(true); 
+                            }          
+                        },
+                        function(error){
+                            serviceApplication.LoadHide(true); 
+                        }             
+                    ); 
+        }
+        
+        $scope.StartSwitch = function()
+        {
+            if(!$scope.OppId || !$scope.Data.PropertyValue) return;
+        
+            servicePage.StartSwitch($scope.OppId,$scope.Data.NewMarketValue)
+                    .then(
+                        function(result){                        
+                            $scope.StartResponse= result; 
+                            
+                            $window.location.href = result;
+                                               
+                        },
+                        function(error){
+                            
+                        }             
+                    ); 
+        }
+    
+    }]);
+    
+    angular.module("hppApp").service('servicePage', ['$q', '$rootScope', function ($q, $rootScope) {
+       this.GetData= function(id)
+        {
+            var deferred = $q.defer();
+            Visualforce.remoting.timeout = 120000;
+            Visualforce.remoting.escape= false;
+                HPP_ProductSwitch.GetData(id,function(result, event){
+                    if(event.status){
+                        deferred.resolve(result);
+                    }
+                    else {
+                        deferred.reject(event);
+                    }     
+                },{ buffer: false, escape: false, timeout: 30000} );
+                return deferred.promise;
+        }        
+        
+        this.GenerateFIS= function(id,docId)
+        {
+            var deferred = $q.defer();
+            Visualforce.remoting.timeout = 120000;
+            Visualforce.remoting.escape= false;
+                HPP_ProductSwitch.GenerateFIS(id,docId,function(result, event){
+                    if(event.status){
+                        deferred.resolve(result);
+                    }
+                    else {
+                        deferred.reject(event);
+                    }     
+                },{ buffer: false, escape: false, timeout: 30000} );
+                return deferred.promise;
+        }
+        
+        this.Complete = function(id)
+        {
+            var deferred = $q.defer();
+                HPP_ProductSwitch.Complete(id,function(result, event){
+                    if(event.status){
+                        deferred.resolve(result);
+                    }
+                    else {
+                        deferred.reject(event);
+                    }     
+                },{ buffer: false, escape: false, timeout: 30000} );
+                return deferred.promise;
+        }
+        
+        this.CreateStubs = function(id)
+        {
+            var deferred = $q.defer();
+                HPP_ProductSwitch.CreateStubs(id,function(result, event){
+                    if(event.status){
+                        deferred.resolve(result);
+                    }
+                    else {
+                        deferred.reject(event);
+                    }     
+                },{ buffer: false, escape: false, timeout: 30000} );
+                return deferred.promise;
+        }
+        
+        this.RunRCE = function(id)
+        {
+            var deferred = $q.defer();
+                HPP_ProductSwitch.RunRCE(id,function(result, event){
+                    if(event.status){
+                        deferred.resolve(result);
+                    }
+                    else {
+                        deferred.reject(event);
+                    }     
+                },{ buffer: false, escape: false, timeout: 30000} );
+                return deferred.promise;
+        }
+        
+        this.UpdateProduct = function(id,value,notes)
+        {
+            var deferred = $q.defer();
+                HPP_ProductSwitch.UpdateProduct(id,value,notes,function(result, event){
+                    if(event.status){
+                        deferred.resolve(result);
+                    }
+                    else {
+                        deferred.reject(event);
+                    }     
+                },{ buffer: false, escape: false, timeout: 30000} );
+                return deferred.promise;
+        }
+        
+        }]);
+    
+    
+
+</script>
+        </apex:define>
+        
+        <apex:define name="header">
+            <c:HPP_Header title="Product Suitability" numapps="1" opp="{!Opp}" />
+        </apex:define>
+        <apex:define name="menu">
+      
+            <c:HPP_Angular_Menu oppid="{!Opp.id}" directorid="{!DirectorID}">
+            </c:HPP_Angular_Menu>
+        </apex:define>
+        <apex:define name="body">
+       
+            <div ng-app="demo" ng-controller="ProdSwitchController" class="verticalScrollSection">
+    
+   
+    
+    
+        <apex:form >
+            <div ng-init="GetData('{!opp.id}'); OppId='{!opp.id}'; EventLogId = '{!eventId }'" class="verticalSection">
+                <div class="SectionTitle">Select product</div> 
+                    <div class="row">  
+                        <div class="col-sm-6 col-md-6">
+                            <label>Current product</label>
+                            <div>{{Data.ProductName}}</div>
+                        </div>
+                        <div class="col-sm-6 col-md-3">
+                            <label>Account number</label>
+                             <div>{{Data.AccountNumber}}</div>
+                        </div>
+                        <div class="col-sm-6 col-md-3">
+                            <label>Account balance</label>
+                            <div>£{{Data.Balance|number:2}}</div>
+                        </div>
+                    </div>                     
+     
+     
+                         
+                       
+                      
+                                       
+<div id="container" >
+                    <table width="100%">
+                        <tr>
+                            
+                            <td valign="top" id="contenttd">
+                                <div id="content">
+                                  
+                                <apex:pagemessages ></apex:pagemessages>
+                                    <apex:outputPanel id="mainPageBlock">
+                                    <div style="padding:20px;">
+                                   
+                             
+<div ng-show="ProductSelected" class="row">
+   
+   <div class="SectionTitle">
+        {{SelectedProduct.Name}}   
+   </div>
+   <a href="" ng-click="ProductSelected=false;AttachmentIDFis =null;GeneratingFIS = false;" ng-show="!GeneratingFIS">Change product</a>
+</div>
+
+
+
+<div ng-hide="ProductSelected">
+      
+   
+    
+    <div ng-repeat="cat in Data.Products track by $index">
+        <div class="SectionTitle">{{cat.Name}}</div>
+        <div class="row">
+            <div class="col-sm-6">
+                <label>Product</label>                
+            </div>
+            <div class="col-sm-3">
+                <label>FTV</label>
+            </div>
+            <div class="col-sm-3">
+                <label>Rate</label>
+            </div>
+        </div>
+        
+        <div ng-repeat="item in cat.Items" class="row">
+          
+        
+        <div class="col-sm-6">
+             <input type="radio"  name="product" ng-model="$parent.$parent.SelectedProduct" ng-value="{{item}}"/>
+            {{item.Name}}
+        </div>
+        <div class="col-sm-3">
+            {{item.MaxFTV | number:0}}%
+        </div>
+        <div class="col-sm-3">
+            {{item.Rate|number:2}}%
+        </div>
+        </div>
+        
+    </div>
+    
+    <div class="row" style="padding-top:20px;">
+        <div class="col-sm-12">
+            <label>Product selection comments</label>
+            <div>
+                <textarea class="form-control" ng-model="SelectionNotes" rows="5"/>
+            </div>
+        </div>
+    </div>
+    
+    <div class="text-center" style="padding-top:10px;">
+    <button type="button" class="btn btn-default" ng-show="SelectedProduct && SelectionNotes" ng-click="SelectProduct()">Select product</button>
+    </div>
+</div>
+
+
+
+<div ng-show="ProductSelected">    
+<div class="SectionTitle">Documents</div>
+
+
+<div class="row" style="font-size:14px;">
+    <div class="col-sm-12">
+        <label><a href="{{SelectedProduct.RiskAndFeatures}}" target="_blank">
+        <span>
+  <i class="fa fa-file-pdf-o fa-2x"></i>
+</span>  
+        
+        Risk and Features Document</a></label>
+        
+    </div>
+    <div class="col-sm-12">
+        <div ng-show="GeneratingFIS">
+        <i class="fa fa-spinner fa-spin fa-lg fa-fw"></i>
+            <label >Generating FIS...</label>
+          
+        </div>
+        
+        <div ng-show="!GeneratingFIS && !AttachmentIDFis">
+            <button type="button" class="btn btn-default" ng-click="SelectProduct()">Create document</button>
+        </div>
+        
+        
+        <label ng-show="AttachmentIDFis"><a target="_blank" href="/servlet/servlet.FileDownload?file={{AttachmentIDFis}}">
+        <span>
+  <i class="fa fa-file-word-o fa-2x"></i>
+</span>
+        
+        FIS</a></label>
+        
+    </div>
+
+</div>
+
+
+<div class="text-center" style="padding-top:20px;" ng-show="AttachmentIDFis">
+    <button type="button" class="btn btn-default" ng-click="Complete()">Next</button>
+</div>
+<!--
+    <table width="100%">
+        <tr>
+            <td width="150px;">Product details</td>
+            <td>{!Prod.name}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><apex:outputLink value="{!KeyFactsLink}" rendered="{!prod != null}" target="_blank"><b>Risk and Features Document</b></apex:outputLink></td>
+        </tr>
+        <tr>
+                        
+            <td style="padding-top: 30px;"><apex:outputPanel rendered="{!prod != null && !IsCompleted && !DocLinkCreated}">
+    <button id="cRCE"  class="redBtn" >Create FIS/FQS</button>
+</apex:outputPanel></td>
+        
+        
+            
+            <td style="padding-top: 30px;"><apex:outputtext escape="false" value="{!DocLink}" rendered="{!prod != null}" ></apex:outputtext></td>
+        </tr>
+        
+    </table>
+-->
+</div>
+
+<div style="padding-top: 30px;">
+    <!--<apex:commandButton styleClass="redBtn" value="Switch Product" rendered="{!DocLinkCreated && !ISCompleted}" action="{!Switch}"/>-->
+
+</div>
+
+                                   
+                                 </div>
+                                  </apex:outputPanel>
+        </div>
+</td>
+</tr>
+</table>
+</div>                                                                       
+                                               
+                                 
+                                         
+                          
+                
+                </div>
+             
+              
+            
+            <!--
+            <apex:outputPanel rendered="{!!RCEFailed}">
+    <script>
+    $('#cRCE').click(function (e) {
+    // custom handling here
+    e.preventDefault();
+    
+    ShowDocumentLoad1();
+            rceCall();
+    
+});
+    
+   
+    
+    
+        function RceResult()
+        {       
+            SetupKendo();
+            HideDocumentLoad1();
+            ShowDocumentLoad();
+            offerletter();
+        }        
+    </script>
+</apex:outputPanel>
+ <apex:actionFunction oncomplete="HideDocumentLoad();SetupKendo();" name="offerletter" action="{!CreateDoc}" rerender="mainPageBlock"/>
+  <apex:actionFunction oncomplete="RceResult();" name="rceCall" action="{!CallRCE}" rerender="mainPageBlock"/>
+<apex:outputPanel rendered="{!RCEFailed}">
+    <script>
+        function RceResult()
+        {
+            HideDocumentLoad1();
+            
+            var errwindow = $("#errWindow");
+            
+             if (!errwindow .data("kendoWindow")) {
+                        errwindow .kendoWindow({
+                            width: "400px",                            
+                            title: "RCE Failed",
+                            modal: true
+                            });                        
+                        }
+                        errwindow .data("kendoWindow").open();                   
+                        errwindow .data("kendoWindow").center(); 
+                        
+        }        
+    </script>
+</apex:outputPanel>
+            -->
+          
+          <div id="fade"></div>
+<div id="overlay" style="display:none;">
+Generating document...
+<br/>
+<br/>
+This may take a few seconds.
+
+<div style="padding-top: 50px;" >
+<img src="{!URLFOR($Resource.ibbstyle, 'images/269.gif')}"></img>
+</div>
+
+
+</div>
+
+ <div id="fade1"></div>
+<div id="overlay1" style="display:none;">
+Calling RCE...
+<br/>
+<br/>
+This may take a few seconds.
+
+<div style="padding-top: 50px;" >
+<img src="{!URLFOR($Resource.ibbstyle, 'images/269.gif')}"></img>
+</div>
+
+
+</div>
+
+
+          
+        </apex:form>
+<style type="text/css">
+#overlay,#overlay1 {
+    display: none; /* ensures itâ€™s invisible until itâ€™s called */
+    position: absolute; /* makes the div go into a position thatâ€™s absolute to the browser viewing area */
+    left: 25%; /* positions the div half way horizontally */
+    top: 25%; /* positions the div half way vertically */
+    padding: 25px; 
+    border: 2px solid black;
+    background-color: #ffffff;
+    width: 50%;
+    height: 50%;
+    z-index: 100; /* makes the div the top layer, so itâ€™ll lay on top of the other content */
+    text-align: center;
+    font-size: 18px;
+}
+#fade,#fade1 {
+    display: none;  /* ensures itâ€™s invisible until itâ€™s called */
+    position: absolute;  /* makes the div go into a position thatâ€™s absolute to the browser viewing area */
+    left: 0%; /* makes the div span all the way across the viewing area */
+    top: 0%; /* makes the div span all the way across the viewing area */
+    background-color: #ccc;
+    -moz-opacity: 0.7; /* makes the div transparent, so you have a cool overlay effect */
+    opacity: .70;
+    filter: alpha(opacity=70);
+    width: 100%;
+    height: 100%;
+    z-index: 90; /* makes the div the second most top layer, so itâ€™ll lay on top of everything else EXCEPT for divs with a higher z-index (meaning the #overlay ruleset) */
+}
+</style>
+
+<script>
+
+
+
+    // handle the #toggle click event
+    $("#toggle").on("click", function() {
+      // apply/remove the active class to the row-offcanvas element
+      $(".row-offcanvas").toggleClass("active");
+    });
+    
+    $("#toggler").on("click", function() {
+      // apply/remove the active class to the row-offcanvas element
+      $(".topMenu").toggleClass("active");
+    });
+
+
+
+
+function ShowDocumentLoad1()
+{
+    $('#overlay1').show('slow');
+    $('#fade1').show('slow');
+}
+
+function HideDocumentLoad1()
+{
+    $('#overlay1').hide('slow');
+    $('#fade1').hide('slow');
+}
+
+ 
+    
+        function SetDate(dateField)
+{
+    
+
+    var day = $(dateField).find('.DateDay').val();
+    var month= $(dateField).find('.DateMonth').val();
+    var year = $(dateField).find('.DateYear').val();  
+    $(dateField).find('input').val(day +'/' + month + '/' + year);
+    
+    
+}
+    
+    
+    $('.DateDay').change(function()
+{
+
+
+
+SetDate($(this).parent());
+
+});
+
+$('.DateMonth').change(function()
+{
+SetDate($(this).parent());
+});
+
+$('.DateYear').change(function()
+{
+SetDate($(this).parent());
+});
+
+
+function ParseDAte()
+{
+
+return;
+
+$('[id$=DateValue]').each(function()
+{
+ var valu = $(this).val();
+ var fvalu = valu;
+ if(valu == '')
+     return;
+ 
+    valu = valu.replace('GMT ','');
+    valu = valu.replace('00:00:00 ','');
+    valu = valu.replace('Mon ','');
+    valu = valu.replace('Tue ','');
+    valu = valu.replace('Wed ','');
+    valu = valu.replace('Thu ','');
+    valu = valu.replace('Fri ','');
+    valu = valu.replace('Sat ','');
+    valu = valu.replace('Sun ','');    
+
+    
+    
+    var d = Date.parse(valu);
+    
+    var ds = d.toString('dd/MM/yyyy');
+    
+    var day = $(this).parent().find('.DateDay');
+    day.val(d.toString('dd'));
+    
+    var month = $(this).parent().find('.DateMonth');
+    month .val(d.toString('MM'));
+    
+    var year= $(this).parent().find('.DateYear');
+    year.val(d.toString('yyyy'));    
+           
+    $(this).val(ds); 
+    
+});
+};
+
+ParseDAte();
+
+</script>
+
+
+        </div>
+   
+        </apex:define>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+</apex:composition>        
+</apex:page>

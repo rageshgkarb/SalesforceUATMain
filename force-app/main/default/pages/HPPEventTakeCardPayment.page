@@ -1,0 +1,548 @@
+<!-- C00096 2013-10-16 SHow problems with AJE calls
+ Remove sort code for internal
+ Cater for non card AJE calls  -->
+<!-- C00187 2014-04-02 Payment none comments not saving -->
+<apex:page controller="HPPEventTakeCardPaymentController" sidebar="false" showheader="false" title="Take Card Payment" action="{!autoRun}">
+    <head>
+
+        <apex:stylesheet value="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+       <apex:stylesheet value="https://maxcdn.bootstrapcdn.com/bootswatch/3.2.0/spacelab/bootstrap.min.css"/>
+          <apex:stylesheet value="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"/>
+        <apex:includescript value="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js" />
+        
+        
+        <c:KendoResource IgnoreKendoDropDown="true"></c:KendoResource>
+        
+        
+        <!-- Angular Resources -->
+        <!--
+        <apex:includescript value="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular.min.js" />
+        <apex:includescript value="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular-animate.min.js" />
+        <apex:includescript value="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular-sanitize.js" />
+        <apex:includescript value="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-messages.js" />
+        -->
+        
+        <apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.11/angular.min.js"/>
+        <apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.11/angular-animate.min.js"/>
+        <apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.11/angular-sanitize.js"/>
+        <apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.11/angular-messages.js"/>
+        
+        
+        
+
+    <apex:stylesheet value="{!URLFOR($Resource.HPP_Includes, '/css/css.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.HPP_Includes, '/css/wait.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.HPP_Includes, '/css/structure.css')}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.HPP_Includes, '/css/modal.css')}"  />
+
+
+        <apex:includeScript value="{!URLFOR($Resource.HPP_Includes, '/js/app/app.js')}"  />
+          <apex:includeScript value="{!URLFOR($Resource.HPP_Includes, '/js/service/service_messagebroker.js')}"  />
+          <apex:includeScript value="{!URLFOR($Resource.HPP_Includes, '/js/service/service_parameters.js')}"  />
+        <apex:includeScript value="{!URLFOR($Resource.HPP_Includes, '/js/service/service_application.js')}"  />
+         
+                 <apex:includeScript value="{!URLFOR($Resource.HPP_Includes, '/js/controller/controller_core.js')}"  />
+        
+        <apex:includeScript value="{!URLFOR($Resource.HPP_Includes, '/js/controller/controller_hpp_event_takecard_payment.js')}"  />
+        <apex:includeScript value="{!URLFOR($Resource.HPP_Includes, '/js/service/service_hpp_event_take_card_payment.js')}"  />
+        
+         
+        
+        
+        
+
+
+        <style>
+            #NewCard .control-label{
+                text-align: right;
+            }
+            
+            .my-panel{
+                padding:20px;
+                background-color: #f5f5f5;
+                margin-top:10px;
+            }
+            
+      
+            
+        
+        </style>
+
+
+       
+    </head>
+    <body ng-app="hppApp" ng-controller="controllerCore" ng-cloak="ng-cloak">
+        <apex:form >
+            <div id="formWrapper">
+                <!-- C00095-->
+                <c:HPPSummary objacc="{!Accounts[0]}" objopp="{!opp}" objexopp="{!ExOpp}" product="{!Prod}" />
+                <div id="container">
+                    <table width="100%">
+                        <tr>
+                            <td valign="top" id="sidebar">
+                                <c:HPPBOMenu oppid="{!Opp.Id}" directorid="{!Opp.ProductEventDirector__c}" />
+                            </td>
+                            <td valign="top" id="contenttd" ng-controller="HPPEventTakeCardPaymentController" ng-init="Data = {
+                                                                                                                    
+                                                                                                                    'AdminFee':{!exOpp.AdminFeeValue__c},
+                                                                                                                    
+                                                                                                                    'Cards':{!CardDataJson }, 
+                                                                                                                    'InternalAccounts':{!InternalAccounts},                                                                                                                   
+                                                                                                                     
+                                                                                                                     'Payment':{
+                                                                                                                                'Method': '{!exOpp.Payment_Method__c}',
+                                                                                                                                'OtherPaymentMethod' : '{!exOpp.Other_payment_method__c}',
+                                                                                                                                'NoneComments' : '{!NoneComments}',
+                                                                                                                                'ExternalComments' : '{!ExternalComments}',
+                                                                                                                                'InternalAccount' : ''                                                                                                                              
+                                                                                                                                
+                                                                                                                               },
+                                                                                                                     'Address':{
+                                                                                                                                     'BillingStreet' : '{!BillingStreet}',
+                                                                                                                                     'BillingCity' : '{!BillingCity}',
+                                                                                                                                     'BillingCounty' : '{!BillingCounty}',
+                                                                                                                                     'BillingPostCode' : '{!BillingPostCode}',
+                                                                                                                                     'BillingCountry' : '{!BillingCountry}'
+                                                                                                                                 }
+                                                                                                                                                                                                                                                
+                                                                                                                  };
+                                                                                                           
+                                                                                                           AJEOk = {!AJEOk};
+                                                                                                           
+                                                                                                           AccountId ='{!Acc.Id}'; ContactId='{!Acc.PersonContactId}'; OppId='{!Opp.id}';
+                                                                                                           IsRemainderAdminFee = {!IsRemainderAdminFee};                                                                                                           
+                                                                                                           AdminFeeTaken = {!IsAdminFeeTaken};
+                                                                                                           IsCompleted = {!IsCompleted};
+                                                                                                           EventLogId = '{!eventId}'">
+                                <div id="content" >
+                                    <h1>Take Card Payment</h1>
+                                           
+                                                                     
+                                    
+                                    
+                                    
+                                 
+                                    
+                                    
+                                    
+                                    
+                                    <!-- new content start -->
+                                    <div style="padding:10px;">
+                                            <div class="row">
+                                                <div class="col-sm-3">
+                                                    <label>Administration Fee</label>  
+                                                </div>
+                                                <div class="col-sm-3">    
+                                                <!-- Case:01931533; Commented following code to display the admin fee and removed rendered condition from admin fee ; Start -->                                              
+
+                                                   <apex:outputpanel rendered="{!adminFeeIsEditable}">
+                                                   <apex:outputField value="{!opp.AdminFeeFull__c}"/>
+                                                       <!--<apex:outputText value="{0, Number, Currency}">{!opp.AdminFeeFull__c}</apex:outputText>
+                                                        <input type="number" class="form-control" html-disabled="true" ng-model="Data.AdminFee" value="{!opp.AdminFeeFull__c}"/>-->
+                                                    </apex:outputpanel>
+                                                <!-- Case:01931533; Commented following code to display the admin fee and removed rendered condition from admin fee ; End-->
+                                                <!-- Case:01931533; removed rendered="{!NOT(adminFeeIsEditable)}" condition from output panel -->
+                                                    <apex:outputpanel rendered="{!NOT(adminFeeIsEditable)}" >
+                                                        £{{Data.AdminFee}}
+                                                    </apex:outputpanel>                                                   
+
+                                                </div>
+                                                <div class="col-sm-3" ng-hide="{!adminFeeIsEditable}">
+                                                    <label>Payment Method</label>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <select class="form-control" id="PaymentMethod-noKendo" ng-model="Data.Payment.Method" ng-hide="AdminFeeTaken || {{Data.AdminFee}} == 0.0">
+                                                        <option value="">Please select</option>
+                                                        <option value="Card">Card</option>
+                                                        <option value="Other">Other Payment Method</option>
+                                                        <option value="None">None</option>
+                                                    </select>
+                                                    
+                                                    <span ng-show="AdminFeeTaken || {{Data.AdminFee}} > 0.0">
+                                                        {{Data.Payment.Method}}
+                                                    </span>
+                                                    
+                                                </div>
+                                            </div>
+                                            
+                                            <div ng-show="Data.Payment.Method == 'None'">
+                                                <div class="row" >
+                                                    <div class="col-sm-3 col-sm-offset-6">
+                                                        <label class="control-label">Payment Confirmed by Other Method</label>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <input type="checkbox" ng-model="Data.Payment.ConfirmedOther" ng-hide="AdminFeeTaken"/>
+                                                        <span ng-show="AdminFeeTaken">{{Data.Payment.ConfirmedOther ? 'Yes' : 'No'}}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-3 col-sm-offset-6">
+                                                        <label class="control-label">Comments</label>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <textarea class="form-control" ng-model="Data.Payment.NoneComments" ng-hide="AdminFeeTaken"/>
+                                                        <span ng-show="AdminFeeTaken">{{Data.Payment.NoneComments}}</span>
+                                                    </div>
+                                                </div>
+                                                
+                                                
+                                             
+                                                
+                                            </div>
+                                                                                        
+                                            
+                                            <div class="row" ng-show="Data.Payment.Method == 'Other'">
+                                                <div class="col-sm-3 col-sm-offset-6">
+                                                    <label class="control-label">Other Payment Method</label>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <select class="form-control" id="OtherPaymentMethod-noKendo" ng-model="Data.Payment.OtherPaymentMethod" ng-hide="AdminFeeTaken">
+                                                        <option value="">Please select</option>
+                                                        <option value="Internal Transfer">Internal Transfer</option>
+                                                        <option value="External Transfer">External Transfer</option>                                                   
+                                                    </select>
+                                                    <span ng-show="AdminFeeTaken">{{Data.Payment.OtherPaymentMethod}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="row" ng-show="Data.Payment.Method == 'Other' && Data.Payment.OtherPaymentMethod == 'Internal Transfer'">
+                                                <div class="col-sm-3 col-sm-offset-6">
+                                                    <label class="control-label">Account Number</label>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <select ng-options="option.Key as option.Value  for option in Data.InternalAccounts" ng-hide="AdminFeeTaken" class="form-control" id="InternalAccount-noKendo" ng-model="Data.Payment.InternalAccount" ng-show="Data.InternalAccounts && Data.InternalAccounts > 0">
+                                                                                                                                                                  
+                                                    </select>
+                                                    <span ng-show="AdminFeeTaken">{{Data.InternalAccount}}</span>
+                                                    
+                                                    <div class="alert alert-danger" ng-show="!Data.InternalAccounts || Data.InternalAccounts.length == 1">
+                                                        There are no internal accounts {{Data.InternalAccounts.length}}
+                                                    </div>                                                    
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row" ng-show="Data.Payment.Method == 'Other' && Data.Payment.OtherPaymentMethod == 'External Transfer'">
+                                                <div class="col-sm-3 col-sm-offset-6">
+                                                    <label class="control-label">Comments</label>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <textarea class="form-control" ng-model="Data.Payment.ExternalComments" ng-hide="AdminFeeTaken"/>                                                        
+                                                    <span ng-show="AdminFeeTaken">{{Data.Payment.ExternalComments}}</span>
+                                                </div>
+                                            </div>
+                                            
+                                            
+                                            
+                                            
+                                           <!-- card details and payment buttons --> 
+                                            
+                                           <div ng-hide="AdminFeeTaken">
+
+                                            
+                                            <div class="row" ng-show="Data.Payment.Method == 'Other'">
+                                                <div style="text-align:center;" ng-show="(Data.Payment.OtherPaymentMethod == 'Internal Transfer' && Data.Payment.InternalAccount) || (Data.Payment.OtherPaymentMethod == 'External Transfer' && Data.Payment.ExternalComments)">
+                                                        <button type="button" ng-click="TakeOtherPayment()" style="width:150px;display:inline;" class="k-button">Take Payment</button>
+                                            </div>
+                                             
+                                            
+                                            </div>
+                                            
+                                            <div class="row" ng-show="Data.Payment.Method == 'None'">
+                                                <div style="text-align:center;" ng-show="(Data.Payment.ConfirmedOther && Data.Payment.NoneComments)">
+                                                        <button type="button" ng-click="TakeOtherPayment()" style="width:150px;display:inline;" class="k-button">Take Payment</button>
+                                                </div>                                     
+                                            
+                                            </div>
+
+
+                                            <div ng-show="Data.Payment.Method == 'Card'">
+
+                                                
+                                                
+                                                <div id="SelectCard" ng-show="!ShowNewCard" class="my-panel">
+                                                    
+                                                    <div style="text-align:center;">
+                                                            <button type="button" style="width:100px;display:inline;width:150px;" ng-click="CreateNewCard()" class="k-button">New Card</button>
+                                                    </div>
+                                                    
+                                                    <div>
+                                                        <table class="table">
+                                                            <thead>
+                                                            <tr>
+                                                                <th>Action</th><th>Card Number</th><th>Card Type</th><th>Expiry Date</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr ng-repeat="card in Data.Cards">
+                                                                    <td><a href="#{{card.CardId}}" ng-click="SelectCard(card)">Select Card</a></td>
+                                                                    <td>{{card.CardNumber}}</td>
+                                                                    <td>{{card.CardType}}</td>
+                                                                    <td>******</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+    
+    
+                                                <div id="CardDetails" ng-show="SelectedCard && !ShowNewCard" class="my-panel">
+                                                    <label>Selected Card Details</label>
+                                                
+                                                    <div class="row">
+                                                        <label class="control-label col-sm-2 col-sm-offset-1">Card Number</label>
+                                                        <div class="col-sm-3">
+                                                            {{SelectedCard.CardNumber}}
+                                                        </div>
+                                                    </div>   
+                                                    <div class="row">
+                                                        <label class="control-label col-sm-2 col-sm-offset-1">Card Type</label>
+                                                        <div class="col-sm-3">
+                                                            {{SelectedCard.CardType}}
+                                                        </div>
+                                                    </div> 
+                                                    <div style="text-align:center;">
+                                                        <button type="button" ng-click="TakePayment()" style="width:150px;display:inline;" class="k-button">Take Payment</button>
+                                                    </div>                                            
+                                                </div>
+    
+    
+    
+                                                <div id="NewCard" ng-show="ShowNewCard" class="my-panel">
+                                                    <div>
+                                                        <label>New Card Details</label>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <div class="row">                                                                                                                        
+                                                                <label class="col-sm-4 control-label">Billing Street</label>
+                                                                <div class="col-sm-5">
+                                                                    <input type="text" class="form-control" ng-model="NewCard.BillingStreet"/>                                                                  
+                                                                </div>                                                          
+                                                            </div>
+                                                            <div class="row">                                                                                                                        
+                                                                <label class="col-sm-4 control-label">Billing City</label>
+                                                                <div class="col-sm-5">
+                                                                    <input type="text" class="form-control" ng-model="NewCard.BillingCity"/>                                                                  
+                                                                </div>                                                          
+                                                            </div>
+                                                            <div class="row">                                                                                                                        
+                                                                <label class="col-sm-4 control-label">Billing County</label>
+                                                                <div class="col-sm-5">
+                                                                    <input type="text" class="form-control" ng-model="NewCard.BillingCounty"/>                                                                  
+                                                                </div>                                                          
+                                                            </div>
+                                                            <div class="row">                                                                                                                        
+                                                                <label class="col-sm-4 control-label">Billing Country</label>
+                                                                <div class="col-sm-5">
+                                                                     
+                                                                    <input type="text" class="form-control" ng-model="NewCard.BillingCountry"/>                                                              
+                                                                </div>                                                          
+                                                            </div>
+                                                            <div class="row">                                                                                                                        
+                                                                <label class="col-sm-4 control-label">Billing Post Code</label>
+                                                                <div class="col-sm-5">
+                                                                    <input type="text" class="form-control" ng-model="NewCard.BillingPostCode"/>                                                                  
+                                                                </div>                                                          
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="row">
+                                                                <label class="col-sm-4 control-label">Card Currency</label>
+                                                                <div class="col-sm-5">
+                                                                <select class="form-control" id="CardCurrency-noKendo" ng-model="NewCard.CardCurrency">
+                                                                        <option>GBP</option>
+                                                                        <option>EUR</option>
+                                                                        <option>USD</option>
+                                                                    </select>
+                                                                 </div>
+                                                            </div>
+                                                        
+                                                            <div class="row">                                                            
+                                                                    <label class="col-sm-4 control-label">Card Type</label>
+                                                                    <div class="col-sm-5">
+                                                                    <select class="form-control" id="CardType-noKendo" ng-model="NewCard.CardType">
+                                                                        <option>Visa Debit</option>
+                                                                        <option>Electron</option>
+                                                                        <option>Maestro</option>
+                                                                        <option>MasterCard Debit</option>
+                                                                        <option>MasterCard</option>
+                                                                        <option>Visa</option>
+                                                                    </select>
+                                                                    </div>
+                                                                
+                                                            </div>
+                                                            
+                                                            <div class="row">                                                            
+                                                                    <label class="col-sm-4 control-label">Issue Number</label>
+                                                                    <div class="col-sm-5">
+                                                                        <input type="text" class="form-control" ng-model="IssueNumber"/>                                                                  
+                                                                    </div>
+                                                                
+                                                            </div>
+                                                            <div class="row">                                                            
+                                                                    <label class="col-sm-4 control-label">Card Number</label>
+                                                                    <div class="col-sm-5">
+                                                                        <input type="text" class="form-control" ng-model="NewCard.CardNumber"/>                                                                  
+                                                                    </div>
+                                                                
+                                                            </div>
+                                                            <div class="row">                                                            
+                                                                    <label class="col-sm-4 control-label">Security Code</label>
+                                                                    <div class="col-sm-5">
+                                                                        <input type="text" class="form-control" ng-model="NewCard.SecurityCode"/>                                                                  
+                                                                    </div>
+                                                                
+                                                            </div>
+                                                            
+                                                            <div class="row">                                                            
+                                                                    <label class="col-sm-4 control-label">Expiry Date</label>
+                                                                    <div class="col-sm-5">
+                                                                        <input type="text" style="width:50px;display:inline;" class="form-control" ng-model="NewCard.ExpiryMonth"/>    
+                                                                        /                                                              
+                                                                        <input type="text" style="width:80px;display:inline;" class="form-control" ng-model="NewCard.ExpiryYear"/>
+                                                                    </div>                                                            
+                                                            </div>
+                                                            
+                                                            <div class="row">                                                            
+                                                                    <label class="col-sm-4 control-label">Valid From</label>
+                                                                    <div class="col-sm-5">
+                                                                        <input type="text" style="width:50px;display:inline;" class="form-control" ng-model="NewCard.FromMonth"/>    
+                                                                        /                                                              
+                                                                        <input type="text" style="width:80px;display:inline;" class="form-control" ng-model="NewCard.FromYear"/>
+                                                                    </div>                                                            
+                                                            </div>                    
+                                                            
+                                                            
+                                                        </div>
+                                                   
+                                                    </div>
+                                                    
+                                                    <div  ng-show="SaveCardErrors" class="alert alert-danger">
+                                                        <ul>
+                                                            <li ng-repeat="error in SaveCardErrors" >{{error}}</li>
+                                                        </ul>
+                                                    </div>
+                                                    
+                                                    <div style="text-align:center;">
+                                                        <button style="width:100px;display:inline;" type="button" class="k-button" ng-click="Save()">Save</button>
+                                                        <button style="width:100px;display:inline;" type="button" class="k-button" ng-click="ShowNewCard = false;">Cancel</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            </div>
+                                            
+                                            <div class="alert alert-success" ng-show="AdminFeeTaken" style="text-align:center;margin-top:20px;">
+                                                <div ng-show="PaymentStatus != 2">
+                                                    Payment has been taken
+                                                </div>
+                                                
+                                                <div ng-show="PaymentStatus == 2">
+                                                    Payment has been suspended
+                                                </div>
+                                                <div ng-show="PaymentStatus == 2" class="alert alert-warning">
+                                                    <!--The card payment attempt has been suspended. Please raise a case for payments.-->
+                                                    <!--C0638-->
+                                                    The card payment attempt has been suspended and a case will now be raised for payments. Please ensure case is completed. 
+                                                  
+                                                   
+                                                  
+                                                    <div> Please select the type of case you would like to generate (suspend cancel/suspend release):
+                                                     
+                                                    <apex:selectList style="font-style:normal;" id="CaseType" value="{!CaseTypeSelected}">
+                                                            <apex:selectOption itemLabel="Suspended-Cancel" itemValue="Suspended-Cancel"/>
+                                                            <apex:selectOption itemLabel="Suspended-Release" itemValue="Suspended-Release"/>
+                                                        </apex:selectList>
+
+                                                    </div>
+                                                   
+                                                        <div  style="text-align:center;">
+                                                            <apex:commandButton style="width:100px;display:inline;font-weight:normal" styleClass="k-button" value="Create Case" action="{!CreateCase}"></apex:commandButton>
+                                                        </div>
+
+                                                                                        
+                                                   <!--C0638 end -->
+                                                </div>
+                                                                               
+                                            </div>
+                                      
+                                            <div style="text-align:center;margin-top:20px;" ng-show="AdminFeeTaken">
+                                            <div  class="alert alert-success" ng-show="AJEOk == true">
+                                                    AJE has been sent to EBS
+                                                </div>  
+                                                
+                                                <div  class="alert alert-warning" ng-show="AJEOk == false">
+                                                    AJE has not been sent to EBS
+                                                    <div>
+                                                        <button type="button" ng-click="ResendAJE()">Send to Host</button>
+                                                    </div>
+                                                </div>      
+                                            </div>
+                                            
+                                            
+                                            
+                                            
+                                            <div  ng-show="Errors" class="alert alert-danger" style="margin-top:10px;">
+                                                        <ul>
+                                                            <li ng-repeat="error in Errors" >{{error}}</li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                        
+                                            
+                                            <div style="text-align:center;margin-top:20px;" ng-show="!IsCompleted && AdminFeeTaken && AJEOk">
+                                                <button type="button" ng-click="Complete()" class="k-button" style="width:150px;display:inline;">Complete Event</button>
+                                            </div>
+                                            <div style="text-align:center;margin-top:20px;" ng-show="!exOpp.AdminFeeValue__c = 0">
+                                                <button type="button" ng-click="Complete()" class="k-button" style="width:150px;display:inline;">Complete Event</button>
+                                            </div>
+                                        </div>
+                                            <!-- new content end -->
+                                    
+                                      
+            <c:HPP_Loading ></c:HPP_Loading>
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+          
+
+            <div id="fade"></div>
+            <div id="overlay">
+                Taking payment...
+                <br />
+                <br />
+                This may take a few seconds.
+                <div style="padding-top: 50px;">
+                    <!--  CPDR01
+                    <img src="{!URLFOR($Resource.ibbstyle, 'images/269.gif')}"></img>
+                        -->
+                    <img src="{!URLFOR($Resource.ibbstyleexternal, 'graphics/logos/circular-timer.gif')}"></img>
+                </div>
+            </div>
+        </apex:form>
+    </body>
+</apex:page>

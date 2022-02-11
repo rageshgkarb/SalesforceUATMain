@@ -1,0 +1,5 @@
+<apex:page standardController="Credit_Score__c" recordsetVar="Credit_Score__cs" extensions="RedirectCE" id="thePage" action="{!redirectCreditScoreListPage}" showHeader="false" sidebar="false">
+
+  Account Redirect page: {!ProfileName}
+  
+</apex:page>

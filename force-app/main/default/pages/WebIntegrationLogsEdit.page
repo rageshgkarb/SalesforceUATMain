@@ -1,0 +1,5 @@
+<apex:page standardController="Web_Integration_Log__c" extensions="RedirectCE" id="thePage" action="{!redirectEditPage}" showHeader="false" sidebar="false">
+
+  Web_Integration_Log__c Redirect page: {!ProfileName}
+  
+</apex:page>

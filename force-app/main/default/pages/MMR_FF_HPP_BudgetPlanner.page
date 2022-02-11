@@ -1,0 +1,414 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 01-10-2022
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<apex:page showHeader="false" sidebar="false" controller="MMR_FF_BudgetPlanner" action="{!Setup}">
+<head>
+    <c:MMR_PageHeader ></c:MMR_PageHeader>  
+    <style>
+.nav-pills>li>a {
+    font-size:14px;
+}
+.headings{
+    font-size: 13px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+.btnrow{
+    margin-top: 15px;
+    
+}
+
+.Raterow{
+    margin-top: 5px;
+}
+
+.budgetrow2{
+width: 400px;
+}
+table {
+  font-family: arial, sans-serif;
+  width: 100%;
+  margin-top: 10px;
+  border-collapse: collapse;
+  table-layout: fixed;
+  background-color: #dddddd;
+}
+td{
+  border: 1px solid #080808;
+  text-align: center;
+  padding: 5px;
+  
+}
+</style> 
+</head>
+<body>
+    
+    <c:MMR_Header title="Budget Planner" numapps="{!NumApplying }" opp="{!bopp}" hide="{!IsCredit}"/>
+
+    <div class="container">
+        <c:MMR_FF_Nav EventId="{!eventid}" active="7" activesection="B" rendered="{!!IsCredit && !IsCompleted}" />
+        <c:MMR_FF_Nav_Links EventId="{!eventid}" active="7" activesection="B" rendered="{!!IsCredit && IsCompleted}"/>
+        
+        <c:MMR_Credit_Nav EventId="{!eventid}" active="7" activesection="B" rendered="{!IsCredit}"/>
+   
+        <apex:form id="aForm" styleClass="form-horizontal">
+        
+        <!--<apex:outputPanel rendered="{!!DisplayHeader}">
+            <br/>
+            <br/>
+        </apex:outputPanel>-->
+
+        <div class="panel panel-primary">
+            <ul class="nav nav-pills nav-justified">
+                <li class="active"><a href="#">Budget Planner</a></li>
+                <li ><a href="/apex/MMR_FF_OpportunityDetails?id={!EventId}">Opportunity Summary</a></li>   
+            </ul>
+             
+        <div class="panel-body">
+        
+        <table>
+            <tr>
+                <td><label>Total Monthly Net Income</label></td>
+                <td><label>Gross Annual Income</label></td>
+            </tr>
+            <tr>
+                <td><label>£{!TotalNetMonthlyIncome}</label></td>
+                <td><label>£{!TotalgrossAnnualIncome}</label></td>
+            </tr>
+        </table>
+        
+        <div class="col-sm-12" style="margin-top: 20px;">
+            <apex:pageMessages ></apex:pageMessages> 
+            <div class="row Raterow">
+                <div class="col-sm-6">
+                    <label>Unstressed Rental Rate</label>
+                </div>
+                <div class="col-sm-6">
+                    <div class = "requiredInput">
+                    <div class = "requiredBlock"></div>
+                    <apex:selectList id="prodSelect" size="1" styleClass="form-control" style="height: 25px;width: 80%" value="{!UnstressedRentalRate}" >
+                        <apex:actionSupport event="onchange" action="{!SaveUnstressedRentalRate}" reRender="StressedPanle" status="actStatus"/>
+                        <apex:selectOptions value="{!ProductItems}"  />
+                        </apex:selectList>
+                        <apex:actionStatus id="actStatus" >
+                                            <apex:facet name="start" >
+                                                <img src="/img/loading.gif" />                    
+                                            </apex:facet>
+                                            </apex:actionStatus>
+                    <!--<apex:inputField required="true" styleClass="form-control btnrow" value="{!Exopp.Unstressed_Rental_Rate__c}"></apex:inputField>-->
+                    </div>
+                </div>
+            </div>
+            
+            <apex:outputPanel id="StressedPanle">
+                <div class="row Raterow">
+                    <div class="col-sm-6">
+                        <label>Product Name </label>
+                    </div>
+                    <div class="col-sm-6">
+                        <apex:outputText styleClass="form-control" style="width: 80%" value="{!ProductName}"></apex:outputText> 
+                    </div>
+                </div>     
+                <div class="row Raterow">
+                        <div class="col-sm-6">
+                            <label>Stressed Rental Rate</label>
+                        </div>
+                        <div class="col-sm-6">
+                            <apex:inputField styleClass="form-control" style="width: 80%" html-disabled="true" value="{!Exopp.Stressed_Rental_Rate__c}"></apex:inputField> 
+                        </div>
+                    </div> 
+            </apex:outputPanel>
+
+            <div class="row Raterow">
+                <div class="col-sm-6">
+                    <label>Select Household Type</label>
+                </div>
+                <div class="col-sm-6">
+                    <div class = "requiredInput">
+                    <div class = "requiredBlock"></div>
+                    <apex:inputField styleClass="form-control" style="width: 80%" value="{!Exopp.Budget_Figures__c}"></apex:inputField>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="row Raterow">
+                <div class="col-sm-6">
+                    <apex:commandButton styleClass="btn btn-primary"  value="Save" action="{!SaveRentalRate}" rerender="aForm,newBudgetPlanner" status="actStatus3" oncomplete="calculateTotal()" />
+                        <apex:actionStatus id="actStatus3" >
+                            <apex:facet name="start" >
+                                <img src="/img/loading.gif" />                    
+                            </apex:facet>
+                        </apex:actionStatus>
+                </div>
+            </div>
+
+        <apex:outputpanel id="newBudgetPlanner" style="{!IF(DisplayBudgetPlanner,'','display:none;')}">
+        <div class="row headings" style="margin-top: 50px;">
+            <div class="col-sm-6">
+            <label>
+               Basic Monthly Expenditure 
+            </label>
+            </div>
+            <div class="col-sm-6">
+            <label>
+               Notes / Description
+            </label>
+            </div>
+        </div>
+        
+            <apex:variable id="alt1" value="{!0}" var="i"/>
+                <apex:repeat value="{!BasicItems}" var="bp">
+                    <div class="row">
+                    <div class="col-sm-4">
+                        <label>
+                        <apex:outputtext value="{!bp.Name}" />             
+                        </label>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="pull-right">
+                        <div class = "requiredInput">
+                        <div class = "requiredBlock"></div>
+                            <apex:inputField id="basic" styleClass="form-control budgetItemBasic" value="{!bp.Applicant_Total__c}" onchange="calculateTotal()"/>
+                        </div>
+                        </div>
+                    </div> 
+                    <div class="col-sm-4">                       
+                        <apex:inputTextarea rows="3" styleClass="form-control" value="{!bp.BDM_Comments__c}" />
+                    </div>
+                    </div>
+                    <apex:variable var="i" value="{!i+1}"/>
+                </apex:repeat>
+    
+                    <div class="row" style="padding-top:20px;">
+                        <div class="col-sm-4 budgetrow2">
+                            <label>
+                                Total Basic Expenditure   
+                            </label>
+                        </div>
+                        <div class="col-sm-1 budgetrow2" style="width: 700px">
+                            <span id="Basictotal"></span>
+                            <apex:inputHidden id="TotalBasicExpenditure1" value="{!TotalBasicExpenditure}" />
+                        </div>    
+                                  
+                    </div>
+                <apex:outputPanel id="DiscretionarySection">
+                    <div class="row headings">
+                        <div class="col-sm-6">
+                            <label>
+                               Discretionary Monthly Expenditure 
+                            </label>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>
+                               Notes / Description
+                            </label>
+                        </div>
+                        </div>
+                        
+                <apex:variable id="alt2" value="{!0}" var="i"/>
+                    <apex:repeat value="{!DiscretionaryItems}" var="bp">
+                    
+                        <div class="row"> 
+                        <div class="col-sm-4">
+                            <label>
+                                <apex:outputtext value="{!bp.Name}" /><!-- Affodability HLR changes -->
+                            </label>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="pull-right">
+                            <div class = "requiredInput">
+                            <div class = "requiredBlock"></div>
+                                <apex:inputField id="discretionary" styleClass="form-control budgetItemDiscretionary" value="{!bp.Applicant_Total__c}" onchange="calculateTotal()"/>
+                            </div>
+                            </div>
+                        </div> 
+                        <div class="col-sm-4">                       
+                            <apex:inputTextarea rows="3" styleClass="form-control" value="{!bp.BDM_Comments__c}"/>
+                        </div>
+
+                        <div class="col-sm-1">  
+                            <apex:outputPanel rendered="{!bp.name=='Others'}">
+                                <apex:commandButton styleClass="btn-danger" value="Remove" action="{!RemoveDiscretionaryExpenditure}" reRender="DiscretionarySection" status="actStatus3">
+                                <apex:param name="nickName" value="{!i}" assignTo="{!rowDeleteBudgetItem}"/>    
+                                </apex:commandButton>
+                                    <apex:actionStatus id="actStatus3" >
+                                        <apex:facet name="start" >
+                                            <img src="/img/loading.gif" />                    
+                                        </apex:facet>
+                                    </apex:actionStatus>
+                            </apex:outputPanel>
+                        </div>
+                        </div>
+                        <apex:variable var="i" value="{!i+1}"/>
+                    </apex:repeat>
+                
+                    <div class="row btnrow"> 
+                        <div class="col-sm-12"> 
+                            <apex:commandButton styleClass="btn btn-primary"  value="Add Other Expenditure Type" action="{!AddDiscretionaryExpenditure}" reRender="DiscretionarySection" status="actStatus1"/> 
+                                <apex:actionStatus id="actStatus1" >
+                                    <apex:facet name="start" >
+                                        <img src="/img/loading.gif" />                    
+                                    </apex:facet>
+                                </apex:actionStatus>
+                            <apex:commandButton styleClass="btn btn-primary"  value="Save All" action="{!Save}" rerender="newBudgetPlanner" status="actStatus2" oncomplete="calculateTotal()"/>
+                                <apex:actionStatus id="actStatus2" >
+                                    <apex:facet name="start" >
+                                        <img src="/img/loading.gif" />                    
+                                    </apex:facet>
+                                </apex:actionStatus>
+                        </div>
+                    </div>
+                    </apex:outputPanel>
+                    
+                    <div class="row" style="margin-top: 10px">
+                        <div class="col-sm-4 budgetrow2">
+                            <label>
+                                Total Discretionary Expenditure   
+                            </label>
+                        </div>
+                        <div class="col-sm-1 budgetrow2" style="width: 700px">
+                            <span id="Discretionarytotal"></span>
+                            <apex:inputHidden id="TotalDiscretionaryExpenditure1" value="{!TotalDiscretionaryExpenditure}" />
+                        </div>  
+                                      
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-sm-4 budgetrow2">
+                            <label>
+                                Total Expenditure   
+                            </label>
+                        </div>
+                        <div class="col-sm-1 budgetrow2" style="width: 700px">
+                            <span id="BasicDiscretionaryTotal"></span>
+                            <apex:inputHidden id="TotalBasicDiscretionary1" value="{!TotalBasicDiscretionary}" />
+                        </div>  
+                                      
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-sm-4 budgetrow2">
+                            <label>
+                                Financial Commitments/Personal Debts   
+                            </label>
+                        </div>
+                        <div class="col-sm-1 budgetrow2" style="width: 700px">
+                            <span id="FinancialCommitment1">{!FinancialCommitment}</span>
+                        </div>  
+                                      
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-4 budgetrow2">
+                            <label>
+                                Total Declared Expenditure Including Financial Commitments    
+                            </label>
+                        </div>
+                        <div class="col-sm-1 budgetrow2" style="width: 700px">
+                            <span id="TotalCommitments"></span>
+                            <apex:inputHidden id="TotalDeclaredExpenditure1" value="{!TotalDeclaredExpenditure}" />
+                        </div>  
+                                      
+                    </div>
+                    <div class="row btnrow"> 
+                        <div class="col-sm-12">
+                            <apex:commandButton styleClass="btn btn-success"  value="Run Affordability Calculation" action="{!Next}" />
+                        </div>
+                    </div>
+                </apex:outputpanel>
+                    </div>
+                
+            </div>
+        </div>
+        <div>
+            <apex:commandButton styleClass="btn btn-primary"  value="Previous" action="{!Prev}" />   
+            
+        </div>
+        </apex:form>        
+    </div>    
+    <c:MMR_PageFooter ></c:MMR_PageFooter>   
+    
+    <script>
+        function calculateTotal(){
+        var totalb =0;
+            $('.budgetItemBasic').each(function(){
+                var v = $(this).val();
+
+                /* CPDR hack */
+                v = v.replace(",", "");
+                /* CPDR hack end */
+
+
+                var nan = isNaN(v);
+
+                if(!nan  && v!='')
+                {
+                    totalb += parseFloat(v);
+                }
+            });
+            console.log('total basic'+totalb );
+            $('#Basictotal').text(totalb.toFixed(2));
+            $('[id$=TotalBasicExpenditure1]').val(totalb.toFixed(2));
+        
+        var total =0;
+            $('.budgetItemDiscretionary').each(function(){
+                var v = $(this).val();
+
+                /* CPDR hack */
+                v = v.replace(",", "");
+                /* CPDR hack end */
+
+
+                var nan = isNaN(v);
+
+                if(!nan  && v!='')
+                {
+                    total += parseFloat(v);
+                }
+            });
+            console.log('total Disc'+total );
+            $('#Discretionarytotal').text(total.toFixed(2));
+            $('[id$=TotalDiscretionaryExpenditure1]').val(total.toFixed(2));
+            
+            $('#BasicDiscretionaryTotal').text((parseFloat(totalb.toFixed(2)) + parseFloat(total.toFixed(2))).toFixed(2));
+            $('[id$=TotalBasicDiscretionary1]').val((parseFloat(totalb.toFixed(2)) + parseFloat(total.toFixed(2))).toFixed(2));
+              
+            var TotalBasicDiscretionary = $('[id$=TotalBasicDiscretionary1]').val();
+            //var TotalFinancialCommitment = $('.FinancialCommitment1').val(); 
+            var TotalFinancialCommitment = document.getElementById('FinancialCommitment1').innerHTML;
+            console.log('TotalFinancialCommitment '+TotalFinancialCommitment);
+            if(TotalFinancialCommitment == ''){
+                TotalFinancialCommitment = 0;
+            }             
+            console.log('TotalBasicDiscretionary '+TotalBasicDiscretionary );
+            
+            $('#TotalCommitments').text((parseFloat(TotalBasicDiscretionary) + parseFloat(TotalFinancialCommitment)).toFixed(2));
+            $('[id$=TotalDeclaredExpenditure1]').val((parseFloat(TotalBasicDiscretionary) + parseFloat(TotalFinancialCommitment)).toFixed(2));
+            
+
+        }
+        
+        /*function calculateFinancialCommitment(){
+            var TotalBasicDiscretionary = $('[id$=TotalBasicDiscretionary]').val();
+            var FinancialCommitment = $('[id$=FinancialCommitment]').val();
+            console.log('TotalBasicDiscretionary '+TotalBasicDiscretionary );
+            console.log('FinancialCommitment '+FinancialCommitment)
+            var TotalCommitment = 0.00;
+            TotalCommitment = TotalBasicDiscretionary + FinancialCommitment;
+            console.log('TotalCommitment '+TotalCommitment );
+            $('[id$=TotalCommitments]').val(parseFloat(TotalCommitment.toFixed(2)));
+            
+        }*/
+
+        $(document).ready(function(){
+            calculateTotal();  
+                      
+        });
+        
+    </script>    
+</body>
+</apex:page>

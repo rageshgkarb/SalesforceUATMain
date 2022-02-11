@@ -1,0 +1,75 @@
+<apex:component controller="HPP_Header_Controller">
+<apex:attribute name="Title" type="String" description=""/>
+<apex:attribute name="NumApps" type="Integer" description=""/>
+<apex:attribute name="PastDates" type="Boolean" description=""/>
+<apex:attribute name="opp" type="opportunity" description="" assignTo="{!o}"/>
+
+<apex:attribute name="Hide" type="Boolean" description=""/>
+<apex:stylesheet value="https://fast.fonts.net/cssapi/127ef530-1eee-4efb-8ebe-815719f876a3.css"/>
+
+
+<apex:outputPanel rendered="{!!Hide}">
+    <nav class="navbar navbar-default" role="navigation" >
+    <div class="navbar-header" style="width:100%;"  >
+        <a class="navbar-brand" href="#"><span style="color:#FFFFFF;"><h2>{!Opp.Name} - {!Title}</h2></span></a>        
+    </div>
+    </nav>
+</apex:outputPanel>    
+
+
+<apex:outputPanel rendered="{!Opp != null && !hide}">
+<div class="panel panel-default">
+<div class="panel-body">
+<div class="container">
+<div class="row">
+    <div class="col-sm-6 col-md-3">
+       <label>Primary customer name</label> 
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <apex:outputField value="{!opp.account.name}"/>
+    </div>
+    <div class="col-sm-6 col-md-3">
+       <label>Property Value</label> 
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <apex:outputField value="{!opp.Purchase_price_market_value__c}"/>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6 col-md-3">
+       <label>Status</label> 
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <apex:outputField value="{!opp.Status_HPP_CAA__c}"/>
+    </div>
+    <div class="col-sm-6 col-md-3">
+       <label>Finance Required</label> 
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <apex:outputField value="{!opp.Finance_Required__c}"/>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6 col-md-3">
+       <label>BDM</label> 
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <apex:outputField value="{!opp.SellerName__c}"/>
+    </div>
+    <div class="col-sm-6 col-md-3">
+       <label>Term</label> 
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <apex:outputField value="{!opp.Term_of_Finance__c}"/> {!Term}
+    </div>
+</div>
+</div>
+</div>
+
+</div>
+</apex:outputPanel>
+<c:MMR_calHack rendered="{!!PastDates}"></c:MMR_calHack>
+
+
+
+</apex:component>

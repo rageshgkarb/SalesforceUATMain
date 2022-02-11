@@ -1,0 +1,19 @@
+<apex:component rendered="true">
+<apex:includeScript value="{!$Resource.Jquerylib}"/>
+<span id="hideMyParent"></span>
+<script type="text/javascript">
+$(document).ready(function() { 
+var now = new Date();
+var startYear=now.getFullYear()-1;
+var endYear=now.getFullYear();
+var optionsString=''; 
+if(startYear<endYear){
+    for(i=startYear;i<endYear+1;i++){
+        optionsString += "<option value=\""+i+"\">"+i+"</option>";
+    } 
+    $('#calYearPicker').html(optionsString);
+} 
+//$('#sidebarDiv #hideMyParent').parent().parent().hide();
+});
+</script>
+</apex:component>

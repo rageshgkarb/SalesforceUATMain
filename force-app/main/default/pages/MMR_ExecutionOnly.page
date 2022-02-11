@@ -1,0 +1,64 @@
+<apex:page showHeader="false" sidebar="false" controller="MMR_OnlyAssessment" action="{!Setup_Opp}">
+<head>
+    <c:MMR_PageHeader ></c:MMR_PageHeader>
+</head>
+<body style="background-color:#ededed;">
+  
+  <style> .q1show{display:none;}.q2show{display:none;}</style>
+  
+  <c:MMR_Header title="Execution Only" opp="{!bopp}"/>
+      <div class="container">
+           
+        <apex:form id="aForm" styleClass="form-horizontal">
+        <div class="row">
+        
+            <div >
+                <h3><span class="text-decoration: underline;">Disclaimer for execution only</span></h3>
+            </div>  
+            <div>
+            <p>
+                
+                Al Rayan Bank offers advice on our own range of Sharia compliant Home Purchase Plans.  
+            </p>
+            <p>
+                To enable Al Rayan Bank to offer you advice, we collect information from you to assess your needs and make a recommendation to you.
+            </p>
+            <p>
+                The advice we give and the recommendation we make is regulated by the Financial Conduct Authority. Should you experience any issues with the advice and recommendation we have made, you would be eligible to take your issue to the Financial Ombudsman Service should you be unable to resolve your issue directly with Al Rayan Bank. 
+            </p>
+            <p>
+                We have identified that you are eligible to proceed with an execution only service, and you have asked to do so.  This is where you waive your right to our advice, and we will proceed with a product and term of your own choosing. 
+            </p>
+            <p>
+                Consequently by opting to proceed on an execution only basis, you are waiving your right to make use of the Financial Ombudsman Service should you experience an issue based on your product selection that you cannot settle directly with Al Rayan Bank.
+            </p>
+            
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="form-group">
+                <div class="col-sm-3 col-sm-offset-3">
+                    <label>Are you happy to proceed</label>
+                </div>
+                <div class="col-sm-3">
+                    <apex:inputField styleclass="form-control" value="{!Opp.Proceed_on_Execution_Only_basis__c}" required="true"/>
+                </div>
+            </div>
+        </div>
+        
+                                  
+            <div>
+            <apex:commandButton styleClass="btn btn-primary" action="{!Previous}" value="Previous"/>
+            <apex:commandButton styleClass="btn btn-success" action="{!Save}" value="Save"/>
+            <apex:commandButton styleClass="btn btn-danger" action="{!NextOnly}" value="Next"/>
+            </div>
+                     
+        </apex:form>        
+    </div>
+    
+    <c:MMR_PageFooter ></c:MMR_PageFooter>
+    
+</body>
+
+</apex:page>

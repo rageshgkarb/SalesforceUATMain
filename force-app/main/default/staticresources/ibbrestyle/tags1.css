@@ -1,0 +1,222 @@
+@charset "UTF-8";
+/* CSS Document */
+form,
+div,
+input { margin:0 0 0 0; padding:0 0 0 0;}
+label { font-weight:bold; }
+img { border:none;}
+
+	/* Basic HTML TAG STYLES START */	
+
+		body {
+			background: #FFFFFF;
+			color: inherit;
+		}
+		p {
+			padding: 0 0 0 0;
+			/*font-size: 0.85em;
+			color: #000000;
+			line-height: 1.3em;*/
+		}
+		abbr[title], 
+		acronym[title] {
+     		border-bottom-width: 0;
+   		}
+			
+		
+		#contents h1 {
+			margin: 0 0 .3em 0;
+			font-size: 2.308em;
+			color: #666666;
+			font-weight: normal;
+		}
+		#contents .page h1 {
+			margin: 0 0 1.06em;
+			font-size: 1.50em;
+			color: #666666;
+			font-weight: bold;
+		}
+		#contents h1 span.h1alt { color:#999999; }
+		
+		#contents h2 {
+			margin: 0 0 .3em 0;
+			font-size: 1.846em;
+			color: #666666;
+			font-weight:normal;
+			
+		}
+		#contents .page h2, #contents .page h3, #contents .page h4, #contents .page h5, #contents .page h6 {
+			margin: 0 0 1.06em;
+			color: #222;
+			font-weight: bold;
+		}
+				
+		.page H2,
+		#contents .module caption {
+			font-size: 1.35em;
+			margin-bottom:.3em;
+		}	
+		
+		.page H2.moduleTitle { border-bottom:1px solid #CCCCCC; padding-bottom:.3em; }
+		.rightTitleIcon { float:right; }
+		#contents .rightTitleIcon img { margin-bottom:0;}
+		
+
+		.page H3 {
+			font-size: 1.25em;
+		}
+		
+		.page H4 {
+			font-size: 1.15em;
+		}	
+
+		.page H5 {
+			font-size: 1.1em;
+		}
+			
+		.page H6 {
+			font-size: 1em;
+		}
+		
+		body a {
+			text-decoration: none;
+			font-weight:normal;
+		}
+		a:hover {
+			text-decoration: underline;
+		}
+		
+		#header a,
+		#contents a,
+		#rightColumn a,
+		#address a,
+		#footer a  {
+			color: #0033CC;
+		}
+		
+		#contents a {
+			font-weight: bold;
+			color: #0033CC;
+			background-color: #FFFFFF;
+		}
+		#extras a {
+			color: #0033CC;
+		}
+		
+		
+		#contents a:hover {
+		/* slight bg change for extra legibility */ 
+			background-color: #ccffff;
+			color: #0033ff;
+			text-decoration:underline;
+		}
+		#contents  a.buttonLink,
+		#contents  a.buttonLink:hover { background-color:transparent; }
+		
+		#extras a:hover {
+			color: #0033ff;
+			text-decoration:underline;
+		}
+	
+		/* only text with bg change on the active/focus state */
+		#contents a:active, 
+		#contents a:focus,
+		#contents .pageIndex a:active,
+		#contents .pageIndex a:focus,
+		#rightColumn a:active, 
+		#rightColumn a:focus   { 
+			background-color: #0033CC;
+			color: #FFF;
+		}
+		
+/*		body a:active img, 
+		body a:focus img { background-color:#FFFFFF; }*/
+		
+		
+	
+
+		.page li { font-weight:normal; }
+		.page ul {
+				margin: 0 0.88em 1em;
+				line-height: 1.4em;
+			}
+			.page ul ul {
+				margin: 0 0.88em 1em;
+			}			
+			.page ul li {
+				padding: 0 0 0 .3em;
+				margin-top: 2px;
+				margin-left:1.5em;
+				font-size:1em;
+			}
+			
+		.page ol {
+			padding: 0 0 0 .3em;
+			margin-top: 2px;
+			margin-left:1.5em;
+			margin-bottom:1em;
+			list-style-type: upper-roman;
+			line-height: 1.4em;
+		}
+			.page ol ol {
+				margin: 0 0.88em 1em;
+			}			
+			.page ol li,
+			 {
+				margin: 0 0 .3em 1.88em;
+				list-style-type: decimal;
+				font-weight:normal;
+				font-size:1em;
+			}
+			
+			#contents ol ol li {list-style-type: lower-latin;}
+			#contents ol ol ol li {list-style-type: lower-roman;}
+			#contents ul ol li {background: none;}
+			
+			#contents ul {
+				list-style-image: url(../graphics/modules/menus/greyListItem.gif);
+			}
+						
+			
+		img {
+			border: none;
+		}
+		img a:link { border-bottom-style:none;}
+
+
+		.page hr {
+			height: 1px;
+			margin: 1.5em 0 3em;
+			color: #bac39e;
+			background-color: #bac39e;
+			border: 0px;
+		}
+
+		acronym, abbr {
+			border-bottom: 1px dashed #9c1948;
+			cursor: pointer;
+		}
+		abbr[title], acronym[title] {
+     		border-bottom-width: 0;
+   		}
+
+		q { quotes: "\201C" "\201D" "\2018" "\2019"; }
+		
+		q:before { content: open-quote; }
+		q:after  { content: close-quote; }
+		
+		q:before   { content: '\201C'; } /* Safari support */
+		q:after    { content: '\201D'; }
+		q q:before { content: '\2018'; }
+		q q:after  { content: '\2019'; }
+
+		blockquote * { quotes: none; }
+		blockquote > *:before { content: '\201C'; }
+		blockquote > *:after  { content: '\201D'; }
+		blockquote q:before   { content: '\2018'; }
+		blockquote q:after    { content: '\2019'; }
+		
+		form { padding:0 0 0 0; margin:0 0 0 0;}
+		address { font-style:normal; }
+
+

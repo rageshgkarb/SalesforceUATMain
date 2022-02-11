@@ -1,0 +1,229 @@
+<apex:component >
+    <apex:attribute description="Applicant no" name="ApplicantNo" type="String"/>
+    <apex:attribute description="Person num" name="PersonNum" type="String" />
+    <apex:attribute description="Acc" name="Acc" type="Account"/>
+    <apex:attribute description="" name="panelClass" type="String"/>
+    <apex:attribute description="" name="type" type="String" /><!-- C0644 Applicant/Director -->
+  
+  <div class="AppWidth col-md-6 aipaddress">    
+
+
+<div class="panel panel-primary applicantPanel">
+            <div class="panel-heading">
+                <h2>{!type} {!PersonNum} - {!Acc.Name}</h2> 
+                <span class="btn btn-danger sameAs{!ApplicantNo} pull-right" >Same as {!type} 1</span>
+                <script>
+                 $('.sameAs{!ApplicantNo}').click(function(){
+                        SameAddressAs(2);
+                    });
+                </script>
+             </div>
+            
+            
+  <div class="panel-body">
+
+  <div class="row">
+
+
+ 
+       
+            <div class="form-group">
+                <div class="col-sm-5">
+                    <label for="" >Current Address Post Code</label>
+                </div>
+                
+                <div class="col-sm-7">
+                    <apex:inputField id="addrPostCode2" value="{!Acc.BillingPostalCode}" styleClass="form-control" />
+                </div>
+            </div>
+             <div class="form-group">
+                <div class="col-sm-5">
+                    <label for="">Customer address</label>
+                </div>
+                
+                <div class="col-sm-7">
+                    <apex:inputField id="addrStreet2" value="{!Acc.BillingStreet}" styleClass="form-control" />
+                </div>
+            </div>
+             <div class="form-group">
+                <div class="col-sm-5">
+                    <label for="">Current Address City</label>
+                </div>
+                
+                <div class="col-sm-7">
+                    <apex:inputField id="addrCity2" value="{!Acc.BillingCity}" styleClass="form-control" />
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="col-sm-5">
+                    <label for="">Current Address Country</label>
+                </div>
+                
+                <div class="col-sm-7">
+                    <apex:inputField id="addrCountry2" value="{!Acc.BillingCountry}" styleClass="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-5">
+                    <label for="">Date moved to address</label>
+                </div>
+                
+                <div class="col-sm-7">
+                    <apex:inputField id="movedCurrent2" styleClass="{!'addressc' + ApplicantNo } form-control" required="true" value="{!Acc.Date_moved_to_address__c}" />
+                </div>
+            </div>  
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <div class="divaddressp{!ApplicantNo}" style="display:none;">
+            <div class="form-group">
+                <div class="col-sm-5">
+                    <label for="" >Previous Address Post Code</label>
+                </div>
+                
+                <div class="col-sm-7">
+                    <apex:inputField id="addrPrevPostCode2" value="{!Acc.ShippingPostalCode}" styleClass="form-control" />
+                </div>
+            </div>
+             <div class="form-group">
+                <div class="col-sm-5">
+                    <label for="">Previous Address</label>
+                </div>
+                
+                <div class="col-sm-7">
+                    <apex:inputField id="addrPrevStreet2" value="{!Acc.ShippingStreet}" styleClass="form-control" />
+                </div>
+            </div>
+             <div class="form-group">
+                <div class="col-sm-5">
+                    <label for="">Previous Address City</label>
+                </div>
+                
+                <div class="col-sm-7">
+                    <apex:inputField id="addrPrevCity2" value="{!Acc.ShippingCity}" styleClass="form-control" />
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="col-sm-5">
+                    <label for="">Previous Address Country</label>
+                </div>
+                
+                <div class="col-sm-7">
+                    <apex:inputField id="addrPrevCountry2" value="{!Acc.ShippingCountry}" styleClass="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-5">
+                    <label for="">Date moved to previous address</label>
+                </div>
+                
+                <div class="col-sm-7">
+                    <apex:inputField id="movedPrevious2" styleClass="{!'addressp' + ApplicantNo } form-control"  value="{!Acc.Date_moved_to_previous_address__c}" />
+                </div>
+            </div>  
+            </div>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <div style="display:none;" class="divaddresspp{!ApplicantNo}">
+            <div class="form-group">
+                <div class="col-sm-5">
+                    <label for="" >Previous Previous Address Post Code</label>
+                </div>
+                <div class="col-sm-7">
+                    <apex:inputField id="addrPrevPrevPostCode2" value="{!Acc.PersonMailingPostalCode}" styleClass="form-control" />
+                </div>
+            </div>
+             <div class="form-group">
+                <div class="col-sm-5">
+                    <label>Previous Previous address</label>
+                </div>
+                
+                <div class="col-sm-7">
+                    <apex:inputField id="addrPrevPrevStreet2" value="{!Acc.PersonMailingStreet}" styleClass="form-control" />
+                </div>
+            </div>
+             <div class="form-group">
+                <div class="col-sm-5">
+                    <label for="">Previous Previous Address City</label>
+                </div>
+                
+                <div class="col-sm-7">
+                    <apex:inputField id="addrPrevPrevCity2" value="{!Acc.PersonMailingCity}" styleClass="form-control"/>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="col-sm-5">
+                    <label for="">Previous Previous Address Country</label>
+                </div>
+                
+                <div class="col-sm-7">
+                    <apex:inputField styleClass="form-control" id="addrPrevPrevCountry2" value="{!Acc.PersonMailingCountry}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-5">
+                    <label for="">Date moved to previous previous address</label>
+                </div>
+                
+                <div class="col-sm-7">
+                    <apex:inputField id="movedPrevPrev2" styleClass="{!'addresspp' + ApplicantNo } form-control"  value="{!Acc.Date_moved_to_prev_previous_address__c}" />
+                </div>
+            </div>          
+            </div>
+            <div class="form-group">
+                <div class="col-sm-5">
+                    <label>Additional address details</label>
+                </div>
+                <div class="col-sm-7">
+                    <apex:inputField styleClass="form-control" value="{!acc.Additional_Address_Details__c}"/>
+                </div>
+            </div>
+            
+             </div>
+             </div>
+        </div>
+        </div>
+        <apex:inputHidden id="addrHouseNo2" value="{!Acc.Customer_Address_House_No__c}"/>        
+       
+        <script>
+            $( document ).ready(function() {
+                $('.addressc{!ApplicantNo}').change(function(){
+                       CheckDates({!ApplicantNo});
+                });
+                $('.addressp{!ApplicantNo}').change(function(){
+                       CheckDates({!ApplicantNo});
+                });
+                $('.addresspp{!ApplicantNo}').change(function(){
+                       CheckDates({!ApplicantNo});
+                });           
+                
+                
+               
+                
+                CheckDates({!ApplicantNo});
+            });         
+        </script>        
+</apex:component>

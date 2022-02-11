@@ -1,0 +1,52 @@
+<apex:component >
+    <div class="row">
+        <div class="panel panel-primary">
+            <div class="panel-body">
+                <div class="col-sm-12">
+                    <strong>Controlling Person</strong> – An Entity is controlled by the persons or entities who hold at least 10%
+                    of the voting shares in the entity or who are known to exercise significant influence over the policy,
+                    business and strategy of the entity. In the case of a trust, the Controlling Person(s) are the settlors(s),
+                    the trustee(s), the protector(s) (if any), the beneficiaries or classes of beneficiaries, or any other
+                    natural persons exercising ultimate effective control over the trust (including through a chain of control
+                    or ownership). Where the settlor(s) of a trust is an Entity then the CRS requires Financial Institutions
+                    to also identify the Controlling Persons of the settlor(s) and when required report them as Controlling
+                    Persons of the trust.
+                    <br/>
+                    <br/>
+                    <strong>It is mandatory that you include your TIN (or equivalent). If a TIN is unavailable, please select a suitable
+                        reason code below.</strong>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <span>Section 4 - Controlling Persons ({{ControllingPersonAddedCount}})</span>
+                <div class="dropdown pull-right" style="margin-top: -3px;" ng-show="HasUnAddedControllingPersons()" ng-init="InitOtherControllingPersons()">
+                    <button class="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown">Add Controlling Person
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" Style="cursor:pointer;">
+                        <li ng-click="AddControllingPerson()"><a>[Add New Controlling Person]</a></li>
+                        <li ng-repeat="person in ControllingPersonsData track by person.Applicant_Number_c" ng-click="AddControllingPerson(person)" ng-if="person.Added == undefined || person.Added == false">
+                            <a>{{ person.Firstname }} {{person.Lastname}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="panel-body">
+                <form name="formSection4" novalidate="novalidate">
+                    <div>
+                        <div ng-repeat="person in ControllingPersonsData track by person.Applicant_Number_c" ng-if="person.Added != undefined && person.Added == true">
+                            <c:BAA_Self_Cert_cPerson model="person"  modellist="ControllingPersonsData" ShowPersonDetails="false" form="formSection4" ControllingPersonHeader="Applicant" ></c:BAA_Self_Cert_cPerson>
+                        </div>
+                        <div ng-repeat="other in OtherControllingPersons track by other.Applicant_Number_c" ng-if="other.Added != undefined && other.Added == true">
+                            <c:BAA_Self_Cert_cPerson model="other" modellist="OtherControllingPersons" ShowPersonDetails="true" form="formSection4" ControllingPersonHeader="Controlling Person"></c:BAA_Self_Cert_cPerson>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</apex:component>

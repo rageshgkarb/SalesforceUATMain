@@ -1,0 +1,32 @@
+<!-- C0770 - Data Errors and Affordability Reporting for HPP/BTL - To dispaly the budget planner values on AffordabilityResult Page. -->
+<apex:page StandardController="AffordabilityResults__c" extensions="BudgetPlannerFigureSectionController" sidebar="false">
+<apex:form >
+    <table>  
+    <tbody>
+        <tr>
+          <td> <b>Type </b></td>
+          <td> <b> Actual to be used </b></td>
+        </tr> 
+          
+        <apex:repeat value="{!items }" var="bi">
+         <tr >
+           <td>
+              <apex:outputfield value="{!bi.Display_Name__c}" />
+           </td>
+           <td>   
+              <apex:outputfield value="{!bi.Value_to_be_used__c}" />
+           </td>   
+         </tr>   
+        </apex:repeat>
+        
+          <tr>
+          <td> <b>Total Monthly Expenditure</b> </td>
+          <td> <b> <apex:outputfield value="{!BudgetItems.TotalCommitments__c}" /> </b></td>
+        </tr> 
+        
+     </tbody>
+     </table>                            
+
+ 
+</apex:form>
+</apex:page>

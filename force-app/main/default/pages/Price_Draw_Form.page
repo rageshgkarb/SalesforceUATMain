@@ -1,0 +1,418 @@
+<!--C0685-->
+<apex:page showHeader="false" sidebar="false" controller="Price_Draw_Form_Controller" docType="html-5.0" >
+<head>
+    <apex:stylesheet value="{!URLFOR($Resource.Bootstrap_3_2_0, '/css/bootstrap.min.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.Bootstrap_3_2_0, '/css/bootstrap_spacelab.min.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/css/core.css')}"/>
+    <script src ="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+    <script>
+    
+        function scriptcalling(){
+            alert("Sucessfully saved");
+            setTimeout(function(){redirect();},1000);
+        }
+    $(window).load(function (){
+    var d = new Date()
+    var vdate = document.getElementById("calYearPicker").innerHTML = d.getFullYear();
+    var previousYears = d.getFullYear()-100;  
+      $("#calYearPicker").html('');
+      for(var i=previousYears; i<= vdate; i++){
+        $("#calYearPicker").append("<option value= '"+ i +"'>"+i+"</option>")
+      }
+    });
+    function DisableKeyboard(e){
+     $(e.target).blur();
+     document.activeElement.blur();
+     }
+     <!-- C0737 Start -->            
+    function onPrefClick(){            
+        if($(".HasENewletter").prop('checked') || $(".HasEmail").prop('checked') || $(".HasPost").prop('checked') || $(".HasSMS").prop('checked') || $(".HasPhone").prop('checked')){                
+            $(".HasNoContact").prop('checked', false);            
+        }        
+    }        
+    function onNonPrefClick(){            
+        if($(".HasNoContact").prop('checked')){                
+            $(".HasENewletter").prop('checked', false);                
+            $(".HasEmail").prop('checked', false);                
+            $(".HasPost").prop('checked', false);                
+            $(".HasSMS").prop('checked', false);                
+            $(".HasPhone").prop('checked', false);            
+        }        
+    }      
+    <!-- C0737 End --> 
+    </script>
+    <script type='text/javascript'>
+    function noenter(ev)  {
+        if (window.event && window.event.keyCode == 13 || ev.which == 13) {
+            doSearchAF();
+            document.activeElement.blur();
+            return false;
+         } else {
+              return true;
+         }
+     }  
+</script>
+</head>
+     <c:PriceDrawForm_Header title="Event-Form" /> 
+<body>
+
+<apex:outputPanel style="font-size: small; " >
+    <apex:form id="aForm2" styleClass="form-horizontal" >
+    <div class="container">
+    <div class="row">
+        <apex:pagemessages ></apex:pagemessages>
+    </div>
+        <div style="padding-top:10px;"></div>
+        <div class="headerBar">
+            <div style="text-align: center;">
+                <span class="textSmallerWhite" style="font-size: 24px; font-family: simpleMedium;" >Lead-Form</span> <!--Modify by Zensar-->
+            </div>
+        </div>
+    
+    <div class="row">
+    <div > <!--class="tab-content"-->
+  <div > <!--class="tab-pane active" id="home"-->
+    <div class="panel panel-default">
+  <div class="panel-body">
+  <div class="col-sm-12">
+      <div class="row">
+      <div class="col-sm-6">
+          <div class="form-group">   
+              <div class="col-sm-4">       
+                  <p>Title</p>
+              </div>
+              <div class="col-sm-6">
+                  <div>
+                      <apex:selectList size="1" value="{!Title}" styleClass="salutation form-control" id="addTitle" required="false" label="Title" >
+            <apex:selectOptions value="{!Titles}"/>
+            </apex:selectList>
+                  </div>
+              </div>
+          </div>
+      </div> 
+          </div>
+      
+      <div class="row">      
+      <div class="col-sm-6">
+          <div class="form-group">   
+              <div class="col-sm-4">       
+                  <p>First Name</p>
+              </div>
+              <div class="col-sm-6">
+                  <div class="requiredInput">
+                      <apex:inputText styleClass="form-control" value="{!FirstName}" maxlength="40" onkeypress="return noenter(event);" />
+                  </div>
+              </div>
+          </div>
+      </div>
+        <div class="col-sm-6">
+          <div class="form-group">   
+              <div class="col-sm-4">       
+                  <p>Last Name</p>
+              </div>
+              <div class="col-sm-6">
+                  <div class="requiredInput">
+                      <apex:inputText styleClass="form-control" value="{!LastName}" maxlength="40" onkeypress="return noenter(event);"/>
+                  </div>
+              </div>
+          </div>
+      </div>
+      </div>
+      
+      <div class="row">     
+          
+          <div class="col-sm-6">
+          <div class="form-group">   
+              <div class="col-sm-4">       
+                  <p>Telephone (Home) </p>
+              </div>
+              <div class="col-sm-6">
+                   <div class="requiredInput">
+                  <apex:inputText styleClass="form-control" value="{!Telephonenum}" maxlength="15" onkeypress="return noenter(event);"/>
+                   </div>
+              </div>
+          </div>
+      </div> 
+    <div class="col-sm-6">
+          <div class="form-group">   
+              <div class="col-sm-4">       
+                  <p>Mobile</p>
+              </div>
+              <div class="col-sm-6">
+                   <div class="requiredInput">
+                  <apex:inputText styleClass="form-control" value="{!Mobilenum}" maxlength="15" onkeypress="return noenter(event);"/>
+                   </div>
+          </div>
+          </div>
+      </div>
+    </div>
+      
+      <div class="row">
+          <div class="col-sm-6">
+              <div class="form-group">   
+                  <div class="col-sm-4">       
+                      <p>Date of birth (dd/mm/yyyy)</p>
+                  </div>
+                  <div class="col-sm-6">
+                      <div>
+                           <div class="requiredInput">
+                           <apex:inputField id="calYearPicker" styleClass="form-control" style="width:145px;" value="{!leaddob.Date_of_Birth__c}" onkeypress="return noenter(event);"/>
+                           </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="col-sm-6">
+              <div class="form-group">   
+                  <div class="col-sm-4">       
+                      <p>Are you Al Rayan Bank customer?</p>
+                  </div>
+                  <div class="col-sm-6">
+                      <apex:inputCheckbox value="{!AreYouAlRayanBankCustomer}" onkeypress="return noenter(event);" />
+                  </div>
+              </div>
+          </div>
+     </div>
+      
+      <div class="row">
+          <div class="col-sm-6">
+              <div class="form-group">   
+                  <div class="col-sm-4">       
+                      <p> Address </p>
+                  </div>
+                  <div class="col-sm-6">
+                       <div class="requiredInput">
+                      <apex:inputTextarea id="addrStreet" styleClass="form-control" value="{!FullAddress}" onkeypress="return noenter(event);"/>
+                        </div>
+                  </div>
+              </div>
+          </div>
+          <div class="col-sm-6">
+              <div class="form-group">   
+                  <div class="col-sm-4">       
+                      <p> City </p>
+                  </div>
+                  <div class="col-sm-6">
+                       <div class="requiredInput">
+                      <apex:inputText id="addrCity" styleClass="form-control" value="{!city}" maxlength="20" onkeypress="return noenter(event);" />
+                        </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <div class="row">
+          <div class="col-sm-6">
+              <div class="form-group">   
+                  <div class="col-sm-4">       
+                      <p>Email</p>
+                  </div>
+                  <div class="col-sm-6">
+                       <div class="requiredInput">
+                            <apex:inputText styleClass="form-control" value="{!EmailAddr}" onkeypress="return noenter(event);" />
+                       </div>
+                  </div>
+              </div>
+          </div>
+          <div class="col-sm-6">
+              <div class="form-group">   
+                  <div class="col-sm-4">       
+                      <p> Post Code </p>
+                  </div>
+                  <div class="col-sm-6">
+                       <div class="requiredInput">
+                      <apex:inputText id="addrPostCode" styleClass="form-control" value="{!Postcode}" maxlength="10" onkeypress="return noenter(event);" />
+                        </div>
+                  </div>
+              </div>
+          </div>
+          <div class="col-sm-6">
+              <div class="form-group">   
+                  <div class="col-sm-4">       
+                      <p> Additional Comments </p>
+                  </div>
+                  <div class="col-sm-6">
+                       <div>
+                      <apex:inputText id="AdditiolComments" styleClass="form-control" value="{!AdditiolComments}" onkeypress="return noenter(event);" />
+                        </div>
+                  </div>
+              </div>
+          </div>
+            
+      </div>
+
+
+      <div class="row"> 
+          <div class="col-sm-12">
+              <div class="form-group"> 
+                  <div class="col-sm-12">
+                      <label>Interested in:</label>
+                  </div>
+                  <div class="col-sm-12">
+                             <apex:inputCheckbox value="{!CurrentAccount}" title="CurrentAccount"/> <label style="font-weight:normal">Current Account</label> &nbsp;
+                             <apex:inputCheckbox value="{!SavingsAccount}" title="SavingsAccount"/> <label style="font-weight:normal">Savings Account</label> &nbsp;
+                             <apex:inputCheckbox value="{!PropertyFinance}" title="PropertyFinance"/><label style="font-weight:normal">&nbsp; Property Finance </label> &nbsp;
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <div class="row"> 
+          <div class="col-sm-12">
+              <div class="form-group">   
+                  <div class="col-sm-12">   
+                    <!--  <label><strong>Storing and using your information:</strong></label>    
+                      <p>In the future we would like to contact you about our products, special offers and promotions. If you agree to 
+                       this we will add your information to our database. We will not give your information to third parties.</p> -->
+                       <label>Keeping you informed</label>
+                         
+                                        <p>From time to time we’d also love to tell you about our Islamic financial services, products and any new offers that we think you’d be interested in based on the information we hold about you. If you would like to hear from us about these please tick the appropriate box(es) below so we know how you would prefer us to contact you.</p>
+                                   
+                    
+                  </div>
+                  
+              </div>
+          </div>
+      </div>
+
+      
+      <div class="row"> 
+          <div class="col-sm-12">
+              <div class="form-group">
+                  <div class="col-sm-12">
+                   <!--   <p>Please tick the appropriate box(es) of the methods you do not wish to be contacted by:</p> -->
+                  </div>
+                  <div class="col-sm-12">
+                           <div class="marketing-pref">
+                           <!-- <label style="font-weight:normal"> Mail &nbsp;&nbsp;<apex:inputCheckbox value="{!HasMail}" title="Mail"/> </label> 
+                            <label style="font-weight:normal"> &nbsp;&nbsp;Email &nbsp;&nbsp;<apex:inputCheckbox value="{!HasEmail}" title="Email"/> </label>
+                            <label style="font-weight:normal"> &nbsp;&nbsp;Telephone &nbsp;&nbsp;<apex:inputCheckbox value="{!HasPhone}" title="phone"/></label>
+                            <label style="font-weight:normal"> &nbsp;&nbsp;SMS &nbsp;&nbsp;<apex:inputCheckbox value="{!HasSMS}" title="SMS"/></label>
+                            <label style="font-weight:normal"> &nbsp;&nbsp;Any method &nbsp;&nbsp;<apex:inputCheckbox value="{!AnyMethod}" title="Any method"/></label>-->
+                            
+                                            <!-- C0737 Start -->
+                                            <label style="font-weight:normal"><apex:inputCheckbox value="{!HasENewletter}" title="E-Newsletter" styleClass="HasENewletter" onclick="onPrefClick()" /> E-Newsletter &nbsp; </label>
+                                            <label style="font-weight:normal"><apex:inputCheckbox value="{!HasEmail}" title="Email" styleClass="HasEmail" onclick="onPrefClick()" /> Email &nbsp;</label>
+                                            <label style="font-weight:normal"><apex:inputCheckbox value="{!HasPost}" title="Post" styleClass="HasPost" onclick="onPrefClick()" /> Post &nbsp;</label>
+                                            <label style="font-weight:normal"><apex:inputCheckbox value="{!HasSMS}" title="SMS" styleClass="HasSMS" onclick="onPrefClick()" /> SMS &nbsp; </label>
+                                            <label style="font-weight:normal"><apex:inputCheckbox value="{!HasPhone}" title="phone" styleClass="HasPhone" onclick="onPrefClick()" /> Phone &nbsp;</label>
+                                            <!-- C0737 End -->
+                          </div>
+                  </div>
+                  
+                 
+                                    <div class="col-sm-12">
+                                    <div>
+                                        <p>If you would prefer not to hear from us with Al Rayan Bank marketing information and offers, please tick here:&nbsp;<!-- C0737 Start --><apex:inputCheckbox value="{!HasNoContact}" title="No Contact" styleClass="HasNoContact" onclick="onNonPrefClick()" /><!-- C0737 End --> </p>
+                                        <p>You can change your preferences at any time, by writing to us at Al Rayan Bank, 24a Calthorpe Road, Edgbaston, Birmingham, B15 1RP.</p>
+                                        <p>If you would like more information about how we use your information please click <a href="https://www.alrayanbank.co.uk/privacy" target="_blank">here</a></p>
+                                    </div>
+                                    </div>
+                
+                                
+              </div>
+          </div>
+
+          <div class="row">
+        </div>
+      </div>
+
+      <div class="row"> 
+          <div class="col-sm-12">
+              <div class="form-group">   
+                  <div class="col-sm-12">   
+                      <p style="font-size:smaller">*Terms and conditions apply. Please ask an Al Rayan Bank representative for a copy.</p>    
+                  </div>
+                  
+              </div>
+          </div>
+      </div>
+
+
+
+       <div class="row">      
+      <div class="col-sm-6">
+          <div class="form-group">   
+              <div class="col-sm-6">
+                  <div>
+                      <p> <a href="https://www.alrayanbank.co.uk/" target="_blank"><strong style="color: #B3995D; font-size:smaller;">alrayanbank.co.uk</strong></a></p>
+                  </div>
+              </div>
+          </div>
+      </div>
+        <div class="col-sm-6">
+          <div class="form-group">   
+              <div class="col-sm-6">       
+
+              </div>
+              <div class="col-sm-6">
+                  <div>
+                     <strong style="font-size:smaller;">Banking you can <strong style="color: #B3995D;">believe </strong>in</strong>
+                  </div>
+              </div>
+          </div>
+      </div>
+      </div>
+
+      </div>
+
+      </div>
+
+      </div>
+      </div>
+        
+        <div class="row">
+           <div class="col-sm-6">
+              <div class="form-group">  
+                  <div class="col-sm-6">       
+                     
+                  </div>
+                  <div class="col-sm-6">   
+                            <apex:commandButton styleClass="goldButton" value="BACK" action="{!back}" style="width:100px" />
+                   </div>
+                   
+               </div>
+            </div>
+            
+            <div class="col-sm-6">
+              <div class="form-group">   
+                  <div class="col-sm-6">
+                        <apex:actionFunction name="doSearchAF" action="{!Save}" />
+                        <apex:actionFunction name="redirect" action="{!RedirectFunc}">
+                            
+                        </apex:actionFunction>
+                        <!--test
+                            <apex:outputText rendered="{!showAlert}" id="alert">
+                            <script>
+                            alert('Save success');
+                            </script>
+                        </apex:outputText>
+                        Test-->
+                        <apex:commandButton styleClass="goldButton" value="SAVE" id="but" action="{!Save}" style="width:100px"/>
+                        <apex:outputText value="{!callscript}" escape="false"></apex:outputText>
+
+
+                   </div>
+                   
+               </div>
+            </div>
+        </div>
+
+    </div>
+    </div>
+    </div>
+
+    </apex:form>
+
+</apex:outputPanel>
+
+</body>
+    <script>
+
+        function datacollectionform()
+        {
+            window.location = '/apex/landing_page';
+        
+        }
+    </script>
+</apex:page>

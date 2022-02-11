@@ -1,0 +1,8 @@
+<apex:page controller="RefreshMetricsLaunchController"> 
+    <apex:form >
+        <apex:pageMessages id="pageMessages"></apex:pageMessages> 
+        <div style="margin: 20px">
+            <apex:commandButton value="REFRESH METRICS" action="{!LaunchEndToEnd}"></apex:commandButton> 
+        </div>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,167 @@
+<!--C0674 - Created new page-->
+<apex:page standardController="Case" extensions="Payment_Services_Complaint_Controller" >
+
+<apex:outputPanel rendered="{!Show}">
+	<apex:outputPanel rendered="{!PaymentServices == 'Yes'}">
+
+			<div id="cdiv">
+			<div>
+	
+			<h1>Complaint due in</h1> 
+			</div>
+
+			<div id="clockdiv">
+			  <div>
+				<span class="days"></span>
+				<div class="smalltext">Days</div>
+			  </div>
+			  <div>
+				<span class="hours"></span>
+				<div class="smalltext">Hours</div>
+			  </div>
+			  <div>
+				<span class="minutes"></span>
+				<div class="smalltext">Minutes</div>
+			  </div>
+			  <div>
+				<span class="seconds"></span>
+				<div class="smalltext">Seconds</div>
+			  </div>
+			</div>
+			</div>
+
+			<div id="Reportable" style="display:none;">
+				<h1>This is now Payment Services Complaint</h1>
+			</div>
+
+			<script>
+			function getTimeRemaining(endtime) {
+			  var t = Date.parse(endtime) - Date.now();
+			  var seconds = Math.floor((t / 1000) % 60);
+			  var minutes = Math.floor((t / 1000 / 60) % 60);
+			  var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
+			  var days = Math.floor(t / (1000 * 60 * 60 * 24));
+			  return {
+				'total': t,
+				'days': days,
+				'hours': hours,
+				'minutes': minutes,
+				'seconds': seconds
+			  };
+			}
+
+			function initializeClock(id, endtime) {
+			  var clock = document.getElementById(id);
+			  var reportable = document.getElementById('Reportable');
+			  var cdiv= document.getElementById('cdiv');
+			  var daysSpan = clock.querySelector('.days');
+			  var hoursSpan = clock.querySelector('.hours');
+			  var minutesSpan = clock.querySelector('.minutes');
+			  var secondsSpan = clock.querySelector('.seconds');
+  
+  			  function updateClock() {
+				var t = getTimeRemaining(endtime);
+
+				daysSpan.innerHTML = t.days;
+				hoursSpan.innerHTML = ('0' + t.hours).slice(-2);
+				minutesSpan.innerHTML = ('0' + t.minutes).slice(-2);
+				secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);
+
+				if (t.total <= 0) {
+				  clearInterval(timeinterval);
+				  cdiv.style.display = "none";
+				  reportable.style.display = "block";
+				}
+			  }
+
+			  updateClock();
+			  var timeinterval = setInterval(updateClock, 1000);
+			}
+
+			var deadline = new Date({!year},  {!month}, {!day}, {!hour}, {!minute}, {!second},0);
+
+			initializeClock('clockdiv', deadline);
+			</script>
+	</apex:outputPanel>
+	<apex:outputPanel rendered="{!PaymentServices == 'No'}">
+		<h1>Payment Services Complaint Not Applicable</h1>
+	</apex:outputPanel>
+</apex:outputPanel>
+
+
+<apex:outputPanel rendered="{!Not(Show)}">
+    <div id="not-report">
+        <h1>Case closed within timescale</h1>
+    </div>
+</apex:outputPanel>
+
+
+<style>
+body{
+    text-align: center;
+    background: #00ECB9;
+  font-family: sans-serif;
+  font-weight: 100;
+}
+
+h1{
+  color: rgb(179,153,93);
+  font-weight: 100;
+  font-size: 20px;
+  margin: 40px 0px 20px;
+}
+
+#Reportable{
+    padding:20px;    
+    background-color: rgb(235,94,80);
+    color:white;
+}
+
+#not-report{
+    background-color : #5cb85c;
+    padding:20px;
+}
+
+#not-report h1{
+    color : #fff;
+    
+}
+
+#Reportable h1{
+  color: #fff;
+  background-color: inherit;
+  font-weight: 100;
+  font-size: 20px;
+  margin: 40px 0px 20px;
+}
+
+#clockdiv{
+    font-family: sans-serif;
+    color: #fff;
+    display: inline-block;
+    font-weight: 100;
+    text-align: center;
+    font-size: 20px;
+}
+
+#clockdiv > div{
+    padding: 10px;
+    border-radius: 3px;
+    background: rgb(179,153,93);
+    display: inline-block;
+}
+
+#clockdiv div > span{
+    padding: 15px;
+    border-radius: 3px;
+    background: rgb(33,33,33);
+    display: inline-block;
+}
+
+.smalltext{
+    padding-top: 5px;
+    font-size: 16px;
+}
+</style>
+
+</apex:page>

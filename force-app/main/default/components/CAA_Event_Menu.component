@@ -1,0 +1,37 @@
+<apex:component controller="CAA_Event_Controller">
+<apex:attribute name="evt" description="" type="Event__c" assignTo="{!Event}" />
+
+<apex:attribute name="EventLog" type="Integer" description=""/>
+
+<!--
+
+ <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+  <div class="panel panel-primary">
+    <div class="panel-heading" role="tab" id="headingOne">
+    
+      <div style="cursor: pointer; cursor: hand;" class="accordion-toggle panel-title collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+       
+       Events
+        
+        
+ 
+        
+      </div>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+      <div class="panel-body">
+         <ul>
+             <li>list</li>
+             <li>of</li>
+             <li>events</li>
+         </ul>   
+     
+     
+      </div>
+    </div>
+  </div>
+</div> 
+
+-->
+ 
+</apex:component>

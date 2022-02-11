@@ -1,0 +1,26 @@
+<apex:page sidebar="true" showChat="false" showHeader="false" standardController="HPP_MI__c" standardStylesheets="false">
+
+<style>
+body {
+font-family: Calibri;
+color:#236FBD;
+font-size: 20px;
+</style>
+
+
+<apex:form >
+<apex:commandButton action="{!save}" value="Save!"/>
+<apex:commandButton action="{!cancel}" value="Cancel!"/>
+<apex:pageblock title="HPP MI Revised view">
+<apex:pageBlockSection title="Overview">
+<h1><apex:inputfield value="{!HPP_MI__c.name}"/></h1>
+<P> </p>
+
+
+
+<apex:outputField value="{!HPP_MI__c.ownerid}"/>
+<p><b>Finance required:    </b>£ {! HPP_MI__c.Finance_Required__c}</p> <p> <b>Term: </b> {!HPP_MI__c.Property_Value__c} </p>
+</apex:pageBlockSection>
+</apex:pageblock>
+</apex:form>
+</apex:page>

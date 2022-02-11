@@ -1,0 +1,597 @@
+html {
+	position: relative;
+	min-height: 100%;
+}
+
+body { 
+	padding-top: 70px; 
+	margin-bottom:60px;
+}
+
+a{
+	color:rgb(179,153,93);
+}
+a:hover {
+	color:rgb(179,153,93);
+}
+
+.rad{
+    padding-right: 10px;
+    display: inline-block;
+}
+
+@media (max-width: 767px)
+{
+    .rad{
+        display: block;
+    }
+
+    .LoginContainer{
+        margin-left:-15px;
+        margin-right:-15px;
+    }
+
+
+}
+
+.form-control{
+	background-color: rgb(243,243,243);
+}
+
+label{
+	line-height: 1.8;
+}
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance:textfield;
+}
+
+
+/* Template Start */
+
+.banner{
+	background-image : url('Photo/ARB_SA_photod.jpg');
+	margin-bottom: 18px;
+}
+
+.banner-current{
+	background-image : url('Photo/banner/current-account.jpg');
+	margin-bottom: 18px;
+}
+
+.banner-fixed{
+	background-image : url('Photo/banner/ftd.jpg');
+	margin-bottom: 18px;
+}
+
+.banner-ypsa{
+	background-image : url('Photo/banner/young-person.jpg');
+	margin-bottom: 18px;
+}
+
+.banner-taxfree{
+	background-image : url('Photo/banner/isa.jpg');
+	margin-bottom: 18px;
+}
+
+.banner-instant{
+	background-image : url('Photo/banner/instant-access.jpg');
+	margin-bottom: 18px;
+}
+
+.banner-notice{
+	background-image : url('Photo/banner/notice.png');
+	margin-bottom: 18px;
+    background-repeat: no-repeat;
+    background-size: 1140px 260px;
+}
+
+/* small images */
+
+@media (max-width: 767px)
+{
+.banner-current{
+	background-image : url('Photo/banner/current-account-sm.jpg');
+	margin-bottom: 18px;
+}
+
+.banner-fixed{
+	background-image : url('Photo/banner/ftd-sm.jpg');
+	margin-bottom: 18px;
+}
+
+.banner-ypsa{
+	background-image : url('Photo/banner/young-person-sm.jpg');
+	margin-bottom: 18px;
+}
+
+.banner-taxfree{
+	background-image : url('Photo/banner/isa-sm.jpg');
+	margin-bottom: 18px;
+}
+
+.banner-instant{
+	background-image : url('Photo/banner/instant-access-sm.jpg');
+	margin-bottom: 18px;
+}
+
+.banner-notice{
+	background-image : url('Photo/banner/notice-sm.jpg');
+	margin-bottom: 18px;
+}
+
+.bann{
+	background-position: center center !important;
+}
+}
+
+
+
+.tagline{
+          font-size: 18px;
+      }
+      
+.tagline strong{
+	color:rgb(179,153,93);
+	font-weight: normal;
+}
+      
+.Header{
+	background-color: #fff;
+	border-top: 5px solid rgb(30,30,30);
+	height:100px;
+}
+      
+.Header strong{
+	color:rgb(179,153,93);
+	font-weight: normal;
+}
+
+.navbar-toggle {
+    float: left;
+}
+
+.navbar-default .navbar-toggle {
+    border-color: #333;
+    background-color:#333;
+}
+
+
+.arbBox{
+        /*border: solid 1px rgb(237,237,237); */
+        background-color: rgb(243,243,243);
+    }
+    
+    hr{
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+/* Template End */
+
+
+
+.mobile-title strong{
+	color:rgb(179,153,93);
+}
+
+
+.blackbutton{
+	background-color: rgb(30,30,30);
+	color: #fff;
+}
+
+.goldbutton{
+	background-color: rgb(179,153,93);
+	color:#fff;
+}
+
+
+.modal-content{
+	z-index: 998;
+}
+
+
+
+
+.white-on-gold{
+	background-color: rgb(179,153,93);
+	color: #fff;
+}
+
+.gold-on-white{
+	color: rgb(179,153,93);
+	background-color: #fff;
+}
+
+
+
+
+.bannertitle{
+	background-image: url('Title/ARB_SA_title.png');
+}
+
+
+
+
+
+
+
+/* CSS Number Circle Background Start*/
+
+.borderCircle{
+        border-radius: 50%;
+        behavior: url(PIE.htc); /* remove if you don't care about IE8 */
+        float: left;
+        width: 25px;
+        height: 25px;
+        padding-top: -2px;
+        margin-right:7px;    
+        color: rgb(179,153,93);
+        text-align: center;
+        font-weight: bold;
+        border: 2px solid rgb(179,153,93);
+        font-size: 18px ;
+	margin-bottom: 5px;
+	margin-top:5px;
+    
+    }
+.borderCircle:hover{
+       
+        color:#fff;
+        background-color:rgb(179,153,93);
+        
+        text-align: center;
+        font-weight: bold;
+        border: 2px solid rgb(179,153,93);
+        font-size: 18px ;
+    
+    }
+    
+    .borderCircleBtn{
+        border-radius: 50%;
+        behavior: url(PIE.htc); /* remove if you don't care about IE8 */
+        float: left;
+        width: 20px;
+        height: 20px;
+        padding-top: -2px;
+        margin-right:7px;    
+        color: #fff;
+        text-align: center;
+        font-weight: bold;
+        border: 2px solid #fff;
+        font-size: 14px ;
+    
+    }
+
+
+.numberCircle {
+    border-radius: 50%;
+    behavior: url(PIE.htc); /* remove if you don't care about IE8 */
+    float: left;
+    width: 35px;
+    height: 35px;
+    padding: 1px;
+    margin-right:7px;    
+    background: rgb(179,153,93);
+    color: #fff;
+    text-align: center;
+
+    font: 24px ;
+    }
+    
+    .numberCircleReverse {
+    border-radius: 50%;
+    behavior: url(PIE.htc); /* remove if you don't care about IE8 */
+    float: left;
+    width: 35px;
+    height: 35px;
+    margin-right:7px;    
+    background: #fff;
+    color: rgb(179,153,93);
+    text-align: center;
+    font-weight: bold;
+    font-size: 24px ;
+    }
+
+
+.numberCircle-sm {
+    border-radius: 50%;
+    behavior: url(PIE.htc); /* remove if you don't care about IE8 */
+    float: left;
+    width: 25px;
+    height: 25px;
+    padding: 1px;
+    margin-right:7px;    
+    background: rgb(179,153,93);
+    color: #fff;
+    text-align: center;
+
+    font: 24px ;
+    }
+    
+    .numberCircleReverse-sm {
+    border-radius: 50%;
+    behavior: url(PIE.htc); /* remove if you don't care about IE8 */
+    float: left;
+    width: 25px;
+    height: 25px;
+    margin-right:7px;    
+    background: #fff;
+    color: rgb(179,153,93);
+    text-align: center;
+    font-weight: bold;
+    font-size: 24px ;
+    }
+
+
+
+.circle-dark{
+        border-radius: 50%;
+        behavior: url(PIE.htc); /* remove if you don't care about IE8 */
+        /*float: left;*/
+        width: 36px;
+        height: 36px;
+        padding: 1px;
+        margin-right:7px;    
+        background: rgb(179,153,93);
+        color: #fff;
+        text-align: center;
+    
+        font-size: 18px ;
+    }
+    
+    .circle-lg{
+        font-size:24px;
+    }
+
+
+#existing-customer{
+	background-color:rgb(179,153,93);
+	color:#fff;
+	padding:10px;
+}
+
+#existing-customer label{
+	font-weight:normal;	
+}
+
+#existing-customer a{
+	font-weight:bold;
+	color:#fff;
+}
+#existing-customer a:hover{
+	color:#fff;
+}
+
+
+#headerLinks a{
+	color:#fff;
+		
+}
+
+#headerLinks a:hover{
+	color:#fff;	
+}
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+	font-family: Arial;
+}
+
+
+
+
+/* CSS Number Circle Background End*/
+
+/* Footer Start */
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  background-color: rgb(237,237,237);
+  font-size:15px;
+}
+
+/* Footer End */
+
+/* Validation Start*/
+
+.validation-panel{
+    background-color: rgb(235,94,80);
+    color: #fff;
+    padding:10px;
+}
+
+.panel-invalid {
+    background-color: rgb(235,94,80);
+    color: #fff;
+    padding:20px;
+
+}
+
+/* Validation End */
+
+/* Popover Start */
+
+.popover.right {
+    min-width: 200px;
+}
+
+.popover{
+    background-color: rgb(173,153,93);
+    color:#fff;
+}
+
+.popover.left>.arrow:after {
+    border-left-color: rgb(173,153,93);
+}
+
+/* Popover End */
+
+/* Your Progress Start */
+
+.your-progress-stages li{
+    border-radius: 50%;
+    behavior: url(PIE.htc); /* remove if you don't care about IE8 */
+    float: left;
+    width: 35px;
+    height: 35px;
+    padding-top: -2px;
+    margin-right:7px;        
+    text-align: center;
+    font-weight: bold;
+    /*border: 2px solid #fff;*/
+    font-size: 25px ;
+}
+
+.your-progress-title{
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+    padding:20px;
+    border-bottom: 1px solid rgb(165,165,165);    
+}
+
+.your-progress-desc{
+    padding:20px;
+    color: #fff;
+    font-size: 18px;
+}
+
+.your-progress-desc p{
+    margin-bottom: 0px;
+}
+
+.your-progress-active  {
+    color: #fff;
+    background-color: rgb(179,153,93);
+}
+
+.your-progress-next {
+    color:rgb(75,75,75);
+    border: 1px rgb(75,75,75) solid;
+}
+
+.your-progress-complete {
+    background-color: rgb(75,75,75);
+    color: rgb(30,30,30);
+}
+
+.your-progress{
+    background : rgb(30,30,30);
+    color: #fff;
+}
+
+.your-progress-stages ul{
+    list-style-type: none;
+    
+}
+
+.your-progress-items{
+    height:50px;
+    padding-left: 20px;
+    padding-right:20px;
+    text-align: center;
+    border-bottom: 1px solid rgb(165,165,165);
+ 
+}
+
+/* Your Progress End  */
+
+
+.mobile-application-title-container{
+	background-color:#fff;
+	margin-left:0px;
+	margin-right:0px;
+	margin-bottom:20px
+}
+
+.mobile-application-title strong{
+	color: rgb(179,153,93);
+}
+
+
+
+
+/* Personal Details Start*/
+		.headerSearchInput 
+		{
+			transition: 0.3s linear all;
+			opacity: 1;
+		}
+		
+		.headerSearchInput.ng-hide 
+		{
+			opacity: 0;
+		}
+
+		.searchInput > input
+		{
+			border: 2px solid #b3995d !important;
+		}
+
+		.searchInput
+		{
+			width: 100% !important; 			
+			font-size: 22px !important;
+		}
+
+		.searchInput > input
+		{
+			width: calc(100% - 2px) !important;
+		}
+
+		.searchResultItem
+		{
+			  padding: 10px;
+			  background: whitesmoke;
+			  margin-bottom: 6px;
+			  width: calc(100% - 8px);
+			  height: 75px;
+			  cursor: pointer;
+		}
+
+		.searchResultItem:hover
+		{
+		  background: white;
+		  box-shadow: 1px 1px 8px #5A5A5A;
+		}
+
+		.searchInput > .k-loading
+		{
+		  right: 10px !important;
+  		  bottom: 16px !important;
+  		}
+		
+		.RefreshIndicatorReverse
+		{
+		  margin-top: 0px !important;
+		  opacity: 0;
+		  transform: rotate(0deg);  
+		  -webkit-transition:all .2s ease-in-out;
+		  -moz-transition:all .2s ease-in-out;
+		  -o-transition:all .2s ease-in-out;
+		  transition:all .2s ease-in-out;
+		}
+
+/* Personal Details End */
+
+.radio-inline {
+    margin-top: 0;
+    margin-left: 0px !important;
+    margin-right:10px; 
+}
+
+.marketing-pref label{
+	margin-right:10px;
+}
+

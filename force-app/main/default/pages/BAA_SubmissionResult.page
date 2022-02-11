@@ -1,0 +1,155 @@
+<!-- C00233 -->
+
+<apex:page showHeader="false" sidebar="false" docType="html-5.0" controller="BAA_SubmissonResults_Controller" action="{!Setup}">
+    <head>       
+        <c:BAA_Resource ></c:BAA_Resource>        
+    </head>
+     
+    <body>    
+        <c:BAA_Header objOpp="{!BaseOpportunity}" title="Submission Result"></c:BAA_Header>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-lg-3">
+                    <apex:form >
+                        <c:BAA_Menu oppId="{!BaseOpportunity.Id}"  DirectorId="{!BaseOpportunity.ProductEventDirector__c}" />
+                    </apex:form>
+                </div>            
+                <div class="col-md-8 col-lg-9">
+                    <apex:form >
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <apex:pagemessages ></apex:pagemessages>
+                            </div>
+                        </div>
+                    
+                    
+                    <apex:repeat value="{!Accounts}" var="accs">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">{!accs.name} - {!Status[accs.id]}</div>                            
+                            <div class="panel-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr class="headerRow"><th>Case</th><th>Subject</th><th>Detail</th><th>Satisfied</th><th>Comment</th></tr>
+                                        </thead>
+                                        <tbody>
+                                        <apex:repeat value="{!Cases[accs.id]}" var="cas">
+                                            <tr class="dataRow">                                            
+                                                <td><a href="/{!cas.id}" >{!cas.CaseNumber }</a>  </td>
+                                                <td>{!cas.Subject}</td><td>{!cas.detail}</td>
+                                                <td>
+                                                    <apex:selectList size="1" styleClass="form-control" value="{!cas.Satisfied}">
+                                                        <apex:selectOption itemValue="No"></apex:selectOption>
+                                                        <apex:selectOption itemValue="Yes"></apex:selectOption>
+                                                    </apex:selectList> </td>
+                                                <td><span class="comment" >Show</span> </td>                                            
+                                            </tr>
+                                            <tr style="display:none;">
+                                                <td colspan="6">
+                                                    <apex:inputTextarea styleClass="form-control" rows="3" cols="10" value="{!cas.Comment}"/>
+                                                </td>
+                                            </tr>
+                                        </apex:repeat>
+                                    </tbody>
+                                </table>
+                                
+                                
+                                
+                                
+                            </div>                        
+                        </div>
+                    </apex:repeat>
+                        
+                        
+                    <div class="row">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">Comments</div>
+                            <div class="panel-body">
+                                <apex:inputField styleClass="form-control" value="{!Opp.SellerBDM_Case_Summary__c}"/>
+                            </div>
+                        </div>
+                    </div>   
+                    
+                    
+                     <div class="row">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">Final Submission Check</div>
+                            <div class="panel-body">
+                                
+                                 <div class="col-xs-12">
+                                 
+                                      <a href="javascript:void(0)"
+                                                onclick="doMC();"><b>Equifax Web Site</b> 
+                                      </a>
+                                      
+                                     <table class="table" width="50%">
+                                         <tbody>
+                                             <tr>
+                                                 <td class="labelCol">Have you completed the companies house check ?</td>
+                                                 <td class="dataCol"><apex:inputField required="true"  value="{!Opp.Company_House_Check__c}"/></td> 
+                                             </tr>
+                                             <tr>
+                                                 <td class="labelCol">Have you attached the companies house check to the opportunity?</td>
+                                                 <td class="dataCol"><apex:inputField required="true"  value="{!Opp.Co_Hse_Check_Copy_Attached__c}"/></td> 
+                                             </tr>
+                                         </tbody>
+                                     </table>
+                                  </div>
+                             </div>
+                         </div>
+                     </div>   
+                    
+                    <div class="row">
+                        <apex:commandButton styleClass="btn-success" value="Save" rendered="{!!IsCompleted}" action="{!Save}" />
+                        <apex:commandButton styleClass="btn-danger" value="Next" rendered="{!!containsUSPerson && !IsCompleted}" action="{!Complete}" />
+                    
+                    </div> 
+                    
+                    <!--div class="row">
+                        <ul>
+                            <apex:repeat value="{!Accounts}" var="a">
+                                <li>{!a.Date_current_bank_account_opened__c}</li>
+                            </apex:repeat>
+                        </ul>
+                    </div-->
+                        
+                    </apex:form>
+                </div>
+            </div>
+        </div>
+        
+        
+        <script type="text/javascript"> 
+    $(document).ready(function() {    
+        $('.comment').click(function(e) {
+            var ee = $(this);
+            var p1 = ee.parent();
+            var p2 = ee.parent().parent();
+        
+            var p3 = ee.parent().parent().next("tr");
+            
+            p3.toggle();
+            
+            var v = ee.text();
+            
+            if(ee.text() == 'Show')
+            {
+                ee.text('Hide');
+            }
+            else
+            {
+                ee.text('Show');
+            }
+        });
+        
+    });
+    
+    function doMC(){
+    var theURL = "https://www.equifax.co.uk/equifax/commercial/";
+    //var winURL = "{!URLFOR($Resource.MarketingConsent)}";
+    //alert(winURL);
+    window.open(theURL,"_blank","height=500,width=600");
+}
+</script>
+        
+    </body>
+</apex:page>

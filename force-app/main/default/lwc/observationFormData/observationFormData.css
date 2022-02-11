@@ -1,0 +1,67 @@
+.strong-text {
+    font-weight: bold;
+}
+.c-container {
+    border: 1px solid white;
+    margin: 10px 0 20px 0;
+}
+
+.custom-box {
+    text-align: center;
+    background-color:  white;
+    padding: 1rem;
+    border: 1px solid  white;
+}
+.custom-box-width{
+    text-align: center;
+    background-color:  white;
+    padding: 1rem;
+    border: 1px solid  white;
+    width:300px;
+}
+.backgroundcolor{
+    background-color:#b3995d;
+}
+.lgc-bg {
+    background-color: rgb(242, 242, 242);
+}
+
+.lgc-bg-inverse {
+    background-color: rgb(22, 50, 92);
+}
+.slds-card{
+    background-color:#a4a4a4;
+    
+}
+.slds-card3{
+    background-color:#95ceff;
+    
+}
+
+.slds-card-Main{
+    background-color:#a4a4a4;
+    z-index: 9002;
+
+}
+.slds-card2{
+    background-color:#a4a4a4;
+}
+.thTable{
+    text-align: center;
+    background-color: #c5c4c2;
+
+}
+.tdTable{
+    background-color: #e6e6e6;
+    text-align: center;
+
+}
+.slds-popover__body{
+    white-space: pre-wrap !important;
+}
+.slds-scope .slds-popover_tooltip, .slds-scope .slds-popover--tooltip {
+    width: -webkit-fill-available !important;
+    /* max-width: var(--sds-c-tooltip-sizing-max-width, var(--lwc-sizeMedium,20rem)); */
+    background-color: var(--sds-c-tooltip-color-background, var(--lwc-colorBackgroundAltInverse,rgb(3, 45, 96)));
+    border: 0;
+}

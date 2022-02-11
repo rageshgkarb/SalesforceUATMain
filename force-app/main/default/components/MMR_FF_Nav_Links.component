@@ -1,0 +1,36 @@
+<apex:component >
+<apex:attribute type="String" description="" name="Active" required="true"/>
+<apex:attribute type="String" description="" name="ActiveSection" required="true"/>
+
+
+<apex:attribute type="String" description="" name="EventId" required="true"/>
+<div style="padding-bottom:10px;">
+
+<ul class="nav nav-pills nav-justified">
+    <li class="{!IF((ActiveSection=='A'),"active","") }"><a href="{!IF((ActiveSection!='A'),"/apex/MMR_FF_PropertyDetails?id="+ EventId,"#") }">Property Details</a></li>
+    <li class="{!IF((ActiveSection=='B'),"active","") }"><a href="{!IF((ActiveSection!='B'),"/apex/MMR_FF_PersonalDetails?id="+ EventId,"#") }">Applicants</a></li>
+   
+</ul>
+
+
+
+</div>
+
+<apex:outputPanel rendered="{!ActiveSection=='B'}">
+<div style="padding-bottom:10px;">
+
+<ul class="nav nav-tabs nav-justified">
+    <li class="{!IF((Active=='1'),"active","") }"><a href="{!IF((Active!='1'),"/apex/MMR_FF_PersonalDetails?id="+ EventId,"#") }">Personal Details</a></li>
+    <li class="{!IF((Active=='2'),"active","") }"><a href="{!IF((Active!='2'),"/apex/MMR_FF_Addresses?id="+ EventId,"#") }">Applicant Addresses</a></li>
+    <li class="{!IF((Active=='3'),"active","") }"><a href="{!IF((Active!='3'),"/apex/MMR_FF_Ownership?id="+ EventId,"#") }">Current Ownership</a></li>
+    <li class="{!IF((Active=='4'),"active","") }"><a href="{!IF((Active!='4'),"/apex/MMR_FF_Income?id="+ EventId,"#") }">Employment &amp; Income</a></li>
+    <li class="{!IF((Active=='5'),"active","") }"><a href="{!IF((Active!='5'),"/apex/MMR_FF_Financial?id="+ EventId,"#") }">Financial Information</a></li>
+    <li class="{!IF((Active=='6'),"active","") }"><a href="{!IF((Active!='6'),"/apex/MMR_FF_Credit?id="+ EventId,"#") }">Credit History</a></li>
+    <li class="{!IF((Active=='7'),"active","") }"><a href="{!IF((Active!='7'),"/apex/MMR_FF_BudgetPlanner?id="+ EventId,"#") }">Budget Planner</a></li>
+</ul>
+
+
+</div>
+</apex:outputPanel>
+
+</apex:component>

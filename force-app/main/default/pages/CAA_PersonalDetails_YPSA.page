@@ -1,0 +1,150 @@
+<apex:page showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false" controller="CAA_Core_Controller" action="{!Setup}">
+
+   
+       
+   
+   
+   <apex:composition template="CAA_Template">
+       <apex:define name="include">
+            <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/controller/controller_address.js')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/controller/controller_applicantdetails.js')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/service/service_applicant_details.js')}"/>
+            <apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/datejs/1.0/date.min.js"/>
+            <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/service/service_application.js')}"/>
+             <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/service/service_parameters.js')}"/>
+             
+             <!-- Kendo UI Styles -->
+<apex:stylesheet value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/styles/kendo.common.min.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/styles/kendo.material.min.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/styles/kendo.dataviz.min.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/styles/kendo.dataviz.material.min.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/styles/kendo.material.mobile.min.css')}"/>
+
+        <!-- Kendo UI -->
+<apex:includeScript value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/js/kendo.all.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/js/cultures/kendo.culture.en-GB.min.js')}"/>
+
+<link rel="stylesheet" type="text/css" href="//services.postcodeanywhere.co.uk/css/address-3.40.css" />
+        <script type="text/javascript" src="//services.postcodeanywhere.co.uk/js/address-3.40.js"></script>
+         </apex:define>
+   
+   
+   
+      <apex:define name="body">
+         <div ng-controller="controllerApplicantDetails" ng-init="EventLogId= '{!EventLogId}';SessionId='{!SessionId}';YPSA=true;PCA_key='{!$Setup.pca__PostcodeAnywhereSettings__c.pca__Key__c}';">
+            <div class="row">
+               <div class="col-md-9" style="padding-bottom:10px;">
+                  <c:CAA_Manage_Applicants rendered="{!Not(IsGuest)}" YPSA="true"/>
+                  <div class="SectionHeader">
+                     <div class="numberCircleReverse">2</div>
+                     <div>Personal details</div>
+                  </div>
+                  <form name="myform" novalidate="novalidate">
+                     <div >
+                        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="false">
+                           <div class="panel panel-default" ng-repeat="app in Data.Applicants track by app.Id" on-finish-render="ngRepeatFinished">
+                              <c:CAA_PersonalDetails model="app" ypsa="true" isGuest="{!isGuest}"  />
+                           </div>
+                        </div>
+                        
+                        <apex:outputPanel rendered="{!Not(IsGuest)}">
+                        <div class="alert alert-danger" ng-show="Data.Applicants.length < 2">
+                            YPSA applications need to have a guardian
+                        </div>
+                        </apex:outputPanel>
+                        
+                        <apex:outputPanel rendered="{!Not(IsGuest)}" layout="none">
+    <div class="alert alert-danger" ng-show="Duplicates">
+        Application contains potential duplicate accounts
+    </div>
+</apex:outputPanel>
+                        <!--
+                           <div>
+                           Submit clicked : {{Submitted}}
+                           </div>
+                           <div>
+                           Form valid : {{myform.$valid}}    
+                           </div>
+                           -->
+                           
+                           <apex:outputPanel layout="none" rendered="{!Not(IsGuest)} && false">
+                           <button class="btn btnArb" ng-click="Submitted = true;">
+                        Validate
+                        </button>
+                        <button class="btn btnArb" ng-click="SaveData()">
+                        Save
+                        </button>
+                           </apex:outputPanel>
+                           
+                           
+                           
+                           <div class="alert alert-danger visible-xs" ng-show="myform.$invalid">
+                               There is missing required information
+                           </div>
+                           
+                        
+                        <button class="btn btnArb" ng-click="Submitted=true;Complete()">
+                        <span> <strong>Continue</strong> to Section 3
+                        <span class="fa-stack fa" >
+                        <i class="fa fa-circle-thin fa-stack-2x"></i>
+                        <i class="fa fa-chevron-right fa-stack-1x"></i>
+                        </span>
+                        </span>
+                        </button>
+                        
+                        
+                        
+                        
+                        
+                        <button class="btn btnArb-danger" ng-click="CompleteOverride()" ng-show="{!Not(IsGuest)} && Duplicates">
+   <span> <strong>Override</strong> to Section 3
+       <span class="fa-stack fa" >
+  <i class="fa fa-circle-thin fa-stack-2x"></i>
+  <i class="fa fa-chevron-right fa-stack-1x"></i>
+</span>
+</span>
+</button>
+                     </div>
+                  </form>
+               </div>
+               <div class="col-md-3">
+                  <div class="rightcol" id="sidebar" >
+                     <c:CAA_Progress Stage="2" rendered="{!IsGuest}"></c:CAA_Progress>
+                     <c:CAA_Event_Menu rendered="{!Not(IsGuest)}"/>
+                <div class="alert alert-danger" ng-show="ErrorAlertText">
+                        <span class="fa fa-thumbs-down" aria-hidden="true"></span>
+                        {{ErrorAlertText}}
+                    </div>
+                    <div style="display:none">
+                        {{ShowErrors()}}
+                </div>
+                <div ng-repeat="app in Data.Applicants" ng-show="Submitted">      
+                    <div class="alert alert-success" ng-show="app.Valid"><i class="fa fa-check" ></i> Applicant {{$index +1 }}</div>
+                    <div class="alert alert-danger" ng-hide="app.Valid"><i class="fa fa-close" ></i> Applicant {{$index +1 }} has errors</div>
+                </div>
+                     
+                  </div>
+               </div>
+            </div>
+            <!--left col -->
+         </div>
+      </apex:define>
+   </apex:composition>
+   
+ <script>    
+            caaApp.directive('onFinishRender', function ($timeout) {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attr) {
+            if (scope.$last === true) {
+                $timeout(function () {
+                scope.$emit('ngRepeatFinished');
+                });
+            }
+        }
+    }
+      
+      });    
+        </script>
+
+</apex:page>

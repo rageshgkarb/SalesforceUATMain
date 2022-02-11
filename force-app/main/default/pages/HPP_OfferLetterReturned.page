@@ -1,0 +1,118 @@
+<!-- C00108 Get some product switching information -->
+
+<apex:page controller="HPP_OfferLetterReturned" sidebar="false" showHeader="false" title="Generate Offer Letter" action="{!Setup}" doctype="html-5.0" standardstylesheets="false">
+    <apex:composition template="HPPProductSwitchTemplate">
+        <apex:define name="include">
+            <script>
+                hppApp.controller('offerLetterController', ['$scope', '$timeout','serviceApplication','serviceOffer','$window',
+                    function($scope, $timeout,serviceApplication,serviceOffer,$window) {
+                        
+                        $scope.Complete= function()
+                        {
+                            if(!$scope.OppId) return null;
+                            serviceApplication.LoadShow('Processing...');
+                            serviceOffer.Complete($scope.EventLogId, $scope.OppId, $scope.DateSigned, $scope.SwitchDate)
+                            .then(
+                                function(result){
+                                    if(result.URL)
+                                    {
+                                        $window.location.href = result.URL;                                                                                              
+                                    }
+                                    else
+                                    {
+                                          serviceApplication.LoadHide(true);   
+                                    }
+                                                                      
+                                },
+                                function(error){
+                                    serviceApplication.LoadHide(true);
+                                    $scope.ErrorMessage = error;
+                                }
+                               );
+                        }                        
+                        
+                    }]);
+                    
+                    
+                    angular.module("hppApp").service('serviceOffer', ['$q', '$rootScope', function ($q, $rootScope) {
+                                                
+                        this.Complete = function(id, oppId, signedDate, switchDate)
+                        {
+                            var deferred = $q.defer();
+                            HPP_OfferLetterReturned.Complete(id,oppId,signedDate, switchDate,function(result, event){
+                                if(event.status){
+                                    deferred.resolve(result);
+                                }
+                                else {
+                                    deferred.reject(event);
+                                }     
+                            },{ buffer: false, escape: false, timeout: 30000} );
+                            return deferred.promise;
+                        }
+                        
+                        
+                     }]);
+                    
+            </script>
+        </apex:define>
+        
+        
+        <apex:define name="header">
+           <c:HPP_Header title="Offer letter returned" numapps="1" opp="{!Opp}" />
+        </apex:define>
+        <apex:define name="menu">
+            <c:HPP_Angular_Menu oppid="{!Opp.Id}" directorid="{!DirectorID}">
+            </c:HPP_Angular_Menu>
+        </apex:define>
+        <apex:define name="body">
+        
+        <div style="100%" ng-controller="offerLetterController" ng-init="OppId='{!Opp.id}';EventLogId='{!eventId}';
+                                                                            DateSigned ='{!DateSigned }';
+                                                                            SwitchDate= '{!SwitchDate}'"> <!-- controller -->
+            <div class="container" style="height:100%">
+                <div class="row" style="height:100%">
+                    <div class="col-md-12" style="height:100%;">
+                        <div class="PanelContents" style="height:100%;" >
+                            <div class="verticalScrollSection" style="height:calc(100%);">
+                                <div class="verticalSection">
+                                    <div class="SectionTitle">Offer letter returned</div>
+                                    
+                                    
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <label>Date signed offer letter returned</label>
+                                            <div>
+                                                <input kendo-date-picker="kendo-date-picker" ng-required="true" ng-model="DateSigned" 
+                                                     k-format="'dd/MM/yyyy'"
+                                                    />
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label>Product Switch Date</label>
+                                            <div>
+                                                <input kendo-date-picker="kendo-date-picker" ng-required="true" ng-model="SwitchDate" 
+                                                     k-format="'dd/MM/yyyy'"
+                                                     />
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                    
+                                    
+                                    
+                                                                       
+                                    
+                                    <div class="text-center" style="padding-top:10px;">                    
+                                        <button ng-disabled="!SwitchDate || !DateSigned" type="button" class="btn btn-default" ng-click="Complete()">Complete</button>
+                                    </div>                                    
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>        
+        </div>
+    </apex:define>
+</apex:composition>
+</apex:page>

@@ -1,0 +1,171 @@
+<apex:page showHeader="false" sidebar="false" controller="MMR_AIP_Controller" docType="html-5.0" action="{!Setup}">
+<head>
+    <c:MMR_PageHeader ></c:MMR_PageHeader>
+      <style>
+.nav-pills>li>a {
+    font-size:14px;
+}
+</style>
+</head>
+    <!--C0639-->
+    <body onload="EnableDisableAfford('{!$Component.j_id0:aForm2:chkDisclaimer}', '{!$Component.j_id0:aForm2:btnAfford}', '{!Opp.Interested_in__c}');">
+        <c:MMR_Header title="AIP" numapps="{!numapplying}" opp="{!bopp}" />
+        <apex:form id="aForm2" styleclass="form-horizontal">
+            <div class="container">
+                <ul class="nav nav-pills nav-justified">
+                    <li><a href="/apex/MMR_AIP_Applicants?id={!EventId}">Manage Applicants</a></li>
+                    <li class="active"><a href="#">AIP</a></li>
+                </ul>
+                <apex:outputpanel id="panelDocument">
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Purchase price/market value</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="requiredInput">
+                                    <apex:inputtext styleclass="form-control" value="{!Opp.Purchase_price_market_value__c}" required="true" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Finance required</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="requiredInput">
+                                    <apex:inputtext styleclass="form-control" value="{!Opp.Finance_Required__c}" required="true" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label>Term of Finance</label>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="requiredInput">
+                                    <apex:inputtext styleclass="form-control" value="{!Opp.Term_of_Finance__c}" required="true" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+           
+                    <apex:outputpanel rendered="{!numapplying ==1}">
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-sm-6">
+                                    <label>Joint budgetary purposes?</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="requiredInput">
+                                        <apex:inputfield styleclass="form-control" value="{!Opp.Is_Joint_Application__c}" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </apex:outputpanel>
+
+                    <!--C0639-->
+                    <apex:outputpanel rendered="{!Opp.Interested_in__c == 'Home Purchase Plan' || Opp.Interested_in__c == 'Home Purchase Plan Premier' || Opp.Interested_in__c == 'Home Purchase Scotland'}" >
+                    <div class="row">
+                            <div class="form-group">
+                                 <div class="col-sm-6">
+                                    <apex:outputpanel rendered="{!Opp.Interested_in__c == 'Home Purchase Plan'}">                        
+                                    <label>
+                                        Al Rayan Bank only offers rent and acquisition based HPP products. 
+                                        Our products are fully compliant with Sharia principles, and have been approved by an independent Sharia Supervisory Committee. 
+                                        Within the market there are alternative interest only products available, however, these products do not comply with Sharia principles. 
+                                        We believe our products provide more certainty in clearing your finance balance. Please confirm if you are happy to proceed. 
+                                    </label>                               
+                                    </apex:outputpanel>
+
+                                    <apex:outputpanel rendered="{!Opp.Interested_in__c == 'Home Purchase Plan Premier'}">                        
+                                    <label>
+                                        Al Rayan Bank offers both rent and acquisition and rent only HPP products. 
+                                        Our products are fully compliant with Sharia principles, and have been approved by an independent Sharia Supervisory Committee. 
+                                        Within the market there are alternative interest based products available, however, these products do not comply with Sharia principles. 
+                                        Please confirm if you are happy to proceed.
+                                    </label>
+                                    </apex:outputpanel>
+
+                                    <apex:outputpanel rendered="{!Opp.Interested_in__c == 'Home Purchase Scotland'}">                        
+                                    <label>
+                                        Al Rayan Bank only offers occupancy and acquisition and occupancy only based HPS products. 
+                                        Our products are fully compliant with Sharia principles, and have been approved by an independent Sharia Supervisory Committee. 
+                                        Within the market there are alternative interest only products available, however, these products do not comply with Sharia principles. 
+                                        We believe our products provide more certainty in clearing your finance balance. Please confirm if you are happy to proceed.
+                                    </label>
+                                    </apex:outputpanel>
+                                </div> 
+                                <div class="col-sm-6">
+                                    <div class="requiredInput">
+                                        <apex:inputfield id="chkDisclaimer" styleclass="form-control" value="{!Opp.Is_Disclaimer_Read__c}" onclick="EnableDisableAfford('{!$Component.chkDisclaimer}', '{!$Component.btnAfford}', '{!Opp.Interested_in__c}');" />
+                                    </div>
+                                </div>                                                            
+                            </div>
+                        </div>
+                    </apex:outputpanel>
+                    <!--C0639 end-->
+                    <div class="row">
+                        <c:MMR_AIP_Applicant acc="{!Accs[0]}" appno="1" rendered="{!NumApplying > 0}"></c:MMR_AIP_Applicant>
+                        <c:MMR_AIP_Applicant acc="{!Accs[1]}" appno="2" rendered="{!NumApplying > 1}"></c:MMR_AIP_Applicant>
+                        <c:MMR_AIP_Applicant acc="{!Accs[2]}" appno="3" rendered="{!NumApplying > 2}"></c:MMR_AIP_Applicant>
+                        <c:MMR_AIP_Applicant acc="{!Accs[3]}" appno="4" rendered="{!NumApplying > 3}"></c:MMR_AIP_Applicant>
+                    </div>
+                    <apex:outputpanel id="sectionAfford">
+                        <div class="row">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Affordability</div>
+                                <div class="panel-body">
+                                    <apex:commandbutton id="btnAfford" value="Run Afford" styleclass="{!if(PassedAffordability,'btn-primary','btn-danger')}" action="{!Afford}" />
+                                    <apex:outputpanel rendered="{!diff != null}">
+                                        <div>
+                                            Affordability Result:  {!if(diff >= 0 || Opp.Income_Assisted_Application__c == true,if(Opp.Income_Assisted_Application__c == true,'PASS - Income Assisted','PASS'),'FAIL')} <!-- C0586 -->
+                                        </div>
+                                        <div>
+                                            {!if(diff >=0 ,'Surplus','Deficit')} : £{!diff}
+                                        </div>
+                                        <apex:outputpanel rendered="{!diff < 0  && Opp.Income_Assisted_Application__c == false}">
+                                            <apex:commandbutton value="Close Opportunity" styleclass="btn-primary" />
+                                        </apex:outputpanel>
+                                    </apex:outputpanel>
+                                </div>
+                            </div>
+                        </div>
+                    </apex:outputpanel>
+                    <apex:outputpanel rendered="{!PassedAffordability  }">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">AIP Document</div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <apex:commandbutton styleclass="{!if(DocumentCreated,'btn-primary','btn-danger')}" rerender="panelDocument" value="Create AIP Document" oncomplete="HideDocumentLoad();" onclick="ShowDocumentLoad('Generating AIP Letter','This may take a few seconds...');" action="{!CreateDoc}" rendered="{!PassedAffordability  }" />
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:outputpanel rendered="{!DocumentCreated}">
+                                            <a target="_blank" href="/servlet/servlet.FileDownload?file={!FileId}">View Document</a>
+                                        </apex:outputpanel>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </apex:outputpanel>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <apex:commandbutton immediate="true" styleclass="btn-primary" value="Previous" action="{!Prev}" />
+                        </div>
+                        <div class="pull-right">
+                            <apex:commandbutton styleclass="btn-danger" rerender="panelDocument" value="Complete AIP" action="{!Complete}" rendered="{!DocumentCreated }" />
+                        </div>
+                    </div>
+                </apex:outputpanel>
+            </div>
+            <c:MMR_PopupLoad />
+        </apex:form>
+    </body>
+
+</apex:page>

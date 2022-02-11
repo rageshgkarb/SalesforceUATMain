@@ -1,0 +1,5 @@
+<apex:page standardController="IBB_Product_Suitability__c" extensions="RedirectCE" id="thePage" action="{!redirectEditPage}" showHeader="false" sidebar="false">
+
+  IBB_Product_Suitability__c Redirect page: {!ProfileName}
+  
+</apex:page>

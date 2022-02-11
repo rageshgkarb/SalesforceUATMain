@@ -1,0 +1,115 @@
+<apex:page controller="DocuGenButtonController" showHeader="false" sidebar="false" standardStylesheets="false">
+    <c:Teller_Resource ></c:Teller_Resource>
+  
+  <apex:form id="mainPage" >
+  <div class="container">
+ {!url}
+  <div>
+      <h1>{!NAme}</h1>
+  </div>
+  
+  <div>
+  
+  <apex:messages />
+  
+  
+  <apex:selectList styleClass="form-control" size="20" multiselect="true" value="{!SelectedTemplate}" >
+      <apex:selectOptions value="{!TemplateList}"/>
+  </apex:selectList>
+  </div>
+  
+  <div>
+      <!--<apex:commandButton styleClass="btn-primary btn-md" value="Preview"/>-->
+      <apex:commandButton styleClass="btn-success btn-md" value="Merge" rerender="mainPage" onclick="ShowDocumentLoad();" oncomplete="HideDocumentLoad();" action="{!MergeDoc}"/>
+      <!--
+      <button onclick="mergedoc();ShowDocumentLoad();">Merge</button>
+      
+      <apex:actionFunction oncomplete="HideDocumentLoad();alert('hello');" name="mergedoc" action="{!MergeDoc}" rerender="mainPage"/>
+-->
+  </div>
+  
+  
+  <apex:outputPanel rendered="{!AttachmentId != null}">
+  <h2><apex:outputtext escape="false" value="{!DocLink}" ></apex:outputtext></h2>
+  </apex:outputPanel>
+  
+  
+  
+  <div>
+        
+          <apex:outputtext escape="false" value="{!ManualLink}" ></apex:outputtext>
+      
+      </div>
+
+  
+
+  </div>
+  
+  
+   <div id="fade"></div>
+<div id="overlay">
+Generating document...
+<br/>
+<br/>
+This may take a few seconds.
+
+<div style="padding-top: 50px;" >
+ <!--  CPDR01 
+<img src="{!URLFOR($Resource.ibbstyle, 'images/269.gif')}"></img>
+    -->
+<img src="{!URLFOR($Resource.ibbstyleexternal, 'graphics/logos/circular-timer.gif')}"></img>
+</div>
+</div>
+  
+  
+   <style type="text/css">
+#overlay, #overlay1 {
+    display: none; /* ensures it’s invisible until it’s called */
+    position: absolute; /* makes the div go into a position that’s absolute to the browser viewing area */
+    left: 25%; /* positions the div half way horizontally */
+    top: 25%; /* positions the div half way vertically */
+    padding: 25px; 
+    border: 2px solid black;
+    background-color: #ffffff;
+    width: 50%;
+    height: 50%;
+    z-index: 100; /* makes the div the top layer, so it’ll lay on top of the other content */
+    text-align: center;
+    font-size: 18px;
+}
+#fade,#fade1 {
+    display: none;  /* ensures it’s invisible until it’s called */
+    position: absolute;  /* makes the div go into a position that’s absolute to the browser viewing area */
+    left: 0%; /* makes the div span all the way across the viewing area */
+    top: 0%; /* makes the div span all the way across the viewing area */
+    background-color: #ccc;
+    -moz-opacity: 0.7; /* makes the div transparent, so you have a cool overlay effect */
+    opacity: .70;
+    filter: alpha(opacity=70);
+    width: 100%;
+    height: 100%;
+    z-index: 90; /* makes the div the second most top layer, so it’ll lay on top of everything else EXCEPT for divs with a higher z-index (meaning the #overlay ruleset) */
+}
+</style>
+
+<script>
+function ShowDocumentLoad()
+{
+    $('#overlay').show('slow');
+    $('#fade').show('slow');
+}
+
+function HideDocumentLoad()
+{
+    $('#overlay').hide('slow');
+    $('#fade').hide('slow');
+}
+</script>
+  
+  
+  </apex:form>
+  
+  
+   
+  
+</apex:page>

@@ -1,0 +1,30 @@
+<apex:component >
+<apex:attribute name="opp" type="Opportunity" description=""/>
+    <img style="padding-right:80px;" class="navbar-brand" itemprop="logo" src="//www.alrayanbank.co.uk/sites/default/files/media/file-uploads/2021-04/logo.png" alt="Al Rayan Bank"/>
+    <div >
+        <apex:outputPanel layout="none" rendered="Opp != null">
+        <div class="row">
+            <div class="col-sm-4">
+                <label>Opportunity: </label>
+                <a href="/{!opp.id}" target="_blank">{!Opp.Name}</a>
+            </div>
+            <div class="col-sm-4">
+            <p>
+                <label>Product: </label>
+                <a href="/{!opp.IBB_Product__c}" target="_blank">{!opp.ibb_product__r.name}</a>
+            </p>
+            <p>
+                <label>No. Applicants: </label>
+                {!Opp.No_of_Applicants__c}
+            </p>    
+                
+                
+            </div>
+            <div class="col-sm-4">
+            
+            </div>
+        </div>
+        </apex:outputPanel>
+    </div>
+    
+</apex:component>

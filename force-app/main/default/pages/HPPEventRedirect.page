@@ -1,0 +1,11 @@
+<apex:page action="{!Setup}" controller="HPPEventRedirectController">
+Could not open customers application
+
+
+
+<div>
+    <p>
+    {!ErrorMsg }
+    </p>
+</div>
+</apex:page>

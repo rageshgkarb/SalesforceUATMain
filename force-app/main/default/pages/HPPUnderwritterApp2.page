@@ -1,0 +1,1589 @@
+<apex:page controller="HPPUnderwritterApplicationData" sidebar="false" showHeader="false" title="Applicant Details">
+<head>
+<apex:includeScript value="{!$Resource.pca__LookupComponent}"/>
+<apex:includeScript value="{!$Resource.pca__EditPageLauncher}"/>
+<apex:includeScript value="{!$Page.pca__EditPageSettings}"/>
+     <style>
+                            .horizontalList li                            
+                            {
+                            list-style-type:none;
+                            display: inline;
+                            }
+                            </style>
+</head>
+<body>
+<c:KendoResource ></c:KendoResource>
+<apex:form >
+<div >
+<div  >
+<table width="100%">
+<tr>
+
+<td valign="top" >
+<div  id="topNav">
+<ul>
+<li><apex:commandLink action="{!PageApplication1}" value="Property Details" id="theCommandLink"/></li>
+<li><apex:commandLink rendered="{!Opp.Number_of_People_Applying__c> 0}" action="{!PageApplicant1}" value="Applicant 1" id="appLink1"/></li>
+<li><apex:commandLink rendered="{!Opp.Number_of_People_Applying__c> 1}" action="{!PageApplicant2}" value="Applicant 2" id="appLink2"/></li>
+<li><apex:commandLink rendered="{!Opp.Number_of_People_Applying__c> 2}" action="{!PageApplicant3}" value="Applicant 3" id="appLink3"/></li>
+<li><apex:commandLink rendered="{!Opp.Number_of_People_Applying__c> 3}" action="{!PageApplicant4}" value="Applicant 4" id="appLink4"/></li>
+<li><apex:commandLink action="{!PageApplication3}" value="Additional Information" id="link3"/></li>
+
+</ul>
+</div>
+<div>
+
+<div style="background-color: #F89406; font-size: 14px; color: #ffffff; padding:5px;display: none;" id="savediv">
+You have made changes to this applicant.
+
+Click save to keep your changes, otherwise they will be lost.
+<apex:commandButton value="Save" action="{!save}"/>
+</div>
+<apex:pageBlock >
+   <div id="example" class="k-content">
+            <div id="forecast">
+                <div id="tabstrip">
+                    <ul>
+                        <li class="k-state-active">
+                            Personal Details
+                        </li>
+                        <li>
+                            Applicant Addresses
+                        </li>
+                        <li>
+                            Current Ownership
+                        </li>
+                        <li>
+                           Employment and Income
+                        </li>
+                        <li>
+                            Financial Information
+                        </li>   
+                        <li>
+                            Credit History
+                        </li>   
+                        <li>
+                            Budget Planner
+                        </li>    
+             
+                    </ul>
+                    <div>
+                    
+                                      
+                    
+                    
+                    <table class="detailList">
+                    <tbody>
+                    <tr>
+                        <td class="labelCol">Title</td><td class="dataCol"><apex:outputField styleClass="nameTitle" value="{!Acc.Salutation}" id="salutation"  /></td><td colspan="2"></td>
+                    </tr>
+                    <tr class="otherSalutation" style="display: none;">    
+                        <td  class="labelCol">Other Title</td><td class="dataCol"><apex:outputField value="{!Acc.Title_Other__c}" /></td><td colspan="2"></td>
+                    </tr>
+                    
+                    
+                    <tr>
+                        <td class="labelCol">First Name</td><td class="dataCol"><apex:outputField value="{!Acc.FirstName}" id="accFirstName"  /></td>
+                        <td class="labelCol">Middle Name</td><td class="dataCol"><apex:outputField value="{!Acc.Middle_Name__pc}" id="accMiddleName"  /></td>                    
+                    </tr>
+                    <tr>
+                        <td class="labelCol">Last Name</td><td class="dataCol"><apex:outputField value="{!Acc.LastName}" id="accLastName"  /></td>
+                        <td class="labelCol">Any other name known by - past/present</td><td class="dataCol"><apex:outputField value="{!Acc.Any_other_name_known_by_past_present__c}" id="accOtherName"  /></td>                    
+                    </tr>
+                    <tr>
+                        <td class="labelCol">Date of birth</td><td class="dataCol"><apex:outputField value="{!Acc.Date_of_Birth__c}" id="accDOB"  /></td>
+                        <td></td><td></td>
+                    </tr>
+                    <tr>
+                                                              
+                        <td class="labelCol">Country of birth</td><td class="dataCol"><apex:inputField value="{!Acc.Country_of_Birth__c}" id="accCBrith"  /></td>
+
+                    </tr>
+                    <tr>
+                        <td class="labelCol">Country of residence</td><td class="dataCol"><apex:inputField value="{!Acc.Country_of_Residence__c}" id="accCResidence"  /></td>                                        
+                        <td class="labelCol">UK residency status</td><td class="dataCol"><apex:inputField value="{!Acc.UK_residency_status__c}" id="accResStatus"  /></td>
+
+                   </tr>
+                   
+                    <tr>
+                        <td class="labelCol">Marital status</td><td class="dataCol"><apex:inputField value="{!Acc.Marital_Status__c}" id="accMStatus"  /></td>                                        
+                        <td class="labelCol">No. of dependents</td><td class="dataCol"><apex:inputField value="{!Acc.No_of_depenents__c}" id="accNoDep"  /></td>
+
+                    </tr>
+                    <tr>
+                        <td class="labelCol">Primary contact number</td><td class="dataCol"><apex:inputField value="{!Acc.Home_Telephone_No__c}" id="accPCnumber"  /></td>                                        
+                        <td class="labelCol">Secondary contact number</td><td class="dataCol"><apex:inputField value="{!Acc.Phone}"   /></td>
+                    </tr>
+                    <tr>
+                        <td class="labelCol">Email address</td><td class="dataCol"><apex:inputField value="{!Acc.PersonEmail}" id="accEmail"  /></td>                    
+                        <td class="labelCol">Mother's maiden name</td><td class="dataCol"><apex:inputField value="{!Acc.Mother_s_family_name_security_question__c}" id="accMName"  /></td>                                        
+                    </tr>
+                    <tr>
+                       <td class="labelCol">School name</td><td class="dataCol"><apex:inputField value="{!Acc.School_name_security_question__c}" id="accSchool"  /></td>                 
+                    </tr>
+                    </tbody>
+                    </table>
+                    
+                    
+                    
+                    
+                    
+                    
+                       <div class="pbSubheader">
+                    <h3>Marketing</h3>
+                    </div>
+                    <table class="detailList">
+                       <tbody>
+                      <tr>
+                            <td class="labelCol">
+                            Please indicate if you ‘Do Not’ wish to bed contacted by IBB by any of the following:
+                            
+                            
+                            </td><td>
+                       
+                                <ul class="horizontalList">
+ <li>Email : <apex:inputCheckbox title="Email"/></li>
+  <li>Mail : <apex:inputCheckbox title="Mail"/></li>
+   <li>Phone : <apex:inputCheckbox title="Phone"/></li>
+    <li>SMS : <apex:inputCheckbox title="SMS"/></li>
+  
+
+ 
+ </ul>
+                            
+                            </td>
+                       </tr>  
+                       </tbody>                 
+                       </table>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                   </div>
+                   
+                     <div><!-- tab start-->
+                   
+       <div class="pbSubheader">
+                    <h3>Current Address</h3>
+                    </div>
+                   <apex:inputHidden id="addrHouseNo" value="{!Acc.Customer_Address_House_No__c}"/>
+                   <table class="detailList">
+                   <tbody>
+                   <tr>
+                       <td class="labelCol">Post Code</td><td class="dataCol"><apex:outputField value="{!Acc.BillingPostalCode}" id="addrPostCode"  label="Current Address Post Code" /></td>
+                   </tr>
+                   <tr>
+                       <td class="labelCol">Address</td><td class="dataCol"><apex:outputField value="{!Acc.BillingStreet}" id="addrStreet"  label="Customer address" /></td>
+                   </tr>
+                   <tr>
+                       <td class="labelCol">Address City</td><td class="dataCol"><apex:outputField value="{!Acc.BillingCity}" id="addrCity"  label="Current Address City" /></td>
+                   </tr>
+                   <tr>
+                       <td class="labelCol">Address Country</td><td class="dataCol"><apex:outputField styleClass="noKendo" value="{!Acc.BillingCountry}" id="addrCountry"  label="Current Address Country" /></td>
+                   </tr>
+                   <tr>
+                       <td class="labelCol">Date moved to address</td><td class="dataCol MoveDate"><apex:outputField styleClass="MoveDate" value="{!Acc.Date_moved_to_address__c}"/> <span id="movedText"></span></td>                      
+                   </tr>                                                 
+                   </tbody>
+                   </table>
+                
+
+
+
+<div id="prevAdd" style="display: none;">
+    <div class="pbSubheader" >
+                    <h3>Previous Address</h3>
+                   </div>
+                   <apex:inputHidden id="addrPrevHouseNo" value="{!Acc.Customer_Address_House_No__c}"/>
+                   <table class="detailList">
+                   <tbody>
+                   <tr>
+                       <td class="labelCol">Post Code</td><td class="dataCol"><apex:outputField value="{!Acc.ShippingPostalCode}" id="addrPrevPostCode"  label="Current Address Post Code" /></td>
+                   </tr>
+                   <tr>
+                       <td class="labelCol">Address</td><td class="dataCol"><apex:outputField value="{!Acc.ShippingStreet}" id="addrPrevStreet"  label="Customer address" /></td>
+                   </tr>
+                   <tr>
+                       <td class="labelCol">Address City</td><td class="dataCol"><apex:outputField value="{!Acc.ShippingCity}" id="addrPrevCity"  label="Current Address City" /></td>
+                   </tr>
+                   <tr>
+                       <td class="labelCol">Address Country</td><td class="dataCol"><apex:outputField styleClass="noKendo" value="{!Acc.ShippingCountry}" id="addrPrevCountry"  label="Current Address Country" /></td>
+                   </tr>
+                   <tr>
+                       <td class="labelCol">Date moved to address</td><td class="dataCol MoveDatePrev"><apex:outputField styleClass="MoveDatePrev" value="{!acc.Date_moved_to_previous_address__c}"/> <span id="movedPrevText"></span></td>                      
+                   </tr>                                                     
+                   </tbody>
+                   </table>
+ </div>
+
+<div id="prevprevAdd" style="display: none;">
+    <div class="pbSubheader" >
+                    <h3>Previous Previous Address</h3>
+                   </div>
+                   <apex:inputHidden id="addrPrevPrevHouseNo" value="{!Acc.Customer_Address_House_No__c}"/>
+                   <table class="detailList">
+                   <tbody>
+                   <tr>
+                       <td class="labelCol">Post Code</td><td class="dataCol"><apex:outputField value="{!Acc.PersonMailingPostalCode}" id="addrPrevPrevPostCode"  label="Current Address Post Code" /></td>
+                   </tr>
+                   <tr>
+                       <td class="labelCol">Address</td><td class="dataCol"><apex:outputField value="{!Acc.PersonMailingStreet}" id="addrPrevPrevStreet"  label="Customer address" /></td>
+                   </tr>
+                   <tr>
+                       <td class="labelCol">Address City</td><td class="dataCol"><apex:outputField value="{!Acc.PersonMailingCity}" id="addrPrevPrevCity"  label="Current Address City" /></td>
+                   </tr>
+                   <tr>
+                       <td class="labelCol">Address Country</td><td class="dataCol"><apex:outputField styleClass="noKendo" value="{!Acc.PersonMailingCountry}" id="addrPrevPrevCountry"  label="Current Address Country" /></td>
+                   </tr>
+                   <tr>
+                       <td class="labelCol">Date moved to address</td><td class="dataCol MoveDatePrevPrev"><apex:outputField styleClass="MoveDatePrevPrev" value="{!Acc.Date_moved_to_prev_previous_address__c}"/> <span id="movedPrevPrevText"></span></td>                      
+                   </tr>                                                     
+                   </tbody>
+                   </table>
+                   
+                    </div>
+                   
+                   
+                   
+                   
+           <div id="addAddress" style="display: none;">
+                <div class="pbSubheader" >
+                    <h3>Additional address details</h3>
+                   </div>
+                   <table class="detailList">
+                   <tbody> 
+                   <tr>
+                   <td class="labelCol">Additional Address Details</td>
+                   <td colspan="3">
+                   <apex:inputField value="{!Acc.Additional_Address_Details__c}" id="accAddAddress"  />
+                   </td>
+                   </tr>
+                   </tbody>
+                   </table>
+                   
+                   </div>
+                    </div><!-- tab end -->
+                    <div>
+                    <div class="pbSubheader" >
+                        <h3>Residential Details</h3>
+                    </div>
+                    <table class="detailList">                       
+                       
+                          
+                        <tr style="display:none;">  
+                            <td class="labelCol">Do you own the property you are currently residing in?</td><td class="dataCol"><apex:inputField styleClass="ownSelling" value="{!Acc.Are_you_selling_an_existing_property__c}"   /></td>
+                            <td></td>
+                        </tr>
+                               <tr>
+                            <td class="labelCol">Home circumstances</td><td class="dataCol"><apex:inputField styleClass="homeCirc" value="{!Acc.Home_Details__c}"   /></td>
+                            <td class="labelCol">Other home circumstances</td><td class="dataCol"><apex:inputField value="{!Acc.Other_home_details__c}"   /></td>    
+                                                  
+                            
+                       
+                        </tr> 
+                       
+                      
+                        
+                        <tr>
+                        <td class="labelCol"><span class="monthlyRentalItem" style="display:none;">What is your current monthly rental payment</span></td><td class="dataCol"><span class="monthlyRentalItem" style="display:none;"><apex:inputField value="{!Acc.What_is_your_currt_monthly_rent_payment__c}"   /></span></td> 
+                         <td class="labelCol"><span class="monthlyRentalItem" style="display:none;">Name of landlord</span></td><td class="dataCol"><span class="monthlyRentalItem" style="display:none;"><apex:inputField value="{!Acc.Name_of_landlord__c}"   /></span></td>
+                        </tr>
+                        
+                        <tr class="ownSellingItem" style="display:none;">
+                            <td class="labelCol">Do you have a mortgage on this property?</td><td class="dataCol"><apex:inputField styleClass="existingMortValue" value="{!Acc.Do_you_have_an_existing_mortgage__c}"   /></td>
+                            <td class="labelCol"><span class="existingMort" style="display:none;"> Lender name </span>   </td><td class="dataCol"><span class="existingMort" style="display:none;"><apex:inputField value="{!Acc.Lender_name__c}"   /></span></td>
+                        </tr>  
+                        
+                        <tr >
+                            <td class="labelCol"><span class="noexistingMortItem" style="display:none;" >Have you previously had a mortgage?</span></td><td class="dataCol"><span class="noexistingMortItem" style="display:none;" ><apex:inputField styleClass="prevMort" value="{!Acc.Have_you_previously_had_a_mortgage__c}"   /></span></td>
+                            <td class="labelCol"><span class="prevMortItem " style="display:none;" >When did you redeem your mortgage?</span></td><td class="dataCol"><span class="prevMortItem " style="display:none;" ><apex:inputField value="{!Acc.When_did_you_redeem_your_mortgage__c}"   /></span></td>
+                        </tr>
+                        
+                       
+                        <tr class="existingMort" style="display:none;">
+                            <td class="labelCol">Mortgage account number</td><td class="dataCol"><apex:inputField value="{!Acc.Mortgage_account_number__c}"   /></td>
+                            <td class="labelCol">How many years have you been with lender</td><td class="dataCol"><apex:inputField value="{!Acc.How_long_have_you_being_with_lender__c}"   /></td>
+                        </tr>
+                <tr class="existingMort" style="display:none;">
+                            <td class="labelCol">Purchase price</td><td class="dataCol"><apex:inputField value="{!Acc.Purchase_price__c}"   /></td>
+                            <td class="labelCol">Amount financed</td><td class="dataCol"><apex:inputField value="{!Acc.Amount_financed__c}"   /></td>
+                        </tr>        
+                        <tr class="existingMort" style="display:none;">
+                            <td class="labelCol">Currently mortgage balance</td><td class="dataCol"><apex:inputField value="{!Acc.How_much_is_outstanding_on_mortgage__c}"   /></td>
+                            <td class="labelCol">Current monthly mortgage repayment </td><td class="dataCol"><apex:inputField value="{!Acc.Current_monthly_mortgage_payment__c}"   /></td>
+                        </tr>
+                        <tr class="existingMort" style="display:none;">
+                            <td class="labelCol">Will this property be sold before completion of this application?</td><td class="dataCol"><apex:inputField value="{!Acc.Is_mortgage_paid_by_time_HPP_completed__c}"   /></td>
+                            <td class="labelCol"><span class="ownSellingItem" style="display:none;" >What is the selling price if this property is to be sold</span></td><td class="dataCol"><span class="ownSellingItem" style="display:none;" ><apex:inputField value="{!Acc.Asset_SellingPrice__c}"   /></span></td>
+                            <td class="labelCol"></td><td class="dataCol"></td>
+                        </tr>                                       
+                    </table>                        
+                    <div class="pbSubheader" >
+                        <h3>Other Properties</h3>
+                          </div>
+                        <table class="detailList">
+                        <tr>
+                            <td class="labelCol">How many other properties do you currently own</td><td class="dataCol"><apex:inputField value="{!Acc.Other_properties_do_you_currently_own__c}"   /></td>
+                            <td class="labelCol">How many buy to let properties do you currently own</td><td class="dataCol"><apex:inputField value="{!Acc.BTL_Properties__c}"   /></td>
+                            <td colspan="2"/>
+                        </tr>
+                        </table>
+                  
+                    <div class="pbSubheader" >
+                        <h3>Other property details</h3>
+                            </div> 
+                            
+                             <apex:outputPanel id="PropertyList" >
+       <apex:variable value="{!0}" var="rowNumProp"/>
+      <ul style="list-style-type: none; padding-left: 15px;">
+      <apex:repeat value="{!Property}" var="d">
+<li style="border:1px solid #CCC; padding: 5px;margin-top: 5px;">      <c:PropertyInfo propertyinfo="{!d}"></c:PropertyInfo>
+      <apex:commandButton value="Remove" action="{!RemoveProperty}"   reRender="PropertyList" status="propRemoveStatus">
+      <apex:param name="nickName"
+                value="{!rowNumProp}"
+                assignTo="{!rowDeleteProperty}"/> 
+               
+                
+                </apex:commandButton> <apex:actionStatus id="propRemoveStatus" startStyle="padding-left: 10px;text-decoration:none;"   startText="Removing property..."  stopText=""/>
+                </li>
+      <apex:variable var="rowNumProp" value="{!rowNumProp+ 1}"/>
+      </apex:repeat>
+      </ul>
+      </apex:outputPanel>
+                     <apex:commandButton value="Add Property" action="{!AddProperty}"  reRender="PropertyList" status="propcounterStatus"/>
+      <apex:actionStatus id="propcounterStatus"  startText=" (Adding new property...)"  stopText=""/>
+              
+                            
+                                        
+                   
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+         
+      
+                    </div>
+                    
+                    
+                    <div><!-- tab start emp income-->
+                        <div class="pbSubheader" >
+                            <h3>Primary Employment</h3>
+                        </div>
+                        <table class="detailList">
+                        <tr>
+                            <td class="labelCol">Employment type</td><td class="dataCol"><apex:inputField styleClass="employmentType" value="{!Acc.Employment_Type__c}"   /></td>
+                            <td class="labelCol"><span style="display:none;" class="employmentOther">Other Employment type</span></td><td class="dataCol"><span style="display:none;" class="employmentOther"><apex:inputField value="{!Acc.Other_Employment_Type__c}"   /></span></td>
+                        </tr>
+                        <tr>
+                            <td class="labelCol">Employment status</td><td class="dataCol"><apex:inputField id="statusnoKendo" styleClass="employmentStatus" value="{!Acc.Employment_Status__c}"   /></td>
+                            <td class="labelCol">Occupation</td><td class="dataCol"><apex:inputField value="{!Acc.Occupation__c}"   /></td>
+                        </tr>
+                        <tr>
+                            <td class="labelCol">Nature of Business</td><td class="dataCol"><apex:inputField value="{!Acc.Nature_of_Employers_Your_Business__c}"   /></td>
+                            <td class="labelCol">Date Employment Commenced</td><td class="dataCol"><apex:inputField value="{!Acc.Date_Employment_Commenced__c}"   /></td>
+                        </tr>
+                        <tr>
+                            <td class="labelCol">If self employed, please state the percentage of the business you own </td><td class="dataCol"><apex:inputField value="{!Acc.Share_holding_in_the_business__c}"   /></td>
+                            <td class="labelCol">If self employed, please state when you became self-employed</td><td class="dataCol"><apex:inputField value="{!Acc.When_was_the_business_established__c}"   /></td>
+                        </tr>    
+                        
+                                          
+                                          
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        </table>
+                        <div></div>
+                        <div class="pbSubheader" style="display:none;">
+                            <h3>Employment Address</h3>
+                        </div>
+                        <table class="detailList">
+                        <tr>
+                            <td class="labelCol">Employer Name</td><td class="dataCol"><apex:inputField value="{!Acc.Employer_Name__c}"  id="empName" /></td>
+                        </tr><tr>    <td class="labelCol">Employer Country</td><td class="dataCol"><apex:inputField value="{!Acc.Employer_Country__c}" id="empCountry"  /></td>
+                        </tr>
+                        <tr>
+                            <td class="labelCol">Employer Postcode</td><td class="dataCol"><apex:inputField value="{!Acc.Employer_Post_Code__c}" id="empPCode"   /></td>
+                        </tr><tr>    <td class="labelCol">Employer Address Line 1</td><td class="dataCol"><apex:inputField value="{!Acc.Employer_Address_Line_1__c}" id="empaddr1"   /></td>
+                        </tr>
+                        <tr>
+                            <td class="labelCol">Employer Address Line 2</td><td class="dataCol"><apex:inputField value="{!Acc.Employer_Address_Line_2__c}" id="empaddr2"   /></td>
+                         </tr><tr>   <td class="labelCol">Employer Address Line 3</td><td class="dataCol"><apex:inputField value="{!Acc.Employer_Address_Line_3__c}" id="empaddr3"   /></td>
+                        </tr>
+                        <tr>
+                            <td class="labelCol">Employer Address Line 4</td><td class="dataCol"><apex:inputField value="{!Acc.Employer_Address_Line_4__c}" id="empaddr4"   /></td>
+                         </tr><tr>   <td class="labelCol">Employer Phone</td><td class="dataCol"><apex:inputField value="{!Acc.Employer_s_Phone__c}"   /></td>
+                        </tr>    
+                        <tr><td>&nbsp;</td></tr>
+                                                <tr><td>&nbsp;</td></tr>
+                        
+                        
+                         <tr>
+                            <td class="labelCol">Gross annual salary</td><td class="dataCol"><apex:inputField value="{!Acc.Gross_Annual_Income__c}"   /></td></tr>
+                            <tr>
+                             <td class="labelCol">Net monthly income</td><td class="dataCol"><apex:inputField value="{!Acc.Net_Monthly_Income__c}"   /></td></tr>
+                            <tr>
+                            <td class="labelCol">Guaranteed bonus (annual)</td><td class="dataCol"><apex:inputField value="{!Acc.Guaranteed_bonus__c}"   /></td>
+                            <td class="labelCol">Regular bonus (annual)</td><td class="dataCol"><apex:inputField value="{!Acc.Regular_Bonus__c}"   /></td></tr>
+                            <tr>
+                            <td class="labelCol">Guaranteed commission (annual)</td><td class="dataCol"><apex:inputField value="{!Acc.Guaranteed_Commission__c}"   /></td>
+                            <td class="labelCol">Regular commission (annual)</td><td class="dataCol"><apex:inputField value="{!Acc.Regular_Commission__c}"   /></td></tr>
+                            <tr>
+                            <td class="labelCol">Guaranteed overtime (annual)</td><td class="dataCol"><apex:inputField value="{!Acc.Guaranteed_Overtime__c}"   /></td>
+                            <td class="labelCol">Regular overtime (annual)</td><td class="dataCol"><apex:inputField value="{!Acc.Regular_Overtime__c}"   /></td></tr>
+                            <tr>
+                            <td class="labelCol">Guaranteed shift allowance (annual)</td><td class="dataCol"><apex:inputField value="{!Acc.Guaranteed_Shift_Allowance__c}"   /></td>
+                            <td class="labelCol">Regular shift allowance (annual)</td><td class="dataCol"><apex:inputField value="{!Acc.Regular_Shift_Allowance__c}"   /></td></tr>
+                            <tr>
+                            <td class="labelCol">Car allowance (annual)</td><td class="dataCol"><apex:inputField value="{!Acc.Car_Allowance__c}"   /></td>
+                            <td class="labelCol">Large town allowance (annual)</td><td class="dataCol"><apex:inputField value="{!Acc.Large_Town_Allowance__c}"   /></td>
+                            
+                            
+                        </tr>
+                        <tr>
+                            
+                            <td></td><td></td>
+                        </tr>
+                        
+                        <tr>
+                           
+                            <td class="labelCol">How do you receive your salary</td><td class="dataCol"><apex:inputField value="{!Acc.How_do_you_receive_your_salary__c}"   /></td>
+                             <td class="labelCol">How often are you paid</td><td class="dataCol"><apex:inputField value="{!Acc.How_often_are_you_paid__c}"    /></td>
+                        </tr>   
+                       
+                        
+                        
+                        
+                         
+                        
+                        <tr>
+                            <td class="labelCol">Do you have a second employment</td><td class="dataCol"><apex:inputField value="{!Acc.Has_Second_Employment__c}" styleClass="secondEmployment"   /></td>
+                            <td></td><td></td>
+                        </tr>
+                                           
+                        </table>
+                        
+                        
+                        <div class="secondEmploymentItem" style="display:none;">
+                             <div class="pbSubheader" >
+                            <h3>Second Employment </h3>
+                        </div>
+                        <table class="detailList">
+                        <tr>
+                            <td class="labelCol">Employment type</td><td class="dataCol"><apex:inputField styleClass="employmentType2" value="{!Acc.Employment_Type_2__c}"   /></td>
+                            <td class="labelCol"><span style="display:none;" class="employmentOther2">Other Employment type</span></td><td class="dataCol"><span style="display:none;" class="employmentOther2"><apex:inputField value="{!Acc.Other_Employment_Type2__c}"   /></span></td>
+                        </tr>
+                        <tr>
+                            <td class="labelCol">Employment status</td><td class="dataCol"><apex:inputField id="statusnoKendo2" styleClass="employmentStatus" value="{!Acc.Employment_status_2__c}"   /></td>
+                            <td class="labelCol">Occupation</td><td class="dataCol"><apex:inputField value="{!Acc.Occupation_2__c}"   /></td>
+                        </tr>
+                        <tr>
+                            <td class="labelCol">Nature of Business</td><td class="dataCol"><apex:inputField value="{!Acc.Nature_of_Business_2__c}"   /></td>
+                            <td class="labelCol">Date Employment Commenced</td><td class="dataCol"><apex:inputField value="{!Acc.Date_Employment_Commenced_2__c}"   /></td>
+                        </tr>
+                        
+                        <tr>
+                            <td class="labelCol">If self employed, please state the percentage of the business you own</td><td class="dataCol"><apex:inputField value="{!Acc.Share_holding_in_the_business_c__c}"   /></td>
+                            <td class="labelCol">If self employed, please state when the business was established</td><td class="dataCol"><apex:inputField value="{!Acc.When_was_the_business_established2__c}"   /></td>
+                        </tr>    
+                        <tr>
+                                               
+                            <td colspan="2"/>
+                        </tr>                        
+                        </table>
+                        
+                        
+                             <div class="pbSubheader" style="display:none;">
+                            <h3>Second Employment Address</h3>
+                        </div>
+                        <table class="detailList">
+                        <tr>
+                            <td class="labelCol">Employer Name</td><td class="dataCol"><apex:inputField value="{!Acc.Employers_Name__c}"  id="emp2Name" /></td>
+                        </tr><tr>    <td class="labelCol">Employer Country</td><td class="dataCol"><apex:inputField value="{!Acc.Employers_Country__c}" id="emp2Country"  /></td>
+                        </tr>
+                        <tr>
+                            <td class="labelCol">Employer Postcode</td><td class="dataCol"><apex:inputField value="{!Acc.Employers_Post_Code__c}" id="emp2PCode"   /></td>
+                        </tr><tr>    <td class="labelCol">Employer Address Line 1</td><td class="dataCol"><apex:inputField value="{!Acc.Employers_Address_Line_1__c}" id="emp2addr1"   /></td>
+                        </tr>
+                        <tr>
+                            <td class="labelCol">Employer Address Line 2</td><td class="dataCol"><apex:inputField value="{!Acc.Employers_Address_Line_2__c}" id="emp2addr2"   /></td>
+                        </tr><tr>    <td class="labelCol">Employer Address Line 3</td><td class="dataCol"><apex:inputField value="{!Acc.Employers_Address_Line_3__c}" id="emp2addr3"   /></td>
+                        </tr>
+                        <tr>
+                            <td class="labelCol">Employer Address Line 4</td><td class="dataCol"><apex:inputField value="{!Acc.Employers_Address_Line_4__c}" id="emp2addr4"   /></td>
+                        </tr><tr>    <td class="labelCol">Employer Phone</td><td class="dataCol"><apex:inputField value="{!Acc.Employer_s_Phone2__c}"   /></td>
+                        </tr>    
+                        
+                          <tr><td>&nbsp;</td></tr>
+                                                <tr><td>&nbsp;</td></tr>
+                       <tr>
+                            <td class="labelCol">Gross annual salary</td><td class="dataCol"><apex:inputField value="{!Acc.Gross_Annual_Income_2__c}"   /></td></tr>
+                            <tr>
+                             <td class="labelCol">Net monthly income</td><td class="dataCol"><apex:inputField value="{!Acc.Net_Monthly_Income_2__c}"   /></td></tr>
+                             <tr>
+                            <td class="labelCol">Guaranteed bonus (annual)</td><td class="dataCol"><apex:inputField value="{!Acc.Guaranteed_bonus_2__c}"   /></td>
+                            <td class="labelCol">Regular bonus (annual)</td><td class="dataCol"><apex:inputField value="{!Acc.Regular_Bonus2__c}"   /></td></tr>
+                            <tr>
+                            <td class="labelCol">Guaranteed commission (annual)</td><td class="dataCol"><apex:inputField value="{!Acc.Guaranteed_Commission2__c}"   /></td>
+                            <td class="labelCol">Regular commission (annual)</td><td class="dataCol"><apex:inputField value="{!Acc.Regular_Commission2__c}"   /></td></tr>
+                            <tr>
+                            <td class="labelCol">Guaranteed overtime (annual)</td><td class="dataCol"><apex:inputField value="{!Acc.Guaranteed_Overtime2__c}"   /></td>
+                            <td class="labelCol">Regular overtime (annual)</td><td class="dataCol"><apex:inputField value="{!Acc.Regular_Overtime2__c}"   /></td></tr>
+                            <tr>
+                            <td class="labelCol">Guaranteed shift allowance (annual)</td><td class="dataCol"><apex:inputField value="{!Acc.Guaranteed_Shift_Allowance2__c}"   /></td>
+                            <td class="labelCol">Regular shift allowance (annual)</td><td class="dataCol"><apex:inputField value="{!Acc.Regular_Shift_Allowance2__c}"   /></td></tr>
+                            <tr>
+                            <td class="labelCol">Car allowance (annual)</td><td class="dataCol"><apex:inputField value="{!Acc.Car_Allowance2__c}"   /></td>
+                            <td class="labelCol">Large town allowance (annual)</td><td class="dataCol"><apex:inputField value="{!Acc.Large_Town_Allowance2__c}"   /></td>
+                        </tr>
+                        <tr>
+                            
+                            <td></td><td></td>
+                        </tr>
+                        
+                        <tr>
+                           
+                            <td class="labelCol">How do you receive your salary</td><td class="dataCol"><apex:inputField value="{!Acc.How_do_you_receive_your_salary_2__c}"   /></td>
+                             <td class="labelCol">How often are you paid</td><td class="dataCol"><apex:inputField value="{!Acc.How_often_are_you_paid2__c}"    /></td>
+                        </tr> 
+                        
+                        
+                                            
+                        </table>
+                        
+                        </div>
+                        
+                        
+                        <div class="pbSubheader" >
+                            <h3>Income Details</h3>
+                        </div>
+                        <table class="detailList">
+                     
+                        <tr>
+                           <td class="labelCol">Do you have another income eg pension</td><td class="dataCol"><apex:inputField styleClass="employmentHasOtherIncome" value="{!Acc.Do_you_have_another_income_eg_pension__c}"    /></td>
+                            <td></td><td></td>
+                        </tr>
+                        <tr>
+                            <td class="labelCol"><span style="display:none;" class="employmentOtherIncome">Source of income</span></td><td class="dataCol"><span style="display:none;" class="employmentOtherIncome"><apex:inputField value="{!Acc.Source_of_income__c}"   /></span></td>
+                            <td class="labelCol"><span style="display:none;" class="employmentOtherIncome">If yes to other income please give value</span></td><td class="dataCol"><span style="display:none;" class="employmentOtherIncome"><apex:inputField value="{!Acc.If_yes_to_other_income_please_give_value__c}"    /></span></td>
+                        </tr>
+                        <tr style="display:none;" class="employmentRetired">
+                            <td class="labelCol"><span style="display:none;" class="employmentRetired">If retired, what is annual pension</span></td><td class="dataCol"><span style="display:none;" class="employmentRetired"><apex:inputField value="{!Acc.If_retired_what_is_annual_pension__c}"    /></span></td>
+                       <td></td><td></td>
+                       </tr>
+                       <tr>
+                            <td class="labelCol"><span style="display:none;" class="selfEmployed">Do you have 3 years of accounts</span></td><td class="dataCol"><span style="display:none;" class="selfEmployed"><apex:inputField value="{!Acc.Do_you_have_2_years_of_accounts__c}"   /></span></td>
+                        
+                            <td class="labelCol"><span style="display:none;" class="selfEmployed">Do you have 3 years of self-assessment tax forms</span></td><td class="dataCol"><span style="display:none;" class="selfEmployed"><apex:inputField value="{!Acc.Do_you_have_3_yrs_of_self_ass_tax_form__c}"    /></span></td>
+                            
+                            </tr> 
+                            <tr>
+                            <td class="labelCol"><span style="display:none;" class="selfEmployed">Year 1 gross dividend income</span></td><td class="dataCol"><span style="display:none;" class="selfEmployed"><apex:inputField value="{!Acc.Year_1_Gross_Dividend_Income__c}"   /></span></td>
+                        
+                            <td class="labelCol"><span style="display:none;" class="selfEmployed">Year 1 net profit</span></td><td class="dataCol"><span style="display:none;" class="selfEmployed"><apex:inputField value="{!Acc.Year_1_Net_Profit__c}"    /></span></td>
+                            
+                            </tr> 
+
+                        <tr>
+                            <td class="labelCol"><span style="display:none;" class="selfEmployed">Year 2 gross dividend income</span></td><td class="dataCol"><span style="display:none;" class="selfEmployed"><apex:inputField value="{!Acc.Year_2_Gross_Dividend_Income__c}"   /></span></td>
+                        
+                            <td class="labelCol"><span style="display:none;" class="selfEmployed">Year 2 net profit</span></td><td class="dataCol"><span style="display:none;" class="selfEmployed"><apex:inputField value="{!Acc.Year_2_Net_Profit__c}"    /></span></td>
+                            
+                            </tr>                           
+
+                        <tr>
+                            <td class="labelCol"><span style="display:none;" class="selfEmployed">Year 3 gross dividend income</span></td><td class="dataCol"><span style="display:none;" class="selfEmployed"><apex:inputField value="{!Acc.Year_3_Gross_Dividend_Income__c}"   /></span></td>
+                        
+                            <td class="labelCol"><span style="display:none;" class="selfEmployed">Year 3 net profit</span></td><td class="dataCol"><span style="display:none;" class="selfEmployed"><apex:inputField value="{!Acc.Year_3_Net_Profit__c}"    /></span></td>
+                            
+                            </tr>                               
+                            
+                             <tr>
+                            <td class="labelCol"><span style="display:none;" class="selfEmployed">Accountant Name</span></td><td class="dataCol"><span style="display:none;" class="selfEmployed"><apex:inputField value="{!Acc.Accountant_name__c}"   /></span></td>
+                        
+                            <td class="labelCol"><span style="display:none;" class="selfEmployed">Accountant Firm</span></td><td class="dataCol"><span style="display:none;" class="selfEmployed"><apex:inputField value="{!Acc.Accountant_Firm__c}"    /></span></td>
+                            
+                            </tr>
+                             <tr>
+                            <td class="labelCol"><span style="display:none;" class="selfEmployed">Accountant Street</span></td><td class="dataCol"><span style="display:none;" class="selfEmployed"><apex:inputField value="{!Acc.Accountant_Street__c}"   /></span></td>
+                        
+                            <td class="labelCol"><span style="display:none;" class="selfEmployed">Accountant Town/City</span></td><td class="dataCol"><span style="display:none;" class="selfEmployed"><apex:inputField value="{!Acc.Accountant_Town_City__c}"    /></span></td>
+                            
+                            </tr>
+                             <tr>
+                            <td class="labelCol"><span style="display:none;" class="selfEmployed">Accountant Postcode</span></td><td class="dataCol"><span style="display:none;" class="selfEmployed"><apex:inputField value="{!Acc.Accountant_PostCode__c}"   /></span></td>
+                        
+                            <td class="labelCol"><span style="display:none;" class="selfEmployed">Accountant Contact No</span></td><td class="dataCol"><span style="display:none;" class="selfEmployed"><apex:inputField value="{!Acc.Accountant_Phone__c}"    /></span></td>
+                            
+                            </tr>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                        <tr>
+                            <td class="labelCol">Additional employment information</td><td class="dataCol"><apex:inputField value="{!Acc.Additional_employment_information__c}"   /></td>
+                        </tr>                                                                      
+                        </table>
+                        
+                        
+                        
+                    
+                        
+                    </div>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                   <div><!-- tab start-->
+                   
+                   <div class="pbSubheader" >
+                       <h3>Asset Information</h3> 
+                   </div>
+                   <table class="detailList">
+                   <tbody>
+                   <tr>
+                            <td class="labelCol">Personal savings value</td><td class="dataCol"><apex:inputField styleClass="finSaving" value="{!Acc.Personal_savings_value__c}"   /></td>
+                            <td colspan="2"></td>
+                   </tr>
+                   
+                   
+                   </tbody>
+                   </table>
+                   
+                   <div class="pbSubheader" >
+                       <h3>Current Account Details</h3> 
+                   </div>
+                   <table class="detailList">
+                   <tbody>
+                   <tr>
+                            <td class="labelCol">Date current account opened</td><td class="dataCol"><apex:inputField value="{!Acc.Date_of_current_account_opened__c}"   /></td>
+                            <td class="labelCol">Name of main bank </td><td class="dataCol"><apex:inputField value="{!Acc.Name_of_where_main_bank_accounts_held__c}"   /></td>
+                   </tr>
+                   <tr>
+                            <td class="labelCol">Current account number</td><td class="dataCol"><apex:inputField value="{!Acc.Other_account_number__c}"   /></td>
+                            <td class="labelCol">Current account sort code</td><td class="dataCol"><apex:inputField value="{!Acc.Other_bank_sort_code__c}"   /></td>
+                   </tr>                                     
+                   </tbody>
+                   </table>                   
+                   
+                                
+
+      
+      
+      
+      
+      <div class="pbSubheader" >
+      <h3>Personal Debts</h3> 
+                   </div>
+      <table class="detailList">
+      <tbody>
+      <tr>
+      <td class="labelCol">Total Monthly Payment</td><td class="dataCol"><span id="monthlyTotal"></span></td>
+      <td class="labelCol">Total Outstanding Payments</td><td class="dataCol"><span id="outTotal"></span></td>
+   
+   </tr>
+   </tbody>
+      </table>
+      
+      
+      
+      <apex:outputPanel id="DebtList" >
+       <apex:variable value="{!0}" var="rowNum"/>
+      <ul style="list-style-type: none; padding-left: 15px;">
+      <apex:repeat value="{!Debt}" var="d">
+<li style="border:1px solid #CCC; padding: 5px;margin-top: 5px;">      <c:PersonDebt debt="{!d}"></c:PersonDebt>
+      <apex:commandButton value="Remove" action="{!Remove}" oncomplete="setUpOut()"  reRender="DebtList" status="debtRemoveStatus">
+      <apex:param name="nickName"
+                value="{!rowNum}"
+                assignTo="{!rowDelete}"/> 
+               
+                
+                </apex:commandButton> <apex:actionStatus id="debtRemoveStatus" startStyle="padding-left: 10px;text-decoration:none;"   startText="Removing debt..."  stopText=""/>
+                </li>
+      <apex:variable var="rowNum" value="{!rowNum + 1}"/>
+      </apex:repeat>
+      </ul>
+      </apex:outputPanel>
+      
+      
+      
+      <apex:commandButton value="Add Debt" action="{!AddDebt}" oncomplete="setUpOut()" reRender="DebtList" status="counterStatus"/>
+      <apex:actionStatus id="counterStatus"  startText=" (Adding new debt...)"  stopText=""/>
+      
+                   </div><!--tab end-->
+                   
+                   <div><!-- tab start credit -->
+                   
+                   
+                   
+                   
+               <div class="pbSubheader" >
+                       <h3>Credit History</h3> 
+                   </div>
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   <table class="detailList">
+                   <tbody>
+                   <tr>
+                            <td class="labelCol">Have you ever been in arrears with your rent, mortgage payments or any other loans</td><td class="dataCol"><apex:inputField styleClass="credArrears" value="{!Acc.Ever_been_in_arrears_with_any_loans__c }"   /></td>
+                           <td></td>
+                   </tr>
+                   <tr class="credArrearsItem" style="display:none;">
+                            <td class="labelCol"><span class="credArrearsItem" style="display:none;">Amount in arrears</span></td><td class="dataCol"><span class="credArrearsItem" style="display:none;"><apex:inputField value="{!Acc.Amount_in_arrears__c }"   /></span></td>
+                            <td class="labelCol">Number of months in arrears</td><td class="dataCol"><apex:inputField value="{!Acc.Number_of_months_in_arrears__c }"   /></td>
+                    </tr>    
+                   <tr class="credArrearsItem" style="display:none;">
+                            <td class="labelCol">Date of highest arrears</td><td class="dataCol"><apex:inputField value="{!Acc.Date_of_highest_arrears__c }"   /></td>
+                            <td class="labelCol">Date arrears repaid</td><td class="dataCol"><apex:inputField value="{!Acc.Date_arrears_repaid__c }"   /></td>
+                            
+                   </tr>  
+                   <tr class="credArrearsItem" style="display:none;">
+                            <td class="labelCol">Have any arrear(s) worsened in the last 6 months</td><td class="dataCol"><apex:inputField styleClass="credWorse" value="{!Acc.Have_any_arrear_s_worsened_in_last_6mth__c }"   /></td>
+                            <td class="labelCol"><span class="credWorseItem" style="display:none;">Please provide detail of arrears</span></td><td class="dataCol"><span class="credWorseItem" style="display:none;"><apex:inputField value="{!Acc.Please_provide_detail_of_arrears__c }"   /></span></td>
+                   </tr>  
+                   <tr>
+                            <td class="labelCol">Have you ever had a county court judgement made against you</td><td class="dataCol"><apex:inputField styleClass="credCCJ" value="{!Acc.Have_you_ever_had_a_CCJ__c}"   /></td>
+                            <td colspan="2"/>
+                   </tr>       
+                   
+                   <tr style="display:none;" class="credCCJItem">
+                   <td valign="top" class="labelCol">Please enter each CCJ </td>
+                   <td valign="top" colspan="3">
+                      <apex:outputPanel id="CCJList" >
+       <apex:variable value="{!0}" var="rowNum"/>
+      <ul style="list-style-type: none; padding-left: 10px;">
+      <apex:repeat value="{!CCJ}" var="d">
+<li style="border:1px solid #CCC;margin-left: 0px;margin-top: 5px;">      <c:CCJ genericobject="{!d}"></c:CCJ>
+      <apex:commandButton value="Remove" action="{!RemoveCCJ}"   reRender="CCJList" status="ccjRemoveStatus">
+      <apex:param name="nickName"
+                value="{!rowNum}"
+                assignTo="{!rowDeleteCCJ}"/> 
+               
+                
+                </apex:commandButton> <apex:actionStatus id="ccjRemoveStatus" startStyle="padding-left: 10px;text-decoration:none;"   startText="Removing CCJ..."  stopText=""/>
+                </li>
+      <apex:variable var="rowNum" value="{!rowNum + 1}"/>
+      </apex:repeat>
+      </ul>
+      </apex:outputPanel>
+      
+      
+      
+      <apex:commandButton styleClass="redBtn" style="padding: 0px 5px 0px 5px;font-size: inherit;" value="Add CCJ" action="{!AddCCJ}"  reRender="CCJList" status="ccjcounterStatus"/>
+      <apex:actionStatus id="ccjcounterStatus"  startText=" (Adding new CCJ...)"  stopText=""/>
+                  </td>
+                   </tr>
+                   
+                     
+                 
+                   <tr>
+                       <td class="labelCol">
+                           Have you ever had a default registered against you?
+                       </td>
+                       <td class="dataCol">
+                           <apex:inputField styleClass="credDefault" value="{!Acc.Default_against_you__c}"   />
+                       </td>
+                   
+                   </tr>
+                   
+                   <tr style="display:none;" class="credDefaultItem">
+                    <td valign="top" class="labelCol">Please enter details of each default </td>
+                   <td valign="top" colspan="3">
+                     <apex:outputPanel id="DefaultList" >
+       <apex:variable value="{!0}" var="rowNum"/>
+      <ul style="list-style-type: none; padding-left: 10px;">
+      <apex:repeat value="{!Defaults}" var="d">
+<li style="border:1px solid #CCC; padding: 5px;margin-top: 5px;margin-left: 0px;">      <c:Defaults genericobject="{!d}"></c:Defaults>
+      <apex:commandButton value="Remove" action="{!RemoveDefault}" alt=""  reRender="DefaultList" status="defaultRemoveStatus">
+      <apex:param name="nickName"
+                value="{!rowNum}"
+                assignTo="{!rowDeleteDefault}"/> 
+               
+                
+                </apex:commandButton> <apex:actionStatus id="defaultRemoveStatus" startStyle="padding-left: 10px;text-decoration:none;"   startText="Removing Default..."  stopText=""/>
+                </li>
+      <apex:variable var="rowNum" value="{!rowNum + 1}"/>
+      </apex:repeat>
+      </ul>
+      </apex:outputPanel>      
+      
+      
+      <apex:commandButton styleClass="redBtn" style="padding: 0px 5px 0px 5px;font-size: inherit;" value="Add Default" action="{!AddDefault}"  reRender="DefaultList" status="defaultcounterStatus"/>
+      <apex:actionStatus id="defaultcounterStatus"  startText=" (Adding new default...)"  stopText=""/>
+                   </td>
+                   </tr>
+                   
+                   
+                   
+                   <tr>
+                            <td class="labelCol">Have you ever been made bankrupt</td><td class="dataCol"><apex:inputField styleClass="credBankrupt" value="{!Acc.Have_you_ever_been_made_bankrupt__c}"   /></td>
+                            <td colspan="2"></td>
+                   </tr>
+                   <tr class="credBankruptItem" style="display:none;">
+                            <td class="labelCol">Date of bankruptcy</td><td class="dataCol"><apex:inputField value="{!Acc.Date_of_bankrutcy__c}"   /></td>
+                            <td class="labelCol">Date discharged</td><td class="dataCol"><apex:inputField value="{!Acc.Date_discharged_v1__c}"   /></td>
+                            
+                   </tr>     
+                  
+                   
+                   <tr>
+                            <td class="labelCol">Have you ever been subject of an IVA?</td><td class="dataCol"><apex:inputField styleClass="credIVAWorse" value="{!Acc.Have_you_had_any_IVA__c}"   /></td>
+                            <td class="labelCol"><span class="credIVAWorseItem" style="display:none;">Please provide details of any IVA(s)</span></td><td class="dataCol"><span class="credIVAWorseItem" style="display:none;"><apex:inputField value="{!Acc.Please_provide_details_of_any_IVA_s__c}"   /></span></td>
+                    </tr>                            
+                         
+                          <tr>
+                                               <td class="labelCol">Have you had a debt relief  order within the last 6 years </td><td class="dataCol"><apex:inputField value="{!Acc.Have_you_had_a_debt_relief__c}"   /></td>
+                   <td colspan="2"/>
+                   
+                   </tr>
+                            
+                   
+                   
+                  <tr>
+                            
+                            <td class="labelCol">Have you applied for a mortgage elsewhere within the last 3 months?</td><td class="dataCol"><apex:inputField styleClass="credRefused" value="{!Acc.AppliedMortgageElsewhere__c}"   /></td>
+                            
+                   </tr>  
+                            
+                    <tr>
+                            <td class="labelCol">Additional information</td><td colspan="3" class="dataCol"><apex:inputField value="{!Acc.Additional_information_about_fin_details__c }" style="width:300px;"   /></td>
+                            <td colspan="2"/>                    
+                    </tr>                            
+                                                                                                                                                                                                    
+                   </tbody>
+                   </table>    
+                   
+                   
+                   
+               
+
+  
+                   
+                 
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                 
+
+                          
+                    
+                   </div><!-- tab end credit -->
+                   
+                   
+                   
+                   <div><!-- budget planner -->
+                        <div class="pbSubheader" >
+                       <h3>Budget Planner</h3> 
+                       </div>
+                       <table class="detailList">
+                       <tbody>
+                       <tr>
+                            <td class="labelCol">Anticipated HPP payment</td><td class="dataCol"><apex:inputField styleClass="budgetItem" value="{!Budget.Anticipated_HPP_payment__c}"   /></td>
+                       </tr> 
+<tr>
+                            <td class="labelCol">Credit card payments</td><td class="dataCol"><apex:inputField styleClass="budgetItem" value="{!Budget.Credit_card_payments__c}"   /></td>
+                            <td class="labelCol">Loan payments</td><td class="dataCol"><apex:inputField styleClass="budgetItem" value="{!Budget.Loan_payments__c}"   /></td>
+                       </tr>
+                       <tr>
+                            <td class="labelCol">Travel insurance</td><td class="dataCol"><apex:inputField styleClass="budgetItem" value="{!Budget.Travel_insurance__c}"   /></td>
+                            <td class="labelCol">Health insurance (doctor/dentist/etc)</td><td class="dataCol"><apex:inputField styleClass="budgetItem" value="{!Budget.Health_insurance__c}"   /></td>
+                       </tr>
+                       <tr>
+                            <td class="labelCol">Car tax</td><td class="dataCol"><apex:inputField styleClass="budgetItem" value="{!Budget.Car_tax__c}"   /></td>
+                            <td class="labelCol">Car insurance</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Car_insurance__c}"   /></td>
+                       </tr> 
+                       <tr>
+                            <td class="labelCol">Car breakdown service</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Car_breakdown__c}"   /></td>
+                            <td class="labelCol">Income protection</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Existing_Life_PP_or_Critical_Illness__c }"   /></td>
+                       </tr>  
+                       <tr>
+                            <td class="labelCol">Subscriptions</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Subscriptions__c}"   /></td>
+                            <td class="labelCol">Sporting tickets</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Sporting_tickets__c}"   /></td>
+                       </tr>  
+                       <tr>
+                            <td class="labelCol">Water</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Water__c}"   /></td>
+                            <td class="labelCol">Electricity</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Electricity__c}"   /></td>
+                       </tr>  
+                       <tr>
+                            <td class="labelCol">Gas</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Gas__c}"   /></td>
+                            <td class="labelCol">After school/religious instruction</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.After_school_instruction__c}"   /></td>
+                       </tr> 
+                       <tr>
+                            <td class="labelCol">Mobile</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Mobile__c}"   /></td>
+                            <td class="labelCol">TV License</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.TV_License__c}"   /></td>
+                       </tr>   
+                       <tr>
+                            <td class="labelCol">Charitable donations</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Charitable_donations__c}"   /></td>
+                            <td class="labelCol">Travel expenses</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Travel_expenses__c}"   /></td>
+                       </tr>  
+                       <tr>
+                            <td class="labelCol">Car Petrol</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Car_Petrol_Insurance_and_Servicing__c}"   /></td>
+                            <td class="labelCol">Sky/Cable/Other</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Sky_Cable__c}"   /></td>
+                       </tr>  
+                      
+                       
+                       
+                       
+                       <tr>
+                            <td class="labelCol">Building insurance</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Buildings_insurance__c}"   /></td>
+                            <td class="labelCol">Contents insurance</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Contents_Insua__c}"   /></td>
+                       </tr>  
+                       <tr>
+                            <td class="labelCol">Life insurance </td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Life__c}"   /></td>
+                            <td class="labelCol">Regular investments/ISA’s</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Regular_investments_ISA_s__c}"   /></td>
+                       </tr>  
+                        
+                       <tr>
+                            <td class="labelCol">Pet expenses (Food, vets, insurance etc)</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Pet_expenses__c}"   /></td>
+                            <td class="labelCol">Car Servicing</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Car_servicing__c}"   /></td>
+                       </tr>  
+                       <tr>
+                            <td class="labelCol">Home telephone</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Home_phone__c}"   /></td>
+                            <td class="labelCol">Internet</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Internet__c}"   /></td>
+                       </tr>  
+                       <tr>
+                            <td class="labelCol">Gaming/Entertainment</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Gaming_Entertainment__c}"   /></td>
+                            <td class="labelCol">Gym/Health Clubs</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Gym_Health_clubs__c}"   /></td>
+                       </tr>             
+                       <tr>
+                            <td class="labelCol">Clothing</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Clothing__c}"   /></td>
+                            <td class="labelCol">Food</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Food_c__c}"   /></td>
+                       </tr>  
+                       <tr>
+                            <td class="labelCol">Holidays</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Holidays__c}"   /></td>
+                            <td class="labelCol">Birthday/Celebrations/Presents</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Birthdays_Celebrations_Presents__c}"   /></td>
+                       </tr>  
+                       <tr>
+                            <td class="labelCol">Going Out</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Going_out__c}"   /></td>
+                            <td class="labelCol">School Fees</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.School_fee__c}"   /></td>
+                       </tr>                                                                                                                                                                                                      
+                       <tr>
+                            <td class="labelCol">Council tax</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Council_tax__c}"   /></td>
+                            <td class="labelCol">Other commitments</td><td class="dataCol"><apex:inputField styleClass="budgetItem"  value="{!Budget.Other_Commitments__c}"   /></td>
+                       </tr>                                       
+                       
+                         <tr>
+                            <td class="labelCol">Total commitments</td><td class="dataCol"><span id="budgetTotal"></span></td>
+                       </tr>                                                                                                                                                                                                            
+                       </tbody>
+                   </table>     
+                   
+                   </div>
+                </div>
+                
+   
+         <apex:commandButton styleClass="redBtn" value="Previous" action="{!PreviousAPP}" rendered="false"/>       
+         <apex:commandButton styleClass="redBtn" value="Save" action="{!Save}"/>
+         <apex:commandButton styleClass="redBtn" value="Next" action="{!NextAPP}" rendered="false"/>
+    
+<apex:pagemessages />
+            </div>
+        </div>
+</apex:pageBlock>
+</div>
+</td></tr></table>
+</div>
+</div>
+
+<script>
+
+function CalcOut()
+{
+var Tbals = 0;
+$('.outBal').each(function(index) {
+     Tbals +=GetFloatValue($(this).val());     
+});
+
+$('#outTotal').text("£" + Tbals.toFixed(2));
+
+}
+
+function GetFloatValue(value)
+{
+    if(value == null)
+        return 0;
+
+    value = value.replace(',','');
+    value = value.replace('£','');
+    value = value.replace('$','');
+    
+    var retValue = parseFloat( value,10);
+    
+    if(isNaN(retValue))
+    {
+        return 0;
+    }
+    return retValue;
+}
+
+function CalcMonth()
+{
+     var Tmonth = 0;
+     $('.mPay').each(function(index) {
+         Tmonth +=GetFloatValue($(this).val());    
+     });
+  
+       
+     $('#monthlyTotal').text("£" + Tmonth .toFixed(2));
+}
+
+
+
+function setUpOut() { 
+
+//alert('called');
+$('input:text').addClass("k-textbox");
+    $("input:button").removeClass("btn");
+                 $("input:button").addClass("k-button");
+                 
+                 
+                 
+    $('.mPay').change(CalcMonth);
+
+
+$('.outBal').change(CalcOut);
+
+CalcMonth();
+CalcOut();
+
+
+};
+
+
+
+
+
+ $(function () {
+$(":input").change(function () {
+// if any input element changes, enable the save and undo buttons
+//$("#savediv").css("display", "block");
+});
+ });
+</script>
+
+<span id="pca_status" style="display:none;" />
+<script type="text/javascript">
+    pca_Load();
+</script>
+<span id="hideMyParent"></span>
+<script type="text/javascript">
+function getDiff(startDate )
+{
+    var today= new Date();
+    var year = today.getFullYear() -  startDate.getFullYear();
+    var month =today.getMonth() -  startDate.getMonth(); 
+    
+    if(isNaN(year) || isNaN(month))
+        return 'Please enter a move date!';
+        
+    return year + ' years, ' + month + ' months';
+}
+
+function getMonths(startDate )
+{
+    var today= new Date();
+    var year = today.getFullYear() -  startDate.getFullYear();
+    var month =today.getMonth() -  startDate.getMonth();     
+    return (year * 12) + month ;
+}
+
+
+function checkAddress()
+{
+        var da = $(".MoveDate").find('span').html()  ;        
+        var n = da.split("/");
+        var dd = new Date(n[1] + "/" + n[0] + "/" + n[2]);
+   
+        $("#movedText").text( getDiff(dd));
+        var months = getMonths(dd);
+        if(months < (12*3))
+        {
+            $("#prevAdd").fadeIn(500);
+        }
+        else
+        {
+            $("#prevAdd").fadeOut(500);
+        } 
+}
+
+$(".MoveDate").change(checkAddress);
+
+function checkPAddress()
+{
+        var da = $(".MoveDatePrev").find('span').html()  ;        
+        var n = da.split("/");
+        var dd = new Date(n[1] + "/" + n[0] + "/" + n[2]);
+   
+        $("#movedPrevText").text( getDiff(dd));
+        var months = getMonths(dd);
+        if(months < (12*3))
+        {
+            $("#prevprevAdd").fadeIn(500);
+        }
+        else
+        {
+            $("#prevprevAdd").fadeOut(500);
+        }    
+}
+$(".MoveDatePrev").change(checkPAddress);
+
+function checkPPAddress()
+{
+     var da = $(".MoveDatePrevPrev").find('span').html()  ;        
+     var n = da.split("/");
+     var dd = new Date(n[1] + "/" + n[0] + "/" + n[2]);
+   
+     $("#movedPrevPrevText").text( getDiff(dd));    
+     
+    var months = getMonths(dd);
+        if(months < (12*3))
+        {
+            $("#addAddress").fadeIn(500);
+        }
+        else
+        {
+            $("#addAddress").fadeOut(500);
+        }  
+     
+     
+}
+$(".MoveDatePrevPrev").change(checkPPAddress );
+
+function FadeInput(value, compareTo,fadeClass)
+{
+    if(value == compareTo)
+    {
+        $("." + fadeClass).fadeIn(500);
+    }
+    else
+    {
+        $("." + fadeClass).fadeOut(500);
+    } 
+}
+
+function FadeInputContains(value, contains,fadeClass)
+{
+    if(value.indexOf(contains) !== -1)
+    {
+        $("." + fadeClass).fadeIn(500);
+    }
+    else
+    {
+        $("." + fadeClass).fadeOut(500);
+    } 
+}
+
+
+function updateEmploymentType()
+{
+    var value= $("select.employmentType").val();
+    FadeInput(value,'Other','employmentOther');
+    updateEmployementTypeShared();
+}
+
+function updateEmploymentType2()
+{
+    var value= $("select.employmentType2").val();
+    FadeInput(value,'Other','employmentOther2');
+    updateEmployementTypeShared();
+}
+
+function updateEmployementTypeShared()
+{
+    var value= $("select.employmentType").val();
+    var value2= $("select.employmentType2").val();
+    
+    var retired = value;
+    
+    if(value == 'Retired' || value2 == 'Retired')
+    {
+        retired = 'Retired';
+    }
+     FadeInput(retired ,'Retired','employmentRetired');
+    
+    
+    
+    if(value.indexOf('Self Employed') !== -1 || value2.indexOf('Self Employed') !==-1)
+    {
+        FadeInputContains('Self employed','Self employed','selfEmployed');
+    }    
+    else
+    {
+        FadeInputContains(' ','Self-employed','selfEmployed');
+    }
+    
+    
+    
+    
+}
+
+
+function updateOtherIncome()
+{
+    var value= $("select.employmentHasOtherIncome").val();
+    FadeInput(value,'Yes','employmentOtherIncome');
+}
+
+function updateEmploymentStatus()
+{
+    var value = $("select.employmentStatus").val();
+    FadeInput(value,'Other','employmentOther');
+}
+
+function updateTitle()
+{
+    var value = $("select.nameTitle").val();
+    FadeInput(value,'Other','otherSalutation');
+}
+
+function otherCirc()
+{
+    var value = $("select.ownOther").val();
+    FadeInput(value,'Other','ownOtherCirc');
+}
+
+function ownRentSub()
+{
+    var value = $("select.ownRentSub").val();
+    FadeInput(value,'Yes','ownRentSubItem');
+}
+
+function ownSelling()
+{
+    var value = $("select.ownSelling").val();
+    FadeInput(value,'Yes','ownSellingItem');
+    
+    if(value == 'No')
+    {
+        FadeInput('','Yes','existingMort');  
+        FadeInput('','Yes','noexistingMortItem'); 
+        FadeInput('','Yes','prevMortItem');  
+        FadeInput('','','monthlyRentalItem');    
+    }
+    else
+    {
+        FadeInput(' ','','monthlyRentalItem');
+        existingMort();
+        prevMort();
+    }
+}
+
+Number.prototype.formatMoney = function(c, d, t){
+var n = this, c = isNaN(c = Math.abs(c)) ? 2 : c, d = d == undefined ? "," : d, t = t == undefined ? "." : t, s = n < 0 ? "-" : "", i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "", j = (j = i.length) > 3 ? j % 3 : 0;
+   return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+ };
+
+function ownMortSub()
+{
+    var value = $("select.ownMortSub").val();
+    FadeInput(value,'Yes','ownMortSubItem');
+}
+
+function credArrears()
+{
+    var value = $("select.credArrears").val();
+    FadeInput(value,'Yes','credArrearsItem');
+}
+
+function credWorse()
+{
+    var value = $("select.credWorse").val();
+    FadeInput(value,'Yes','credWorseItem');
+}
+
+function credCCJ()
+{    
+    var value = $("select.credCCJ").val();
+    FadeInput(value,'Yes','credCCJItem');
+}
+
+function credBankrupt()
+{
+    var value = $("select.credBankrupt").val();
+    FadeInput(value,'Yes','credBankruptItem');
+}
+
+function credDefault()
+{
+    var value = $("select.credDefault").val();
+    FadeInput(value,'Yes','credDefaultItem');
+}
+
+function credIVAWorse()
+{
+    var value = $("select.credIVAWorse").val();
+    FadeInput(value,'Yes','credIVAWorseItem');
+}
+
+function credRefused()
+{
+    var value = $("select.credRefused").val();
+    FadeInput(value,'Yes','credRefusedItem');
+}
+
+function credRefused1()
+{
+    var value = $("select.credRefused1").val();
+    FadeInput(value,'Yes','credRefused1Item');
+}
+
+function prevMort()
+{
+    var value = $("select.prevMort").val();
+    FadeInput(value,'Yes','prevMortItem');
+}
+
+function secondEmployment()
+{
+    var value = $("select.secondEmployment").val();
+    FadeInput(value,'Yes','secondEmploymentItem');
+}
+
+function existingMort()
+{
+    var value = $("select.existingMortValue").val();
+    FadeInput(value,'Yes','existingMort');    
+    FadeInput(value,'No','noexistingMortItem');
+    
+    if(value == 'Yes')
+    {
+        FadeInput('','No','prevMortItem');
+    }
+    else
+    {
+        prevMort();
+    }
+}
+
+$(document).ready(function() { 
+setUpOut();
+
+$(".finSaving").change(CalcSaving);
+
+$(".budgetItem").change(CalcBudget);
+
+function CalcBudget()
+{
+    var tot = 0;
+    $(".budgetItem").each(function(index) {
+         tot+=GetFloatValue($(this).val());    
+     });
+    $("#budgetTotal").text('£' + tot.formatMoney(2, '.', ','));
+}
+
+function CalcSaving()
+{
+    var tot = 0;
+    $(".finSaving").each(function(index) {
+         tot+=GetFloatValue($(this).val());    
+     });
+    $("#finTotalSaving").text('£' + tot.formatMoney(2, '.', ','));
+}
+
+function HomeCirc()
+{
+    var value = $("select.homeCirc").val();
+    
+    if(value == 'Council Tenant')
+    {
+        FadeInput('','','monthlyRentalItem');
+        FadeInput('','No','ownSellingItem');
+        var kend = $("select.ownSelling").data('kendoDropDownList');
+
+            kend .select(function (dataItem) {
+            
+            return dataItem.value === 'No';
+            });
+      
+    }
+    else if(value == 'Joint Owner')
+    {
+        FadeInput('','No','monthlyRentalItem');
+        FadeInput('','','ownSellingItem');
+        var kend = $("select.ownSelling").data('kendoDropDownList');
+
+            kend .select(function (dataItem) {
+            
+            return dataItem.value === 'Yes';
+            });
+    }
+    else if(value == 'Owner Occupier')
+    {
+        FadeInput('','No','monthlyRentalItem');
+        FadeInput('','','ownSellingItem');
+    }
+    else if(value == '')
+    {
+        FadeInput('','No','monthlyRentalItem');
+        FadeInput('','No','ownSellingItem');
+    }
+    else
+    {
+        FadeInput('','','monthlyRentalItem');
+        FadeInput('','No','ownSellingItem');
+    }
+    
+    
+    
+       
+}
+
+CalcSaving();
+CalcBudget();
+secondEmployment();
+existingMort();
+prevMort();
+credArrears();
+credCCJ();
+credWorse();
+credBankrupt();
+credDefault();
+credIVAWorse();
+credRefused();
+credRefused1();
+secondEmployment();
+existingMort();
+prevMort();
+/*ownSelling();*/
+HomeCirc();
+
+
+$("select.homeCirc").change(HomeCirc);
+$("select.employmentType").change(updateEmploymentType);
+$("select.employmentType2").change(updateEmploymentType2);
+$("select.employmentHasOtherIncome").change(updateOtherIncome);
+$("select.employmentStatus").change(updateEmploymentStatus);
+$("select.nameTitle").change(updateTitle);
+$("select.ownOther").change(otherCirc);
+$("select.ownRentSub").change(ownRentSub);
+/*$("select.ownSelling").change(ownSelling);*/
+$("select.ownMortSub").change(ownMortSub);
+$("select.credArrears").change(credArrears);
+$("select.credWorse").change(credWorse);
+$("select.credCCJ").change(credCCJ);
+$("select.credBankrupt").change(credBankrupt);
+$("select.credDefault").change(credDefault);
+$("select.credIVAWorse").change(credIVAWorse);
+$("select.credRefused").change(credRefused);
+$("select.credRefused1").change(credRefused1);
+$("select.secondEmployment").change(secondEmployment);
+$("select.existingMortValue").change(existingMort);
+$("select.prevMort").change(prevMort);
+
+
+checkAddress();
+checkPAddress();
+checkPPAddress();
+
+var now = new Date();
+var startYear=now.getFullYear()-100;
+var endYear=now.getFullYear();
+var optionsString=''; 
+if(startYear<endYear){
+    for(i=startYear;i<endYear+1;i++){
+        optionsString += "<option value=\""+i+"\">"+i+"</option>";
+       
+    } 
+    $('#calYearPicker').html(optionsString);
+} 
+//$('#sidebarDiv #hideMyParent').parent().parent().hide();
+});
+</script>
+
+
+<apex:outputPanel rendered="{!IsCompleted}">
+<script>
+//SetReadOnly();
+
+</script>
+</apex:outputPanel>
+
+
+  </apex:form>
+  </body>
+
+</apex:page>

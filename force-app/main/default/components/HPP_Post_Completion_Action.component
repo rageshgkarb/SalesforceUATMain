@@ -1,0 +1,462 @@
+<apex:component controller="HPPPostCompletionActionController">
+<apex:attribute assignTo="{!ParentOpportunityId}" name="OppId" type="ID" description="The Id of the parent opportuntiy" required="true"/>
+
+
+<!--
+    <apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.11/angular.min.js"/>
+<apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.11/angular-animate.min.js"/>
+<apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.11/angular-sanitize.js"/>
+<apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular-messages.js"/>
+
+
+       <apex:stylesheet value="{!URLFOR($Resource.CAA_Includes, '/css/css.css')}"/>
+    
+    <apex:stylesheet value="{!URLFOR($Resource.CAA_Includes, '/css/wait.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.CAA_Includes, '/css/structure.css')}"/>
+
+
+    <apex:includeScript value="{!URLFOR($Resource.HPP_Includes, '/js/app/app.js')}"  />
+        <apex:includeScript value="{!URLFOR($Resource.HPP_Includes, '/js/controller/controller_core.js')}"  />
+        <apex:includeScript value="{!URLFOR($Resource.HPP_Includes, '/js/service/service_messagebroker.js')}"  />
+        <apex:includeScript value="{!URLFOR($Resource.HPP_Includes, '/js/service/service_parameters.js')}"  />
+        <apex:includeScript value="{!URLFOR($Resource.HPP_Includes, '/js/service/service_application.js')}"  />
+
+-->
+
+<script>
+  // angular.module("demo",[]);
+
+
+    angular.module("hppApp").controller("ProdSwitchController", ["$scope","$sce","servicePage","$window","serviceApplication",
+         function($scope,$sce,servicePage,$window,serviceApplication) {
+    
+    
+        $scope.ShowWarning = function()
+        {
+            if(!$scope.SwitchDate) return false;
+            
+            var date1 = $scope.SwitchDate;
+            var date2 = $scope.Data.SuggestedSwitchDate;
+            
+            
+            var ukDate1 = new Date(date1.split('/')[2], date1.split('/')[1] - 1, date1.split('/')[0]);
+            var ukDate2 = new Date(date2.split('/')[2], date2.split('/')[1] - 1, date2.split('/')[0]);
+            
+            return  ukDate1 < ukDate2;
+        }
+        
+        $scope.SwitchDateInThePast = function()
+        {
+            if(!$scope.SwitchDate) return false;
+            
+            var SwitchDate = new Date($scope.SwitchDate.split('/')[2], $scope.SwitchDate.split('/')[1] - 1, $scope.SwitchDate.split('/')[0]);
+            
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth(); //January is 0!
+            var yyyy = today.getFullYear();
+            
+            var todayDate = new Date(yyyy,mm,dd,0,0,0,0);
+            
+            return SwitchDate <  todayDate;
+            
+        }
+        
+    
+        $scope.GetData = function()
+        {
+            if(!$scope.OppId) return;
+        
+            servicePage.GetData($scope.OppId)
+                    .then(
+                        function(result){                        
+                            $scope.Data= result;    
+                            
+                            $scope.SwitchDate = result.SuggestedSwitchDate ;
+                            
+                            if(result.IsBTL)
+                            {
+                                $scope.Data.Advice = 'No';
+                            }                
+                        },
+                        function(error){
+                            
+                        }             
+                    ); 
+        }
+        
+        $scope.StartSwitch = function()
+        {
+            if(!$scope.OppId || !$scope.Data.PropertyValue || !$scope.Data.Advice || !$scope.SwitchDate) return;
+            serviceApplication.LoadShow('Processing...');
+        
+            servicePage.StartSwitch($scope.OppId,$scope.Data.NewMarketValue, $scope.Data.Advice, $scope.SwitchDate)
+                    .then(
+                        function(result){                        
+                            $scope.StartResponse= result; 
+                            
+                            $window.location.href = result;
+                                               
+                        },
+                        function(error){
+                            serviceApplication.LoadHide(true);
+                        }             
+                    ); 
+        }
+    
+    }]);
+    
+    angular.module("hppApp").service('servicePage', ['$q', '$rootScope', function ($q, $rootScope) {
+       this.GetData= function(id)
+        {
+            var deferred = $q.defer();
+            Visualforce.remoting.timeout = 120000;
+            Visualforce.remoting.escape= false;
+                HPPPostCompletionActionController.GetData(id,function(result, event){
+                    if(event.status){
+                        deferred.resolve(result);
+                    }
+                    else {
+                        deferred.reject(event);
+                    }     
+                },{ buffer: false, escape: false, timeout: 120000} );
+                return deferred.promise;
+        }        
+        
+        this.StartSwitch= function(id,value,advice, date)
+        {
+            var deferred = $q.defer();
+            Visualforce.remoting.timeout = 120000;
+            Visualforce.remoting.escape= false;
+                HPPPostCompletionActionController.StartSwitch(id,value,advice,date,function(result, event){
+                    if(event.status){
+                        deferred.resolve(result);
+                    }
+                    else {
+                        deferred.reject(event);
+                    }     
+                },{ buffer: false, escape: false, timeout: 120000} );
+                return deferred.promise;
+        }
+        
+        }]);
+    
+    
+
+</script>
+<apex:includeScript value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/js/kendo.engage_2015_1_429.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/js/cultures/kendo.culture.en-GB.min.js')}"/>
+      <!--  
+       <apex:stylesheet value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/styles/kendo.common.min.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/styles/kendo.material.min.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/styles/kendo.dataviz.min.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/styles/kendo.dataviz.material.min.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/styles/kendo.material.mobile.min.css')}"/>
+-->
+
+<style>
+.btn-default{
+    padding:10px !important;
+    font-weight: normal !important;
+    background-color: rgb(179,153,93) !important;
+    color: rgb(255,255,255) !important;
+    background-image: none !important;
+    border:none !important;
+    font-size:12px !important;
+}
+
+body{
+    padding-top:0px;
+    margin-top:0px;
+}
+
+.btn-default:hover{
+    background-color: #777 !important;
+    background-image: none !important;
+    border:none !important;
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
+
+.k-header{
+    background-color: rgb(179,153,93) !important;
+}
+</style>
+
+
+
+<div style="margin-top:20px;" ng-app="hppApp">
+    <div ng-controller="controllerCore">
+
+
+    <div class="SectionTitle ">Post completion actions</div>
+    
+    <div class="ng-cloak"  ng-controller="ProdSwitchController" ng-init="OppId='{!ParentOpportunityId }'; GetData();">
+        <div>
+            
+            <div ng-hide="Data" class="row">
+                <div class="col-sm-12">
+                    <label><i class="fa fa-spinner fa-spin fa-lg fa-fw"></i> Fetching Indexed Property Value from EBS</label>
+                </div>
+            </div>
+            
+           <div ng-show="false">
+           {{Data}}
+           </div>
+           
+           
+           <button type="button" ng-show="Data.OpenItems.length == 0 && !HideButton"  class="btn btn-default" ng-click="NewProductSwitch= true;HideButton=true;">Create product switch</button>
+           
+           
+           <div ng-show="Data.OpenItems.length > 0">
+            There is already a product switch in progress
+            
+            <table class="table">
+            <thead>
+                <tr>
+                    <th>Continue</th>
+                    <th>Post completion action</th>
+                    <th>Opportuntiy</th>
+                    <th>Staus</th>
+                </tr>
+            </thead>
+            
+            
+            <tbody>
+                <tr ng-repeat="item in Data.OpenItems">
+                    <td><a href="/apex/CAA_Continue?id={{item.OppId}}" >Continue Action</a></td>               
+                    <td><a href="/{{item.ID}}" target="_blank">{{item.Action}} - {{item.Name}}</a></td>
+                    <td><a href="/{{item.OppId}}" target="_blank">{{item.OpportunityName}}</a></td>
+                    <td>{{item.Status}}</td>
+                </tr>
+            </tbody>
+            </table>
+            
+            
+        </div>
+           
+           
+           <div ng-show="NewProductSwitch">
+           <div class="SectionTitle">Product Switch</div>
+            <div>
+                <div class="row">
+                    <div class="col-sm-4 ">
+                        <label>Current Product</label>
+                    </div>
+                    <div class="col-sm-8">
+                        {{Data.ProductName}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4 ">
+                        <label>Expiry Date</label>
+                    </div>
+                    <div class="col-sm-8">
+                        {{Data.ExpiryDate }}
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label>Account</label>
+                    </div>
+                    <div class="col-sm-8">
+                        {{Data.Account}}
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label>Balance</label>
+                    </div>
+                    <div class="col-sm-8">
+                        £{{Data.Balance | number:2}}
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label>Current Payment</label>
+                    </div>
+                    <div class="col-sm-8">
+                        £{{Data.CurrentRepayment | number:2}}
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label>Remaining Term</label>
+                    </div>
+                    <div class="col-sm-8">
+                        {{Data.RemainingTerm}}
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label>Property Value (Draw down)</label>
+                    </div>
+                    <div class="col-sm-8">
+                        £{{Data.PropertyValue| number:2}}                    
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label>Property Value (Estimated)</label>
+                    </div>
+                    <div class="col-sm-8">
+                        £{{Data.FTVValue | number:2}}                     
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label>Estimated FTV</label>
+                    </div>
+                    <div class="col-sm-8">                                     
+                        {{Data.FTV| number:2}}%
+                    </div>
+                </div>
+                
+                <div class="row" style="margin-bottom:10px;">
+                    <div class="col-sm-4">
+                        <label>Property Value for switch</label>
+                    </div>
+                    <div class="col-sm-8">                                     
+                        <input type="currency" ng-model="Data.NewMarketValue" class="form-control" style="max-width:150px;" />
+                    </div>
+                </div>
+                
+                
+                <div class="row" ng-show="Data.DaysTillExpiry > 0">
+                    <div class="col-sm-4">
+                        <label>Days until product expiry</label>
+                    </div>
+                    <div class="col-sm-8">                                     
+                        {{Data.DaysTillExpiry}}
+                    </div>
+                </div>
+                
+                <div class="row" ng-show="Data.DaysTillExpiry < 0">
+                    <div class="col-sm-4">
+                        <label>Days since product expiry</label>
+                    </div>
+                    <div class="col-sm-8">                                     
+                        {{Data.DaysTillExpiry*-1}}
+                    </div>
+                </div>
+             
+           
+                <div class="row" ng-show="ShowWarning() && !SwitchDateInThePast()">
+                    <div class="col-sm-6">
+                    <div class="alert alert-danger" style="margin-bottom:0px;margin-top:5px;">
+                    Product switch date will result in an admin fee
+                    </div>
+                    </div>
+                </div>
+                
+                <div class="row" ng-show="SwitchDateInThePast()">
+                    <div class="col-sm-6">
+                    <div class="alert alert-danger" style="margin-bottom:0px;margin-top:5px;">
+                    Product switch date can not be in the past
+                    </div>
+                    </div>
+                </div>
+                
+                <div class="row" style="padding-top:10px;">
+                    <div class="col-sm-4">
+                        <label>Product switch date</label>
+                    </div>
+                    <div class="col-sm-8">
+                        <input kendo-date-picker="kendo-date-picker" ng-model="SwitchDate" 
+            
+             k-format="'dd/MM/yyyy'"
+             style="max-width: 150px;" />
+                    </div>
+                </div>
+                
+                <div class="row" ng-hide="Data.IsBTL">
+                    <div class="col-sm-4">
+                        <label>Does the customer require advice?</label>
+                    </div>
+                    <div class="col-sm-8">                                     
+                        <label class="radio-inline"><input name="optAdvice" ng-model="Data.Advice" type="radio" value="Yes" />Yes</label> 
+                        <label class="radio-inline"><input name="optAdvice" ng-model="Data.Advice" type="radio" value="No" />No</label>
+                    </div>
+                </div>
+                
+                
+                
+                
+                 <button type="button" ng-click="StartSwitch()" class="btn btn-default" ng-show="Data.PropertyValue && Data.Advice && SwitchDate && !SwitchDateInThePast()">Start product switch</button>
+            
+            </div>
+            
+        </div>
+           
+           
+           
+           
+           
+           
+           
+           <div ng-show="Data.CompletedItems.length > 0 " style="padding-top:40px;">
+           <div class="SectionTitle">Completed Actions</div>
+           
+           <table class="table">
+               <thead>
+                   <tr>
+                       <th>Action</th>
+                       <th>Name</th>
+                       <th>Opportunity</th>
+                       <th>Status</th>
+                   </tr>
+                   
+               </thead>
+              <tbody> 
+           <tr ng-repeat="item in Data.CompletedItems">
+          
+             
+               <td>{{item.Action}}</td>
+               <td><a href="{{item.ID}}">{{item.Name}}</a></td>
+               <td><a href="{{item.OpportunityId}}" target="_blank">{{item.OpportunityName}}</a></td>
+               <td>{{item.Status}}</td>
+           </tr>
+           </tbody>
+           </table>
+           </div>
+           
+           
+        </div>
+    
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    </div>
+    
+    
+    <!-- Load Screen 
+        <div class="regionLoad" ng-cloak="ng-cloak" ng-show="Load" style="box-sizing: content-box !important; -webkit-box-sizing: content-box !important;">
+            <div class="regionWaitBackground" style="box-sizing: content-box !important; -webkit-box-sizing: content-box !important;"></div>
+            <div class="regionWaitMessage text-center" style="box-sizing: content-box !important; -webkit-box-sizing: content-box !important;">
+                <div class="regionSpinner">
+                </div>
+                <div class="regionTitle">
+                    Please wait
+                </div>
+            </div>
+        </div>
+    -->
+    </div>
+</div>    
+</apex:component>

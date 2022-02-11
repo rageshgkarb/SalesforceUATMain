@@ -1,0 +1,58 @@
+<apex:page sidebar="false" showHeader="false" standardStylesheets="false" controller="SecureMessageCount" action="{!Setup}">
+
+<style>
+    .numberCircleMsg {
+    border-radius: 50%;
+    behavior: url(PIE.htc);
+    display: inline-block;
+    width: 20px;
+    height: 18px;
+    padding: 4px;
+    background: rgb(179,153,93);
+    /* border: 1px solid #666; */
+    color: #fff;
+    text-align: center;
+    font: 14px Arial, sans-serif;
+}
+
+body{
+    margin:0px;
+}
+
+a{
+    text-decoration:none;
+ 
+    font-family:"Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+    color: rgb(102, 102, 102);
+    
+}
+
+a:hover{
+    text-decoration:underline;
+    color:rgb(179,153,93);
+    cursor:pointer;
+}
+
+</style>
+
+<script>
+    function refresh() {   
+        window.location.reload(true);      
+        setTimeout(refresh, 10000);
+    }
+     
+     setTimeout(refresh, 10000);
+
+</script>
+
+<apex:outputPanel rendered="{!NewMessages > 0}">
+    <a onclick="window.top.location.href = 'https://online.alrayanbank.co.uk/online/aspscripts/ProxyExternalPageSecureMessage.asp';">Messages <div class="numberCircleMsg ng-binding">{!NewMessages}</div> </a>
+  
+  
+  
+  
+  
+</apex:outputPanel>
+
+   
+</apex:page>

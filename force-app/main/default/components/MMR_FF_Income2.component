@@ -1,0 +1,978 @@
+<apex:component >
+    <apex:attribute name="Applicant" type="Account" description="" />
+    <apex:attribute name="title" type="String" description="" />
+    <apex:attribute name="appNo" type="String" description="" />
+    <apex:attribute name="type" type="String" description="" /><!-- C0644 Applicant / Director -->
+    <apex:attribute name="typeOfOpportunity" type="String" description="" /><!--Case: 01938975; Customer overseas credit policy -->
+    
+    <div class="AppWidth col-md-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h2> {!type} {!appNo} - {!Applicant.Name}</h2>
+            </div>
+            <div class="panel-body">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        Primary Employment
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label class="form-label">Employment type</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputfield required="true" styleclass="form-control employmentType1{!AppNo}" value="{!Applicant.Employment_Type__c}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row employmentHide1{!AppNo}">
+                                <div class="form-group employmentOther{!AppNo}" style="display:none;">
+                                    <div class="col-sm-6">
+                                        <label>Other Employment type</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputfield styleclass="form-control" value="{!Applicant.Other_Employment_Type__c}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label class="form-label">Employment status</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputfield styleclass="form-control" value="{!Applicant.Employment_Status__c}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group employmentHide1{!AppNo}">
+                                    <div class="col-sm-6">
+                                        <label>Occupation</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputfield styleclass="form-control" value="{!Applicant.Occupation__c}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group employmentHide1{!AppNo}">
+                                    <div class="col-sm-6">
+                                        <label>Nature of Employment / Your Business</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputfield required="true" styleclass="form-control employmentNatoB1{!AppNo}" value="{!Applicant.Nature_of_Employers_Your_Business__c}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row employmentHide1{!AppNo}">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Date Employment Commenced</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputfield styleclass="form-control" value="{!Applicant.Date_Employment_Commenced__c}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- start panel self employed -->
+                            <div class="panel panel-info selfEmpItem1{!AppNo}">
+                                <div class="panel-heading">Self Employed</div>
+                                <div class="panel-body">
+                                    <div class="col-sm-12">
+                                        <div class="row employmentHide1{!AppNo}">
+                                            <div class="form-group selfEmpItem1{!AppNo}">
+                                                <div class="col-sm-6">
+                                                    <label>If self employed, please state the percentage of the business you own</label>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <apex:inputfield styleclass="form-control" value="{!Applicant.Share_holding_in_the_business__c}" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row employmentHide1{!AppNo}">
+                                            <div class="form-group selfEmpItem1{!AppNo}">
+                                                <div class="col-sm-6">
+                                                    <label>If self employed, please state when you became self-employed</label>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <apex:inputfield styleclass="form-control" value="{!Applicant.When_was_the_business_established__c}" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end panel self employed -->
+
+                            <apex:outputpanel rendered="{!type!='Director'}">
+
+                                <div class="row">
+                                    <div class="form-group employmentHide1{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>Employer Name</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Employer_Name__c}" id="emp2Name" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group employmentHide1{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>Employer Country</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Employer_Country__c}" id="emp2Country" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group employmentHide1{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>Employer Postcode</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Employer_Post_Code__c}" id="emp2PCode" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group employmentHide1{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>Employer Address Line 1</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Employer_Address_Line_1__c}" id="emp2addr1" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group employmentHide1{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>Employer Address Line 2</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Employer_Address_Line_2__c}" id="emp2addr2" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group employmentHide1{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>Employer Address Line 3</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Employer_Address_Line_3__c}" id="emp2addr3" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group employmentHide1{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>Employer Address Line 4</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Employer_Address_Line_4__c}" id="emp2addr4" />
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="form-group employmentHide1{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>Gross annual salary</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Gross_Annual_Income__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group employmentHide1{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>Net monthly income</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Net_Monthly_Income__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group employmentHide1{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>Payments above basic salary</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control nonIncomeSelect1{!AppNo}" value="{!Applicant.Non_standard_income__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row nonIncome1{!AppNo}">
+                                    <div class="form-group employmentHide1{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>Regular bonus (annual)</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Regular_Bonus__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row nonIncome1{!AppNo}">
+                                    <div class="form-group employmentHide1{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>Guaranteed commission (annual)</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Guaranteed_Commission__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row nonIncome1{!AppNo}">
+                                    <div class="form-group employmentHide1{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>Regular commission (annual)</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Regular_Commission__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row nonIncome1{!AppNo}">
+                                    <div class="form-group employmentHide1{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>Guaranteed overtime (annual)</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Guaranteed_Overtime__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row nonIncome1{!AppNo}">
+                                    <div class="form-group employmentHide1{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>Regular overtime (annual)</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Regular_Overtime__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row nonIncome1{!AppNo}">
+                                    <div class="form-group employmentHide1{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>Guaranteed shift allowance (annual)</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Guaranteed_Shift_Allowance__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row nonIncome1{!AppNo}">
+                                    <div class="form-group employmentHide1{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>Regular shift allowance (annual))</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Regular_Shift_Allowance__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row nonIncome1{!AppNo}">
+                                    <div class="form-group employmentHide1{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>Car allowance (annual)</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Car_Allowance__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row nonIncome1{!AppNo}">
+                                    <div class="form-group employmentHide1{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>Large town allowance (annual)</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Large_Town_Allowance__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group employmentHide1{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>How do you receive your salary</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.How_do_you_receive_your_salary__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group employmentHide1{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>How often are you paid</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.How_often_are_you_paid__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group employmentHide1{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>Do you have a second employment</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control secondEmployment{!AppNo}" value="{!Applicant.Has_Second_Employment__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </apex:outputpanel>
+
+                        </div>
+                    </div>
+                </div>
+
+                <apex:outputpanel rendered="{!type!='Director'}">
+                    <div class="panel panel-info secondEmploymentItem{!AppNo}">
+                        <div class="panel-heading">
+                            Secondary Employment
+                        </div>
+                        <div class="panel-body">
+                            <div class="col-sm-12">
+                                <div class="row">
+
+
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label class="form-label">Employment type</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control employmentType2{!AppNo}" value="{!Applicant.Employment_Type_2__c}" />
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Other Employment type</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Other_Employment_Type2__c}" />
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
+
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label class="form-label">Employment status</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Employment_status_2__c}" />
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Occupation</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Occupation_2__c}" />
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
+
+                                    <div class="form-group selfEmpItem2{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label class="form-label">Nature of Business</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Nature_of_Business_2__c}" required="false" />
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="form-group selfEmpItem2{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>Date Employment Commenced</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Date_Employment_Commenced_2__c}" />
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group selfEmpItem2{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>If self employed, please state the percentage of the business you own</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Share_holding_in_the_business_c__c}" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group selfEmpItem2{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>If self employed, please state when you became self-employed</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.When_was_the_business_established2__c}" />
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Employer Name</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Employers_Name__c}" id="emp2sName" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Employer Country</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Employers_Country__c}" id="emp2sCountry" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Employer Postcode</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Employers_Post_Code__c}" id="emp2sPCode" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Employer Address Line 1</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Employers_Address_Line_1__c}" id="emp2saddr1" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Employer Address Line 2</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Employers_Address_Line_2__c}" id="emp2saddr2" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Employer Address Line 3</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Employers_Address_Line_3__c}" id="emp2saddr3" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Employer Address Line 4</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Employers_Address_Line_4__c}" id="emp2saddr4" />
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Gross annual salary</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Gross_Annual_Income_2__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Net monthly income</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Net_Monthly_Income_2__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Guaranteed bonus (annual)</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Guaranteed_bonus_2__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Regular bonus (annual</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Regular_Bonus2__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Guaranteed commission (annual)</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Guaranteed_Commission2__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Regular commission (annual)</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Regular_Commission2__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Guaranteed overtime (annual)</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Guaranteed_Overtime2__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Regular overtime (annual)</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Regular_Overtime2__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Guaranteed shift allowance (annual)</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Guaranteed_Shift_Allowance2__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Regular shift allowance (annual))</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Regular_Shift_Allowance2__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Car allowance (annual)</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Car_Allowance2__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Large town allowance (annual)</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Large_Town_Allowance2__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>How do you receive your salary</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.How_do_you_receive_your_salary_2__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>How often are you paid</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.How_often_are_you_paid2__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </apex:outputpanel>
+                <apex:outputpanel rendered="{!type!='Director'}">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            Income Details
+                        </div>
+                        <div class="panel-body">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Do you have another income eg pension</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield required="true" styleclass="form-control employmentHasOtherIncome{!AppNo}" value="{!Applicant.Do_you_have_another_income_eg_pension__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group employmentOtherIncome{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>Source of income</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Source_of_income__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group employmentOtherIncome{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>If yes to other income please give value</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.If_yes_to_other_income_please_give_value__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group employmentRetired{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>If retired, what is annual pension</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.If_retired_what_is_annual_pension__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Net monthly income</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Net_Monthly_Income__c }" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group selfEmployed{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>Do you have 3 years of accounts</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Do_you_have_2_years_of_accounts__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group selfEmployed{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>Do you have 3 years of self-assessment tax forms</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Do_you_have_3_yrs_of_self_ass_tax_form__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group selfEmployed{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>Year 1 gross dividend income</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Year_1_Gross_Dividend_Income__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group selfEmployed{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>Year 1 net profit</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Year_1_Net_Profit__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group selfEmployed{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>Year 2 gross dividend income</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Year_2_Gross_Dividend_Income__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group selfEmployed{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>Year 2 net profit</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Year_2_Net_Profit__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group selfEmployed{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>Year 3 gross dividend income</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Year_3_Gross_Dividend_Income__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group selfEmployed{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>Year 3 net profit</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Year_3_Net_Profit__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group selfEmployed{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>Accountant Name</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Accountant_name__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group selfEmployed{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>Accountant Firm</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Accountant_Firm__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group selfEmployed{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>Accountant Street</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Accountant_Street__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group selfEmployed{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>Accountant Town/City</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Accountant_Town_City__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group selfEmployed{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>Accountant Postcode</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Accountant_PostCode__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group selfEmployed{!AppNo}">
+                                        <div class="col-sm-6">
+                                            <label>Accountant Contact No</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Accountant_Phone__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Additional employment information</label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <apex:inputfield styleclass="form-control" value="{!Applicant.Additional_employment_information__c}" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </apex:outputpanel>
+                <!--Case: 01938975; Customer overseas credit policy ;Start-->
+                <apex:outputPanel rendered="{!typeOfOpportunity =='Home Purchase Plan Premier'}">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        Overseas Credit policy Details
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Credit Policy Wealth Status</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputfield required="true" styleclass="form-control" value="{!Applicant.Credit_Policy_Wealth_Status__c}" />
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label>Is the customer an expat</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <apex:inputfield required="true" id="CustExpat" styleclass="form-control customerExpat{!AppNo}" value="{!Applicant.Is_the_customer_an_expat__c}">
+                                        
+                                        </apex:inputfield>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            
+                            <!--<div class="row">
+                                <div class="form-group ReturnBack{!AppNo}">
+                                    <div class="col-sm-6">
+                                        <label>returning to UK in the next 5 years?</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class = "requiredInput">
+                                        <div class = "requiredBlock"></div>
+                                            <apex:inputfield id="ReturnInNextFive" styleclass="form-control ReturnInNextFiveYear{!AppNo}" value="{!Applicant.Is_the_customer_going_to_return_in_the_n__c}"/>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            
+                            <div class="row"> 
+                                <div class="form-group customerAsset{!AppNo}">
+                                    <div class="col-sm-6">
+                                        <label>What is the customer asset value? </label>
+                                    </div>
+                                    <div class="col-sm-6"> 
+                                    <div class = "requiredInput">
+                                        <div class = "requiredBlock"></div>
+                                            <apex:inputField id="CustomerAssetVal" styleclass="form-control CustomerAssetValue{!AppNo}" value="{!Applicant.Customer_Asset_Value__c}"/>
+                                        </div>  
+                                    </div>
+                                </div> 
+                            </div>
+                            
+                            <div class="row">
+                                <div class="form-group creditPolicyCustomerProfile{!AppNo}">
+                                    <div class="col-sm-6">
+                                        <label>Customer profile Type</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                         <div class = "requiredInput">
+                                         <div class = "requiredBlock"></div>
+                                             <apex:inputfield id="Customertypeprofile" styleclass="form-control CustomerType{!AppNo}" value="{!Applicant.Customer_profile_Type__c}" />
+                                         </div>
+                                    </div>
+                                </div>
+                            </div>-->
+                            
+                            </div>
+                        </div>                  
+                </div>
+                </apex:outputpanel>
+               <!--Case: 01938975; Customer overseas credit policy ;End-->
+            </div>
+        </div>
+    </div>
+</apex:component>

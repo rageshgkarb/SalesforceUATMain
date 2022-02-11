@@ -1,0 +1,340 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 01-10-2022
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+  Modifications Log 
+  Ver   Date         Author                               Modification
+  1.0   04-24-2021   ChangeMeIn@UserSettingsUnder.SFDoc   Initial Version
+-->
+<template>
+  
+  <div class="slds-card">
+    <div id="action" class="slds-box slds-text-heading_small">
+      <lightning-icon icon-name="standard:question_feed" alternative-text="Approved" title="Approved"></lightning-icon>
+      <b style="padding-left: 8px;">Section Details</b>
+
+      <lightning-layout vertical-align="spread" flexibility="auto">
+
+        <lightning-layout-item class="strong-text" flexibility="auto" size="4" padding="around-small">      
+          
+          <lightning-input  class="strong-text" type="text" label="Section Name"
+          value={sectionName} name={form} onchange={sectionNameHandler}></lightning-input>
+          
+      
+
+        </lightning-layout-item>
+  
+        <lightning-layout-item class="strong-text" flexibility="auto" size="4" padding="around-small">
+          
+        <lightning-input  class="strong-text" type="text" label="Section Order"
+          value={sectionOrder} name={form} onchange={sectionOrderHandler}></lightning-input>           
+        </lightning-layout-item>
+
+       
+          <div style="margin-top: 20px;">
+             <b style="font-size: 12px;color:var(--lwc-colorTextLabel,rgb(107, 109, 112))">Critical?</b><lightning-input   class="strong-text"  type="checkbox" 
+                  value={showCritical} checked={showCritical} name={index} onchange={secCriticalValChange}></lightning-input>
+          </div>
+        
+          <template if:true={showCritical}>
+
+            <td>
+              <div style="margin-top: 16px;margin-left: 15px;">
+                <lightning-input step="1" class="strong-text" type="text" label="Critical Option"
+                 value={sectionCriticalVal} name={index} onchange={changeSecCriticalValue}></lightning-input> 
+              </div>
+            </td>
+
+            
+           <td>
+            <div style="margin-top: 16px;margin-left: 15px;margin-top: 37px;">
+              
+                <lightning-button variant="brand" class="slds-m-left_x-small" name={index}  label="Add Conditions" title="Conditions"
+                    onclick={openRanking}>            
+                    </lightning-button>
+           
+            </div>
+          </td>
+          </template>
+
+
+
+      </lightning-layout>
+
+      <template if:true={showSecCriteria}>
+            <!-- Modal/Popup Box LWC starts here -->
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <!-- Modal/Popup Box LWC header here -->
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeRanking}>
+                            <lightning-icon icon-name="utility:close"
+                                alternative-text="close"
+                                variant="inverse"
+                                name={index}
+                                size="small" ></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 class="slds-text-heading_medium slds-hyphenate">Result Details</h2>
+                        
+                    </header>
+                    <!-- Modal/Popup Box LWC body starts here -->
+                    <div class="slds-modal__content slds-p-around_medium">
+                      
+                       <template for:each={rankingDetails} for:item="opt" for:index="index">
+                        <lightning-layout horizontal-align="space" key={opt}>
+                          <lightning-layout-item padding="around-small" >
+                            <div class="custom-box-width" style="width:200px">
+                              
+                              <lightning-input class="strong-text"  type="text" label="Score to reduce"
+                                name={index}  value={opt.value} onchange={getResultValue}></lightning-input>                        
+                            </div>
+                          </lightning-layout-item>
+                          <lightning-layout-item padding="around-small" >
+                            <div style="width: 268px;border : 1px solid #ffbf00;padding:10px;background-color:#FFFFFF;">
+                              <div> 		
+                                  <b>Number of Questions : {opt.minVal} - {opt.maxVal}</b>	
+                              </div>
+                              <div>
+                                
+                                <!--<span><b>{opt.min}<input type="range" min={opt.min} max={opt.max} value={opt.minVal} 
+                                      class="slider" id={index} name="minRange"
+                                      onchange={handleInput} style="width: 200px;font-weight: bold;"
+                                  />{opt.max}</b></span><br/>-->
+
+                                  <b>{opt.maxMin}<input type="range" min={opt.maxMin} max={opt.maxMax} value={opt.maxVal} 
+                                      class="slider" id={index} name="maxRange"
+                                      onchange={handleInput} style="width: 200px;font-weight: bold;"
+                                  />{opt.maxMax}</b>
+                              </div>
+                             <!-- <div style="text-align:right"> 	
+                                  	
+                                  <b>Range : {opt.minVal} - {opt.maxVal}</b>
+                              </div>-->
+                          </div>    
+                          </lightning-layout-item>
+                          
+                            <lightning-layout-item padding="around-small">
+                            
+                            <div class="custom-box" style="margin-top: 24px;">
+                                <template if:true={opt.showAdd}>
+                                    <lightning-icon 
+                                    size="x-small"
+                                    onclick={addRanking} 
+                                    icon-name="utility:new" 
+                                    alternative-text="Add Row" 
+                                    variant="error" 
+                                    style="cursor: pointer;"
+                                    title="Add Row"
+                                    id={index}>
+                                    </lightning-icon>
+                                </template>
+                               
+                                <template if:true={opt.showDel}>
+                           
+                                <lightning-icon 
+                                size="x-small"
+                                onclick={removeRanking} 
+                                icon-name="utility:delete" 
+                                alternative-text="Delete Row" 
+                                variant="error" 
+                                style="cursor: pointer;"
+                                title="Delete Row"
+                                id={index}>
+                                </lightning-icon>
+                                </template>
+      
+                            
+                              <!-- <lightning-icon icon-name="action:delete" style="margin-top: 13px;" name={index} value={indexc}  
+                              alternative-text="Delete Row" size="small" title="Delete Row" onclick={removeScoreRow}></lightning-icon>-->
+                            </div>
+                        </lightning-layout-item>
+                        </lightning-layout>
+                       </template>
+                    </div>
+                    <!-- Modal/Popup Box LWC footer starts here -->
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" onclick={closeRanking} name={index} title="Cancel">Cancel</button>
+                        <button class="slds-button slds-button_brand" onclick={closeRanking} name={index} title="OK">OK</button>
+                    </footer>
+                </div>
+              </section>
+              <div class="slds-backdrop slds-backdrop_open"></div>
+            </template>
+
+
+      
+
+      <b class="slds-align_absolute-center">
+        <lightning-button label="Add New Question" icon-name="utility:add" variant="brand"  onclick={addquestion}></lightning-button>
+      </b>
+    </div>
+    <template for:each={tempList} for:item="source" for:index="index">
+      <tr key={somekey}>
+      <td style="width: 5%;padding-left: 20px;" >
+        <div >
+          <lightning-input step="1" class="strong-text" type="number" label="Order"
+           value={source.form.Question_Number__c} name={index} onchange={changeQuestionNumber}></lightning-input> 
+        </div>
+      </td>
+
+      <td style="width: 16%;padding-left: 20px;" key={somekey}>
+        <div>
+          <lightning-textarea size="5" name={index} class="strong-text" label="Objective" onchange={changeCode} value={source.form.Objective__c}></lightning-textarea>
+        </div>
+      </td>
+
+      <td style="width: 16%;padding-left: 20px;" key={somekey}>
+        <div>
+          <lightning-textarea size="5" name={index} class="strong-text" label="Guide" onchange={changeGuide} value={source.form.Guide__c}></lightning-textarea>
+        </div>
+      </td>
+
+      <td style="width: 30%;padding-left: 20px;" key={somekey}>
+        <div>
+          <lightning-textarea size="5" name={index} class="strong-text" label="Question" onchange={changeQuestion} value={source.form.Question__c}></lightning-textarea>
+        </div>
+      </td>
+      <!--<template if:true={options}>  
+      <td style="width: 10%;padding-left: 20px; !important" key={somekey}>
+          
+        <div class="slds-combobox_container">
+            <lightning-combobox type="text" class="strong-text" name={index} label="Type of Answer"
+                  value={selectedValue} options={options} data-id="withdrawl" placeholder="Select One"
+                  onchange={onchangepicklistvalue}>
+                 </lightning-combobox>
+        </div>
+      </td>
+    </template> --> 
+           
+           
+           
+        <template if:false={source.showPickListField}>
+        <td style="width: 10%;padding-left: 20px;" key={somekey}>
+        <div>
+              <lightning-input step="1" class="strong-text"  type="number" label="Score"
+                  name="Score" value={source.form.Score__c}></lightning-input>
+          </div>
+        </td>
+      </template>
+            
+      <template if:true={source.showPickListField}>
+        <td style="width: 10%;padding-left: 20px;vertical-align:middle;" key={somekey}>
+          <div class="slds-align_absolute-center" >
+                <lightning-button variant="brand" class="slds-m-left_x-small" name={index}  label="Add/Edit Options" title="Options"
+                    onclick={openModal}>            
+                  </lightning-button>
+          </div>
+        </td>
+      </template>
+      <template if:true={source.showPopup}>
+        <!-- Modal/Popup Box LWC starts here -->
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <!-- Modal/Popup Box LWC header here -->
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                        <lightning-icon icon-name="utility:close"
+                            alternative-text="close"
+                            variant="inverse"
+                            name={index}
+                            size="small" ></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 class="slds-text-heading_medium slds-hyphenate">Assign Scores</h2>
+                    
+                </header>
+                <!-- Modal/Popup Box LWC body starts here -->
+                <div class="slds-modal__content slds-p-around_medium">
+                  <div class="slds-align_absolute-center"><lightning-button label="Add Option" name={index} icon-name="utility:add" icon-position="right" onclick={addScore} variant="brand"></lightning-button></div>
+                   <template for:each={source.optionScoreList} for:item="opt" for:index="indexc">
+                    <lightning-layout horizontal-align="space" key={index}>
+                      <!-- <lightning-layout-item padding="around-small" >
+                        <div class="custom-box-width" style="width:100px">
+                          <b>Is Critical Value:</b><br/>
+                          <lightning-input class="strong-text"  type="checkbox" 
+                            name={index} data-indexc={indexc} value={opt.isCriticalValue} checked={opt.isCriticalValue} onchange={getcriticalVal}></lightning-input>                        
+                        </div>
+                        </lightning-layout-item> -->
+                        
+                        <lightning-layout-item padding="around-small" >
+                        <div class="custom-box-width" style="width:300px">
+                          <lightning-input class="strong-text"  type="text" label="Option"
+                            name={index} data-indexc={indexc} value={opt.option} onchange={getOptionVal}></lightning-input>                        
+                        </div>
+                      </lightning-layout-item>
+                      <lightning-layout-item padding="around-small" >
+                        <div class="custom-box-width" style="width: 115px;">
+                         <lightning-input step="1" class="strong-text"  type="integer" label="Score"
+                         name={index} data-indexc={indexc} value={opt.score} onchange={getScoreVal}></lightning-input>
+                        </div>
+                      </lightning-layout-item>
+                      <lightning-layout-item padding="around-small">
+                        <div class="custom-box" style="margin-top: 24px;" >
+                          <lightning-icon 
+                          size="x-small"
+                          onclick={removeScoreRow} 
+                          name={index} 
+                          data-indexc={indexc}
+                          icon-name="utility:delete" 
+                          alternative-text="Delete Row" 
+                          variant="error" 
+                          style="cursor: pointer;"
+                          title="Delete Row">
+                        </lightning-icon>
+
+                        
+                          <!-- <lightning-icon icon-name="action:delete" style="margin-top: 13px;" name={index} value={indexc}  
+                          alternative-text="Delete Row" size="small" title="Delete Row" onclick={removeScoreRow}></lightning-icon>-->
+                        </div>
+                    </lightning-layout-item>
+                    </lightning-layout>
+                   </template>
+                </div>
+                <!-- Modal/Popup Box LWC footer starts here -->
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" onclick={closeModal} name={index} title="Cancel">Cancel</button>
+                    <button class="slds-button slds-button_brand" onclick={submitDetails} name={index} title="OK">OK</button>
+                </footer>
+            </div>
+          </section>
+          <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+        <td style="width: 4%;padding-left: 20px;" key={somekey}>
+        <div>
+           <b>Critical?</b><lightning-input   class="strong-text"  type="checkbox" 
+                value={source.form.Critical__c} checked={source.form.Critical__c} name={index} onchange={criticalValChange}></lightning-input>
+        </div>
+        </td>
+       <!-- <template if:true={source.showCriticalField}>
+        <td style={fieldStyle} key={somekey}>
+          <div >
+            <lightning-input step="1" class="strong-text" type="text" label="Critical Value"
+             value={source.form.Critical_Value__c} name={index} onchange={changeCriticalValue}></lightning-input> 
+          </div>
+        </td>
+        </template> -->
+        
+        <td style="width: 5%;vertical-align: middle;padding-left: 20px;" key={somekey}>
+          <div>
+            <lightning-icon 
+              size="x-small"
+              onclick={removeRow} 
+              icon-name="utility:delete" 
+              alternative-text="Delete rule" 
+              variant="error" 
+               name={index}
+              style="cursor: pointer;"
+              title="Delete rule">
+            </lightning-icon>
+          </div>
+        </td>
+      </tr>
+        </template> 
+      </div>
+
+
+
+</template>

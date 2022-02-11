@@ -1,0 +1,27 @@
+<apex:component layout="none">
+ 
+    <apex:attribute name="statement" 
+            description="The Knockout containerless statement to insert."
+            type="String"
+            required="false"
+    />
+    <apex:attribute name="close"
+            description="Flag that determines whether this is an opening or closing statement for Knockout."
+            type="Boolean"
+            required="false"
+            default="false"
+    />
+ 
+    <apex:componentBody >
+        <!--knockout opening tag-->
+        <apex:outputPanel layout="none" rendered="{!NOT(ISBLANK(statement))}">
+            <apex:outputText value="<" escape="false"/>!-- ko {!statement} --<apex:outputText value=">" escape="false"/>
+        </apex:outputPanel>
+        <!--knockout closing tag-->
+        <apex:outputPanel layout="none" rendered="{!close}">
+            <apex:outputText value="<" escape="false"/>!-- /ko --<apex:outputText value=">" escape="false"/>
+        </apex:outputPanel>
+ 
+    </apex:componentBody>
+ 
+</apex:component>

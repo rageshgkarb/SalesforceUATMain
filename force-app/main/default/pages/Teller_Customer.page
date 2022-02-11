@@ -1,0 +1,202 @@
+<apex:page applyBodyTag="false" showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false">
+	
+	<head>	
+		<!-- <c:Teller_Resource ></c:Teller_Resource> -->	
+		 <style>
+	        .greenBorder{
+	            border:solid 2px green;
+	        }
+	        .redBorder{
+	            border:solid 2px red;
+	        }
+	        
+	        .customerName{
+	            font-size:22px;
+	            font-weight:bold;
+	            color: #56688A;
+	        }
+	        
+	        .fieldLabel{
+	            color:#9FA9BD;
+	            font-size:14px;
+	        }
+	        
+	        .fieldData{
+	            color:#56688A;
+	            font-size:14px;
+	            font-weight: bold;
+	        }
+	        
+	        .fieldData p{
+	            margin: 0px;
+	        }
+	        
+	         .customerDetails .row{
+	            padding-top:20px;
+	        }
+	        
+	        .customerDetails hr{
+	            margin-top:7px;
+	            margin-bottom:0px;
+	        }
+	        
+	        .customerDetailsPane{
+	            background-color: #F3F6F9;
+	            border-left: solid 1px #C6CEDE;
+	            height:100%;
+	            margin-top: 35px;
+	        }
+	        
+	       .panelHeader{                
+	                 border: 1px solid #C6CEDE;
+	                padding:10px; 
+	                font-size:14px;
+	                font-weight:bold;
+	                background-color:#DFE4EE; 
+	                color:#657594; 
+	                -webkit-border-top-left-radius: 5px;
+					-webkit-border-top-right-radius: 5px;
+					-moz-border-radius-topleft: 5px;
+					-moz-border-radius-topright: 5px;
+					border-top-left-radius: 5px;
+					border-top-right-radius: 5px;                
+	                              
+	            }       
+        
+   		</style>
+
+
+	</head>
+	<body>
+		<div ng-controller="controllerCustomerDetails" ng-init="InitialiseCustomer()">
+
+			<div class="pageTitle">
+				<img class="btn_back" src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_back.png')}" ui-sref="customers"></img>
+				<span class="pageTitle">Customer: {{CustomerDetails.Salutation}} {{CustomerDetails.FirstName}} {{CustomerDetails.LastName}}</span>
+			</div>
+
+			<div ng-show="CustomerDetails.EBS_ID__c == null && CustomerLoaded" style="margin-top: 30px;" ng-cloak="ng-cloak">
+				<div class="alert alert-danger">
+					Customer does not have an EBS account.
+				</div>
+            </div>  
+
+			<div ng-show="CustomerDetails.EBS_ID__c != null && CustomerLoaded" ng-cloak="ng-cloak">
+				
+				<div class="col-sm-12 col-md-8" style="padding:20px;">										
+						
+
+							<div class="row" style="height:100%;">
+								<div class="col-sm-12 col-md-8" style="padding:10px;">
+									<div class="row">
+
+										<div class="col-sm-5 col-lg-4">
+											<div>
+												<a>
+													<img ng-src="{{ImageUrl}}" ng-class="imageClass" width="157" /><br/>
+												</a>
+											</div>
+											<p/>
+											<div>
+												<a>
+													<img ng-src="{{SignatureUrl}}" ng-class="imageClass" height="54" />
+												</a>
+											</div>
+										</div>
+
+										<div class="col-sm-7 col-md-6 col-lg-8 customerDetails" style="padding-left: 40px;">
+											<div class="customerName">
+												{{CustomerDetails.Salutation}} {{CustomerDetails.FirstName}} {{CustomerDetails.LastName}}
+											</div>
+											<div class="fieldData">
+												<span style="margin-right:20px;">{{CustomerDetails.EBS_ID__c}}</span> <span>{{CustomerDetails.Date_of_Birth__c}}</span>
+												</div>
+												<hr/>
+												<div class="row">
+													<div class="col-sm-6">
+														<div class="fieldLabel">
+															Address
+														</div>
+														<div class="fieldData">
+															<p>{{CustomerDetails.BillingStreet}}</p>
+															<p>{{CustomerDetails.Customer_Address_District__c}}</p>
+															<p>{{CustomerDetails.BillingPostalCode}}</p>
+														</div>
+													</div>
+													
+													<div class="col-sm-6">
+														<div class="fieldLabel">
+															Birth
+														</div>
+														<div class="fieldData">
+															<p>{{CustomerDetails.Town_of_Birth__c}}</p>
+															<p>{{CustomerDetails.Country_of_Birth__c}}</p>
+														</div>
+													</div>
+												</div>
+												<hr/>
+												<div class="row">
+													<div class="col-sm-6">
+														<div class="fieldLabel">
+															Mothers Maiden Name
+														</div>
+														<div class="fieldData">
+															<p>{{CustomerDetails.Mother_s_family_name_security_question__c     }}</p>
+														</div>
+													</div>
+													
+													<div class="col-sm-6">
+														
+														<div class="fieldLabel">
+															School Name
+														</div>
+														<div class="fieldData">
+															<p>{{CustomerDetails.School_name_security_question__c}}</p>
+														</div>
+													</div>
+													
+												</div>
+											</div>
+										</div>
+
+
+									</div>
+								</div>
+							</div>
+
+						
+
+
+				</div>
+				
+				<div class="col-sm-12 col-md-4 customerDetailsPane" style="padding:30px;">					
+					
+					<div ng-show="ShowAlerts == true">
+						<div class="fieldData" style="margin-bottom: 10px;">Alerts</div>
+						<div ng-repeat="alert in Alerts">
+							<div class="alert {{alert.CssClass}}">                                    
+                                    {{alert.Data}}
+                            </div>
+						</div>
+					</div>
+					<div>
+						<script id="rowTemplate" type="text/x-kendo-tmpl">
+			                <tr>
+			                    <td>#: Status#</td>
+			                    <td>#: Value#</td>
+			                    <td>#: CreatedDate#</td>
+			                </tr>
+			                
+			                <tr class="DescRow">
+			                    <td colspan="3">#: Description#</td>
+			                </tr>
+			            </script>
+						<kendo-grid options="mainGridOptions"></kendo-grid>		
+					</div>
+
+				</div>
+				
+			</div>
+
+		</body>
+	</apex:page>

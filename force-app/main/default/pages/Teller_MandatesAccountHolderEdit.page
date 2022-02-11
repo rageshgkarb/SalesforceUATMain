@@ -1,0 +1,70 @@
+<apex:page applyBodyTag="false" showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false">
+
+<style type="text/css">
+	dropdown {width:150px; height:50px;}
+</style>
+
+	<div ng-init="LoadSignatoriesAndGroups()">
+
+		<div id="header">Signatories</div>
+        <table class="table table-striped" id="Signatories" style="margin-top:0px;" >
+            <thead>
+            <tr>
+                <th class="col-sm-4">
+                    EBS Id
+                </th>
+                <th class="col-sm-4">
+                    Primary Account Holder
+                </th>
+                <th class="col-sm-4">
+                    Customer Name
+                </th>
+                <th class="col-sm-4">
+                    Relationship to Primary Applicant
+                </th>
+                <th class="col-sm-4">
+                    Relationship Type
+                </th>
+                <th class="col-sm-4">
+                    Signatory Group
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            
+            <tr class="itemRow" ng-repeat="item in response.SignatoryList track by item.ProspectCustomerId" ng-class-Even="'BranchItemOdd'" style="padding:5px;margin:0px;">
+                <td class="col-sm-4">
+                    <a href="/{{item.ProspectCustomerId}}" target="_blank">{{item.CustomerEBSId}}</a>
+                </td>
+                <td class="col-sm-4">
+                    {{item.PrimaryAccountHolder}}
+                </td>
+                <td class="col-sm-4">
+                    {{item.CustomerName}}
+                </td>
+                <td class="col-sm-4">
+                    {{item.RelationshipToPrimaryApplicant}}
+                </td>
+                <td class="col-sm-4">
+                    {{item.RelationshipType}}
+                </td>
+                <td class="col-sm-4">
+                 	<!-- <select id="signatoryGroupInput" class="form-control" ng-model="item.SignatoryGroup" ng-options="sig.Value for sig in response.SignatoryGroupList"></select> -->					
+					<select id="signatoryGroupInput" class="dropdown" ng-model="item.SignatoryGroup" ng-options="sig.Value as sig.Label for sig in response.SignatoryGroupList">
+					</select> 	
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="functionfooter" >
+            <div class="row">
+                <div class="col-sm-offset-1 col-sm-10">
+					<a id="CancelButton" class="goldButton"  ng-click="LoadMandatesAndSignatoriesInternal()">CANCEL</a>
+                    <a id="SaveButton" class="goldButton" ng-click="SaveSignatories()">SAVE ACCOUNT HOLDERS</a>
+                </div>
+            </div>
+        </div> 
+	</div>
+
+</apex:page>

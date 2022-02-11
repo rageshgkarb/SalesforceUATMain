@@ -1,0 +1,369 @@
+<apex:component >
+<apex:attribute name="TransactionId" description="" type="ID"/>
+<apex:attribute name="Deposit" description="" type="Double"/>
+<apex:attribute name="EventLogId" description="" type="String"/>
+<apex:attribute name="SessionId" description="" type="String"/>
+
+<apex:attribute name="IsGuest" description="" type="Boolean"/>
+<apex:attribute name="AutoRDS" description="" type="Boolean"/>
+<apex:attribute name="IsFTD" description="" type="Boolean" />
+<apex:attribute name="AddressLine1" description="" type="String"/>
+<apex:attribute name="AddressLine2" description="" type="String"/>
+<apex:attribute name="City" description="" type="String"/>
+<apex:attribute name="County" description="" type="String"/>
+<apex:attribute name="PostCode" description="" type="String"/>
+
+
+
+<style>
+    body{
+        font-size:12px;
+    }
+</style>
+<!--<apex:form  >
+{{State}}-->
+<div  ng-controller="controllerPayment" ng-init="TransactionId = '{!TransactionId}';State = 'CARDDETAILS';cardData={};cardData.Deposit={!Deposit};SessionId='{!SessionID}';EventLogId='{!EventLogId}';
+                                                cardData.AddressLine1='{!AddressLine1}';
+                                                cardData.AddressLine2='{!AddressLine2}';
+                                                cardData.City='{!City}';
+                                                cardData.County='{!County}';
+                                                cardData.PostCode='{!PostCode}';
+                                                AutoRDS='{!AutoRDS}';    
+                                                cardData.CardType='';                                           
+                                                    ">
+
+
+<div class="alert alert-danger" ng-show="SystemError ">
+    There was a problem taking the payment, please check the entered card details...
+
+</div>
+
+<div ng-show="State == 'ERROR'">
+        <div class="alert alert-danger">
+            There was a problem taking the payment, please check the entered card details and try again
+        </div>
+    
+    </div>
+
+
+<div ng-show="State == 'CARDDETAILS' || State  == 'ERROR'">
+<form name="myform" novalidate="novalidate">
+    <div class="SectionTitle">
+        Your card details
+    </div>
+    <div class="row">
+        <div class="col-sm-12"><!-- C0606 -->
+            <strong>When making a debit card payment, please note that the funds will take 3 working days to clear.</strong>
+        </div>
+    </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <div>
+                    <label>Deposit Amount</label>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon">£</span>
+                    <!-- C0606 (readonly) Start -->
+                    <apex:outputpanel layout="none" rendered="{!IsFTD}">
+                        <input type="number" class="form-control" ng-model="cardData.Deposit" name="Deposit" ng-required="true" readonly="readonly" />
+                    </apex:outputpanel>
+                    <apex:outputpanel layout="none" rendered="{!!IsFTD}">
+                        <input type="number" class="form-control" ng-model="cardData.Deposit" name="Deposit" ng-required="true" />
+                    </apex:outputpanel>
+                    <!-- C0606 (readonly) End -->
+                </div>  
+                <c:Input_Error_Field field="Deposit"></c:Input_Error_Field>               
+            </div>
+            <div class="col-sm-4">
+                <div>
+                    <label>Card Type</label>
+                </div>
+                <div>
+                    <select id="CardCurrency" class="form-control" name="CardType" ng-required="true"
+                    ng-model="cardData.CardType" ng-options="option.key as option.value  for option in cardTypes">               
+                </select>
+           
+                </div>
+                <c:Input_Error_Field field="CardType"></c:Input_Error_Field> 
+                
+            </div>
+        
+        </div>
+                
+        <div class="row">         
+            <div class="col-sm-4">
+                <div>
+                    <label class="control-label">Card Number</label>
+                </div>
+                <div>    
+                    <input id="CardCurrency"  type="text" inputmode="numeric" pattern="[0-9]*" class="form-control" name="CardNumber" ng-required="true"
+                        ng-model="cardData.CardNumber" />
+                </div>
+                <c:Input_Error_Field field="CardNumber"></c:Input_Error_Field>
+            </div>
+            <div class="col-sm-4">                
+                <div>
+                    <label class="control-label">Security Code</label>
+                </div>
+                <div style="width:100px;">
+                    <input id="SecurityCode" type="text" inputmode="numeric" pattern="[0-9]*" class="form-control" name="SecurityCode" my-maxlength="3" ng-maxlength="3"  ng-required="true" 
+                    ng-model="cardData.SecurityCode " />
+                </div>  
+                <c:Input_Error_Field field="SecurityCode"></c:Input_Error_Field>              
+            </div>
+            <div class="col-sm-4">                
+                <div>
+                    <label class="control-label">Issue Number</label>
+                </div>
+                <div style="width:60px;">
+                    <input id="IssueNumber" type="text" inputmode="numeric" pattern="[0-9]*" class="form-control" name="IssueNumber" my-maxlength="2" ng-maxlength="2"
+                    ng-model="cardData.IssueNumber" />
+                </div>                                 
+            </div>
+        </div>
+        
+        
+        
+        <div class="row"> 
+            <div class="col-sm-4">
+                <div>
+                    <label class="control-label" for="ValidFrom">Valid From</label>
+                </div>
+                <div class="rowr clearfix">
+                    <div style="width:60px;float:left;margin-right:10px;">
+                    <input id="ValidFromMonth" type="text" inputmode="numeric" pattern="[0-9]*" class="form-control" name="cardData.ValidFromMonth" maxlength="2" placeholder="MM" ng-maxlength="2" my-maxlength="2"
+                        ng-model="cardData.ValidFromMonth" />
+                    </div>
+                    <div style="width:60px;float:left;">
+                    
+                    <input id="ValidFromYear" type="text" inputmode="numeric" pattern="[0-9]*" class="form-control" name="cardData.ValidFromYear" maxlength="2" placeholder="YY" ng-maxlength="2" my-maxlength="2"
+                        ng-model="cardData.ValidFromYear" /> 
+                    </div>
+                </div>
+            </div>        
+            <div class="col-sm-4 " >
+                <div>
+                    <label class="control-label">Expiry Date</label>
+                </div>
+                <div class="clearfix">
+                    <div style="width:60px;float:left;margin-right:10px;">
+                    <input id="ExpiryMonth" type="text" inputmode="numeric" pattern="[0-9]*" class="form-control" name="ExpiryMonth" maxlength="2" placeholder="MM" ng-maxlength="2" ng-required="true"
+                        ng-model="cardData.ExpiryMonth" />
+                    </div>
+                    <div style="width:60px;float:left;">
+                    <input id="ExpiryYear" type="text" inputmode="numeric" pattern="[0-9]*" class="form-control" name="ExpiryYear" maxlength="2" placeholder="YY" ng-maxlength="2" ng-required="true"
+                        ng-model="cardData.ExpiryYear" />
+                    </div>
+                </div>
+                
+                <div class="input-validation" ng-show="Submitted && myform.$invalid">
+                    <p class="alert alert-danger" ng-show="myform.ExpiryMonth.$error.required || myform.ExpiryYear.$error.required">These fields are required</p>           
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="row" style="padding-top:10px;">
+            <div class="col-sm-8">
+                <div>
+                    <label>Billing address</label>
+                </div>
+                <div>
+                    {!AddressLine1},{!AddressLine2} <br/>
+                    {!City}, {!County} <br/>
+                    {!PostCode}
+                </div>
+            </div>
+             <div class="col-sm-4">
+                <span ng-click="MakePayment()" class="btn btnArb pull-right">Make Payment</span>
+            </div>
+        </div>
+        
+        
+        <!--
+        <div class="row"> 
+            <div class="col-sm-4">
+                <div>
+                    <label class="control-label" for="ValidFrom">Valid From</label>
+                </div>
+                <div>
+                    <input id="ExpiryMonth" type="text" class="form-control" name="cardData.ExpiryMonth" maxlength="2" placeholder="MM"
+                        ng-model="cardData.ExpiryMonth" />
+                </div>
+            </div>        
+            <div class="col-sm-4">
+                <div>
+                    <label class="control-label">&nbsp;</label>
+                </div>
+                <div>
+                    <input id="ExpiryYear" type="text" class="form-control" name="cardData.ExpiryYear" maxlength="2" placeholder="YY"
+                        ng-model="cardData.ExpiryYear" />
+                </div>
+            </div>
+        </div>
+        -->
+ 
+
+<!--
+    <div style="border:1px red solid;padding:20px;margin:10px;">
+        <label>Testing</label>
+        <div class="row" style="padding-top:10px;">
+            <div class="col-sm-12">                
+                
+                <div class="row">
+                    <div class="col-sm-4">
+                        Line 1
+                        <input class="form-control" ng-model="cardData.AddressLine1" />
+                    </div>
+                    <div class="col-sm-4">
+                        Line 2
+                        <input class="form-control" ng-model="cardData.AddressLine2" />
+                    </div>
+                    <div class="col-sm-4">
+                        City
+                        <input class="form-control" ng-model="cardData.City" />
+                    </div>
+                    <div class="col-sm-4">
+                        County 
+                        <input class="form-control" ng-model="cardData.County" />
+                    </div>                   
+                    <div class="col-sm-4">
+                        PostCode
+                        <input class="form-control" ng-model="cardData.PostCode" />
+                    </div>
+                  </div>  
+                    
+                    
+                    
+                </div>
+                
+            </div>
+           
+           
+           
+           
+        </div>
+-->
+    
+    
+    
+    
+    
+    
+    
+ </form>
+ </div>
+    
+    
+    
+  
+    
+
+
+
+    
+    <div ng-show="State == '3DAUTH'">
+        <!--Checking card...-->
+        <iframe frameBorder="0" id="iff" width="100%" height="450px" ng-show="!ll || ll != 'success'" ng-src="{{currentProjectUrl}}">
+    
+    
+        </iframe>
+    </div>
+    
+    <div ng-show="State == 'MAKINGPAYMENT'">
+        <div class="alert alert-info">
+            Making payment
+        </div>
+    </div>
+    
+    
+    
+    <apex:outputPanel rendered="{!IsGuest}" layout="none">
+        <div ng-show="State == 'ACCEPTED'">
+        <div class="alert alert-success">
+            Payment successful
+        </div>    
+    </div>
+    
+    <div ng-show="State == 'DECLINED'">
+        <div class="alert alert-danger">
+            Payment declined
+        </div>
+    </div>
+    </apex:outputPanel>
+    
+    
+   
+    
+    
+    <apex:outputPanel rendered="{!Not(IsGuest)}">
+    <div ng-show="State == 'ACCEPTED'">
+    
+        <div class="alert alert-success" ng-hide="Response.SettleStatus == 'Suspended'">            
+                <label>Payment - {{Response.SettleStatus}} </label>            
+        
+        </div>
+    
+        <div class="alert alert-warning" ng-show="Response.SettleStatus == 'Suspended'">
+            <div>
+                <label>Payment - {{Response.SettleStatus}} </label>
+            </div>
+            <div class="row">
+                <div class="col-sm-4 alert">
+                    <label>Address Status</label>
+                    <div>
+                        
+                        <div class="alert alert-success" ng-show="Response.AddressStatus == 'Matched'"><i class="fa fa-check" ></i>{{Response.AddressStatus}}</div>
+                        <div class="alert alert-danger" ng-show="Response.AddressStatus != 'Matched'"><i class="fa fa-times"></i>{{Response.AddressStatus}}</div>
+                    </div>                    
+                    
+                    
+                </div>
+                <div class="col-sm-4 alert">
+                    <label>Postcode Status</label>
+                    <div>
+                        
+                        <div class="alert alert-success" ng-show="Response.PostcodeStatus== 'Matched'"><i class="fa fa-check" ></i>{{Response.PostcodeStatus}}</div>
+                        <div class="alert alert-danger" ng-show="Response.PostcodeStatus!= 'Matched'"><i class="fa fa-times" ></i>{{Response.PostcodeStatus}}</div>
+                    </div>
+                    
+                </div>
+                <div class="col-sm-4 alert">
+                    <label>Security Code Status</label>
+                    <div>
+                        
+                        <div class="alert alert-success" ng-show="Response.SecurityCodeStatus== 'Matched'"><i class="fa fa-check" ></i>{{Response.SecurityCodeStatus}}</div>
+                        <div class="alert alert-danger" ng-show="Response.SecurityCodeStatus!= 'Matched'"><i class="fa fa-times" ></i>{{Response.SecurityCodeStatus}}</div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+        </div>    
+        
+        
+        
+    </div>
+    
+    <div class="alert alert-success" ng-show="AJECompleted">
+        AJE Completed
+    </div>
+    
+    <div class="alert alert-danger" ng-show="AJEError">
+        AJE Error - {{AJEError}}
+    </div>
+    
+    <div ng-show="State == 'DECLINED'">
+        <div class="alert alert-danger">
+            Payment declined
+        </div>
+    </div>
+    
+    </apex:outputPanel>
+    
+  
+</div>
+
+<!--</apex:form>-->
+</apex:component>

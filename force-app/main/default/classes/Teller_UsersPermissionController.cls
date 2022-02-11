@@ -1,0 +1,1 @@
+global class Teller_UsersPermissionController {}

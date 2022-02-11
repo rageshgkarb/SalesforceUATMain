@@ -1,0 +1,19 @@
+<apex:page applyBodyTag="false" showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false">
+
+<div ng-init="$scope.init()">
+                       <div class="row">
+                            <div class="col-sm-8 col-sm-offset-2" >
+                                Account: <input ng-model="SFind" class="form-control" arb-Enter="LoadMandatesAndSignatories()"/>
+                            </div>
+                        </div>
+                        <div id="FindAccountError" ng-show="stage == '99'">
+                            <div class="col-sm-8 col-sm-offset-2">
+                            <div class="alert alert-danger">
+                                {{FindAccountError}}
+                            </div>
+                            </div>
+                        </div>
+</div>
+
+
+</apex:page>

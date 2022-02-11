@@ -1,0 +1,68 @@
+<!-- ******************************************************************************** -->
+<!-- C00233 New page for submission to Decision Engine                                -->
+<!-- ******************************************************************************** -->
+
+<apex:page showHeader="false" sidebar="false" docType="html-5.0" controller="BAA_Application_Signed_Controller" action="{!Setup}">
+    <head>       
+        <c:BAA_Resource ></c:BAA_Resource>        
+    </head>
+    <c:BAA_PopupLoad />
+     
+    <body>    
+        <c:BAA_Header objOpp="{!BaseOpportunity}" title="Submit to Decision Engine"></c:BAA_Header>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-lg-3">
+                    <apex:form >
+                    
+                        <c:BAA_Menu oppId="{!BaseOpportunity.Id}"  DirectorId="{!BaseOpportunity.ProductEventDirector__c}" />
+                    </apex:form>
+                </div>            
+                <div class="col-md-8 col-lg-9">
+                    <apex:form id="aForm">
+                        
+                        <div class="row">
+                            
+                            <!--div class="col-xs-12">
+                                <c:BAA_Applicants_Nav eventId="{!EventId}" Applicants="{!AppAccs}" Page="Z"  />
+                            </div-->
+                        </div>
+                        
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">Submit to Decision Engine
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                   
+                                   <div class="col-xs-12">
+                                       <!--table class="table" width="50%">
+                                        <tbody>
+                                            <tr>
+                                                <td class="labelCol">Has the signed application form been received?</td><td class="dataCol"><apex:inputField required="true"  value="{!ExOpp.Application_form_signed__c}"/></td>                            
+                                            </tr>
+                                            <tr>  
+                                                <td class="labelCol">Have the supporting documents been received?</td><td class="dataCol"><apex:inputField required="true" value="{!ExOpp.Documents_Received__c}"/></td>            
+                                            </tr> 
+                                            <tr>  
+                                                <td class="labelCol">Date received</td><td class="dataCol"><apex:inputField required="true"  value="{!ExOpp.All_customer_documents_recieved__c}"/></td>            
+                                            </tr> 
+                                            
+                                        </tbody> 
+                                    </table--> 
+                                   </div>
+                                </div>   
+                                 <apex:messages />         
+                                <div class="row">
+                                       <div class="col-xs-12">
+                                           <apex:commandButton styleClass="btn-danger" rerender="aForm" value="Call Decision Engine" action="{!SubmitToDe}" onclick="ShowDocumentLoad('Calling Decision Engine ','This may take a few seconds...');" oncomplete="HideDocumentLoad();" rendered="{!NOT(DeResponce)}"/>
+                                           <apex:commandButton styleClass="btn-danger" value="Complete Event" action="{!Complete}" rendered="{!DeResponce}"/>
+                                       </div>
+                                </div>
+                            </div>
+                        </div>
+                    </apex:form>
+                </div>
+            </div>
+        </div>
+    </body>
+</apex:page>

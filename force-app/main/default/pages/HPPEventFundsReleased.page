@@ -1,0 +1,157 @@
+<!-- C00179 add original funds sent date -->
+
+<apex:page controller="HPPEventFundsReleasedController" sidebar="false" showHeader="false" title="Funds Released" action="{!autoRun}">
+    <head>
+        <c:KendoResource ></c:KendoResource>
+        <script>
+            $(document).ready(function() {
+                $("#grid").kendoGrid({
+                    height: 200
+                });
+            });
+
+
+        </script>
+    </head>
+    <body>
+        <apex:form >
+            <div id="formWrapper">
+   
+                <c:HPPSummary objAcc="{!Accounts[0]}" objOpp="{!opp}" objExOpp="{!ExOpp}" Product="{!Prod}" />
+                <div id="container" >
+                    <table width="100%">
+                        <tr>
+                            <td valign="top" id="sidebar">
+                                <c:HPPBOMenu oppId="{!Opp.Id}"  DirectorId="{!Opp.ProductEventDirector__c}" />
+                            </td>
+                            <td valign="top" id="contenttd">
+                                <div id="content">
+                                    <h1>Release of Funds</h1>
+                                
+                                                                     <apex:outputPanel rendered="{!IsBTL || IsPremier}">
+                                     <p style="padding-left:10px;padding-right:10px;font-weight:bold;font-size:14px;">
+                                                PLEASE NOTE THIS IS A BUY TO LET OR HOME PURCHASE PLAN PREMIER APPLICATION. PLEASE ENSURE THAT PRIOR TO THE SIGNOFF OF THE PAYMENT THE REMAINDER OF THE ADMIN FEE HAS BEEN TAKEN.                                             
+                                     </p> 
+                                            </apex:outputPanel>
+                                
+                                    <apex:outputPanel id="mainPageBlock">
+                                    <div style="padding:20px;">
+                                        <!-- content -->
+                                        
+                                        <apex:pageBlock >
+                                            <apex:pageBlockSection >
+                                                <!--C0662 - disabled the inputfield-->
+                                                <apex:inputField value="{!exOpp.IBB_Solicitor__c}" style="width:200px;" html-disabled="true" />
+                                                
+                                                <!-- C00179 -->
+                                                <apex:pageBlockSectionItem />
+                                                <apex:pageblockSectionItem rendered="{!showOriginalFundsSent}">
+                                                <!--apex:pageblockSectionItem-->
+                                                    <apex:outputLabel value="Original Funds Sent Date"/>
+                                                    <apex:outputField value="{!exOpp.Original_funds_sent_date__c}" />
+                                                </apex:pageblockSectionItem>
+                                                <apex:pageBlockSectionItem />
+                                                <!-- C00179 end -->
+                                            </apex:pageBlockSection>
+                                            
+                                            
+                                            
+                                            
+                                            <table style="min-width: 400px; margin: auto;" id="grid">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Approver Name</th>
+                                                        <th>Date Approved</th>
+                                                        <th>Comments</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td><apex:outputField value="{!exOpp.ApproverName1__c}" /></td>
+                                                        <td>
+                                                            <apex:outputText value="{0,date,dd/MM/yyyy}">
+                                                                <apex:param value="{!exOpp.DateApprover1__c}" />
+                                                            </apex:outputText>
+                                                        </td>
+                                                        <td><apex:outputText value="{!exOpp.CommentsApprover1__c}" /></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><apex:outputField value="{!exOpp.ApproverName2__c}" /></td>
+                                                        <td>
+                                                            <apex:outputText value="{0,date,dd/MM/yyyy}">
+                                                                <apex:param value="{!exOpp.DateApprover2__c}" />
+                                                            </apex:outputText>
+                                                        </td>
+                                                        <td><apex:outputText value="{!exOpp.CommentsApprover2__c}" /></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><apex:outputField value="{!exOpp.ApproverName3__c}" /></td>
+                                                        <td>
+                                                            <apex:outputText value="{0,date,dd/MM/yyyy}">
+                                                                <apex:param value="{!exOpp.DateApprover3__c}" />
+                                                            </apex:outputText>
+                                                        </td>
+                                                        <td><apex:outputText value="{!exOpp.CommentsApprover3__c}" /></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><apex:outputField value="{!exOpp.ApproverName4__c}" /></td>
+                                                        <td>
+                                                            <apex:outputText value="{0,date,dd/MM/yyyy}">
+                                                                <apex:param value="{!exOpp.DateApprover4__c}" />
+                                                            </apex:outputText>
+                                                        </td>
+                                                        <td><apex:outputText value="{!exOpp.CommentsApprover4__c}" /></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            
+                                            <apex:pageBlockSection rendered="{!canApprove}">    
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="Approval Comments" />
+                                                    <apex:outputPanel >
+                                                        <apex:inputText value="{!approverComments}" />
+                                                        <apex:commandButton value="Approve" action="{!approve}" />
+                                                    </apex:outputPanel>
+                                                </apex:pageBlockSectionItem>
+                                            </apex:pageBlockSection>
+                                            
+                                            
+                                           
+                                            
+
+                                            <apex:pageBlockButtons location="bottom">
+                                                <apex:commandButton rerender="mainPageBlock" onclick="ShowDocumentLoad()" oncomplete="HideDocumentLoad()" value="Release Funds" action="{!releaseFunds}" rendered="{!hasRequiredAuthorisationBeenMet && NOT(haveFundsBeenReleased)}" />
+                                                <apex:commandButton value="Complete Event" action="{!complete}" rendered="{!NOT(IsCompleted) && hasRequiredAuthorisationBeenMet && haveFundsBeenReleased}" />
+                                            </apex:pageBlockButtons>
+                                        </apex:pageBlock>
+                                        
+                                        <div style="text-align: center;">
+                                            <apex:outputPanel style="text-align: center; font-weight: bold;">
+                                                <apex:outputText value="{!pageMessage}" />
+                                            </apex:outputPanel>
+                                        </div>
+                                    </div>
+                                    </apex:outputPanel>
+                                </div>
+                                
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+                   <div id="fade"></div>
+<div id="overlay">
+Releasing funds...
+<br/>
+<br/>
+This may take a few seconds.
+
+<div style="padding-top: 50px;" >
+<img src="{!URLFOR($Resource.ibbstyle, 'images/269.gif')}"></img>
+</div>
+
+
+</div>     
+        </apex:form>
+    </body>
+</apex:page>

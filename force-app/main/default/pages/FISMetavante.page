@@ -1,0 +1,24 @@
+<!-- C00254 -->
+
+<apex:page sidebar="false" showHeader="false">
+ <apex:form >
+        <apex:pageBlock >
+        
+          <h1>FIS</h1>
+          <div></div>     
+           
+         To open FIS please click the 'Open FIS' link below. If you need to reset your password, please click on the 'Reset Password' link to create a case.
+         
+          <div></div>
+          <apex:pageBlockSection > 
+              <apex:outputLink value="https://82.33.247.81:11007/panorama-IBB/login.jsp">Open FIS</apex:outputLink>
+          
+ 
+     
+          
+      
+       <apex:outputLink value="https://{!$Label.Domain_URL}/500/e?retURL=%2F500%3Ffcf%3D00BD0000008Dhni&RecordType=012D0000000QWmE&ent&00N20000001sWbz=Software&00N20000001sWc4=FIS&cas14=Password+reset&cas15=FIS+password+reset&cas4_lkid=001D000000eO34fIAC">Reset Password</apex:outputLink>
+      </apex:pageBlockSection>
+      </apex:pageBlock>
+ </apex:form>
+</apex:page>

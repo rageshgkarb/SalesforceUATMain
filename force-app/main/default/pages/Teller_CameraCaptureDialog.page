@@ -1,0 +1,20 @@
+<apex:page applyBodyTag="false" showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false">
+
+<div ng-controller="controllerCameraCapture" ng-init="Initiate()">
+
+	<button ng-click="SwicthSource()">switch</button>
+	<button ng-click="Capture()">capture</button>
+	<video ng-show="!Captured" id="videoContainer" muted="muted" autoplay="autoplay" poster="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/profile_avatar.png')}" width="640" height="480"></video>
+	<canvas ng-show="false" id="snapshotCanvas" width="640" height="480"></canvas>
+	
+
+	<div class="overlay">
+	    <div class="overlay-inner">
+	    </div>
+	</div>
+	<img ng-show="Captured" id="canvasImg"></img>
+	<button class="btn-crop js-crop">Crop</button>
+
+</div>
+	
+</apex:page>

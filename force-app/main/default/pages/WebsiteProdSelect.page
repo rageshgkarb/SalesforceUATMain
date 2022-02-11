@@ -1,0 +1,32 @@
+<apex:page controller="WebsiteProdSelectController" showHeader="false" sidebar="false" action="{!setSession}">
+  <apex:form >
+  
+    <apex:pageBlock id="thePage">
+      
+      <apex:pageblocksection columns="1">
+        
+        <!-- <apex:outputtext value="sessionid:{!SessionID}"/> -->
+        <!-- <apex:outputtext value="accountid:{!AccountID}"/> -->
+      <apex:outputtext value="{!errMessage}"/> 
+     <!--   <apex:outputtext value="LURL:{!LiabilitiesLinkURL}"/> -->
+        <apex:pageblocksectionitem rendered="{!errMessage == '' || errMessage == null}">  
+        
+          <h1>Please select a product to apply for:</h1>
+        </apex:pageblocksectionitem>    
+        
+        <!--
+        <apex:pageblocksectionitem >         
+          <apex:commandLink value="Apply for a new product"  action="{!LiabilitiesLink}" target="new" rendered="{!errMessage == '' || errMessage == null}"/>
+        </apex:pageblocksectionitem>  
+        -->
+        
+        <a href="/caa_product_screen" target="_blank">Apply for a new product</a>
+        
+        
+       <!-- <apex:pageblocksectionitem >    
+          <apex:commandLink value="Home Purchase Plan" action="{!HPPLink}" target="new"/>
+        </apex:pageblocksectionitem>    -->
+      </apex:pageblocksection>
+  </apex:pageblock>
+  </apex:form>
+</apex:page>

@@ -1,0 +1,22 @@
+html, body {
+    font-size: small;
+}
+.page p {
+	padding: 0 0 1.50em;
+	/*color: #222;*/
+	line-height: 1.3em;
+}
+
+.accessOptions li.size span { 
+	margin-left:3px; 
+	margin-right:3px;
+}
+.accessOptions li.size span.small { font-size:1em; }
+.accessOptions li.size span.medium { font-size:1.231em; }
+.accessOptions li.size span.large { font-size:1.385em; }
+
+.contrast p { line-height:1.9em; }
+.contrast p span.colour { line-height:1; margin-top:.2em; }
+
+/*.contrast p span.colour.bp { background-color:#FEDCDC;}
+.contrast p span.colour.bp a:link { color:#000000; }*/

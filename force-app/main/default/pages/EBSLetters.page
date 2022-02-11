@@ -1,0 +1,731 @@
+<apex:page controller="EBS_Letter_Controller"  action="{!onLoad}">
+    <apex:composition template="Base_Template">
+        <apex:define name="body">
+        
+            <style>
+                .bootstrap-container input[type="checkbox"]{
+                    display:inline-block;
+                    width:15px;
+                }
+                
+                .templateList{
+                    list-style: none;
+                }
+                
+                .templateList li{
+                    vertical-align: middle;
+                }
+                
+                .templateList .form-control{
+                    height: 13px;
+                }
+                
+                .modal-lg{
+                    width:80%;
+                    height:100%;
+                }
+                
+                .model-lg .modal-content{
+                    height:80% !important;
+                }
+                
+                .modal-lg iframe{
+                    width:100%;
+                    border:0;
+                    height:500px;
+                    overflow-y:scroll;
+                }
+                
+                
+                
+            </style>
+        
+            <script>
+                docugenApp.controller('detailsController',['$scope','$uibModalInstance','jobId','docugenCreateLetterService',
+                    function($scope,$uibModalInstance,jobId,docugenCreateLetterService){
+                        $scope.url='/apex/DocugenP_Job?id='+jobId;
+                        
+                        $scope.jobId=jobId;
+                        $scope.ok = function () {
+                            $uibModalInstance.close($scope.selected.item);
+                        };
+                        
+                        $scope.cancel = function () {
+                            $uibModalInstance.dismiss('cancel');
+                        };
+                        
+                        $scope.cancelJob=function(jobId){
+                             docugenCreateLetterService.SetJobStatus($scope.jobId,"Deleted")
+                             .then(
+                                function(result){
+                                    $scope.cancel();
+                                },
+                                function(error){
+                                    //$scope.Updating = false;
+                                }
+                            );
+                        };
+                    }
+               ]);
+            
+                
+            
+               docugenApp.controller('ebsLettersController',['$scope','$http','docugenCreateLetterService','$timeout','roundProgressService','$uibModal',
+                    function($scope,$http,docugenCreateLetterService,$timeout,roundProgressService,$uibModal){
+                        //progress plugin
+                            
+                         $scope.$watch("docugenSettings", function(){   
+                             $scope.docugenSettings=JSON.parse($('<textarea />').html($scope.docugenSettings).text());
+                             
+                             //alert($scope.docugenSettings.AzureURL);
+                         });
+                            
+                        
+                        
+                        
+                         $scope.open=function(jobId){
+                             $scope.jobId=jobId;
+                             var uibModalInstance= $uibModal.open({
+                              animation: true,
+                              templateUrl: 'myModalContent.html',
+                              controller: 'detailsController',
+                              size:'lg',
+                              resolve: {
+                                jobId: function () {
+                                  return $scope.jobId;
+                                }
+                              }
+                            });
+                        };
+                       
+                        
+                        
+                        
+                        console.log("test");
+                        
+                        $scope.current =        60;
+                        $scope.max =            100;
+                        $scope.offset =         0;
+                        $scope.timerCurrent =   0;
+                        $scope.uploadCurrent =  0;
+                        $scope.stroke =         5;
+                        $scope.radius =         10;
+                        $scope.isSemi =         false;
+                        $scope.rounded =        false;
+                        $scope.responsive =     false;
+                        $scope.clockwise =      true;
+                        $scope.currentColor =   '#45ccce';
+                        $scope.bgColor =        '#eaeaea';
+                        $scope.duration =       1;
+                        $scope.currentAnimation = 'none';
+                        $scope.animationDelay = 0;
+                        
+                        
+                                                            
+                        $scope.getColor = function(){
+                            return $scope.gradient ? 'url(#gradient)' : $scope.currentColor;
+                        };
+
+                        //progress plugin
+                                                              
+                        $scope.showLoader=true;
+                        
+                        $scope.jobsLoaded=false;
+                        
+                        $scope.creatingJobs=false;
+                        $scope.export=false;
+                        
+                        //ftype=true, then docugen will create pdf documents
+                        $scope.ftype=false;
+                        
+                        $scope.GetTemplates = function(){
+                            docugenCreateLetterService.GetAvailableTemplates()
+                            .then(
+                                function(result){
+                                    $scope.templates = result;
+                                    $scope.showLoader=false;
+                                },
+                                function(error){
+                                    //$scope.Updating = false;
+                                }
+                            );
+                        };
+                        
+                        
+                        $scope.viewJob=function(jobId){
+                            ///apex/DocugenP_Job?id={{job.Id}}
+                            var newwindow = window.open('apex/DocugenP_Job?id='+jobId,'name','height="100%",width="100%",scrollbars=no');
+                            if (window.focus) {newwindow.focus()}
+                            
+                            
+                            var check=function() {
+                                
+                                if(newwindow .document) { // if loaded
+                                    newwindow .document.title = "View Job Details";
+                                } else { // if not loaded yet
+                                    setTimeout(check, 10); // check in another 10ms
+                                }
+                            }
+                            
+                            check(); 
+                            
+                            
+                        };
+                        
+                        $scope.GetJobs = function(){
+                            docugenCreateLetterService.GetJobs()
+                            .then(
+                                function(result){
+                                    $scope.jobData=result;
+                                    $scope.jobsLoaded=true;
+                                },
+                                function(error){
+                                    //$scope.Updating = false;
+                                }
+                            );
+                        };
+                     
+                        
+                        
+                        setInterval($scope.GetJobs,5000); 
+                        
+                        
+                        $scope.CancelJob=function(jobId){
+                            if(confirm("Are you sure?")){
+                                $http({
+                                    method: 'GET',
+                                    url: $scope.docugenSettings.AzureURL+'/CancelJob?id='+jobId
+                                }).then(function successCallback(response) {
+                                    docugenCreateLetterService.SetJobStatus(jobId,"Deleted");
+                                    
+                                }, function errorCallback(response) {
+                                    console.log(response);
+                                }); 
+                            }
+                        };
+                        
+                        
+                        $scope.jsonGenerate=function(){
+                            console.log($scope.letterJson);
+                            $http({
+                                  method: 'POST',
+                                  //url: 'https://docugen-plus-dev.azurewebsites.net/api/GenerateDoc',
+                                  url:$scope.docugenSettings.AzureURL+'/GenerateDoc',
+                                //url:'http://localhost:55446/api/GenerateDoc',
+                                  headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                                  data:$.param({ "": $scope.letterJson })
+                                }).then(function successCallback(response) {
+                                   
+                                    
+                                }, function errorCallback(response) {
+                                    console.log(response);
+                            });
+                        };
+                        
+                        $scope.CreateDocuments=function(){
+                           var scrollTop = $("#job-queue").offset().top; // For example
+                           $('html, body').animate({scrollTop: scrollTop}, 'slow');
+                           $scope.GetJobs();
+                            
+                           for(var i=0;i<$scope.Data.length;i++){
+                                try{
+                                    //console.log();
+                                    $scope.Data[i].Data.org=$scope.docugenSettings.Org;
+                                    $http({
+                                          method: 'POST',
+                                          //url: 'https://docugen-plus-dev.azurewebsites.net/api/GenerateDoc',
+                                          url:$scope.docugenSettings.AzureURL+'/GenerateDoc',
+                                        //url:'http://localhost:55446/api/GenerateDoc',
+                                          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                                          data:$.param({ "": JSON.stringify($scope.Data[i].Data) })
+                                        }).then(function successCallback(response) {
+                                           
+                                            
+                                        }, function errorCallback(response) {
+                                            console.log(response);
+                                    });
+                                    
+                                    delete $scope.Data[i];
+                                }catch(e){
+                                    console.log(e);
+                                    
+                                }
+                            }
+                           
+                             
+                        };
+                        
+                        
+                        
+                        $scope.ShowCreateButton = function(){    
+                        
+                            if(!$scope.Data) return false;
+                                                
+                            for(var i = 0; i < $scope.Data.length;i++){
+                                if($scope.Data[i].Selected) return true;
+                            }
+                            
+                            return false;
+                        }
+                        
+                        $scope.GetData = function(exp){
+                            var templates = [];
+                            
+                            console.log(exp);
+                            
+                            $scope.creatingJobs=true; 
+                            $scope.export=false;
+                            
+                            if(exp){
+                                $scope.export=exp;
+                                $scope.creatingJobs=false; 
+                            }
+                            
+                                                       
+                            
+                            for(var i=0; i< $scope.templates.length;i++)
+                            {
+                                if($scope.templates[i].Selected)
+                                    templates.push($scope.templates[i].Name);
+                            }
+                            
+                            if(templates.length == 0) return;
+                        
+                            $scope.docType="PDF";
+                            if($scope.ftype==false){
+                                $scope.docType="Word";
+                            }
+                            
+                            docugenCreateLetterService.GetTemplateData(templates,$scope.docType,$scope.export)
+                            .then(
+                                function(result){
+                                    $scope.Data = result;
+                                    var csvArray=[];
+                                    if($scope.export){
+                                        
+                                        $scope.Data.forEach(function(job,jindex){// = result[0].Data;
+                                            var csvContent="data:text/csv;charset=utf-8,";
+                                            
+                                            console.log("add header...");
+                                            
+                                            console.log(JSON.stringify(job));
+                                            
+                                            var dataString = job.Data.Columns.join(",");
+                                            csvContent += dataString+ "\n";
+                                            
+                                            console.log("add data...");
+                                            
+                                            job.Data.Rows.forEach(function(row,index){
+                                                
+                                                
+                                                for(var i=0; i < row.Cells.length; i++) {
+                                                    row.Cells[i] = row.Cells[i].replace(/"/g, '""');
+                                                }
+                                                
+                                                
+                                                dataString = '"'+row.Cells.join('","')+'"';
+                                                
+                                                
+                                                csvContent += index < job.Data.Rows.length ? dataString+ "\n" : dataString;
+                                            });
+                                            
+                                            
+                                            var encodedUri = encodeURI(csvContent);
+                                            var link = document.createElement("a");
+                                            link.setAttribute("href", encodedUri);
+                                            link.setAttribute("download", job.Name+".csv");
+                                            document.body.appendChild(link);
+                                            
+                                            console.log("download file...");
+                                            link.click();
+                                        });
+                                        
+                                        
+                                        
+                                        
+                                        $scope.export=false;
+                                    }
+                                    else{
+                                        
+                                         $scope.Data.forEach(function(job,jindex){
+                                             console.log(JSON.stringify(job));
+                                         });
+                                        
+                                        $scope.creatingJobs=false;
+                                        $scope.CreateDocuments();
+                                    }
+                                },
+                                function(error){
+                                    //$scope.Updating = false;
+                                }
+                            );                        
+                        }
+                        
+                        $scope.ExcelExport=function(){
+                            $scope.GetData(true);
+                        };
+                        
+                        $scope.stopPropagation=function($event){
+                            //if($event.target.getAttribute('class').indexOf('btn-dropdown')>-1){
+                                $event.stopPropagation();
+                            //}
+
+                        };
+                }]);
+                
+                
+                 docugenApp.service('docugenCreateLetterService', ['$q', '$rootScope', function ($q, $rootScope) {
+                     
+                     this.GetAvailableTemplates=function(){
+                         var deferred = $q.defer();
+                         Visualforce.remoting.timeout = 120000;
+                         EBS_Letter_Controller.GetAvailableTemplates(function(result, event){
+                             if(event.status){
+                                 deferred.resolve(result);
+                             }
+                             else {
+                                 deferred.reject(event);
+                             }
+                         });
+                         return deferred.promise;
+                     };
+                     
+                     this.GetJobs=function(){
+                         var deferred = $q.defer();
+                         Visualforce.remoting.timeout = 120000;
+                         EBS_Letter_Controller.GetJobs(function(result, event){
+                             if(event.status){
+                                 deferred.resolve(result);
+                             }
+                             else {
+                                 deferred.reject(event);
+                             }
+                         });
+                         return deferred.promise;
+                     };
+                     
+                     this.CheckJobStatus=function(JobIds){
+                         var deferred = $q.defer();
+                         Visualforce.remoting.timeout = 120000;
+                         EBS_Letter_Controller.CheckJobStatus(JobIds,function(result, event){
+                             if(event.status){
+                                 deferred.resolve(result);
+                             }
+                             else {
+                                 deferred.reject(event);
+                             }
+                         });
+                         return deferred.promise;
+                     };
+                     
+                     this.SetJobStatus=function(jobId,status){
+                         var deferred = $q.defer();
+                         Visualforce.remoting.timeout = 120000;
+                         EBS_Letter_Controller.SetJobStatus(jobId,status,function(result, event){
+                             if(event.status){
+                                 deferred.resolve(result);
+                             }
+                             else {
+                                 deferred.reject(event);
+                             }
+                         });
+                         return deferred.promise;
+                     };
+                     
+                     this.GetTemplateData=function(templates,docType,excelExport){
+                         var deferred = $q.defer();
+                         //Visualforce.remoting.timeout = 120000;
+                         
+                         EBS_Letter_Controller.GetTemplateData(templates,docType,excelExport,function(result, event){
+                             if(event.status){
+                                 deferred.resolve(result);
+                             }
+                             else{
+                                 deferred.reject(event);
+                             }
+                         },{ buffer: false, escape: false, timeout: 120000});
+                         return deferred.promise;
+                     };
+                     
+                 }]);
+                
+            
+            </script>
+        
+            <style>
+                .modal-header h4{
+                    margin:0 !important;
+                }
+                
+                .modal-header{
+                    color:#fff !important;
+                    background-color:#A58B52 !important;
+                    border-radius:3px 3px 0 0;
+                    border-bottom:1px solid #7F652C !important;
+                }
+                
+                .modal-header .close{
+                    background:transparent;
+                }
+                
+                .modal-body{
+                    padding:0 !important;
+                }
+                
+                .templateList .dd-options{
+                    margin-right:-10px;
+                    margin-top:-2px;
+                    background:transparent !important;
+                    
+                }
+                
+                .templateList .btn-default
+                {
+                    background:transparent !important;
+                }
+                
+                .templateList .dd-options li{
+                    padding:0 !important;
+                }
+            </style>
+        
+            <div ng-controller="ebsLettersController" class="docugen col-sm-11" ng-init="GetTemplates();docugenSettings='{!docugenSettings}'">
+                    <h3>
+                        <div class="col-sm-6">
+                            Create Letters
+                        </div>
+                        <div class="col-sm-6">
+                            <span class="pull-right" style="font-size:0.9em;">Docugen<sup>+</sup></span>
+                            <a class="pull-right btn btn-default" style="padding:4px 7px !important;font-size:0.5em;margin-right:10px;" href="/apex/DocugenPViewDocs">
+                                View Documents
+                            </a>
+                            <a class="pull-right btn btn-default" style="padding:4px 7px !important;font-size:0.5em;margin-right:10px;" href="{{docugenSettings.TemplatesURL}}">
+                                Templates
+                            </a>
+                            <a class="pull-right btn btn-default" style="padding:4px 7px !important;font-size:0.5em;margin-right:10px;" href="{{docugenSettings.FieldsURL}}">
+                                EBS Field Config
+                            </a>
+                        </div>
+                    </h3>
+                    <div style="clear:both">
+                        &nbsp;    
+                    </div>
+                    
+                    
+                    <div class="signal" style="margin-top:100px;" ng-show="showLoader"></div>
+                    <div ng-hide="showLoader">
+                        
+                        <div class="panel panel-brown" style="overflow:hidden;">
+                            <div class="panel-body">
+                                 <div class="row">
+                                      <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <label>&nbsp;</label>
+                                            <div>
+                                                <ul class="templateList list-group checked-list-box">
+                                                    <li ng-click="template.Selected=template.Selected?false:true" class="list-group-item checkbox" ng-class="{'list-group-item-primary':template.Selected}" ng-repeat="template in templates | orderBy : Name" ng-show="template.Valid">
+                                                      
+                                                          <label ng-click="stopPropagation($event)"><input name="chkTemplate"  type="checkbox" class="form-control" ng-model="template.Selected" style="block-inline" />{{template.Name}}</label>
+                                                          
+                                                          <div class="btn-group dd-options pull-right" uib-dropdown="uib-dropdown" auto-close="outside-click" is-open="status.isopen" ng-click="stopPropagation($event)" >
+                                                              <button id="single-button" type="button" class="btn btn-default btn-dropdown" uib-dropdown-toggle="uib-dropdown-toggle" ng-disabled="disabled">
+                                                                  <span class="caret"></span>
+                                                              </button>
+                                                              <ul class="uib-dropdown-menu pull-right"  role="menu" aria-labelledby="single-button">
+                                                                  <li role="menuitem">
+                                                                      <a href="/{{template.Id}}" target="_blank">View Template</a>
+                                                                  </li>
+                                                              </ul>
+                                                          </div>
+                                                          
+                                                          <span class="badge pull-right">{{template.NumRows}}</span>                               
+                                                    </li>
+                                                </ul>    
+                                            </div>
+                                            <label>Invalid templates</label>
+                                            <div>
+                                                <div class="templateList">
+                                                    <span class="label label-danger pull-left" style="margin:3px;padding:5px;" ng-repeat="template in templates | orderBy : Name" ng-hide="template.Valid">
+                                                            {{template.Name}}                                     
+                                                    </span>
+                                                    <div style="clear:both">
+                                                        &nbsp;
+                                                    </div>
+                                                </div>    
+                                            </div>
+                                            
+                                            
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-sm-6">
+                                    
+                                    
+                                    </div>
+                          
+                                      <div style="clear:both">
+                                      </div>
+                                  </div>                                     
+                                </div>
+                         </div>
+                        <div class="row" align="center">
+                            <div class="form-group">
+                                <style>
+                                    .ftype{
+                                        font-size:3em;
+                                        padding:10px !important;
+                                        cursor:pointer;
+                                        color:#c0c0c0;
+                                    }
+                                    
+                                    .ftype.active{
+                                        color:#101010;
+                                    }
+                                    
+                                    .ftype:hover{
+                                        color:#101010;
+                                    }
+                                </style>
+                                <table>
+                                    <tr>
+                                        <td class="ftype" ng-class="{'active':ftype==false}" ng-click="ftype=false">
+                                            <i class="fa fa-file-word-o" aria-hidden="true"></i>
+                                        </td>
+                                        <td class="ftype" ng-class="{'active':ftype}" ng-click="ftype=true">
+                                            <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                                        </td>
+                                        <td style="padding:10px;"> 
+                                            <button ng-click="GetData()" type="button" style="font-size:1.5em;position:relative;padding-left:40px;" class="btn btn-primary"><span ng-hide="creatingJobs" style="position:absolute;left:10px;top:5px;font-size:1.5em;"><i class="fa fa-circle-o" aria-hidden="true"></i></span><div class="signal" ng-show="creatingJobs" style="left:20px;border-color:#fff !important;"></div>
+                                                Generate</button>
+                                            <button ng-click="ExcelExport()" type="button" style="font-size:1.5em;position:relative;padding-left:40px;" class="btn btn-primary"><span ng-hide="export" style="position:absolute;left:10px;top:5px;font-size:1.5em;"><i class="fa fa-file-excel-o" aria-hidden="true"></i></span><div class="signal" ng-show="export" style="left:20px;border-color:#fff !important;"></div>
+                                                Excel Export</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3" align="center"><span ng-show="creatingJobs">Creating jobs...</span></td>
+                                    </tr>
+                                </table>
+                                
+                            </div>    
+                        </div>
+                                  
+                                 <div class="row">
+                                     <div class="panel panel-default" style="position:relative;min-height:400px;margin:1%;width:98%;">
+                                     
+                                     
+                                         <table class="table" id="job-queue">
+                                             <thead>
+                                                 <!--<th>Action</th>-->
+                                                 <th>Job</th>
+                                                 <th>Status</th>
+                                                 <th>Progress</th>
+                                                 <th>Template</th>
+                                                 <th>Merge fields</th>
+                                                 <th>Records</th>
+                                                 <th>&nbsp;</th>
+                                             </thead>
+                                             
+                                             <tr ng-repeat="job in jobData">
+                                                 <!--ng-click="job.Status=='Deleted'|| viewJob(job.Id)" <td><input type="checkbox" ng-model="job.Selected" ng-show="job.Status == 'Pending'"/></td>-->
+                                                 <td><a ng-class="{'disabled':job.Status=='Deleted'}" ng-click="job.Status=='Deleted'|| open(job.Id)"  target="_blank">{{job.Name}}</a></td>
+                                                 <td>{{job.Status}}</td>
+                                                 <td>
+                                                     <round-progress
+                                                    max="max"
+                                                    current="job.Progress"
+                                                    color="{{ getColor() }}"
+                                                    bgcolor="{{ bgColor }}"
+                                                    radius="{{ radius }}"
+                                                    semi="isSemi"
+                                                    rounded="rounded"
+                                                    stroke="{{ stroke }}"
+                                                    clockwise="clockwise"
+                                                    responsive="responsive"
+                                                    duration="{{ duration }}"
+                                                    animation="{{ currentAnimation }}"
+                                                    offset="{{ offset }}"
+                                                    animation-delay="{{ animationDelay }}"
+                                                                    on-render="showPreciseCurrent" style="float:left;"></round-progress>
+                                                     <span style="margin-left:5px;margin-top:5px;">{{job.Progress}}%</span>
+                                                 </td>
+                                                 <td>{{job.TemplateName}}</td>
+                                                 <td>{{job.MergeFields}}</td>
+                                                 <td>{{job.Records}}</td>
+                                                 <td><a href="#" ng-click="CancelJob(job.Id)" type="button" ng-show="job.Status=='Pending'">Cancel</a></td>
+                                             </tr>                                                                              
+                                         </table>
+                                         
+                                         <div style="top:50px;width:100%;text-align:center;position:absolute !important;color:#c0c0c0;" ng-hide="jobsLoaded">Loading jobs...</div>
+                                         
+                                         
+                                                                              
+                                     <!--<button type="button" class="btn btn-primary" ng-click="CreateDocuments()" ng-show="ShowCreateButton()">Create Documents</button>-->
+                                       <!--
+                                         <div ng-repeat="job in Data" >
+                                             <h4>{{job.Name}}</h4>
+                                         
+                                         
+                                         
+                                       
+                                             <table class="table">
+                                                 <thead>
+                                                     <th ng-repeat="col in job.Data.Columns track by $index">{{col}}</th>
+                                                 </thead>
+                                                 
+                                                 <tbody>
+                                                     <tr ng-repeat="row in job.Data.Rows">
+                                                         <td ng-repeat="cell in row.Cells track by $index">{{cell}}</td>
+                                                     </tr>
+                                                 </tbody>                                         
+                                             </table>
+                                  
+                              
+                                    
+                                 </div>
+                                  -->
+                             </div>
+                         </div>                        
+                        
+                    </div>
+                    
+                
+             <!-- test --> 
+             <div class="hidden">
+                                 <input type="text" ng-model="jsonJobId" />
+                                <textarea ng-model="letterJson"></textarea>
+                                <button ng-click="jsonGenerate()">Generate</button>
+                            </div>       
+                    
+            </div>
+            <!-- test --> 
+            
+            <script type="text/ng-template" id="myModalContent.html">
+                <div class="bootstrap-container">
+                    <div class="modal-header">
+                        <button aria-label="Close" class="close pull-right" type="button" style="border:0 !important;" ng-click="cancel()"><span aria-hidden="true">×</span></button>
+                        <h4 class="modal-title">Job Details</h4>
+
+                    </div>
+                    <div class="modal-body">
+                        <iframe src="{{url}}"></iframe>
+                          
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn-primary btn" ng-click="cancelJob()">
+                            Delete
+                        </button>
+                        <button class="btn btn-default" type="button" ng-click="cancel()">Close</button>
+                    </div>
+                </div>
+            </script>
+        
+        
+        </apex:define>        
+    </apex:composition>
+    
+    
+    
+    
+    
+        
+</apex:page>

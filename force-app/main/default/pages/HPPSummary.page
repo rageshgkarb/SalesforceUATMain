@@ -1,0 +1,97 @@
+<apex:page controller="HPPSummaryController"   sidebar="false" showHeader="false" title="Submit to decison engine">
+    <head>
+        <c:KendoResource ></c:KendoResource>
+        <!-- Bootstrap -->
+    <apex:stylesheet value="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <apex:stylesheet value="https://maxcdn.bootstrapcdn.com/bootswatch/3.2.0/spacelab/bootstrap.min.css"/>
+    <apex:stylesheet value="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"/>
+    <apex:includeScript value="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"/>
+    
+    <style>
+        body{
+            font-size: 12px;
+        }
+        
+        .SectionTitle {
+                color: rgb(179,153,93);
+                font-size: 20px;
+                font-weight: bold;
+                padding-bottom: 10px;
+            }
+        
+        
+    </style>
+    
+    </head>
+    <body>
+        <apex:form > 
+            <div id="formWrapper">
+                <!-- C00095-->
+                <c:HPPSummary objAcc="{!Accounts[0]}" objOpp="{!opp}" objExOpp="{!ExOpp}" Product="{!Prod}" />
+                <div id="container" >
+                    <table width="100%">
+                        <tr>
+                            <td valign="top" id="sidebar">
+                                <c:HPPBOMenu oppId="{!Opp.Id}"  DirectorId="{!Opp.ProductEventDirector__c}" />
+                            </td>
+                            <td valign="top" id="contenttd">
+                                <div id="content">
+                                    <h1>Setup on EBS</h1>                                
+                                    <apex:outputPanel id="mainPageBlock">
+                                    <div style="padding:20px;">
+                                    <!-- content -->
+                                    
+                                 Aplication complete.
+                                 
+                                 
+                                 <div>
+                                 <h2>Documents</h2>
+                                 
+                                 <table width="100%">
+                                     <tr>
+                                         <td>FIS</td>
+                                         <td><apex:outputtext escape="false" value="{!FIS}" ></apex:outputtext></td>
+                                     </tr>
+                                     <tr>
+                                         <td>Application Form</td>
+                                         <td><apex:outputtext escape="false" value="{!ApplicationForm}" ></apex:outputtext></td>
+                                     </tr>
+                                     <tr>
+                                         <td>Welcome Letter</td>
+                                         <td><apex:outputtext escape="false" value="{!WelcomeLetter}" ></apex:outputtext></td>
+                                     </tr>
+                                     <tr>
+                                         <td>Offer Letter</td>
+                                         <td><apex:outputtext escape="false" value="{!OfferLetter}" ></apex:outputtext></td>
+                                     </tr>
+                                     <tr>
+                                         <td>Risk and Features Document</td>
+                                         <td><apex:outputLink value="{!KeyFactsLink}" rendered="true" target="_blank"><b>Open</b></apex:outputLink></td>
+                                     </tr>
+                                     <tr>
+                                         <td>Initial Disclosure Document</td>
+                                         <td><apex:outputLink value="{!IDDLink}" rendered="true" target="_blank"><b>Open</b></apex:outputLink></td>
+                                     </tr>
+                                 </table>
+                                 </div>
+
+                                <c:HPP_Post_Completion_Action oppID="{!opp.id}"  />
+                                    
+                               </div>
+                                    </apex:outputPanel>
+                                </div>
+                                
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+           
+            
+        
+
+
+            
+        </apex:form>
+        </body>
+</apex:page>

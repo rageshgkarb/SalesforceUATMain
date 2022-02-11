@@ -1,0 +1,5 @@
+<apex:page standardController="Case" recordsetVar="Cases" extensions="RedirectCE" id="thePage" action="{!redirectCaseListPage}" showHeader="false" sidebar="false">
+
+  Account Redirect page: {!ProfileName}
+  
+</apex:page>

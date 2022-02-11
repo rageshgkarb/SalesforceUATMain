@@ -1,0 +1,564 @@
+<apex:page standardStylesheets="false" controller="HPPEventAIPController" sidebar="false" showHeader="false" title="Applicant Details">
+<head>
+<c:ExternalKendo ></c:ExternalKendo>
+
+<style>
+#emailList
+{
+padding-top: 10px;
+}
+
+#emailList li
+{
+display: inline;
+list-style-type: none;
+margin-left:20px;
+
+}
+
+</style>
+</head>
+<body>
+
+<apex:form id="aForm" >
+<div id="headertop">
+    
+    <div id="ibbMotto">Banking you can <strong>believe</strong> in</div>
+    
+    <div class="headerLogo">
+        <a href="http://www.islamic-bank.com/"><img alt="IBB logo image" height="94" src="http://www.islamic-bank.com/graphics/shim.gif" title="Home page link" width="200"/></a>
+    </div>
+    
+    <div style="clear:both;"></div>
+</div>
+<div id="formWrapper">
+<div class="header" >
+<h1>{!Acc.Name} - Agreement in Principle</h1>
+</div>
+
+
+
+<div id="container" >
+
+<table width="100%">
+<tr>
+
+<td valign="top" id="contenttd">
+
+<div  id="topNav">
+
+<ul>
+<li><apex:commandLink action="{!ProductDetails}" >Product Details</apex:commandLink></li>
+<li><span>Applicants</span></li>
+<li class="{!App1Css}"><span>{!Accounts[0].name}</span></li>
+
+<apex:outputPanel rendered="{!Opp.Number_of_People_Applying__c> 1 }">
+<li class="{!App2Css}"><span>{!Accounts[1].name}</span></li>
+</apex:outputPanel>
+
+
+
+<apex:outputPanel rendered="{!Opp.Number_of_People_Applying__c> 2 }">
+<li class="{!App3Css}"><span>{!Accounts[2].name}</span></li>
+
+</apex:outputPanel>
+<apex:outputPanel rendered="{!Opp.Number_of_People_Applying__c> 3}">
+<li class="{!App4Css}"><span>{!Accounts[3].name}</span></li>
+</apex:outputPanel>
+
+<li class="k-header"><span>AIP Confirmation</span></li>
+</ul>
+
+</div>
+
+
+
+
+<apex:pageBlock >
+<h2>Applicant {!CurApp } - {!Acc.name}</h2>
+
+<div style="text-align:right">
+        <apex:commandButton value="Save" styleClass="ROButton" action="{!save}" rendered="false"/>
+        <apex:commandButton value="Previous" styleClass="ROButton blueBtn" action="{!PreviousAPP}"/>
+                <apex:commandButton value="Next" styleClass="ROButton redBtn" action="{!NextAPP}"/>
+</div>
+
+<apex:pagemessages ></apex:pagemessages>
+
+<div class="inputArea">
+                   
+<h2>Personal details</h2>
+
+<div class="gridLayoutContainer">
+<div>
+
+    <table class="gridLayout">
+    <tbody>
+        <tr>
+            <td class="labelCol">Title<span class="star">*</span></td>
+            <td class="dataCol"><apex:inputField styleClass="required" value="{!Acc.salutation}" /></td>
+            <td class="status"></td>
+        </tr>
+        <tr>
+            <td class="labelCol">First name<span class="star">*</span></td>
+            <td class="dataCol"><apex:inputField styleClass="required" value="{!Acc.FirstName}" /></td>
+            <td class="status"></td>
+        </tr>
+        <tr>
+            <td class="labelCol">Middle name</td>
+            <td class="dataCol"><apex:inputField value="{!Acc.Middle_Name__pc}" /></td>
+            <td class="status"></td>
+        </tr>        
+        <tr>
+            <td class="labelCol">Last name<span class="star">*</span></td>
+            <td class="dataCol"><apex:inputField styleClass="required" value="{!Acc.LastName}" /></td>
+            <td class="status"></td>
+        </tr>
+        <tr>
+            <td class="labelCol">Gender<span class="star">*</span></td>
+            <td class="dataCol"><apex:inputField styleClass="required" value="{!Acc.Gender__c}" /></td>
+            <td></td>
+        </tr>   
+        <tr>
+            <td class="labelCol">Date of birth<span class="star">*</span></td>
+            <td class="dataCol">
+            <c:DateSelect2 date="{!Acc.Date_of_Birth__c}"></c:DateSelect2>
+            </td>
+            <td class="status"></td>
+        </tr>  
+        <tr>
+            <td class="labelCol">Phone<span class="star">*</span></td>
+            <td class="dataCol"><apex:inputField styleClass="required" value="{!Acc.Home_Telephone_No__c}" /></td>
+            <td class="status"></td>
+        </tr>  
+        <tr>
+            <td class="labelCol">Email<span class="star">*</span></td>
+            <td class="dataCol"><apex:inputField styleClass="required email" value="{!Acc.PersonEmail}" /></td>
+            <td class="status"></td>
+        </tr>                                     
+        
+                      
+    
+    </tbody>
+    </table>
+</div>
+</div>
+</div>    
+
+
+<div class="inputAreaAlt">
+                   
+<h2>Address</h2>
+
+<div class="gridLayoutContainer">
+<div>
+
+    <table class="gridLayout">
+    <tbody>
+        <tr>
+            <td class="labelCol">Current address: postcode</td>
+            <td class="dataCol"><apex:inputField styleClass="required" value="{!Acc.BillingPostalCode}" id="addrPostCode"/></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td class="labelCol">Customer address</td>
+            <td class="dataCol"><apex:inputField value="{!Acc.BillingStreet}" id="addrStreet" label="Customer address" /></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td class="labelCol">Current address: city</td>
+            <td class="dataCol"><apex:inputField value="{!Acc.BillingCity}" id="addrCity"/></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td class="labelCol">Current address: country</td>
+            <td class="dataCol"><apex:inputField styleClass="noKendo" value="{!Acc.BillingCountry}" id="addrCountry" required="true" label="Current Address Country" /></td>
+            <td></td>
+        </tr>
+       
+            <tr>
+            <td class="labelCol">Date moved to address<span class="star">*</span></td>
+            <td class="dataCol">
+            <c:DateSelect2 date="{!Acc.Date_moved_to_address__c}"></c:DateSelect2>
+            </td>
+            <td class="status"></td>
+        </tr>  
+            
+                                       
+    </tbody>
+    </table>
+</div>
+</div>    
+</div>
+
+
+
+<div class="inputArea">
+                   
+<h2>Financial information</h2>
+
+<div class="gridLayoutContainer">
+<div>
+
+    <table class="gridLayout">
+        <tbody>
+              <tr>
+                  <td class="labelCol">Employment type</td>
+                  <td class="dataCol"><apex:inputField styleClass="employType required" value="{!Acc.Employment_Type__c}" /></td>
+                  <td class="status"></td>
+              </tr>
+              <tr>
+                  <td class="labelCol">Date employment commenced</td>
+                  <td class="dataCol"><apex:inputField value="{!Acc.Date_Employment_Commenced__c}" /></td>
+                  <td></td>
+              </tr>
+                <tr style="display:none;" class="employTypeItem">
+                    <td class="labelCol">Do you have 2 years of accounts?</td>
+                    <td class="dataCol"><apex:inputField value="{!Acc.Do_you_have_2_years_of_accounts__c}" /></td>
+                    <td></td>
+                </tr>
+              <tr>
+                  <td class="labelCol">Net monthly income (£)</td>
+                  <td class="dataCol"><apex:inputField value="{!Acc.Net_Monthly_Income__c}" /></td>
+                  <td></td>
+              </tr>
+              <tr>    
+                  <td class="labelCol">Regular net monthly bonuses/overtime (£)</td>
+                  <td class="dataCol"><apex:inputField value="{!Acc.Non_guaranteed_overtime_commission__c}" /></td>
+                  <td></td>
+              </tr> 
+               <tr>
+                  <td class="labelCol">Do you have another income eg pension?</td>
+                  <td class="dataCol"><apex:inputField value="{!Acc.Do_you_have_another_income_eg_pension__c}"/></td>
+                  <td></td>
+               </tr>
+               <tr>   
+                  <td class="labelCol">If yes to other income please give value (£)</td>
+                  <td class="dataCol"><apex:inputField value="{!Acc.If_yes_to_other_income_please_give_value__c}" /></td>
+                  <td></td>
+              </tr>
+        </tbody>
+    </table>
+</div>
+</div>
+</div>    
+
+
+<div class="inputAreaAlt">                   
+<h2>Existing property</h2>
+
+<div class="gridLayoutContainer">
+<div>
+
+    <table class="gridLayout">
+        <tbody>
+                  <tr>
+                      <td class="labelCol">Are you selling an existing property?</td>
+                      <td class="dataCol"><apex:inputField styleClass="ExistingProp" value="{!Acc.Asset_ExistingProperty__c}" required="false"/></td>
+                      <td></td>
+                  </tr>
+                  <tr class="existingpopitem" style="display: none;">    
+                      <td class="labelCol">Do you have a mortgage?</td>
+                      <td class="dataCol"><apex:inputField styleClass="hasMortgage" value="{!Acc.Do_you_have_a_mortgage__c}" required="false"/></td>
+                      <td></td>
+                  </tr>
+                  
+                  <tr class="hasMortgageItem" style="display: none;">
+                      <td  class="labelCol">How much is outstanding on mortgage?</td>
+                      <td class="dataCol"><apex:inputField value="{!Acc.Asset_MortgageOutstanding__c}" required="false"/></td>
+                      <td></td>
+                  </tr>
+                  <tr class="hasMortgageItem" style="display: none;">
+                      <td class="labelCol">Monthly rent or mortgage payment?</td>
+                      <td class="dataCol"><apex:inputField value="{!Acc.Monthly_rent_or_mortgage_payment__c}" required="false"/></td>
+                      <td></td>              
+                  </tr>                  
+              </tbody>
+    </table>
+</div>
+</div>
+</div>    
+
+
+
+
+<div class="inputAreaAlt">                   
+<h2>Use of your data</h2>
+
+<div class="gridLayoutContainer">
+<div>
+
+ <table class="gridLayout" >
+<tbody>
+    <tr>
+        <td class="labelCol">Please confirm you are happy for IBB to hold your data to progress your account<span class="star">*</span></td>
+        <td class="dataCol"><apex:inputField styleClass="required" value="{!Acc.Are_you_happy_for_IBB_to_hold_your_data__c}" id="addHappy"/></td>
+        <td class="status"></td>
+    </tr>
+    
+    <tr>
+        
+        <td  class="labelCol">
+            <a target="_blank" href="/resource/1337159017000/MarketingConsent">Please click here to review how your data will be held and used by Islamic Bank of Britain</a>
+        </td>
+        <td colspan="2"></td>
+    </tr> 
+    
+    <tr>
+        <td class="labelCol">How did you hear about IBB?<span class="star">*</span></td>
+        <td class="dataCol"><apex:inputField styleClass="required" value="{!Opp.How_did_you_hear_about_IBB__c }" id="addhowHear" /></td>
+        <td class="status"></td>
+    </tr>
+      
+     
+    <tr>
+        <td colspan="2" class="labelCol">
+            
+                In the future we would like to contact you about our products, special offers and promotions.  If you agree to this, we will add your information to our database.  We will not give your information to third parties.
+<br> </br>
+Please tick the appropriate box(es) if you DO NOT wish to contacted by:
+<br> </br>
+                
+                <div id="emailList" >
+                 <ul>
+                 <li>Email : <apex:inputCheckbox value="{!HasEmail}" title="Email"/></li>
+                  <li>Mail : <apex:inputCheckbox value="{!HasMail}" title="Mail"/></li>
+                   <li>Phone : <apex:inputCheckbox value="{!HasPhone}" title="Phone"/></li>
+                    <li>SMS : <apex:inputCheckbox value="{!HasSMS}" title="SMS"/></li>
+                  
+                
+                 
+                 </ul>
+                </div>
+                
+        </td>
+        <td></td>
+    </tr>       
+        
+    </tbody>
+    </table>
+</div>
+</div>
+</div>    
+
+
+
+
+   <div id="example" class="k-content">
+        
+                 
+                    <div>
+   
+      
+  
+      
+          <apex:pageBlockSection rendered="{!Opp.Interested_in__c == 'Buy to Let'}" showHeader="true" columns="1" id="tab6" lang="" title="Buy To Let">
+                     <apex:repeat value="{!$ObjectType.Account.FieldSets.BTL_Questions}" var="f"> 
+       <apex:inputField value="{!Acc[f]}" required="{!f.required}"/>
+    </apex:repeat>
+      </apex:pageBlockSection>
+      
+      
+      
+                    </div>
+                   
+                   
+                   <div> <!-- Marketing tab -->
+                  <style>
+
+#navlist li
+{
+display: inline;
+list-style-type: none;
+margin-left:0;
+}
+</style>
+
+
+ 
+ 
+               
+                   
+                   
+              
+            </div>
+
+<div style="text-align:right">
+        <apex:commandButton value="Save" styleClass="ROButton" action="{!save}" rendered="false"/>
+        <apex:commandButton value="Previous" styleClass="ROButton blueBtn" action="{!PreviousAPP}"/>
+                <apex:commandButton value="Next" styleClass="ROButton redBtn" action="{!NextAPP}"/>
+</div>
+       
+
+           
+       
+        </div>
+</apex:pageBlock>
+</td></tr></table>
+
+</div>
+</div>
+
+
+
+<span id="pca_status" style="display:none;" />
+<script type="text/javascript">
+    pca_Load();
+</script>
+<span id="hideMyParent"></span>
+
+
+ <script type="text/javascript"> 
+   
+   
+   
+   
+   
+  $(document).ready(function() {
+  
+ 
+     
+ 
+  
+  
+
+    // validate signup form on keyup and submit
+    $("form[id$='aForm']").validate({
+    
+    success: function(label){
+        label.html("&nbsp;").addClass("evCompleted");
+    },
+ 
+            errorPlacement: function(error, element) {
+                error.appendTo( element.parent("td").next("td.status") );
+            }
+    
+    
+    });
+    
+   
+     
+     
+     
+    
+    
+jQuery.validator.messages.required = "Please enter a value";
+   
+});
+  
+  $('input').keyup(function(){
+    if(!$(this).valid()){
+        
+        $(this).parent("td").next("td.status").find("label").removeClass("evCompleted");
+    
+        return false;
+    }
+});
+
+function ExistingProperty()
+{
+    var sal = $("select.ExistingProp").val();
+              
+                       if(sal == 'Yes')
+                {
+                    $(".existingpopitem").fadeIn('slow');
+                    mortgateFields();
+                }
+                else
+                {
+                $(".existingpopitem").fadeOut('slow');
+                $(".hasMortgageItem").fadeOut('slow');
+                } 
+}
+
+$("select.ExistingProp").change(ExistingProperty);
+
+function mortgateFields()
+{
+    var sal = $("select.hasMortgage").val();              
+    if(sal == 'Yes')
+        {$(".hasMortgageItem").fadeIn('slow');}
+        else
+          {$(".hasMortgageItem").fadeOut('slow');}   
+}
+
+$("select.hasMortgage").change(mortgateFields);
+
+
+$('[id$=DateValue]').each(function()
+{
+    var valu = $(this).val();
+    valu = valu.replace('GMT ','');
+    valu = valu.replace('00:00:00 ','');
+    valu = valu.replace('Mon ','');
+    valu = valu.replace('Tue ','');
+    valu = valu.replace('Wed ','');
+    valu = valu.replace('Thu ','');
+    valu = valu.replace('Fri ','');
+    valu = valu.replace('Sat ','');
+    valu = valu.replace('Sun ','');    
+
+    
+    
+    var d = Date.parse(valu);
+    
+    var ds = d.toString('dd/MM/yyyy')
+    
+    var day = $(this).parent().find('.DateDay');
+    day.val(d.toString('dd'));
+    
+    var month = $(this).parent().find('.DateMonth');
+    month .val(d.toString('MM'));
+    
+    var year= $(this).parent().find('.DateYear');
+    year.val(d.toString('yyyy'));    
+           
+    $(this).val(ds);
+
+   
+});
+
+
+function SetDate(dateField)
+{
+    
+
+    var day = $(dateField).find('.DateDay').val();
+    var month= $(dateField).find('.DateMonth').val();
+    var year = $(dateField).find('.DateYear').val();        
+    
+    $(dateField).find('input').val(day +'/' + month + '/' + year);
+
+
+}
+
+
+$('.DateDay').change(function()
+{
+
+
+
+SetDate($(this).parent());
+
+});
+
+$('.DateMonth').change(function()
+{
+SetDate($(this).parent());
+});
+
+$('.DateYear').change(function()
+{
+SetDate($(this).parent());
+});
+
+$('select option')
+                .filter(function() { return $.trim( $(this).text() ) == '--None--'; })
+                .html('&nbsp; &nbsp; &nbsp; --&nbsp;&nbsp;&nbsp;&nbsp;Please select&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;&nbsp;&nbsp;' );
+
+</script>
+
+  </apex:form>
+  </body>
+
+</apex:page>

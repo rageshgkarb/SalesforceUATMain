@@ -1,0 +1,10 @@
+<apex:page standardController="Account_with_IBB__c" >
+  <!-- Begin Default Content REMOVE THIS -->
+  <h1>To check the live available balance and transaction history for this account, please open Engage via the button above. To view the transaction history how to guide please click </h1>
+           
+          
+              <apex:outputLink value="https://{!$Label.Domain_URL}/sfc/#version?selectedDocumentId=069D0000002yRfR" target="_blank">here</apex:outputLink>
+       
+  
+  
+</apex:page>

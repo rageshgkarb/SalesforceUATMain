@@ -1,0 +1,333 @@
+<apex:page applyBodyTag="false" showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false">
+    
+    <div style="height:calc(100% - 4px); width:100%;" ng-controller="activitiesController">
+        
+        <!-- Page Title -->
+        <div class="pageTitleContainer">
+            <div style="float: left;">
+                <!-- <img class="btn_back" src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_back.png')}"></img> -->
+                <span class="pageTitleGray">Teller Activities</span>
+                <!-- <span class="pageTitleBlack"> {{CustomerDetails.Salutation}} {{CustomerDetails.FirstName}} {{CustomerDetails.LastName}}</span> -->
+            </div>
+            <div class="toolbar">
+                <div class="toolbarButton" ng-click="GetTellerActivityAudit()">
+                    <div class="imgCircle">
+                        <img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_refresh.png')}"></img>
+                    </div>
+                    <div class="hidden-xs textSmallestDarkGray caption">REFRESH</div>
+                </div>  
+                <div class="hidden-xs toolbarButton" ng-click="PrintTelllerActivityAuditForToday()" title="Print Teller Daily Summary">
+                    <div class="imgCircle">
+                        <img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_print.png')}"></img>
+                    </div>
+                    <div class="textSmallestDarkGray caption">PRINT TAS</div>
+                </div>      
+                <div class="hidden-xs toolbarButton" ng-click="PrintTelllerActivityAudit()">
+                    <div class="imgCircle">
+                        <img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_print.png')}"></img>
+                    </div>
+                    <div class="textSmallestDarkGray caption">PRINT</div>
+                </div>     
+				<div id="btnFilter" class="visible-xs toolbarButton" ng-click="ToggleFilterPane()">
+                    <div class="imgCircle">
+                        <img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_filter.png')}"></img>
+                    </div>
+                    <div class="hidden-xs textSmallestDarkGray caption">FILTER</div>
+                </div>     
+            </div>
+        </div>
+        
+        <!-- Page Content -->
+        <div class="pageStructure">
+            <div class="pageContentContainer">
+                
+            <div class="filtersList pageContentLeft" ng-class="{'hidden-xs' : ShowFilterPane == false}" style="min-height:400px;">
+                <div class="verticalScroller" style="margin-top: 15px; margin-left:10px; height:100%;">
+                     <div style="margin-bottom: 10px;">
+                        <label class="pageSubTitleGray" style="margin-left: 5px;">Options</label>
+                     </div>
+					 
+					 <div class="mdCard" ng-class="{'mdCardCollapse' : SelectedCard != 'Quick' }" style="width: calc(100% - 21px); margin-top: 10px !important; overflow: hidden; height: calc(100% - 225px);" ng-click="SelectedCard = 'Quick'">
+                        <label class="sectionTitleSmallGray" style="margin-left: 15px;margin-top: 10px;font-size: 18px;">Favourites</label>
+						<img class="expander" src="/resource/1443172700000/Teller_Includes/Teller_Includes/media/down.png" width="15px" style="position:  absolute; right: 15px; top: 15px;"></img>
+                        <div class="mdCard_body accountExpanderContent verticalScroller" style="height: calc(100% - 40px); width: calc(100% - 10px); margin-left: 0px; margin-right: 0px; margin-top: 0px; background:white;">							
+							 <div class="accountFunctionContainer" style="height: auto; width: 100%; background: white;">								 
+								 <div class="accountFunctionsListContainer" style="width: 100%;">
+                                         <ul class="accountFunctionList" style="width: 100%; background: white;">										 
+											<li class="accountFunction" style="opacity: 0.9;" ng-repeat="search in FilterLists.Favourites track by $index" ng-click="ExecuteSearch(search)">
+												<div class="accountFunctionContent textSmallerWhite" style="color:white;">{{search.SearchName}}</div>     
+											</li>											 
+                                         </ul>
+                                     </div>
+								 </div>
+						</div>
+                    </div> 
+                     
+                     <div class="mdCard" ng-class="{'mdCardCollapse' : SelectedCard != 'Filter' }" style="width: calc(100% - 21px); margin-top: 10px !important; height: calc(100% - 225px);" ng-click="SelectedCard = 'Filter'">
+                        <label class="sectionTitleSmallGray" style="margin-left: 15px;margin-top: 10px;font-size: 18px;">Filter</label>
+						<img class="expander" src="/resource/1443172700000/Teller_Includes/Teller_Includes/media/down.png" width="15px" style="position:  absolute; right: 15px; top: 15px;"></img>
+                        <div class="mdCard_body verticalScroller verticalScrollSection" style="margin-left: 20px; margin-right: 23px; margin-top: 5px; overflow-x: hidden; width: 315px; padding-right: 10px;">
+                            
+                            <c:Teller_Material_Select className="kendoInputBranch" labelText="Branch" ngmodelProperty="SearchCriteria.Branch_Number" modelPropertyToWatch="SearchCriteria.Branch_Number" width="301px" show="true" disabled="false" datasource="FilterLists.Branches" fieldTextName="Name" fieldValueName="Branch_Number__c"></c:Teller_Material_Select>  
+                            <c:Teller_Material_Select className="kendoInputUser" labelText="User" ngmodelProperty="SearchCriteria.Created_By_User_Id" modelPropertyToWatch="SearchCriteria.Created_By_User_Id" width="301px" show="true" disabled="false" datasource="FilterLists.Tellers" fieldTextName="Name" fieldValueName="Id"></c:Teller_Material_Select>  
+                            <c:Teller_Material_Select className="kendoInputTill" labelText="Till" ngmodelProperty="SearchCriteria.Till_Name" modelPropertyToWatch="SearchCriteria.Till_Name" width="301px" show="true" disabled="false" datasource="FilterLists.Tills" fieldTextName="Name" fieldValueName="Name"></c:Teller_Material_Select>  
+                            <c:Teller_Material_Select className="kendoInputCurrency" labelText="Currency" ngmodelProperty="SearchCriteria.Activity_Currency" modelPropertyToWatch="SearchCriteria.Activity_Currency" width="301px" show="true" disabled="false" datasource="FilterLists.Currencies"></c:Teller_Material_Select>  
+                            
+<!--                            <div class="md_group">   
+                              <div class="md_input" style="height: 34px; position: absolute;"></div>
+                              <select id="kendoInputBranch" class="kendoInputBranch" kendo-combo-box="kendo-combo-box" style="width: 301px;  margin-top: 0.5px; border: none;" k-rebind="SearchCriteria.Branch_Number" ng-model="SearchCriteria.Branch_Number" k-data-source="FilterLists.Branches" k-data-text-field="'Name'" k-data-value-field="'Branch_Number__c'">                              
+                              </select>                           
+                              <span class="md_highlight"></span>
+                              <span class="md_bar" style="z-index: 2; margin-top: 4px;"></span>
+                              <label class="md_label">Branch</label>
+                            </div>  -->
+                            
+<!--                            <div class="md_group">   
+                              <div class="md_input" style="height: 34px; position: absolute;"></div>
+                              <select class="kendoInputUser" kendo-combo-box="kendo-combo-box" style="width: 301px;  margin-top: 0.5px; border: none;" ng-model="SearchCriteria.Created_By_User_Id" k-data-source="FilterLists.Tellers" k-data-text-field="'Name'" k-data-value-field="'Id'">
+                              </select>                           
+                              <span class="md_highlight"></span>
+                              <span class="md_bar" style="z-index: 2; margin-top: 4px;"></span>
+                              <label class="md_label">User</label>
+                            </div>  -->
+                            
+<!--                            <div class="md_group">   
+                              <div class="md_input" style="height: 34px; position: absolute;"></div>
+                              <select class="kendoInputTill" kendo-combo-box="kendo-combo-box" style="width: 301px;  margin-top: 0.5px; border: none;" ng-model="SearchCriteria.Till_Name" k-data-source="FilterLists.Tills" k-data-text-field="'Name'" k-data-value-field="'Name'">
+                              </select>                           
+                              <span class="md_highlight"></span>
+                              <span class="md_bar" style="z-index: 2; margin-top: 4px;"></span>
+                              <label class="md_label">Till</label>
+                            </div>  -->
+                            
+<!--                            <div class="md_group">      
+                              <div class="md_input" style="height: 34px; position: absolute;"></div>
+                              <select class="kendoInputCurrency" kendo-combo-box="kendo-combo-box" style="width: 301px;  margin-top: 0.5px; border: none;" ng-model="SearchCriteria.Activity_Currency" k-data-source="FilterLists.Currencies">
+                              </select>                           
+                              <span class="md_highlight"></span>
+                              <span class="md_bar" style="z-index: 2; margin-top: 4px;"></span>
+                              <label class="md_label">Currency</label>
+                            </div> -->
+                            
+                            <div class="md_group">      
+                              <input class="md_input" type="text" required="required" onkeypress='return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46' ng-model="SearchCriteria.From_Activity_Amount"></input>
+                              <span class="md_highlight"></span>
+                              <span class="md_bar"></span>
+                              <label class="md_label">From Amount</label>
+                            </div>
+                            
+                            <div class="md_group">      
+                              <input class="md_input" type="text" required="required" onkeypress='return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46' ng-model="SearchCriteria.To_Activity_Amount"></input>
+                              <span class="md_highlight"></span>
+                              <span class="md_bar"></span>
+                              <label class="md_label">To Amount</label>
+                            </div>
+                            
+                            <div class="md_group"> 
+                              <div class="md_input" style="height: 34px; position: absolute;"></div>
+                              <input class="kendoInputFromDateTime" kendo-date-time-picker="kendo-date-time-picker" k-format="'dd/MM/yyyy HH:mm'" style="width: 301px;  margin-top: 0.5px; border: none;" ng-model="SearchCriteria.From_Activity_Date_Time" arb-Material-Highlight-Value="{{SearchCriteria.From_Activity_Date_Time}}"></input>                           
+                              <span class="md_highlight"></span>
+                              <span class="md_bar" style="z-index: 2; margin-top: 4px;"></span>
+                              <label class="md_label">From Date Time</label>
+                            </div>
+
+                            <div class="md_group">
+                              <div class="md_input" style="height: 34px; position: absolute;"></div>
+                              <input class="kendoInputToDateTime" kendo-date-time-picker="kendo-date-time-picker" k-format="'dd/MM/yyyy HH:mm'" style="width: 301px;  margin-top: 0.5px; border: none;" ng-model="SearchCriteria.To_Activity_Date_Time" arb-Material-Highlight-Value="{{SearchCriteria.To_Activity_Date_Time}}"></input>                             
+                              <span class="md_highlight"></span>
+                              <span class="md_bar" style="z-index: 2; margin-top: 4px;"></span>
+                              <label class="md_label">To Date Time</label>
+                            </div>
+                        
+                            <div class="md_group">      
+                              <input class="md_input" type="text" required="required" onkeypress='return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 45' ng-model="SearchCriteria.Credit_Account"></input>
+                              <span class="md_highlight"></span>
+                              <span class="md_bar"></span>
+                              <label class="md_label">Credit Account</label>
+                            </div>
+                            
+                            <div class="md_group">      
+                              <input class="md_input" type="text" required="required" onkeypress='return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 45' ng-model="SearchCriteria.Debit_Account"></input>
+                              <span class="md_highlight"></span>
+                              <span class="md_bar"></span>
+                              <label class="md_label">Debit Account</label>
+                            </div>
+                            
+<!--                             <div class="md_group">      
+                              <div class="md_input" style="height: 34px; position: absolute;"></div>
+                              <select class="kendoInputStatus" kendo-combo-box="kendo-combo-box" style="width: 301px;  margin-top: 0.5px; border: none;" ng-model="SearchCriteria.Status" k-data-source="FilterLists.Status">
+                              </select>                           
+                              <span class="md_highlight"></span>
+                              <span class="md_bar" style="z-index: 2; margin-top: 4px;"></span>
+                              <label class="md_label">Status</label>
+                            </div> -->
+                            
+                            <c:Teller_Material_Select className="kendoInputStatus" labelText="Status" ngmodelProperty="SearchCriteria.Status" modelPropertyToWatch="SearchCriteria.Status" width="301px" show="true" disabled="false" datasource="FilterLists.Status"></c:Teller_Material_Select>  
+                            
+                            <div class="md_group">      
+                              <input class="md_input" type="text" required="required" ng-model="SearchCriteria.Description"></input>
+                              <span class="md_highlight"></span>
+                              <span class="md_bar"></span>
+                              <label class="md_label">Description</label>
+                            </div>
+                            
+                            <div class="md_group">      
+                              <div class="md_input" style="height: 34px; position: absolute;"></div>
+                              <select class="kendoInputActivityType" kendo-combo-box="kendo-combo-box" style="width: 301px;  margin-top: 0.5px; border: none;" ng-model="SearchCriteria.Activity_Type">
+                                  <option value=""></option>
+                                  <option value="Customer Image">Customer Image</option>
+                                  <option value="Depository">Depository</option>
+                                  <option value="Mandate">Mandate</option>
+                                  <option value="Transaction">Transaction</option>
+                              </select>                           
+                              <span class="md_highlight"></span>
+                              <span class="md_bar" style="z-index: 2; margin-top: 4px;"></span>
+                              <label class="md_label">Activity Type</label>
+                            </div>
+                            
+<!--                            <div class="md_group">      
+                              <div class="md_input" style="height: 34px; position: absolute;"></div>
+                              <select class="kendoInputTransactionType" kendo-combo-box="kendo-combo-box" style="width: 301px;  margin-top: 0.5px; border: none;" ng-model="SearchCriteria.Transaction_Type"  k-data-source="FilterLists.TransactionTypes" k-data-text-field="'Name'" k-data-value-field="'Name'">
+                              </select>                           
+                              <span class="md_highlight"></span>
+                              <span class="md_bar" style="z-index: 2; margin-top: 4px;"></span>
+                              <label class="md_label">Transaction Type</label>
+                            </div> -->
+                            
+                            <c:Teller_Material_Select className="kendoInputTransactionType" labelText="Transaction Type" ngmodelProperty="SearchCriteria.Transaction_Type" modelPropertyToWatch="SearchCriteria.Transaction_Type" width="301px" show="true" disabled="false" datasource="FilterLists.TransactionTypes" fieldTextName="Name" fieldValueName="Name"></c:Teller_Material_Select>  
+                            
+                         </div>
+                    </div>
+                    
+                    <div class="mdCard" ng-class="{'mdCardCollapse' : SelectedCard != 'Sort' }" style="width: calc(100% - 21px); margin-top: 10px !important; overflow: hidden;" ng-click="SelectedCard = 'Sort'">
+                        <label class="sectionTitleSmallGray" style="margin-left: 15px;margin-top: 10px;font-size: 18px;">Sort</label>
+						<img class="expander" src="/resource/1443172700000/Teller_Includes/Teller_Includes/media/down.png" width="15px" style="position:  absolute; right: 15px; top: 15px;"></img>
+                        <div class="mdCard_body" style="margin-left: 20px; margin-right: 23px; margin-top: 20px;">  
+                            <div class="md_group">                            
+                              <div class="md_input" style="height: 34px; position: absolute;"></div>
+<!--                              <select class="kendoInputSortBy" kendo-combo-box="kendo-combo-box" required="required" style="width: 301px;  margin-top: 0.5px; border: none;" ng-model="SearchCriteria.OrderByFieldName">
+                                  <option></option>
+                                  <option value="Created_By_User__c">User</option>
+                                  <option value="Activity_Currency__c">Currency</option>
+                                  <option value="Activity_Amount__c">Amount</option>
+                                  <option value="Activity_Date_Time__c">Activity Date Time</option>
+                                  <option value="Status__c">Status</option>
+                                  <option value="Activity_Description__c">Description</option>
+                                  <option value="Activity_Type__c">Type</option>            
+                              </select>  -->
+                                                          
+                              <select ng-init="InitialiseSortBy()" class="kendoInputSortBy" kendo-combo-box="kendo-combo-box" style="width: 301px;  margin-top: 0.5px; border: none;" ng-model="SearchCriteria.OrderByFieldName"> <!-- ng-options="item as item.text for item in SortByOptions track by item"        -->
+                                  <option value="Activity_Date_Time__c">Activity Date Time</option>
+                                  <option value="Activity_Amount__c">Amount</option>
+                                  <option value="Branch">Branch</option>
+                                  <option value="">Credit Account</option>
+                                  <option value="Activity_Currency__c">Currency</option>
+                                  <option value="">Debit Account</option>
+                                  <option value="Activity_Description__c">Description</option>                                
+                                  <option value="Status__c">Status</option>
+                                  <option value="Created_By_User__c">Teller</option>
+                                  <option value="">Till</option>
+                                  <option value="">Transaction Type</option>                    
+                                  <option value="Activity_Type__c">Type</option>    
+                              </select> 
+                              
+                              <span class="md_highlight"></span>
+                              <span class="md_bar" style="z-index: 2; margin-top: 4px;"></span>
+                              <label class="md_label">Sort By</label>
+                            </div>      
+                            <div class="md_group_empty">
+                                <label class="md_label_empty">{{SearchCriteria.OrderDescending ? 'Descending' : 'Ascending'}}</label>
+                                
+                                <div class="sortButton" ng-click="OnSortClicked()">
+                                    <img class="sortIcon" ng-class="{sortIconAscending : SearchCriteria.OrderDescending == false}" src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/sort_direction.png')}"/>
+                                </div>
+                                
+<!--                            <div class="sliderInputContainer">
+                                    <input class="sliderInput" type="checkbox" id="s4" ng-model="SearchCriteria.OrderDescending" />
+                                    <label class="slider" for="s4"></label>
+                                </div> -->
+                            </div>                                                      
+                         </div>
+                    </div>                  
+                    <input class="goldButton" type="button" value="APPLY" ng-click="GetTellerActivityAudit()" style="float:right; margin-right: 15px; margin-top: 15px;"></input>
+                    <input class="goldButton" style="float:right; margin-right: 5px; margin-top: 15px;" type="button" value="CLEAR" ng-click="ClearFilterAndSortOptions()"></input>                 
+                </div>
+            </div>
+                
+            <div class="activitiesList pageContentRight" ng-class="{'hidden-xs' : ShowResultsPane == false}" ng-init="Initialise()">
+                
+                <div class="horizontalScrollContainer" ng-cloak="ng-cloak"> 
+                    <div style="margin-bottom: 10px;">
+                        <label class="hidden-xs pageSubTitleGray" style="margin-left: 5px;">Activities</label>
+                    </div>
+                    <div class="verticalScroller verticalScrollSection" id="activitiesContainer" style="position:relative; height: calc(100% - 50px);" ng-show="TellerActivities.length != 0" ng-class="{RefreshIndicatorDragging : scrollContainerStopScroll == true}">    
+                        <div id="RefreshIndicator" class="GoldCircle RefreshIndicator" ng-class="{RefreshIndicatorReverse : RefreshIndicatorReverseCss == true, RefreshIndicatorStartRefresh : Refreshing == true, RefreshIndicatorEndRefresh : RefreshCompleted == true}">
+                            <img class="RefreshIndicatorIcon" ng-class="{RefreshIndicatorIconRotating : Refreshing == true}" src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/Refresh.svg')}"></img>
+                        </div>  
+						
+                            <div style="margin-top: 5px; padding-left:2px;">
+								
+								<div ng-repeat="activity in TellerActivities" class="searchResultItem" style="height:100%;" ng-click="OpenActivity(activity)">
+									
+									<div class="searchResultActivityDateTime" style="padding-right: 15px; border-right: 1px solid gainsboro; width: 95px; display: table-cell;">
+                                        <div class="mobileText textMediumDarkGray">{{activity.Activity_Date_Time__c | date:'dd/MM/yyyy' : 'UTC'}}</div>
+                                        <div class="mobileText textDarkGray" style="margin-top: -2px;">{{activity.Activity_Date_Time__c | date:'HH:mm:ss'}}</div>
+                                    </div>
+									
+									<div class="searchResultActivityDetails" style="padding-left: 15px; padding-right:15px; display: table-cell; width: 100%;">
+										<span class="mobileText textMediumDarkGray" ng-bind-html="activity.Activity_Type__c"></span>
+										<span class="mobileText"> : </span>
+										<span class="mobileText textMediumDarkGray" ng-bind-html="activity.Activity_Description__c"></span>
+                                        <div class="mobileText textDarkGray" style="margin-top: -2px;">{{activity.Created_By_User__r.Name}}</div>
+                                    </div>
+									
+									<div class="searchResultActivityStatus" style="display: table-cell; padding-right:15px; padding-left: 15px; border-left: 1px solid gainsboro;">
+                                    	<div class="mobileText textDarkGray ng-binding" style="font-size: 12px; margin-top: 1px;">Status</div>
+                                        <div class="mobileText textMediumDarkGray ng-binding" style="font-size: 16px; float:left;margin-top:  -2px;">{{activity.Status__c}}</div>
+                                    </div>                                      
+                                    <!-- <div ng-if="activity.Activity_Type__c == 'Transaction'" ng-class="{colorRed : activity.Activity_Amount__c < 0, colorGreen : activity.Activity_Amount__c > 0}" class="mobileText textMediumDarkGray" style="font-size: 18px; padding-left:15px; border-left: 1px solid gainsboro; display: table-cell; vertical-align: middle;">{{activity.Activity_Currency__c | filter_currencytosymbol}}</div> -->
+                                    <div ng-if="activity.Activity_Type__c == 'Transaction'" ng-class="{colorRed : activity.Activity_Amount__c < 0, colorGreen : activity.Activity_Amount__c > 0}" class="searchResultActivityAmount mobileText textMediumDarkGray" style="font-size: 18px; display: table-cell; vertical-align: middle; padding-left:15px; border-left: 1px solid gainsboro;">{{activity.Activity_Currency__c | filter_currencytosymbol}}{{activity.Activity_Amount__c | number : 2}}</div>                                   																		
+								</div>
+															
+								
+                                <!-- <div ng-repeat="activity in TellerActivities" class="searchResultItem" style="height:60px;" ng-click="OpenActivity(activity)">
+									
+                                    <div style="float:left;">
+                                        <div style="float:left; padding-right: 15px; border-right: 1px solid gainsboro; width: 95px;">
+                                            <div class="textMediumDarkGray">{{activity.Activity_Date_Time__c | date:'dd/MM/yyyy' : 'UTC'}}</div>
+                                            <div class="textDarkGray" style="margin-top: -2px;">{{activity.Activity_Date_Time__c | date:'HH:mm:ss'}}</div>
+                                        </div>
+                                        <div style="float:left; margin-left: 15px;">
+											<span class="textMediumDarkGray" ng-bind-html="activity.Activity_Type__c"></span>
+											<span> : </span>
+											<span class="textMediumDarkGray" ng-bind-html="activity.Activity_Description__c"></span>
+                                            <div class="textDarkGray" style="margin-top: -2px;">{{activity.Created_By_User__r.Name}}</div>
+                                        </div>
+                                    </div>
+                                    <div style="float: right; margin-right: 3px; min-width: 96px;">
+                                        <div style="float:left;">
+                                            <div class="textDarkGray ng-binding" style="font-size: 12px; margin-top: 1px;">Status</div>
+                                            <div class="textMediumDarkGray ng-binding" style="font-size: 16px; float:left;margin-top:  -2px;">{{activity.Status__c}}</div>
+                                        </div>                                      
+                                        <div ng-if="activity.Activity_Type__c == 'Transaction'" ng-class="{colorRed : activity.Activity_Amount__c < 0, colorGreen : activity.Activity_Amount__c > 0}" class="textMediumDarkGray" style="margin-top: 8px; font-size: 18px; float:left; margin-left: 15px; padding-left:15px; border-left: 1px solid gainsboro;">{{activity.Activity_Currency__c | filter_currencytosymbol}}</div>
+                                        <div ng-if="activity.Activity_Type__c == 'Transaction'" ng-class="{colorRed : activity.Activity_Amount__c < 0, colorGreen : activity.Activity_Amount__c > 0}" class="textMediumDarkGray" style="margin-top: 8px; font-size: 18px; float: right; margin-left: 3px;">{{activity.Activity_Amount__c}}</div>
+                                    </div>      
+                                </div> -->
+                                
+								<div class="GoldCircle GoldCircleButton" style="margin-left: calc(50% - 30px); margin-bottom: 20px; margin-top: -35px; position: absolute;" ng-click="GetNextPage()" ng-show="TellerActivitiesAnyRemaining == true">
+                                    <img class="GoldCircleIcon" src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/down.png')}" style="margin-top: 15px; margin-left: 13px;"></img>
+                                </div>                              
+                            </div>                       
+                        </div>                      
+                </div>
+                
+                <div id="printoutSection" style="display:none; visibility:collapse;" arb-Dynamic-Html="arbDynamicHtml" dynamic-template="{{PrintTemplate}}"></div>
+            </div>              
+                
+            </div>
+        </div>  
+        
+        
+    </div>
+        
+</apex:page>

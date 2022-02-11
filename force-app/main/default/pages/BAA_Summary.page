@@ -1,0 +1,67 @@
+<!-- C00233 new page -->
+
+<apex:page showHeader="false" sidebar="false" docType="html-5.0" controller="BAA_SummaryController" applyBodyTag="">
+    <head>       
+        <c:BAA_Resource ></c:BAA_Resource>        
+    </head>
+    
+     <body>    
+        <c:BAA_Header objOpp="{!BaseOpportunity}" title="Summary"></c:BAA_Header>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-lg-3">
+                    <apex:form >
+                        <c:BAA_Menu oppId="{!BaseOpportunity.Id}"  DirectorId="{!BaseOpportunity.ProductEventDirector__c}" />
+                    </apex:form>
+                </div>            
+                <div class="col-md-8 col-lg-9">
+                    <apex:form id="aForm">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <apex:pagemessages ></apex:pagemessages>
+                            </div>
+                        </div>
+                        
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">Summary: Documents</div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div>
+                                            Summary
+                                        </div>
+                                        <table class="table" width="50%">
+                                            <tbody>
+                                                <tr>
+                                                    
+                                                    <td class="dataCol"><apex:outputtext escape="false" value="{!ApplicationForm}" ></apex:outputtext></td> 
+                                                </tr>
+                                                <tr>
+                                                    
+                                                    <td class="dataCol"><apex:outputtext escape="false" value="{!WelcomeLetter}" ></apex:outputtext></td> 
+                                                </tr>
+                                                <!--apex:outputPanel layout="none" rendered="{!NOT(IsCompleted)}">
+                                                    <tr>
+                                                        <td>
+                                                            <apex:commandButton value="Complete" 
+                                                                            
+                                                                            action="{!Complete}" 
+                                                                            styleclass="btn-danger" 
+                                                                             
+                                                                            rendered="{!NOT(IsCompleted)}"/>
+                                                        </td>
+                                                    </tr>
+                                                </apex:outputPanel-->
+                                            </tbody>
+                                        </table>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                     </apex:form>
+                </div>
+             </div>
+         </div>
+      </body>
+</apex:page>

@@ -1,0 +1,42 @@
+<apex:page Controller="ServiceConsole_CaseListController" showHeader="false" sidebar="false" tabStyle="Case">
+
+	<script src="/support/console/28.0/integration.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		function openSubTab(recid, recname) {
+		 	if(!sforce.console.isInConsole()){
+				window.parent.location.replace('/'+recid);
+			}else{
+		    	sforce.console.getEnclosingPrimaryTabId(function(result) {
+		    		sforce.console.openSubtab(result.id, '/'+recid , true, recname, null);
+		    	});
+			}
+		}
+	</script>
+	<apex:form >
+		<apex:pageBlock title="Cases" id="caseTableBlock">
+
+			<apex:pageBlockButtons location="top">
+                <apex:commandButton value="New Case" onclick="javascript:openSubTab('setup/ui/recordtypeselect.jsp?ent=Case&retURL=%2F{!parentObjId}%3Fnooverride%3D1&save_new_url=%2F500%2Fe%3FretURL%3D%252F{!parentObjId}%253Fnooverride%253D1%26def_account_id%3D{!parentObjId}'); return false;"  />
+            </apex:pageBlockButtons>
+
+	        <apex:pageBlockTable value="{!recentCases}" var="theCase" rendered="{!IF(recentCases.size > 0, true, false)}">
+
+	            <apex:column headerValue="Case No.">
+	            	<a href='' onclick="javascript:openSubTab('{!theCase.Id}'); return false;" style="cursor: pointer;">{!theCase.CaseNumber}</a>
+	            </apex:column>
+	            <apex:column value="{!theCase.Subject}"/>
+	            <apex:column value="{!theCase.Status}"/> 
+	            <apex:column headerValue="Record Type">
+	            	<apex:outputText value="{!theCase.RecordType.Name}" />
+	            </apex:column> 
+	            <apex:column value="{!theCase.CreatedDate}" />
+
+	        </apex:pageBlockTable> 
+
+	        <apex:commandLink action="{!getMoreCases}" value="Show {!showMoreValue} more »  | " id="moreCasesLink" reRender="caseTableBlock" rendered="{!IF(rowLimit < totalCases, true, false)}"/>
+	        <apex:commandLink action="{!showAllCases}" value="Show All ({!totalCases}) »" id="allCasesLink" reRender="caseTableBlock" rendered="{!IF(rowLimit < totalCases, true, false)}"/>
+
+	    </apex:pageBlock>
+    </apex:form>
+
+</apex:page>

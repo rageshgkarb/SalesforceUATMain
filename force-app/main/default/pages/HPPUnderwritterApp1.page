@@ -1,0 +1,432 @@
+<apex:page controller="HPPUnderwritterApplicationData"  sidebar="false" showHeader="false" title="Applicant Details" action="{!Setup}">
+<head>
+<apex:includeScript value="{!$Resource.pca__LookupComponent}"/>
+<apex:includeScript value="{!$Resource.pca__EditPageLauncher}"/>
+<apex:includeScript value="{!$Page.pca__EditPageSettings}"/>
+</head>
+<body>
+<c:KendoResource ></c:KendoResource>
+<apex:form id="aForm" >
+
+
+<div > 
+
+
+<div  >
+
+<table width="100%">
+<tr>
+<td valign="top" id="sidebar" style="display:none;">
+    
+</td>
+<td valign="top" >
+<div  id="topNav">
+<ul>
+<li class="active"><apex:commandLink action="{!PageApplication1}" value="Property Details" id="theCommand"/></li>
+
+
+<li><apex:commandLink rendered="{!Opp.Number_of_People_Applying__c> 0}" action="{!PageApplicant1}" value="Applicant 1" id="appLink1"/></li>
+
+<apex:outputPanel rendered="{!Opp.Number_of_People_Applying__c> 1}">
+<li><apex:commandLink rendered="{!Opp.Number_of_People_Applying__c> 1}" action="{!PageApplicant2}" value="Applicant 2" id="appLink2"/></li>
+</apex:outputPanel>
+<apex:outputPanel rendered="{!Opp.Number_of_People_Applying__c> 1}">
+<li><apex:commandLink rendered="{!Opp.Number_of_People_Applying__c> 2}" action="{!PageApplicant3}" value="Applicant 3" id="appLink3"/></li>
+</apex:outputPanel>
+<apex:outputPanel rendered="{!Opp.Number_of_People_Applying__c> 1}">
+<li><apex:commandLink rendered="{!Opp.Number_of_People_Applying__c> 3}" action="{!PageApplicant4}" value="Applicant 4" id="appLink4"/></li>
+</apex:outputPanel>
+
+<li><apex:commandLink action="{!PageApplication3}" value="Additional Information" id="link3"/></li>
+</ul>
+</div>
+<div >
+
+
+<apex:pageBlock >
+  <div id="tabstrip">
+ <ul>
+                        <li class="k-state-active">
+                            Application Details
+                        </li>
+                        <li>
+                            Property Details
+                        </li>
+                     
+                       
+                    </ul>      
+                  <div>
+<div class="pbSubheader" >
+    <h3>Product Details</h3>
+</div>
+    <table class="detailList">
+        <tbody>
+            <tr>
+                <td class="labelCol">IBB Product</td><td class="dataCol"><apex:outputField value="{!Opp.IBB_Product__c}"/></td>                            
+                <td class="labelCol">Purpose of finance</td><td class="dataCol"><apex:outputField value="{!Opp.Purpose_of_Finance__c}"/></td>            
+            </tr>  
+            <tr>
+
+                <td class="labelCol">Finance required</td><td class="dataCol"><apex:outputField value="{!Opp.Finance_Required__c}"/></td>
+               <td class="labelCol">Term of finance</td><td class="dataCol"><apex:outputField value="{!Opp.Term_of_Finance__c}"/></td>           
+            </tr>
+            <tr>
+                <td class="labelCol">Purchase price/ market value</td><td class="dataCol"><apex:outputField value="{!Opp.Purchase_price_market_value__c}"/></td>  
+                <td colspan="2"/>
+            </tr>
+            
+          
+         
+                                                    
+        </tbody>
+    </table>
+    
+    
+   <div class="pbSubheader" >
+    <h3>Deposit Details</h3>
+</div>
+     <apex:outputPanel id="DepositList" >
+       <apex:variable value="{!0}" var="rowNum"/>
+     <table class="detailList">
+<tr><th>Deposit source</th><th>Deposit Value</th><th>Details</th><th>Action</th></tr>
+      <apex:repeat value="{!DepositSource}" var="d">
+  
+<tr>
+    <td>
+        <apex:inputField value="{!d.Deposit_Source__c}"   />
+    </td>
+    
+    <td><apex:inputField value="{!d.Deposit_Value__c}" styleClass="depositValue" /></td>
+
+    <td><apex:inputField value="{!d.Deposit_Details__c}" style="width:300px;"    /></td>
+    <td>
+        <apex:commandButton value="Remove" action="{!RemoveDepositSource}"   reRender="DepositList" status="DepositListRemoveStatus">
+        <apex:param name="nickName"
+                value="{!rowNum}"
+                assignTo="{!rowDeleteDepositSource}"/> 
+        
+        </apex:commandButton>
+        <apex:actionStatus id="DepositListRemoveStatus" startStyle="padding-left: 10px;text-decoration:none;"   startText="Removing..."  stopText=""/>
+    </td>
+</tr>
+      
+               
+      <apex:variable var="rowNum" value="{!rowNum + 1}"/>
+      </apex:repeat>
+      <tr><td></td><td><b><span id="depositValue"/></b></td><td></td></tr>
+   </table>
+      </apex:outputPanel>
+      
+      <apex:commandButton value="Add Deposit Type" action="{!AddDepositSource}" oncomplete="setUpOut()" reRender="DepositList" status="counterStatus1"/>
+      <apex:actionStatus id="counterStatus1"  startText=" (Adding...)"  stopText=""/>
+    
+
+    
+    
+    
+    
+
+    
+    <div class="pbSubheader" >
+    <h3>Refinance Details</h3>
+</div>
+     <apex:outputPanel id="RefinanceList" >
+       <apex:variable value="{!0}" var="rowNum"/>
+     <table class="detailList">
+<tr><th>Refinance reason</th><th>Refinance Value</th><th>Details</th><th>Action</th></tr>
+      <apex:repeat value="{!RefinanceSource}" var="d">
+  
+<tr>
+    <td>
+        <apex:inputField value="{!d.Refinance_Type__c}"   />
+    </td>
+    
+    <td><apex:inputField value="{!d.Refinance_Value__c}" styleClass="refinanceValue"   /></td>
+
+    <td><apex:inputField value="{!d.Refinance_Details__c}" style="width:300px;"   /></td>
+    <td>
+        <apex:commandButton value="Remove" action="{!RemoveRefinanceSource}"   reRender="RefinanceList" status="RefinanceListRemoveStatus">
+        <apex:param name="nickName"
+                value="{!rowNum}"
+                assignTo="{!rowDeleteRefinanceSource}"/> 
+        
+        </apex:commandButton>
+        <apex:actionStatus id="RefinanceListRemoveStatus" startStyle="padding-left: 10px;text-decoration:none;"   startText="Removing..."  stopText=""/>
+    </td>
+    
+</tr>
+
+      
+               
+      <apex:variable var="rowNum" value="{!rowNum + 1}"/>
+      
+      </apex:repeat>
+      <tr><td></td><td><b><span id="refinanceValue"/></b></td><td></td></tr>
+   </table>
+      </apex:outputPanel>
+      
+      <apex:commandButton value="Add Refinance Reason" action="{!AddRefinanceSource}" oncomplete="setUpOut()" reRender="RefinanceList" status="counterStatus"/>
+      <apex:actionStatus id="counterStatus"  startText=" (Adding...)"  stopText=""/>
+    
+              
+
+  
+          
+      </div><!-- end tab property details-->
+   
+   
+   <div><!--start property details-->
+   <div class="pbSubheader" >
+    <h3>Property Address</h3>
+</div>
+    <table class="detailList" width="50%">
+        <tbody>
+            <tr> 
+                <td class="labelCol">Country</td><td class="dataCol"><apex:inputField styleClass="noKendo" id="acc17country" value="{!Opp.New_property_country__c}" required="false"/></td>
+                <td class="labelCol"></td><td class="dataCol"></td>
+            </tr>
+            <tr>
+                <td class="labelCol">Postcode</td><td class="dataCol"><apex:inputField id="acc17zip" value="{!Opp.New_property_postcode__c}" required="false"/></td>
+                <td class="labelCol"></td><td class="dataCol"></td>
+            </tr>
+            <tr>
+                <td class="labelCol">Street</td><td class="dataCol"><apex:inputField id="acc17street" value="{!Opp.New_property_street__c}" required="false"/></td>
+                <td class="labelCol"></td><td class="dataCol"></td>
+            </tr>
+            <tr>
+                <td class="labelCol">City</td><td class="dataCol"><apex:inputField id="acc17city" value="{!Opp.New_property_city__c}" required="false"/></td>
+                <td class="labelCol"></td><td class="dataCol"></td>
+            </tr>
+            <tr>
+            <td class="labelCol">Is the property located in England, Wales or Mainland Scotland?</td><td class="dataCol"><apex:inputField value="{!ExOpp.Mainland__c}" required="false"/></td>            
+            </tr>
+        </tbody>
+    </table>
+    
+    <div class="pbSubheader" >
+    <h3>Property Details</h3>
+</div>
+    <table class="detailList">
+        <tbody>
+
+          <tr>
+            <td class="labelCol">Are you paying full market value for the property?</td><td class="dataCol"><apex:inputField value="{!ExOpp.Paying_full_value__c}" required="false"/></td>            
+            </tr>
+                  
+        <tr>
+                <td class="labelCol">Tenure</td><td class="dataCol"><apex:inputField id="tenure" styleClass="tenure" value="{!ExOpp.Tenure__c}" required="false"/></td>
+                <td class="labelCol">If the property is less than 10 years old does it have a guarantee?</td><td class="dataCol"><apex:inputField value="{!ExOpp.Property_guarantee__c }" required="false"/></td>
+                <td colspan="2"/>              
+            </tr>
+            
+            <tr style="display:none;" class="tenureItem">
+                <td class="labelCol">Remaining leasehold term</td><td class="dataCol"><apex:inputField value="{!ExOpp.Remaining_leasehold_term__c}"/></td>
+                <td class="labelCol">Full lease term</td><td class="dataCol"><apex:inputField styleClass="tenure" value="{!ExOpp.Full_lease_term__c}"/></td>                                    
+            </tr>
+            <tr>
+                <td class="labelCol">Property type</td><td class="dataCol"><apex:inputField styleClass="PropType" value="{!ExOpp.Property_Type__c}" required="false"/></td>
+                <td class="labelCol">Property details</td><td class="dataCol"><apex:inputField id="propType2noKendo" value="{!ExOpp.Property_details__c}" required="false"/></td>
+            </tr>  
+ 
+            <tr>
+            <td class="labelCol">Additional property information</td><td class="dataCol"><apex:inputField value="{!Opp.Misc_property_info__c}" required="false"/></td>
+                <td class="labelCol">No. of bedrooms</td><td class="dataCol"><apex:inputField value="{!ExOpp.No_of_bedrooms__c}" required="false"/></td>
+                <td colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="labelCol"><span style="display:none;" class="flatItem">If a flat, how many storeys high</span></td><td class="dataCol"><span style="display:none;" class="flatItem"><apex:inputField value="{!ExOpp.If_a_flat_how_many_storeys_high__c}"/></span></td>
+                <td class="labelCol"><span style="display:none;" class="flatItemh">What floor is the flat located on</span></td><td class="dataCol"><span style="display:none;" class="flatItemh"><apex:inputField value="{!ExOpp.What_floor_is_the_flat_located_on__c}"/></span></td>
+            </tr>  
+            <tr>
+                <td class="labelCol">Is the property above a commercial premises?</td><td class="dataCol"><apex:inputField value="{!ExOpp.Is_property_above_commercial_premise__c}" required="false"/></td>
+                <td class="labelCol">Is the property ex local authority?</td><td class="dataCol"><apex:inputField value="{!ExOpp.Is_the_property_expublic_sector__c}" required="false"/></td>                
+            </tr>
+            <tr>
+                <td class="labelCol">Are you buying from a family member</td><td class="dataCol"><apex:inputField styleClass="buyfam" value="{!ExOpp.Are_you_buying_from_a_family_member__c}" required="false"/></td>
+                <td class="labelCol"><span style="display:none;" class="buyfamItem">Is there an element of Gift involved?</span></td><td class="dataCol"><span style="display:none;" class="buyfamItem"><apex:inputField value="{!ExOpp.Is_there_an_element_of_Gift_involved__c}" required="false"/></span></td>
+            </tr>  
+            <tr>
+                <td class="labelCol"><apex:outputLabel rendered="{!!IsBuyToLet}" >Is the property your main residence?</apex:outputLabel> </td><td class="dataCol"><apex:inputField rendered="{!!IsBuyToLet}" value="{!ExOpp.Is_the_property_your_main_residence__c}" required="false"/></td>
+                <td class="labelCol">Is the property shared ownership?</td><td class="dataCol"><apex:inputField value="{!ExOpp.Shared_ownership__c}" required="false"/></td>                                
+            </tr>  
+            
+            <tr>
+                <td class="labelCol">Construction type of roof </td><td class="dataCol"><apex:inputField value="{!ExOpp.Construction_Type_Roof__c}" required="false"/></td>
+                <td class="labelCol">Construction type of walls</td><td class="dataCol"><apex:inputField value="{!ExOpp.Construction_type_walls__c}" required="false"/></td>            
+            </tr>
+            <tr style="display:{! If(IsBuyToLet, 'table-row','none')};">
+                <td class="labelCol">Will the property be used for trade purposes?  </td><td class="dataCol"><apex:inputField value="{!ExOpp.Property_be_used_for_trade_purposes__c}" required="false"/></td>
+                <td colspan="2"/>
+            </tr>
+            <tr>
+                <td class="labelCol">Will the property be let on a standard AST agreement?  </td><td class="dataCol"><apex:inputField styleClass="ast" value="{!ExOpp.Will_property_be_let_using_AST__c}"/></td>
+              <td class="labelCol"><span style="display:none;" class="astItem">Please state the length of the AST </span></td><td class="dataCol"><span style="display:none;" class="astItem"><apex:inputField value="{!ExOpp.Length_of_AST__c}"/></span></td>
+            </tr>  
+            
+              <tr>
+                <td class="labelCol">If 'Buy to Let' refinancing have you ever owned property for more than 12 months?</td><td class="dataCol"><apex:inputField styleClass="nameTitle" value="{!Opp.If_BTL_financing_owned_property_12mths__c}"   /></td>
+                <td class="labelCol">Will the property be let to family or to a company?</td><td class="dataCol"><apex:inputField value="{!ExOpp.Property_let_to_family_or_company__c}" required="false"/></td>
+                <td colspan="2"/>
+            </tr>
+            
+             <tr>
+              <td class="labelCol">If refinancing, when was the property purchased?</td><td class="dataCol"><apex:inputField value="{!Opp.Refinance_date_property_purchased__c}" required="false"/></td>
+                <td colspan="2"/>
+            </tr>             
+                              
+                                                                 
+        </tbody>
+    </table>   
+   
+   </div><!-- end property details-->
+           </div>
+            <apex:commandButton styleClass="redBtn" value="Save" action="{!Save}"/>
+</apex:pageBlock>
+</div>
+</td></tr></table>
+</div>
+</div>
+
+<apex:outputPanel rendered="{!IsCompleted}">
+
+</apex:outputPanel>
+
+  </apex:form>
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <span id="pca_status" style="display:none;" />
+<script type="text/javascript">
+    pca_Load();
+</script>
+<span id="hideMyParent"></span>
+  
+<script>
+function PropType()
+{
+    var value = $("select.PropType").val();
+    FadeInputContains(value,'Flat','flatItem');
+}
+
+function Tenure()
+{
+    var value = $("select.tenure").val();
+    FadeInput(value,'Leasehold','tenureItem');
+}
+$("select.tenure").change(Tenure);
+$("select.PropType").change(PropType);
+$("select.buyfam").change(BuyFam);
+$("select.ast").change(AST);
+
+function BuyFam()
+{
+    var value = $("select.buyfam").val();
+    FadeInput(value,'Yes','buyfamItem');
+}
+
+function AST()
+{
+    var value = $("select.ast").val();
+    FadeInput(value,'Yes','astItem');
+}
+
+
+
+function FadeInput(value, compareTo,fadeClass)
+{
+    if(value == compareTo)
+    {
+        $("." + fadeClass).fadeIn(500);
+    }
+    else
+    {
+        $("." + fadeClass).fadeOut(500);
+    } 
+}
+
+
+function FadeInputContains(value, contains,fadeClass)
+{
+    if(value.indexOf(contains) !== -1)
+    {
+        $("." + fadeClass).fadeIn(500);
+    }
+    else
+    {
+        $("." + fadeClass).fadeOut(500);
+    } 
+}
+function GetFloatValue(value)
+{
+    if(value == null)
+        return 0;
+
+    value = value.replace(',','');
+    value = value.replace('£','');
+    value = value.replace('$','');
+    
+    var retValue = parseFloat( value,10);
+    
+    if(isNaN(retValue))
+    {
+        return 0;
+    }
+    return retValue;
+}
+
+Number.prototype.formatMoney = function(c, d, t){
+var n = this, c = isNaN(c = Math.abs(c)) ? 2 : c, d = d == undefined ? "," : d, t = t == undefined ? "." : t, s = n < 0 ? "-" : "", i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "", j = (j = i.length) > 3 ? j % 3 : 0;
+   return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+ };
+
+$(".depositValue").change(CalcDeposit);
+$(".refinanceValue").change(CalcRefinance);
+
+function CalcDeposit()
+{
+ var tot = 0;
+    $(".depositValue").each(function(index) {
+         tot+=GetFloatValue($(this).val());    
+     });
+    $("#depositValue").text('£' + tot.formatMoney(2, '.', ','));
+}
+
+function CalcRefinance()
+{
+ var tot = 0;
+    $(".refinanceValue").each(function(index) {
+         tot+=GetFloatValue($(this).val());    
+     });
+    $("#refinanceValue").text('£' + tot.formatMoney(2, '.', ','));
+}
+
+$(document).ready(function(){
+CalcDeposit();
+CalcRefinance();
+BuyFam();
+AST();
+Tenure();
+PropType();
+
+});
+
+
+
+</script> 
+ 
+  
+  
+  </body>
+
+</apex:page>

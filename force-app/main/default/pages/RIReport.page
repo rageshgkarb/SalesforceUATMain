@@ -1,0 +1,197 @@
+<apex:page controller="RIReportSelection" renderAs="PDF" showHeader="false" sidebar="false" standardStylesheets="true">
+
+<head>
+<style>
+
+body
+{
+    font-family: sans-serif;
+    font-size: 11pt;
+}
+
+table.KRI
+{
+	border: 1px solid #809FFF; 
+	border-collapse:collapse;
+}
+
+
+h2
+{
+	color: #809FFF;
+}
+
+th
+{
+    background-color: #809FFF;
+    color: #FFF;
+    font-size:11pt;
+    text-align: center;
+    padding: 5px;
+    border: border: 1px solid #FFFFFF;
+}
+
+
+@page
+{
+    size: A4 landscape !important;
+<!--    margin-bottom: 100px;-->
+<!--    margin-left: 10px;-->
+<!--    margin-right: 10px;-->
+    
+    @top-center
+    {
+        content: element(header);
+        font-size: 18pt;
+    }
+    
+    @bottom-center
+    {
+        content: "Page " counter(page);
+        font-size: 12pt;
+    }
+    
+    @bottom-right-corner
+    {
+        content: element(logo);
+    }
+}
+
+</style>
+</head>
+
+<apex:outputPanel layout="none">
+	    
+  	<h2>Risk and RI Report</h2>
+  	
+  	<apex:outputText value="{0,date,dd/MM/yyyy}">
+	<h3><apex:param value="{!todayDate}"/></h3>
+	</apex:outputText>
+  	
+</apex:outputPanel>
+	    
+<apex:outputPanel layout="none">
+  
+  	<h2>{!dateRange} Report</h2>
+  	
+  	<apex:outputText value="{0,date,dd/MM/yyyy}">
+		<h3>From <apex:param value="{!sixMonthsAgoBeginningOfMonth}"/></h3>
+	</apex:outputText>
+
+	<apex:outputText value="{0,date,dd/MM/yyyy}">
+		<h3>To <apex:param value="{!theDateTimeNow}"/></h3>
+	</apex:outputText>
+
+</apex:outputPanel>
+
+<apex:outputPanel layout="none">
+	
+	<table style="border: 1px solid #809FFF; border-collapse:collapse;">
+     	<tr>
+<!-- 		<th style="display:{!IF()}"> -->
+			<th>
+				Bank Risk Register ID 
+			</th>
+			<th>
+				Board Risk Register ID 
+			</th>
+			<th>
+				KRI Number
+			</th>
+			<th>
+				Level 1 Risk 
+			</th>
+			<th>
+				Level 2 Risk 
+			</th>
+			<th>
+				Risk Title 
+			</th>
+			<th>
+				Level 3 Risk 
+			</th>
+			<th>
+				Bank Inherent Probability
+			</th>
+			<th>
+				Bank Inherent Impact
+			</th>
+			<th>
+				Bank Residual Probability
+			</th>
+			<th>
+				Bank Residual Impact
+			</th>
+			<th>
+				Risk Weighting 
+			</th>
+			<th>
+				Owner 
+			</th>
+			<th>
+				Process 
+			</th>
+			<th>
+				Frequency 
+			</th>
+		</tr>
+		
+		<apex:repeat value="{!reportRows}" var="riskRow">
+			<tr>
+				<td>
+					{!riskRow.theRisk.Bank_Risk_Register_ID__c}
+				</td>
+				<td>
+					{!riskRow.theRisk.Board_Risk_Register_ID__c}
+				</td>
+				<td>
+					{!riskRow.theRisk.IBB_KRI_Number__c}
+				</td>
+				<td>
+					{!riskRow.theRisk.grc__Category__c}
+				</td>
+				<td>
+					{!riskRow.theRisk.grc__Subcategory__c}
+				</td>
+				<td>
+					{!riskRow.theRisk.Name}
+				</td>
+				<td>
+					{!riskRow.theRisk.IBB_Level_3_Description__c}
+				</td>
+				<td>
+					{!riskRow.theRisk.Risk__Inherent_Likelihood_Text__c}
+				</td>
+				<td>
+					{!riskRow.theRisk.Risk__Inherent_Impact_Text__c}
+				</td>
+				<td>
+					{!riskRow.theRisk.Risk__Residual_Likelihood_Text__c}
+				</td>
+				<td>
+					{!riskRow.theRisk.Risk__Residual_Impact_Text__c}
+				</td>
+				<td>
+					{!riskRow.theRisk.IBB_Risk_Weighting__c}
+				</td>
+				<td>
+					{!riskRow.theRisk.grc__Business_Unit__c}
+				</td>
+				<td>
+					{!riskRow.theRisk.Process__c}
+				</td>
+				<td>
+					{!riskRow.theRisk.Frequency__c}
+				</td>
+			</tr>
+		
+		</apex:repeat>
+        		
+	</table>
+
+
+</apex:outputPanel>
+
+
+
+</apex:page>

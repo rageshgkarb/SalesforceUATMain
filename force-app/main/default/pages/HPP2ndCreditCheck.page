@@ -1,0 +1,110 @@
+<apex:page controller="HPP2ndCreditCheck"   sidebar="false" showHeader="false" title="2nd Credit Check" action="{!Setup}">
+    <head>
+        <c:KendoResource ></c:KendoResource>
+    </head>
+    <body>
+        <apex:form >
+            <div id="formWrapper">
+                <div class="header">
+                    <h1>{!Opp.Name} </h1>
+                </div>
+                <c:HPPSummary objAcc="{!Accounts[0]}" objOpp="{!opp}" objExOpp="{!ExOpp}" Product="{!Prod}" />
+                <div id="container" >
+                    <table width="100%">
+                        <tr>
+                            <td valign="top" id="sidebar">
+                                <c:HPPBOMenu oppId="{!Opp.Id}"  DirectorId="{!Opp.ProductEventDirector__c}" />
+                            </td>
+                            <td valign="top" id="contenttd">
+                                <div id="content">
+                                    <h1>2nd Credit Check</h1>
+                                
+                                    <apex:outputPanel id="mainPageBlock">
+                                    <div style="padding:20px;">
+                                    <!-- content -->
+                                    
+                                    <apex:commandButton value="Perform Credit Check" action="{!CallCredit}" 
+                                            reRender="mainPageBlock" onclick="ShowDocumentLoad()" 
+                                            oncomplete="HideDocumentLoad()" rendered="{!Allow2ndCreditCheck}"/>   
+                                    
+                                    <br/><br/>
+                                    
+                                    <div class="apexp"> 
+                                    <div class="bPageBlock">
+                                    <div class="pbBody">
+                                    <table class="list">
+                                    <tbody>
+                                    <tr class="headerRow">
+                                        <th>Customer Name</th>
+                                        <th>Decision</th>
+                                        <th>Credit Date</th>
+                                        <th>Action</th>
+                                    </tr>
+                                   
+                                    
+                                    <apex:repeat value="{!Credits}" var="c">
+                                    <tr class="dataRow">
+                                        <td>{!c.Prospect_Customer__r.Name}</td>
+                                        <td>
+                                        {!c.Decision__c}
+                                        </td>
+                                        <td>
+                                        <apex:outputText value="{0,date,dd'/'MM'/'yyyy}">
+    <apex:param value="{!c.CreatedDate}" /> 
+</apex:outputText>
+                                        
+                                        </td>
+                                        
+                                        
+                                        <td><span onClick="Viewer('{!c.Decision_ID__c}');">View</span></td>
+                                    </tr>
+                                    </apex:repeat>
+                                     </tbody>
+                                    </table>
+                                   </div>
+                                   </div>
+                                   </div>
+                                    
+                               <apex:pageMessages ></apex:pageMessages>
+                                </div>
+                                    </apex:outputPanel>
+                                     <iframe id="frame" width="100%" height="500" >
+                                    
+                                    </iframe>
+                                </div>
+                                
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div id="fade"></div>
+<div id="overlay">
+Doing credit check...
+<br/>
+<br/>
+This may take a few seconds.
+
+<div style="padding-top: 50px;" >
+ <!--  CPDR01 
+<img src="{!URLFOR($Resource.ibbstyle, 'images/269.gif')}"></img>
+	-->
+<img src="{!URLFOR($Resource.ibbstyleexternal, 'graphics/logos/circular-timer.gif')}"></img>
+</div>
+
+
+</div>
+
+<script>
+
+    function Viewer(deId)
+    {
+        $('#frame').attr('src','http://Appdev01:98/XMLDataViewer/CreditData?CallID=' + deId );
+    };
+
+</script>
+            
+        </apex:form>
+
+        </body>
+</apex:page>

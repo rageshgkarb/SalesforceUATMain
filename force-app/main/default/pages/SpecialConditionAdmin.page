@@ -1,0 +1,238 @@
+<apex:page standardController="Special_Condition__c"  extensions="SpecialConditionAdminController" >
+<style>
+.panel
+{
+    border: solid 1px #444;
+    margin: 10px;
+    padding: 10px;
+}
+h1
+{
+    font-size: 18pt;
+    padding-bottom: 20px;
+}
+
+</style>
+
+
+<h1>Special Conditions</h1>
+<apex:form >
+
+
+<table>
+<tr>
+    <td>Code</td><td>{!data.Name}</td>
+</tr>
+<tr>
+    
+    <td>Category</td><td>
+    
+    <apex:selectList value="{!data.Category__c}" size="1">
+    <apex:selectOption itemValue="G" itemLabel="G" ></apex:selectOption>
+    <apex:selectOption itemValue="P" itemLabel="P"></apex:selectOption>
+    <apex:selectOption itemValue="I" itemLabel="I"></apex:selectOption> <!-- C0760 Process Optimization 2.0 -->
+    </apex:selectList>
+    
+    </td>
+       </tr>
+       <tr>
+            <td>Version</td>
+            <td><apex:inputField value="{!data.Version__c}"/></td>
+       </tr>
+       
+       <tr>
+           <td>Post completion condition</td>
+           <td><apex:inputCheckbox value="{!data.Post_Completion__c}"/></td>       
+       </tr>
+       <tr>
+           <td>Chase within (months)</td>       
+           <td>
+               <apex:selectList size="1" value="{!data.Chase_within_months__c}">
+                   <apex:selectOption itemLabel="-- None --" itemvalue=""></apex:selectOption>
+                   <apex:selectOption itemValue="1"></apex:selectOption>
+                   <apex:selectOption itemValue="2"></apex:selectOption>
+                   <apex:selectOption itemValue="3"></apex:selectOption>
+                   <apex:selectOption itemValue="5"></apex:selectOption>
+                   <apex:selectOption itemValue="6"></apex:selectOption>
+                   <apex:selectOption itemValue="7"></apex:selectOption>
+                   <apex:selectOption itemValue="8"></apex:selectOption>
+                   <apex:selectOption itemValue="9"></apex:selectOption>
+                   <apex:selectOption itemValue="10"></apex:selectOption>
+                   <apex:selectOption itemValue="11"></apex:selectOption>
+                   <apex:selectOption itemValue="12"></apex:selectOption>
+              
+               </apex:selectList>
+           </td>     
+       </tr>
+       
+       
+       
+       <tr>
+       <td>Active</td><td><apex:inputField value="{!data.Active__c}"/></td>
+       </tr>
+       <tr>
+            <td>Template</td><td><apex:inputTextarea style="width:500px" rows="5" value="{!data.Stand_condition__c}"/>  </td>
+</tr>
+</table>
+<apex:commandButton action="{!Save}" value="Save"/>
+<apex:commandButton styleClass="redBtn" action="{!NewAdmin}" value="New Condition" />
+<br/><br/><br/>
+
+
+</apex:form>
+
+<table width="100%">
+<tr>
+<td valign="top" class="panel"> 
+
+
+
+
+
+<apex:form >
+ <apex:outputPanel id="criteriaPanel"> 
+<div>
+
+
+<div>
+<h2>Data Fields</h2>
+
+<table width="100%">
+
+
+<tr>
+<td>Code</td>
+<td><apex:inputText maxlength="5" value="{!CurrentTag.Code}" required="true" label="Tag Code"/></td>
+</tr>
+<tr>
+<td>
+Object
+</td>
+
+<td>
+ <apex:selectList value="{!CurrentTag.ObjectName}" id="crObjList" size="1" required="true">
+                            <apex:selectOptions value="{!crObjOptions}"/>
+                            <apex:actionSupport event="onchange" rerender="criteriaPanel"/>              
+                        </apex:selectList>  
+</td>
+</tr>
+
+
+<tr>
+<td>Field</td>
+ <td>
+                          <apex:selectList value="{!CurrentTag.Field}" id="crFieldList" size="1" required="true" rendered="{!CurrentTag.ObjectName!= '' && CurrentTag.ObjectName!= null && CurrentTag.ObjectName!= '--'}">
+                            <apex:selectOptions value="{!crFieldOptions}"/>
+                                          
+                        </apex:selectList>
+  </td>
+  </tr>
+  <tr>
+  <td></td>
+    <td>
+  <apex:commandButton rendered="{!CurrentTag.ObjectName!= null && CurrentTag.ObjectName!= '--'}" action="{!AddField}" reRender="criteriaPanel" value="Add Field"/>
+  </td>
+
+</tr>
+
+</table>
+
+</div>
+</div>
+
+<div>
+<div>
+<table width="100%">
+<tr>
+<th>Code</th><th>Object</th><th>Field</th><th>Action</th>
+</tr>
+<apex:repeat value="{!CurrentItem.Tags}" var="tag">
+<tr>
+    <td>{!tag.Code}</td>
+    <td>{!tag.ObjectName}</td>
+    <td>{!tag.Field}</td>   
+    <td>
+    <apex:commandLink action="{!delItem}" value="Del" rerender="criteriaPanel" immediate="true">
+                            <apex:param name="delObj" value="{!tag.ObjectName}" assignTo="{!delObj}"/>
+                            <apex:param name="delField" value="{!tag.Field}" assignTo="{!delField}"/>
+                        </apex:commandLink>
+    </td> 
+</tr>
+</apex:repeat>
+
+</table>
+<apex:pagemessages ></apex:pagemessages>
+</div>
+</div>
+</apex:outputPanel>
+</apex:form>
+</td>
+<td valign="top" width="50%" class="panel">
+
+<apex:form >
+ <apex:outputPanel id="userTagPanel"> 
+<div >
+<div>
+<h2>Manual Fields</h2>
+
+<table width="100%">
+<tr>
+<td>Code</td>
+<td><apex:inputText maxlength="5" value="{!CurrentUserTag.Code}" label="Tag Code" title="Tag Code" required="true"/></td>
+</tr>
+<tr>
+<td>
+Title
+</td>
+
+<td>
+<apex:inputText value="{!CurrentUserTag.Title}" label="Tag Title" title="Tag Title" required="true"/>  
+</td>
+</tr>
+  <tr>
+  <td></td>
+    <td>
+  <apex:commandButton action="{!AddUserTag}" reRender="userTagPanel" value="Add Field"/>
+  </td>
+</tr>
+</table>
+</div>
+</div>
+
+<div>
+<div>
+<table width="100%">
+<tr>
+<th>Code</th><th>Object</th><th>Field</th>
+</tr>
+<apex:repeat value="{!CurrentItem.UserTags}" var="tag">
+<tr>
+    <td>{!tag.Code}</td>
+    <td>{!tag.Title}</td>    
+    <td>
+    <apex:commandLink action="{!delUserTag}" value="Del" rerender="userTagPanel" immediate="true">
+                            <apex:param name="delCode" value="{!tag.Code}" assignTo="{!delCode}"/>
+                           
+                        </apex:commandLink>
+    </td> 
+</tr>
+</apex:repeat>
+
+</table>
+<apex:pageMessages />
+
+
+
+</div>
+</div>
+</apex:outputPanel>
+
+
+</apex:form>
+</td>
+</tr>
+</table>
+
+
+
+</apex:page>

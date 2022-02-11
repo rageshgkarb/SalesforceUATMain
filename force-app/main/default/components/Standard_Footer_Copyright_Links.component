@@ -1,0 +1,7 @@
+<apex:component >
+    <p class="text-muted">© Copyright {! YEAR(TODAY()) } Al Rayan Bank PLC
+                    <a href="https://www.alrayanbank.co.uk/privacy"
+                        target="_blank">Privacy and Security</a>&nbsp;|&nbsp;
+    <a href="https://www.alrayanbank.co.uk/cookies-policy" target="_blank">Cookie Policy</a>
+    </p>
+</apex:component>

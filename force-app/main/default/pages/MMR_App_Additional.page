@@ -1,0 +1,299 @@
+<apex:page showHeader="false" sidebar="false" controller="MMR_App_Additional" docType="html-5.0" action="{!Setup}">
+<head>
+    <c:MMR_PageHeader ></c:MMR_PageHeader>   
+
+</head>
+<body>
+
+  
+  <c:MMR_Header title="Application - Additional Information" numapps="{!numapplying}" opp="{!bopp}" hide="{!IsCredit}"/>
+
+      <div class="container">
+              <c:MMR_App_Nav active="2" EventId="{!EventId}" rendered="{!!IsCredit && !IsCompleted}"/>
+              <c:MMR_App_Nav_Links active="2" EventId="{!EventId}" rendered="{!!IsCredit && IsCompleted}"/>             
+              
+              
+              <c:MMR_Credit_Nav EventId="{!eventid}" active="2" activesection="E" rendered="{!IsCredit}"/>
+    
+        <apex:form id="aForm" styleClass="form-horizontal">
+     
+      
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs">
+          <li class="active"><a href="#home" data-toggle="tab">Third Party Information</a></li>
+          <li><a href="#profile" data-toggle="tab">Additional Occupier Information</a></li>
+          <li><a href="#messages" data-toggle="tab">Staff Sales Information</a></li>
+        </ul>
+        
+        <!-- Tab panes -->
+        <div class="tab-content">
+          <div class="tab-pane active" id="home">
+              <div class="row">
+                  <div class="form-group">
+                      <div class="col-sm-3">
+                          <label>Access contact name</label>
+                      </div>
+                      <div class="col-sm-3">
+                      <!--C0782 REAC changes required="{!If(CONTAINS(Opp.Interested_in__c,'REAC') ,false,true)}" -->
+                          <apex:inputField required="{!If(CONTAINS(Opp.Interested_in__c,'REAC') ,false,true)}" styleClass="form-control" value="{!ExOpp.Estate_agent_contact_name__c}"/>
+                      </div>               
+                      <div class="col-sm-3">
+                          <label>Access company name</label>
+                      </div>
+                      <div class="col-sm-3">
+                          <apex:inputField styleClass="form-control" value="{!ExOpp.Estate_agent_company_name__c}"/>
+                      </div>
+                  </div>
+              </div>
+              
+              <div class="row">
+                  <div class="form-group">
+                      <div class="col-sm-3">
+                          <label>Access telephone number</label>
+                      </div>
+                      <div class="col-sm-3">
+                      <!--C0782 REAC changes required="{!If(CONTAINS(Opp.Interested_in__c,'REAC') ,false,true)}" -->
+                          <apex:inputField required="{!If(CONTAINS(Opp.Interested_in__c,'REAC') ,false,true)}" styleClass="form-control" value="{!ExOpp.Estate_agent_contact_telephone_number__c}"/>
+                      </div>
+                      <div class="col-sm-3">
+                          <label>Solicitor company name</label>
+                      </div>
+                      <div class="col-sm-3">
+                          <apex:inputField styleClass="form-control" value="{!ExOpp.Solicitor_company_name__c}"/>
+                      </div>
+                  </div>
+              </div>
+              
+              <div class="row">
+                  <div class="form-group">
+                      <div class="col-sm-3">
+                          <label>Solicitor contact name</label>
+                      </div>
+                      <div class="col-sm-3">
+                          <apex:inputField styleClass="form-control" value="{!ExOpp.Solicitor_contact_name__c}"/>
+                      </div>
+                      <div class="col-sm-3">
+                          <label>Solicitor postcode</label>
+                      </div>
+                      <div class="col-sm-3">
+                          <apex:inputField styleClass="form-control" value="{!ExOpp.Solicitor_postcode__c}"/>
+                      </div>
+                  </div>
+              </div>
+              
+              
+              <div class="row">
+                  <div class="form-group">
+                      <div class="col-sm-3">
+                          <label>Solicitor street</label>
+                      </div>
+                      <div class="col-sm-3">
+                          <apex:inputField styleClass="form-control" value="{!ExOpp.Solicitor_street__c}"/>
+                      </div>
+
+                      <div class="col-sm-3">
+                          <label>Solicitor city</label>
+                      </div>
+                      <div class="col-sm-3">
+                          <apex:inputField styleClass="form-control" value="{!ExOpp.Solicitor_city__c}"/>
+                      </div>
+                  </div>
+              </div>
+              
+              <div class="row">
+                  <div class="form-group">
+                      <div class="col-sm-3">
+                          <label>Solicitor country</label>
+                      </div>
+                      <div class="col-sm-3">
+                          <apex:inputField styleClass="form-control" value="{!ExOpp.Solicitor_country__c}"/>
+                      </div>
+
+                      <div class="col-sm-3">
+                          <label>Solicitor telephone number</label>
+                      </div>
+                      <div class="col-sm-3">
+                          <apex:inputField styleClass="form-control" value="{!ExOpp.Solicitor_contact_telephone_number__c}"/>
+                      </div>
+                  </div>
+              </div>
+              
+              <div class="row">
+                  <div class="form-group">
+                      <div class="col-sm-3">
+                          <label>Solicitor email</label>
+                      </div>
+                      <div class="col-sm-3">
+                          <apex:inputField styleClass="form-control" value="{!ExOpp.Solicitor_email_address__c}"/>
+                      </div>
+
+                      <div class="col-sm-3">
+                          <label>Supporting information for the application</label>
+                      </div>
+                      <div class="col-sm-3">
+                          <apex:inputField styleClass="form-control" value="{!ExOpp.Additional_Information__c}"/>
+                      </div>
+                  </div>
+              </div>
+              
+              <div class="row">
+                  <div class="form-group">
+                      <div class="col-sm-3">
+                          <label>Panel/non panel solicitor</label>
+                      </div>
+                      <div class="col-sm-3">
+                      <!--C0782 REAC changes required="{!If(CONTAINS(Opp.Interested_in__c,'REAC') ,false,true)}" -->
+                          <apex:inputField styleClass="form-control" required="{!If(CONTAINS(Opp.Interested_in__c,'REAC') ,false,true)}"    value="{!Opp.Panelled_Non_Panelled_Solicitor__c}"/>
+                      </div>
+
+                     
+                  </div>
+              </div>
+              
+              
+              
+              
+              
+              
+              
+          </div>
+          <div class="tab-pane" id="profile">
+          
+              <div class="row">
+                  <div class="form-group">
+                      <div class="col-sm-6">
+                          <label>How many people over 17 will occupy the property?</label>
+                      </div>
+                      <div class="col-sm-2">
+                          <apex:inputField styleClass="form-control" value="{!ExOpp.Over_17_will_occupy_property__c}" required="false"/>
+                      </div>
+                  </div>              
+              </div>    
+              
+              <div class="panel panel-primary">
+                  <div class="panel-heading">
+                      Other Adults
+                  </div>
+                  <div class="panel-body">
+                      <apex:outputPanel id="OtherAdultList" >
+                      <div class="col-sm-12">
+                      <apex:variable value="{!0}" var="rowNumAdult"/>
+                          
+                          <apex:repeat value="{!OtherAdults }" var="otherAdult">
+                              <div class="row">
+                                  <div class="form-group">
+                                      <div class="col-sm-3">
+                                          <label>First name</label>
+                                      </div>
+                                      <div class="col-sm-3">
+                                          <apex:inputField styleClass="form-control" value="{!otherAdult.First_name__c}" id="debtName"  />
+                                      </div>
+                                  
+                                      <div class="col-sm-3">
+                                          <label>Last name</label>
+                                      </div>
+                                      <div class="col-sm-3">
+                                          <apex:inputField styleClass="form-control" value="{!otherAdult.Last_name__c}" id="debtStart"  />
+                                      </div>
+                                  </div>
+                              </div>
+                              
+                              <div class="row">
+                                  <div class="form-group">
+                                      <div class="col-sm-3">
+                                          <label>Date of birth</label>
+                                      </div>
+                                      <div class="col-sm-3">
+                                          <apex:inputField styleClass="form-control" value="{!otherAdult.Date_of_birth__c}" id="debtMonthly"  />
+                                      </div>
+                                
+                                      <div class="col-sm-3">
+                                          <label>Relationship to primary applicant</label>
+                                      </div>
+                                      <div class="col-sm-3">
+                                          <apex:inputField styleClass="form-control" value="{!otherAdult.Relationship_to_primary_applicant__c}" id="debtBalance"  />
+                                      </div>
+                                  </div>
+                              </div>
+                              
+                              <div class="row">
+                                  <div class="pull-right">
+                                  <apex:commandButton styleClass="btn-danger" value="Remove" action="{!RemoveAdult}"   reRender="OtherAdultList" status="adultRemoveStatus">
+      <apex:param name="nickName"
+                value="{!rowNumAdult}"
+                assignTo="{!rowDeleteAdult}"/> 
+               
+                
+                </apex:commandButton> <apex:actionStatus id="adultRemoveStatus" startStyle="padding-left: 10px;text-decoration:none;"   startText="Removing adult..."  stopText=""/>
+                              </div>
+                              </div>
+                              
+                              <apex:variable var="rowNumAdult" value="{!rowNumAdult+ 1}"/>
+                          </apex:repeat>
+                          </div>
+                      </apex:outputPanel>
+                      
+                      <div class="row">
+                      <div class="col-sm-12">
+                           <apex:commandButton styleClass="btn-primary" value="Add Adult" action="{!AddAdult}"  reRender="OtherAdultList" status="adultcounterStatus"/>
+      <apex:actionStatus id="adultcounterStatus"  startText=" (Adding new adult...)"  stopText=""/>
+                      </div>
+                      </div>
+                      
+                  </div>
+                  </div>
+                  
+                  
+              
+              
+          
+          
+          </div>
+          <div class="tab-pane" id="messages">
+              <div class="row">
+                  <div class="form-group">
+                      <div class="col-sm-3">
+                          <label>Advice at point of sale</label>
+                      </div>
+                      <div class="col-sm-3">
+                          <apex:inputField styleClass="form-control" value="{!Opp.Advice_at_POS__c}"/>
+                      </div>
+                  </div>
+              </div>
+              
+              <div class="row">
+                  <div class="form-group">
+                      <div class="col-sm-3">
+                          <label>Service provided at point of sale</label>
+                      </div>
+                      <div class="col-sm-3">
+                          <apex:inputField styleClass="form-control" value="{!Opp.Service_at_POS__c}"/>
+                      </div>
+                  </div>
+              </div>
+              
+              <div class="row">
+                  <div class="form-group">
+                      <div class="col-sm-3">
+                          <label>How the sale was made</label>
+                      </div>
+                      <div class="col-sm-3">
+                          <apex:inputField styleClass="form-control" value="{!Opp.How_was_sale_made__c}"/>
+                      </div>
+                  </div>
+              </div>
+          </div>
+        </div>
+      
+        <div class="col-sm-12">
+            <apex:commandButton value="Previous" styleClass="btn-primary" action="{!Previous}" rendered="{!!IsCredit && !IsCompleted}"/>
+            <apex:commandButton value="Save" styleClass="btn-success" action="{!Save}" rendered="{!!IsCompleted || !IsCredit }"/>
+            <apex:commandButton value="Next" styleClass="btn-danger" action="{!Next}" rendered="{!!IsCredit && !IsCompleted}"/>
+        </div>
+        
+        
+        </apex:form>
+        
+      </div>
+</body>
+</apex:page>

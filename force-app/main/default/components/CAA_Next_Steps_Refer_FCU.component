@@ -1,0 +1,45 @@
+<apex:component >
+<apex:attribute name="ProductName" type="String" description="" />
+<apex:attribute name="Duplicate" type="Boolean" description="" />
+
+
+<apex:outputPanel rendered="{!Not(Duplicate)}"> 
+    <div>
+        <p>
+            Thank you for your application for a {!ProductName} with Al Rayan Bank.
+        </p>
+        
+        <p>
+            We have reviewed your application and we are pleased to inform you that your account has progressed to the next stage.
+        </p>
+        
+        <p>
+            We will shortly be in contact with you to request further information regarding the opening of your new account.
+        </p>
+        
+        <p>
+            If you require any further information about your account application please contact us on 0800 4080 786.
+        </p>
+    </div>
+</apex:outputPanel>
+
+
+<apex:outputPanel rendered="{!Duplicate}"> 
+    <div>
+        <p>
+            Thank you for your application with Al Rayan Bank.
+        </p>
+        
+        <p>
+            We’ve reviewed your application and have noticed that we may have your details already registered on our system. This may be because you’re an existing customer or have applied for one of our products before.
+        </p>
+        
+        <p>
+            To progress with your application please call us on 0800 408 6407.  Alternatively you can <a href="https://www.alrayanbank.co.uk/other-products/request-for-product-information">request a call back</a>  or wait for us to get in touch with you, which we will do shortly.
+        </p>
+        
+        
+    </div>
+</apex:outputPanel>
+    
+</apex:component>

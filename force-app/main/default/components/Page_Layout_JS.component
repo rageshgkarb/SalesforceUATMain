@@ -1,0 +1,888 @@
+<apex:component >
+<script>
+
+<!--var demoApp = angular.module("demo",["dndLists","kendo.directives" ]);-->
+
+    var demoApp = angular.module("demo",["dndLists"]);
+
+    /**
+ * The controller doesn't do much more than setting the initial data model
+ */
+angular.module("demo").controller("NestedListsDemoController", ["$scope","servicePage","$sce", function($scope,servicePage,$sce) {
+
+
+    $scope.trustAsHtml = $sce.trustAsHtml;
+
+    $scope.AddZone = function()
+    {
+        $scope.models.dropzones.push({label:"zone", icon:'', items:[]});
+    }
+    
+    
+        $scope.GetAllData = function(id)
+        {
+            servicePage.GetAllData($scope.PrimaryObjectId)
+                    .then(
+                        function(result){   
+                            if(!result){
+                                $scope.WaitingForResponses = 0;
+                                return;
+                            } 
+                            
+                            var s = result.Config.Data__c.replace('\&quot;','"');
+                            s = s.replace('&quot;','"');
+                        
+                            //var obj = JSON.parse(s);
+                            $scope.models = JSON.parse(s);
+                            
+                            
+                            //DATA
+                            $scope.Data = result.Data;                        
+                            var t = 1;   
+                            var d = $scope.FieldData = {};
+                            
+                            for(x=0; x < result.Data.length; x++)
+                            {
+                                var obj = result.Data[x];
+                                
+                                for(y=0; y < obj.Fields.length ; y++)
+                                {
+                                    var s = obj.Name + '-' + obj.Fields[y].ApiName;
+                                    
+                                    $scope.FieldData[s] = obj.Fields[y].Value; 
+                                }
+                            }
+                            
+                            
+                            //Related Data
+                            $scope.RelatedData= result.RelatedDataNew;
+                            $scope.R = 1;                            
+                            
+                            var t = 1;    
+                            var g  = {};
+                            var tt = {};
+                              
+                            
+                            
+                            for(x=0; x < result.RelatedDataNew.length; x++)
+                            {
+                                var relatedItem = {};
+                                var obj = result.RelatedDataNew[x];
+                                
+                                var gg = [];
+                              
+                                
+                                var ss = {Records:[]};
+                                
+                                for(rec=0; rec< obj.Records.length;rec++)
+                                {
+                                    var record = {};
+                                    var fields = obj.Records[rec].Fields;
+                                
+                                    for(y=0; y < fields.length ; y++)
+                                    {
+                                        var s = obj.Name + '-' + fields [y].ApiName;
+                                        record [s] =       fields [y].Value; 
+                                    }
+                                    ss.Records.push(record);
+                                }
+                                 tt[obj.Name]= ss;                            
+                            }
+                            $scope.tt = tt;
+                                
+                            
+                        
+                        
+                            $scope.AttachmentsQuote = result.AttachmentsQuote;
+                            $scope.Attachments = result.Attachments;
+                            $scope.AttachmentsVal = result.AttachmentsVal;
+                            $scope.Notes = result.Notes;
+                            $scope.Activity= result.ActivityHistory;
+                        
+                            //ButtonFields 
+                            $scope.ButtonFields = {};
+                            
+                            for(var i= 0; i < result.ButtonFields.length; i++){
+                                var item = result.ButtonFields[i];
+                                
+                                $scope.ButtonFields[item.ApiName] = item.Value;
+                            }
+                            
+                            //Stage Data
+                            $scope.StageData= result.StageData;
+                        
+                            
+                            $scope.WaitingForResponses = 0;
+                        },
+                        function(error){
+                            $scope.WaitingForResponses = 0; 
+                        }
+                    ); 
+        }
+    
+    
+        $scope.Setup= function(id, objectId)
+        {
+            $scope.PrimaryObjectId = objectId;
+        
+            $scope.GetAllData(id);
+            return;
+        
+            //serviceApplication.LoadShow('Processing...');
+            
+            servicePage.GetConfig(id)
+                    .then(
+                        function(result){
+                        //alert(result);
+                        var s = result.Data__c.replace('\&quot;','"');
+                        s = s.replace('&quot;','"');
+                        
+                        //var obj = JSON.parse(s);
+                    $scope.models = JSON.parse(s);
+                    
+                    
+                    $scope.WaitingForResponses = 9;
+                    
+                    $scope.SetupData(id);
+                    $scope.GetRelatedData(id);
+                    $scope.GetAttachments();
+                    $scope.GetAttachmentsVal();
+                    $scope.GetAttachmentsQuote();
+                    $scope.GetNotes();
+                    $scope.GetActivityHistory();
+                    $scope.GetButtonFields(id);
+                    $scope.GetStageData();
+                    
+                    //$scope.$apply();
+                        },
+                        function(error){
+                            //serviceApplication.LoadHide(false);  
+                        }
+                    ); 
+        } 
+        
+        $scope.GetButtonUrl = function(item)
+        {
+            if(!$scope.ButtonFields) return null;
+            if(!item.Fields) return item.Link;
+        
+            var strAr = item.Fields.split(',');
+            
+            for(var i = 0; i < strAr.length; i++){
+                var field = strAr[i];
+                
+                var stringToFind = '{' + '!' + field + '}';
+                
+                //var found = $scope.ButtonFields[field.toLowerCase];                
+                              
+                    var fieldValue = $scope.ButtonFields[field.toLowerCase()];
+                    
+                    if(fieldValue){
+                        item.Link = item.Link.replace(stringToFind,fieldValue);
+                    }
+            }
+            return item.Link ;
+        }
+        
+        $scope.GetStageData = function(result)
+        {
+            servicePage.GetStageData ($scope.PrimaryObjectId)
+                    .then(
+                        function(result){                        
+                            $scope.StageData= result;
+                            $scope.WaitingForResponses -= 1;
+                        },
+                        function(error){
+                            $scope.WaitingForResponses -= 1;  
+                        }
+                        //$scope.WaitingForResponses -= 1;
+                    ); 
+        }
+        
+        $scope.GetNotes = function()
+        {
+            servicePage.GetNotes($scope.PrimaryObjectId)
+                    .then(
+                        function(result){                        
+                            $scope.Notes= result;
+                            $scope.WaitingForResponses -= 1;
+                        },
+                        function(error){
+                            $scope.WaitingForResponses -= 1;  
+                        }
+                        //$scope.WaitingForResponses -= 1;
+                    ); 
+        }
+        
+        $scope.GetActivityHistory= function()
+        {
+            servicePage.GetActivityHistory($scope.PrimaryObjectId)
+                    .then(
+                        function(result){                        
+                            $scope.Activity= result;
+                            $scope.WaitingForResponses -= 1;
+                        },
+                        function(error){
+                            $scope.WaitingForResponses -= 1;  
+                        }
+                        //$scope.WaitingForResponses -= 1;
+                    ); 
+        }
+        
+        
+        
+        
+        $scope.GetButtonFields = function(id)
+        {
+            servicePage.GetButtonFields($scope.PrimaryObjectId,id)
+                    .then(
+                        function(result){                        
+                            $scope.ButtonFields = {};
+                            
+                            for(var i= 0; i < result.length; i++){
+                                var item = result[i];
+                                
+                                $scope.ButtonFields[item.ApiName] = item.Value;
+                            }
+                            $scope.WaitingForResponses -= 1;
+                        },
+                        function(error){
+                            $scope.WaitingForResponses -= 1;  
+                        }
+                        //$scope.WaitingForResponses -= 1;
+                    ); 
+        }
+        
+        $scope.GetAttachmentsQuote = function()
+        {
+            servicePage.GetAttachmentsQuote ($scope.PrimaryObjectId)
+                    .then(
+                        function(result){                        
+                            $scope.AttachmentsQuote = result;
+                            $scope.WaitingForResponses -= 1;
+                        },
+                        function(error){
+                            $scope.WaitingForResponses -= 1; 
+                        }
+                        //$scope.WaitingForResponses -= 1;
+                    );
+        }
+        
+        $scope.GetAttachments = function()
+        {
+            servicePage.GetAttachments ($scope.PrimaryObjectId)
+                    .then(
+                        function(result){                        
+                            $scope.Attachments = result;
+                            $scope.WaitingForResponses -= 1;
+                        },
+                        function(error){
+                            $scope.WaitingForResponses -= 1; 
+                        }
+                        //$scope.WaitingForResponses -= 1;
+                    ); 
+        }
+        
+        $scope.GetAttachmentsVal = function()
+        {
+            servicePage.GetAttachmentsVal ($scope.PrimaryObjectId)
+                    .then(
+                        function(result){                        
+                            $scope.AttachmentsVal = result;
+                            $scope.WaitingForResponses -= 1;
+                        },
+                        function(error){
+                            //serviceApplication.LoadHide(false); 
+                            $scope.WaitingForResponses -= 1; 
+                        }
+                        //$scope.WaitingForResponses -= 1;
+                    ); 
+        }
+        
+        $scope.SetupData= function(id)
+        {
+            //serviceApplication.LoadShow('Processing...');
+            
+            servicePage.GetData(id,$scope.PrimaryObjectId)
+                    .then(
+                        function(result){
+                        
+                        $scope.Data = result;
+                        
+                        var t = 1;
+                        //alert(result);
+                        //var s = result.Data__c.replace('\&quot;','"');
+                        //s = s.replace('&quot;','"');
+                        
+                        
+                        var d = $scope.FieldData = {};
+                        
+                        for(x=0; x < result.length; x++)
+                        {
+                            var obj = result[x];
+                            
+                            for(y=0; y < obj.Fields.length ; y++)
+                            {
+                                var s = obj.Name + '-' + obj.Fields[y].ApiName;
+                                
+                                $scope.FieldData[s] = obj.Fields[y].Value;       
+                                
+                            }
+                            
+                        
+                        }
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        //var obj = JSON.parse(s);
+                    //$scope.models = JSON.parse(s);
+                    //$scope.$apply();
+                        $scope.WaitingForResponses -= 1;
+                        },
+                        function(error){
+                            //serviceApplication.LoadHide(false);  
+                            $scope.WaitingForResponses -= 1;
+                        }
+                        //$scope.WaitingForResponses -= 1;
+                    ); 
+        } 
+        
+        
+        $scope.GetRelatedData= function(id)
+        {
+            //serviceApplication.LoadShow('Processing...');
+            $scope.Load = true;
+            
+            servicePage.GetRelatedDataNew(id,$scope.PrimaryObjectId)
+                    .then(
+                        function(result){
+                        
+                        $scope.RelatedData= result;
+                        $scope.R = 1;
+                        
+                        
+                        var t = 1;
+                        //alert(result);
+                        //var s = result.Data__c.replace('\&quot;','"');
+                        //s = s.replace('&quot;','"');
+                        
+                        
+                        //var d = $scope.RelatedData;
+                        
+                        
+                        var g  = {};
+                        
+                        
+                        
+                        
+                        
+                        var tt = {};
+                        
+                        tt['sobject1'] = '3rs';
+                        tt['sobject2'] = '9fsdfs';
+                        
+                        
+                        
+                        for(x=0; x < result.length; x++)
+                        {
+                            var relatedItem = {};
+                            var obj = result[x];
+                            
+                            var gg = [];
+                            
+                            //relatedItem['testing'] = 1;
+                            
+                            relatedItem['testing1'] = 2;
+                        
+                            
+                            var ss = {Records:[]};
+                            //alert(obj);                                    
+                            
+                            
+                            
+                            for(rec=0; rec< obj.Records.length;rec++)
+                            {
+                                var record = {};
+                                var fields = obj.Records[rec].Fields;
+                            
+                                 for(y=0; y < fields.length ; y++)
+                                {
+                                    var s = obj.Name + '-' + fields [y].ApiName;
+                                    
+                                    //$scope.FieldData[s] = fields [y].Value; 
+                                    
+                                    record [s] =       fields [y].Value; 
+                                    
+                                }
+                                ss.Records.push(record);
+                            }
+                            
+                            
+                            
+                           
+                            
+                            
+                     
+                             tt[obj.Name]= ss;
+                        
+                        }
+                        
+                        
+                        
+                        $scope.tt = tt;
+                        
+                        
+                        
+                        
+                        //var obj = JSON.parse(s);
+                    //$scope.models = JSON.parse(s);
+                    //$scope.$apply();
+                    $scope.WaitingForResponses -= 1;
+                        },
+                        function(error){
+                            //serviceApplication.LoadHide(false);
+                            $scope.WaitingForResponses -= 1;  
+                        }
+                        
+                    ); 
+        } 
+    
+    
+
+        $scope.Drop = function(item){
+        
+        if(item.type == 'tab')
+        {
+            
+        
+        
+            //call kendo?
+            //var t = $("#tab" + item.id).data("kendoTabStrip");
+            //var g = 1;
+            /*
+            window.setTimeout(function() {
+               var s = "#tab" + (item.id -1) + " a";
+               var g = $("#tab" + item.id).data("kendoTabStrip");
+                   $(s).click(function(e){
+                        e.preventDefault();
+                        $(this).tab('show');
+                    });
+                 
+           }, 1000);
+            */
+        }
+        item.id = item.id + 1;
+        
+    }
+    
+    $scope.getField = function(key){
+       for(var prop in $scope.fields)
+       {
+           if($scope.fields[prop].key == key) return $scope.fields[prop];
+       }
+       return;
+    }
+    
+    $scope.GetRelatedList = function(item){
+        return $scope.Related;    
+    }
+    
+    $scope.getRFieldValue = function(item, rg){
+        if(!rg[item.objectname+'-'+ item.apiname]) return '';
+    
+    
+        return $sce.trustAsHtml(rg[item.objectname+'-'+ item.apiname]);
+    }
+    
+    $scope.getFieldValueLink = function(obj){
+    
+        if(!obj.lookupId) return '';
+    
+      var key = obj.apiname.toLowerCase();
+      obj.lookupId = obj.lookupId.toLowerCase();
+      var objname = 'opportunity';
+    
+       for(var prop in $scope.Data)
+       {
+           var o = $scope.Data[prop];
+           if(o.Name == objname)
+           {
+               //find field in this dataset
+               for(var fieldIndex in o.Fields)
+               {
+                   var field = o.Fields[fieldIndex];
+                   if(field.ApiName == key){
+                   
+                       for(var fieldIndex2 in o.Fields)
+                       {
+                           var field2 = o.Fields[fieldIndex2];
+                           if(field2.ApiName == obj.lookupId)
+                           {
+                                                         
+                               return $sce.trustAsHtml('<a target="_blank" href="/' + field2.Value+ '">' + field.Value + '</a>');
+                           }
+                       }
+                   
+                   
+                       
+                   
+                    //return field.Value;                   
+                    }
+               }
+           }
+       }
+       return '';
+    }
+    
+    $scope.getFieldValueLinkRelated = function(rg,item){    
+        if(!item.lookupId) return;
+        
+        var lookupField = item.objectname+'-'+ item.lookupId;
+        var lookupVal = rg[lookupField];
+        var dataField = item.objectname+'-'+ item.apiname;
+        var dataVal = rg[dataField];
+        
+        if(lookupVal && dataVal)
+        {
+            return '<a target="_blank" href="/' + rg[lookupField]+ '">' + dataVal + '</a>';                           
+        }       
+        return '';
+    }
+    
+    $scope.getFieldValueRelated = function(rg,item){
+        if(item.lookupId) return $scope.getFieldValueLinkRelated(rg,item);    
+    
+        var val = rg[item.objectname+'-'+ item.apiname];
+        
+        if(!val) return '';
+        
+        return val;
+        return $sce.trustAsHtml(val);
+    }
+    
+    $scope.getFieldValue = function(obj){
+        if(obj.lookupId) return $scope.getFieldValueLink(obj);
+    
+      var key = obj.apiname.toLowerCase();
+      var objname = 'opportunity';
+    
+       for(var prop in $scope.Data)
+       {
+           var o = $scope.Data[prop];
+           if(o.Name == objname)
+           {
+               //find field in this dataset
+               for(var fieldIndex in o.Fields)
+               {
+                   var field = o.Fields[fieldIndex];
+                   if(field.ApiName == key){
+                   
+                       if(!field.Value) return '';
+                   
+                    return $sce.trustAsHtml(field.Value);   
+                   
+                    //return field.Value;                   
+                    }
+               }
+           }
+       }
+       return '';
+    }
+    
+    /*
+    $scope.getFieldValue = function(key){
+       for(var prop in $scope.fields)
+       {
+           if($scope.fields[prop].key == key) return $scope.fields[prop].value;
+       }
+       return;
+    }
+    */
+    
+    $scope.fields = [
+        {key :"account__c",  value: "a04534343DfdFD", sobject : "account"}
+    ];
+
+    $scope.buildFieldList = function(){
+    
+        //find all fields with in the configured template
+        
+        $scope.SFfields = [];
+        
+        for(var obj in $scope.models.dropzones)
+        {
+            $scope.findField($scope.models.dropzones[obj].items);
+        }
+    }
+    
+    $scope.findField = function(items){
+
+        for(var obj in items)
+        {
+            var item = items[obj];
+        
+            if(item.type == "item")
+            {
+            
+                if(item.apiname && $scope.SFfields.indexOf(item.apiname) == -1){
+                    $scope.SFfields.push({apiname:item.apiname, sobject:item.sobject});
+                }                    
+            }
+            else
+            {
+                if(item.items !== undefined){
+                    $scope.findField(item.items);
+                }
+                else if(item.columns !== undefined )//columns
+                {
+                    //loop through collumns
+                    for (var c in item.columns)
+                    {
+                        var cols = item.columns[c];
+                        
+                        if(cols)
+                        {
+                            $scope.findField(cols);
+                        }
+                        
+                    }
+                    
+                }
+            }
+        }    
+    }
+    
+/*
+    $scope.models = {
+        selected: null,
+        templates: [
+            {type: "item", id: 2, apiname:"", label:"Field"},
+            {type: "relateditem", id: 2, apiname:"", label:"RelatedField"},
+            {type: "tab", id: 2, apiname:"", selected: 0, label:"tabs",col: [{label:"Tab 1"},{label:"Tab 2"},{label:"Tab 3"}], columns: [[], [],[]]},
+            {type: "label", id: 2, title:"SomeTitle", class:"title-md"},
+            {type: "container", id: 1, columns: [[]], label:"1"},
+            {type: "container2", id: 2, columns: [[], []], label:"2"},
+            {type: "container3", id: 3, columns: [[], [],[]], label:"3"},
+            {type: "related", id: 4, columns: [[]], label:"Related List"}
+        ],
+        
+        headerzone: {
+            "A":[]
+        },
+                
+        dropzones :[]              
+    };
+*/
+    $scope.$watch('models.dropzones', function(model) {
+        $scope.modelAsJson = angular.toJson($scope.models, true);
+    }, true);
+
+}]);
+
+
+angular.module("demo").service('servicePage', ['$q', '$rootScope', function ($q, $rootScope) {
+       this.GetConfig= function(data)
+        {
+            var deferred = $q.defer();
+        Visualforce.remoting.timeout = 120000;
+        Visualforce.remoting.escape= false;
+            PageLayoutController.GetConfig(data,function(result, event){
+                if(event.status){
+                    deferred.resolve(result);
+                }
+                else {
+                    deferred.reject(event);
+                }     
+            },{ buffer: false, escape: false, timeout: 30000} );
+            return deferred.promise;
+        }
+        
+        this.GetRelatedDataNew= function(layout,id,related)
+        {
+            related = 'applicant__c';
+            var deferred = $q.defer();
+        Visualforce.remoting.timeout = 120000;
+        Visualforce.remoting.escape= false;
+            PageLayoutController.GetRelatedDataNew(layout,id,related,function(result, event){
+                if(event.status){
+                    deferred.resolve(result);
+                }
+                else {
+                    deferred.reject(event);
+                }     
+            },{ buffer: true, escape: false, timeout: 30000} );
+            return deferred.promise;
+        }
+        
+        this.GetRelatedData= function(layout,id)
+        {
+        
+            var deferred = $q.defer();
+        Visualforce.remoting.timeout = 120000;
+        Visualforce.remoting.escape= false;
+            PageLayoutController.GetRelatedData(layout,id,function(result, event){
+                if(event.status){
+                    deferred.resolve(result);
+                }
+                else {
+                    deferred.reject(event);
+                }     
+            },{ buffer: true, escape: false, timeout: 30000} );
+            return deferred.promise;
+        }
+        
+        
+        this.GetActivityHistory= function(id)
+        {
+            var deferred = $q.defer();
+        Visualforce.remoting.timeout = 120000;
+        Visualforce.remoting.escape= false;
+            PageLayoutController.GetActivityHistory(id,function(result, event){
+                if(event.status){
+                    deferred.resolve(result);
+                }
+                else {
+                    deferred.reject(event);
+                }     
+            },{ buffer: true, escape: false, timeout: 30000} );
+            return deferred.promise;
+        }
+        
+        this.GetButtonFields= function(id,layoutId)
+        {
+            var deferred = $q.defer();
+        Visualforce.remoting.timeout = 120000;
+        Visualforce.remoting.escape= false;
+            PageLayoutController.GetButtonFields(id,layoutId,function(result, event){
+                if(event.status){
+                    deferred.resolve(result);
+                }
+                else {
+                    deferred.reject(event);
+                }     
+            },{ buffer: true, escape: false, timeout: 30000} );
+            return deferred.promise;
+        }
+        
+        this.GetAttachments= function(id)
+        {
+            var deferred = $q.defer();
+        Visualforce.remoting.timeout = 120000;
+        Visualforce.remoting.escape= false;
+            PageLayoutController.GetAttachments(id,function(result, event){
+                if(event.status){
+                    deferred.resolve(result);
+                }
+                else {
+                    deferred.reject(event);
+                }     
+            },{ buffer: true, escape: false, timeout: 30000} );
+            return deferred.promise;
+        }
+        
+        this.GetAttachmentsVal= function(id)
+        {
+            var deferred = $q.defer();
+        Visualforce.remoting.timeout = 120000;
+        Visualforce.remoting.escape= false;
+            PageLayoutController.GetAttachmentsVal(id,function(result, event){
+                if(event.status){
+                    deferred.resolve(result);
+                }
+                else {
+                    deferred.reject(event);
+                }     
+            },{ buffer: true, escape: false, timeout: 30000} );
+            return deferred.promise;
+        }
+        
+        this.GetAttachmentsQuote= function(id)
+        {
+            var deferred = $q.defer();
+        Visualforce.remoting.timeout = 120000;
+        Visualforce.remoting.escape= false;
+            PageLayoutController.GetAttachmentsQuote(id,function(result, event){
+                if(event.status){
+                    deferred.resolve(result);
+                }
+                else {
+                    deferred.reject(event);
+                }     
+            },{ buffer: true, escape: false, timeout: 30000} );
+            return deferred.promise;
+        }
+        
+        this.GetNotes= function(id)
+        {
+            var deferred = $q.defer();
+        Visualforce.remoting.timeout = 120000;
+        Visualforce.remoting.escape= false;
+            PageLayoutController.GetNotes(id,function(result, event){
+                if(event.status){
+                    deferred.resolve(result);
+                }
+                else {
+                    deferred.reject(event);
+                }     
+            },{ buffer: true, escape: false, timeout: 30000} );
+            return deferred.promise;
+        }
+        
+        this.GetData= function(layout,id)
+        {
+            var deferred = $q.defer();
+        Visualforce.remoting.timeout = 120000;
+        Visualforce.remoting.escape= false;
+            PageLayoutController.GetData(layout,id,function(result, event){
+                if(event.status){
+                    deferred.resolve(result);
+                }
+                else {
+                    deferred.reject(event);
+                }     
+            },{ buffer: true, escape: false, timeout: 30000} );
+            return deferred.promise;
+        }
+        
+        this.GetStageData= function(id)
+        {
+            var deferred = $q.defer();
+        Visualforce.remoting.timeout = 120000;
+        Visualforce.remoting.escape= false;
+            PageLayoutController.GetStageData(id,function(result, event){
+                if(event.status){
+                    deferred.resolve(result);
+                }
+                else {
+                    deferred.reject(event);
+                }     
+            },{ buffer: true, escape: false, timeout: 30000} );
+            return deferred.promise;
+        }
+        
+        this.GetAllData= function(id)
+        {
+            var deferred = $q.defer();
+        Visualforce.remoting.timeout = 120000;
+        Visualforce.remoting.escape= false;
+            PageLayoutController.GetAllData(id,function(result, event){
+                if(event.status){
+                    deferred.resolve(result);
+                }
+                else {
+                    deferred.reject(event);
+                }     
+            },{ buffer: false, escape: false, timeout: 30000} );
+            return deferred.promise;
+        }
+        
+
+   }]);
+
+</script>
+</apex:component>

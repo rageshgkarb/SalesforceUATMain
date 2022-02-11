@@ -1,0 +1,169 @@
+@charset "UTF-8";
+/* CSS Document for IBB eforms */
+
+#contents .fm_formmasterForm table,
+#contents .fm_formmasterForm table table,
+#contents .fm_formmasterSaveForm table,
+#contents .fm_formmasterSaveForm table table { 
+	border:none; 
+	border-collapse:collapse;
+	border-spacing:0;
+}
+#contents .fm_formmasterForm table th, 
+#contents .fm_formmasterForm td,
+#contents .fm_formmasterSaveForm table th, 
+#contents .fm_formmasterSaveForm td {
+	border:1px solid transparent;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 10px;
+	padding-left: 0px;
+}
+#contents .fm_formmasterForm input,
+#contents .fm_formmasterForm select,
+#contents .fm_formmasterForm textarea  { margin-right:5px; margin-left:5px; }
+
+
+
+#contents .fm_formmasterForm textarea:hover, 
+#contents .fm_formmasterForm textarea:focus, 
+#contents .fm_formmasterForm input:hover, 
+#contents .fm_formmasterForm input:focus,
+#contents .fm_formmasterForm select:hover, 
+#contents .fm_formmasterForm select:focus,
+
+
+#contents .fm_formmasterSaveForm textarea:hover, 
+#contents .fm_formmasterSaveForm textarea:focus, 
+#contents .fm_formmasterSaveForm input:hover, 
+#contents .fm_formmasterSaveForm input:focus,
+#contents .fm_formmasterSaveForm select:hover, 
+#contents .fm_formmasterSaveForm select:focus  {
+	background-color: #CFF6FB;
+}
+
+
+	#contents a:hover {
+		/* slight bg change for extra legibility */
+			background-color: #FFFFFF;
+		}
+
+
+.headingsmall2 {
+	font-style: normal;
+	font-weight: bold;
+}
+
+#contents table.progress { 
+	border:none;
+	border-spacing:none;
+	border-collapse:collapse;
+	width:947px;
+	margin-bottom:1em;
+}
+table.progress td.ready { background-color:#CCCCCC;}
+table.progress td.active { background-color:#001D68;}
+
+#contents  td.errorText,
+.errortext {
+	font-style: normal;
+	font-variant: normal;
+	color: #ee2d27;
+	font-weight:bold;
+	margin-bottom:1em;
+}
+.errortext { margin-top:1em;}
+
+.errorformfield {
+	border:1px inset #CC0033;  
+	color:#0000CC; 
+	background-color:#F5E5E5;
+}
+
+.FormQuestion {
+	font-style: normal;
+	font-weight: bold;
+	color: #464646;
+}
+
+.MandatorySign {
+	font-size: 1em;
+	font-style: normal;
+	font-variant: normal;
+	color: #ee2d27;
+}
+
+.FormFieldLabel {
+	font-size: 1em;
+	font-style: normal;
+	font-weight: normal;
+	color: #001d68;
+}
+
+#contents .fm_formmasterForm .FormHelpPanel {
+	font-size: 1em;
+	color: #464646;
+	line-height: 125%;
+	padding: 12px;
+	background-color: #CCCCCC;
+	border:none;
+}
+
+.fm_progressBarPercent {
+	font-size: 1em;
+	font-weight: normal;
+	color: #000000;
+}
+#contents .fm_formmasterForm table.fm_progressBarPercent { 
+	width:400px;
+	text-align:right;
+}
+#contents .fm_formmasterForm table.fm_progressBarPercent td { text-align: center;}
+
+
+.FormInformText  {
+	font-size: 1em;
+	font-weight: normal;
+	color: #464646;
+}
+
+.FormField  {
+	font-size: 1em;
+	font-weight: normal;
+}
+
+input.FormButton,
+input.button  {
+	font-size: 1.35em;
+	width:auto;
+	overflow:visible;
+	padding:3px;
+	border-top:1px solid #C4C4C4;
+	border-right:1px solid #9E9E9E;
+	border-bottom:1px solid #6F6F6F;
+	border-left:1px solid #9E9E9E;
+	font-weight:normal;
+	background-color:#E0E0E0;
+	background-image: url(../../graphics/modules/IBB-eye-candy.png);
+	background-repeat: repeat-x;
+	background-position: left -833px;
+	text-transform:capitalize;
+}
+
+#contents .fm_formmasterForm input.FormButton:focus,
+#contents .fm_formmasterForm input.button:focus,
+#contents .fm_formmasterSaveForm input.FormButton:focus,
+#contents .fm_formmasterSaveForm input.button:focus {
+	background-color:#CCCCCC;
+	background-image: none;
+}
+
+.FormBar  {
+	font-size: 1em;
+	font-style: normal;
+	font-weight: bold;
+	color: #ffffff;
+}
+
+
+

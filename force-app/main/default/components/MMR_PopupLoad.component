@@ -1,0 +1,86 @@
+<apex:component >
+<apex:attribute type="String" name="Title" description=""/>
+<apex:attribute type="String" name="Body" description=""/>
+
+
+ <div id="fade"></div>
+<div id="overlay">
+<span id="popupTitle">
+
+</span>
+<br/>
+<br/>
+<span id="popupBody">
+
+</span>
+
+<div style="padding-top: 50px;" >
+<img src="{!URLFOR($Resource.ibbstyle, 'images/269.gif')}"></img>
+</div>
+</div>
+
+<script>
+function ShowDocumentLoad(title,body)
+{
+    $("#popupTitle").html(title);
+    $("#popupBody").html(body);
+
+    $('#overlay').show('slow');
+    $('#fade').show('slow');
+}
+
+function HideDocumentLoad()
+{
+    $('#overlay').hide('slow');
+    $('#fade').hide('slow');
+}
+
+//C0639 - SBC - Add disclaimer in AIP page
+function EnableDisableAfford(chk, btnAffordId, prdInterestedIn)
+{
+    if(prdInterestedIn != 'Buy To Let Purchase Plan' && prdInterestedIn != 'Buy To Let Purchase Plan Scotland')
+    {
+        if (document.getElementById(chk).checked == true)
+        {
+            document.getElementById(btnAffordId).disabled = false;
+        }
+        else if (document.getElementById(chk).checked == false)
+        {
+            document.getElementById(btnAffordId).disabled = true;
+        }
+    }
+}
+//C0639 end
+</script>
+
+<style type="text/css">
+#overlay, #overlay1 {
+    display: none; /* ensures it’s invisible until it’s called */
+    position: absolute; /* makes the div go into a position that’s absolute to the browser viewing area */
+    left: 25%; /* positions the div half way horizontally */
+    top: 25%; /* positions the div half way vertically */
+    padding: 25px; 
+    border: 2px solid black;
+    background-color: #ffffff;
+    width: 50%;
+    height: 50%;
+    z-index: 100; /* makes the div the top layer, so it’ll lay on top of the other content */
+    text-align: center;
+    font-size: 18px;
+}
+#fade,#fade1 {
+    display: none;  /* ensures it’s invisible until it’s called */
+    position: absolute;  /* makes the div go into a position that’s absolute to the browser viewing area */
+    left: 0%; /* makes the div span all the way across the viewing area */
+    top: 0%; /* makes the div span all the way across the viewing area */
+    background-color: #ccc;
+    -moz-opacity: 0.7; /* makes the div transparent, so you have a cool overlay effect */
+    opacity: .70;
+    filter: alpha(opacity=70);
+    width: 100%;
+    height: 100%;
+    z-index: 90; /* makes the div the second most top layer, so it’ll lay on top of everything else EXCEPT for divs with a higher z-index (meaning the #overlay ruleset) */
+}
+</style>
+
+</apex:component>

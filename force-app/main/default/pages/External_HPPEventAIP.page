@@ -1,0 +1,256 @@
+<apex:page controller="HPPEventAIPController" standardStylesheets="false" sidebar="false" showHeader="false" title="Applicant Details" action="{!setUp}" >
+<head>
+<c:ExternalKendo ></c:ExternalKendo>
+</head>
+<body>
+
+<apex:form id="aForm">
+
+<div id="headertop">
+    
+    <div id="ibbMotto">Banking you can <strong>believe</strong> in</div>
+    
+    <div class="headerLogo">
+        <a href="http://www.islamic-bank.com/"><img alt="IBB logo image" height="94" src="http://www.islamic-bank.com/graphics/shim.gif" title="Home page link" width="200"/></a>
+    </div>
+    
+    <div style="clear:both;"></div>
+</div>
+
+<div id="formWrapper" >
+
+
+
+<div class="header" >
+<h1>{!Acc.Name} - Agreement in Principle</h1>
+</div>
+
+
+
+
+
+
+<div id="container" >
+<table width="100%">
+<tr>
+<!-- left landed menu was here -->
+<td valign="top" id="contenttd">
+<div  id="topNav">
+
+<ul>
+<li class="active"><apex:commandLink action="{!ProductDetails}" >Product Details</apex:commandLink></li>
+<li><span>Applicants</span></li>
+<li class="k-header"><span>{!Accounts[0].name}</span></li>
+
+<apex:outputPanel rendered="{!Opp.Number_of_People_Applying__c> 1 && Prod!=null}">
+<li ><span>{!Accounts[1].name}</span></li>
+</apex:outputPanel>
+
+
+
+<apex:outputPanel rendered="{!Opp.Number_of_People_Applying__c> 2 && Prod!=null}">
+<li class="k-header"><span>{!Accounts[2].name}</span></li>
+
+</apex:outputPanel>
+<apex:outputPanel rendered="{!Opp.Number_of_People_Applying__c> 3}">
+<li class="k-header"><span>{!Accounts[3].name}</span></li>
+</apex:outputPanel>
+
+<li class="k-header"><span>AIP Confirmation</span></li>
+</ul>
+
+</div>
+<div class="contentDiv">
+
+
+
+
+                    <div class="inputArea">
+                    <apex:pagemessages />
+                    <apex:messages />
+<h2>Product details</h2>
+
+<div class="gridLayoutContainer">
+<div>
+<table class="gridLayout" >
+    <tbody>
+    <tr align="center">
+    <apex:outputLink value="{!IDDLink}" rendered="true" target="_blank"><b>Initial Disclosure Document Download</b></apex:outputLink> <br> </br>
+    </tr>
+    <tr>
+        <td class="labelCol">Interested in</td>
+        <td class="dataCol"><apex:outputLabel value="{!Opp.Interested_in__c}" /></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td class="labelCol">IBB product</td>
+        <td class="dataCol"><apex:selectList required="true" value="{!Opp.IBB_Product__c}"   id="recent" size="1"  > 
+            <apex:selectOptions value="{!ProductItems}" />           
+</apex:selectList></td>
+        <td class="status"></td>
+    </tr>   
+    <tr>
+        <td class="labelCol">Purchase price/market value (£)<span class="star">*</span></td>
+        <td class="dataCol"><apex:inputField styleClass="required" value="{!Opp.Purchase_price_market_value__c}" /></td>
+        <td class="status"></td>
+    </tr>
+    <tr>
+        <td class="labelCol">Term of finance (years)<span class="star">*</span></td>
+        <td class="dataCol"><apex:inputField styleClass="required" value="{!Opp.Term_of_Finance__c}" /></td>
+        <td class="status"></td>
+    </tr>     
+    <tr>
+        <td class="labelCol">Finance required (£)<span class="star">*</span></td>
+        <td class="dataCol"><apex:inputField styleClass="required" value="{!Opp.Finance_Required__c}" /></td>
+        <td class="status"></td>
+    </tr>      
+    <tr>
+        <td class="labelCol">Purpose of finance<span class="star">*</span></td>
+        <td class="dataCol"><apex:inputField styleClass="required" value="{!Opp.Purpose_of_Finance__c}" /></td>
+        <td class="status"></td>
+    </tr>          
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+
+
+
+
+<apex:outputPanel rendered="{!IsBTL}">
+<div class="inputArea">
+                    <apex:pagemessages />
+                    <apex:messages />
+<h2>Personal Details</h2>
+
+<div class="gridLayoutContainer">
+<div>
+<table class="gridLayout" >
+    <tbody>
+    <tr>
+        <td class="labelCol">Do you currently own a property?</td>
+        <td class="dataCol"><apex:inputField value="{!Opp.Do_you_currently_own_a_property__c   }" rendered="{!IsBTL}"  /></td>
+        <td class="status"></td>
+    </tr>        
+    <tr>
+        <td class="labelCol">If 'Buy to Let' refinancing have you owned property for more than 12 months?</td>
+        <td class="dataCol"><apex:inputField value="{!Opp.How_many_BTL_Properties_do_you_own__c }" rendered="{!IsBTL}"  /></td>
+        <td class="status"></td>
+    </tr> 
+    
+    <tr>
+        <td class="labelCol">What type of Buy to Let do you require?</td>
+        <td class="dataCol"><apex:inputField value="{!Opp.What_type_of_Buy_to_Let_do_you_require__c  }" rendered="{!IsBTL}"  /></td>
+        <td class="status"></td>
+    </tr>    
+    <tr>
+        <td class="labelCol">Monthly rental income expected from this property</td>
+        <td class="dataCol"><apex:inputField value="{!Opp.Monthly_rental_income__c  }" rendered="{!IsBTL}"  /></td>
+        <td class="status"></td>
+    </tr>                      
+    </tbody>
+    </table>
+</div>
+</div>
+</div>
+</apex:outputPanel>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div style="text-align:right;">
+<apex:commandButton styleClass="redBtn" value="Next" action="{!ExternalProductEntered}" rendered="{!!IsCompleted}"/>
+</div>
+
+
+
+
+
+</div>
+
+</td></tr>
+</table>
+
+
+
+</div>
+</div>
+
+  </apex:form>
+  
+     <script type="text/javascript"> 
+   
+   
+   
+   
+   
+  $(document).ready(function() {
+  
+ 
+     
+ 
+  
+  
+
+    // validate signup form on keyup and submit
+    $("form[id$='aForm']").validate({
+    
+    success: function(label){
+        label.html("&nbsp;").addClass("evCompleted");
+    },
+ 
+            errorPlacement: function(error, element) {
+                error.appendTo( element.parent("td").next("td.status") );
+            }
+    
+    
+    });
+    
+    $('[id$=addFirst]').rules("add",{
+         required: true
+     });
+    
+      $('[id$=addLast]').rules("add",{
+         required: true
+     });
+     
+     $('[id$=dateOB1]').val('01/01/1990');
+     
+     
+     
+    
+    
+jQuery.validator.messages.required = "Please enter a value";
+   
+});
+  
+  $('input').keyup(function(){
+    if(!$(this).valid()){
+        
+        $(this).parent("td").next("td.status").find("label").removeClass("evCompleted");
+    
+        return false;
+    }
+});
+
+</script>
+  
+  </body>
+
+</apex:page>

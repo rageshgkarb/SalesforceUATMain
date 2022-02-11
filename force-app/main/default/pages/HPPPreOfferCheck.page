@@ -1,0 +1,226 @@
+<apex:page controller="HPPPreOfferLetterChecksController"   sidebar="false" showHeader="false" title="Submit to decison engine" action="{!Setup}">
+    <head>
+        <c:KendoResource ></c:KendoResource>
+    </head>
+    <body>
+        <apex:form >
+            <div id="formWrapper">                
+                <c:HPPSummary objAcc="{!Accounts[0]}" objOpp="{!opp}" objExOpp="{!ExOpp}" Product="{!Prod}" />
+                <div id="container" >
+                    <table width="100%">
+                        <tr>
+                            <td valign="top" id="sidebar">
+                                <c:HPPBOMenu oppId="{!Opp.Id}"  DirectorId="{!Opp.ProductEventDirector__c}" />
+                            </td>
+                            <td valign="top" id="contenttd">
+                                <div id="content">
+                                    <h1>Pre Offer Letter Production Checks</h1>
+                                
+                                    <apex:outputPanel id="mainPageBlock">
+
+                 
+                                    
+                                    <div style="padding:20px;">
+                                    <!-- content -->
+                                    
+                                    <table width="100%">
+                                        <tr>
+                                        <th width="50%"><h2>Opportunity Fields                                        </h2>
+                                        </th>
+                                        <th width="50%"><h2>HPP Extended Opportunity Fields</h2>
+                                        </th>
+                                                                               
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td valign="top"><!-- start of opp fields -->
+                                            <table width="100%">
+                                            <apex:repeat value="{!OppFields}" var="o">
+                                            <tr>
+                                                <td class="labelCol">{!o.name}</td>
+                                                <td>
+                                                    <apex:inputfield value="{!Opp[o.APIName__c]}" rendered="{!o.Editable__c}"/>
+                                                    <apex:outputfield value="{!Opp[o.APIName__c]}" rendered="{!!o.Editable__c}"/>
+                                                </td>
+                                            </tr>
+                                            </apex:repeat>
+                                            </table>
+                                            
+                                            </td><!-- end of opp fields-->
+                                            
+                                            <td valign="top"><!-- start of ext opp fields -->
+                                            <table width="100%">
+                                            <apex:repeat value="{!ExOppFields}" var="o">
+                                            <tr>
+                                                <td>{!o.name}</td>
+                                                <td>
+                                                    <apex:inputfield value="{!ExOpp[o.APIName__c]}" rendered="{!o.Editable__c}"/>
+                                                    <apex:outputfield value="{!ExOpp[o.APIName__c]}" rendered="{!!o.Editable__c}"/>
+                                                </td>
+                                            </tr>
+                                            </apex:repeat>
+                                            </table>
+                                            
+                                            </td><!-- end of ext opp fields-->
+                                        
+                                        
+                                        </tr>
+                                        
+                                    
+                                    </table>
+                                    
+                                    
+                                   
+          
+
+                                    
+                                    
+
+                                  
+                                   
+                                </div>
+                                
+                                
+                                   <div>
+        
+            
+            <apex:variable value="{!1}" var="rowNumProp"/>
+            <apex:repeat value="{!Accounts}" var="a">
+                <apex:outputpanel rendered="{!!(IsBTLLTD && a.firstname==null)}"><!-- C0644 -->
+                    <div style="padding:10px;">
+                        <h2>Applicant {!rowNumProp} </h2>
+                        <table width="50%">
+                            <apex:repeat value="{!AccFields}" var="o">
+                                <tr>
+                                    <td>{!o.name}</td>
+                                    <td>
+                                        <apex:inputfield value="{!a[o.APIName__c]}" rendered="{!o.Editable__c}" />
+                                        <apex:outputfield value="{!a[o.APIName__c]}" rendered="{!!o.Editable__c}" />
+                                    </td>
+                                </tr>
+
+                            </apex:repeat>
+                        </table>
+                    </div>
+                    <apex:variable var="rowNumProp" value="{!rowNumProp+ 1}" />
+                </apex:outputpanel>                             
+            </apex:repeat>
+        </div>
+                                
+                                
+               <div style="padding-top:40px">                  
+<h3 >Special Conditions</h3>
+  
+        
+        <div class="pbBody">
+        <apex:variable value="{!0}" var="rowNumProp"/>
+        
+                                   <table class="list" width="100%">
+                                   <thead>
+                                   <tr class="headerRow">
+                                       <th class="headerRow">Action</th>
+                                       <th class="headerRow">Ref</th>
+                                       <th class="headerRow">Condition</th>
+                                       <th class="headerRow">UW</th>
+                                       <th class="headerRow">Reat</th>
+                                       <th class="headerRow">Satisfied</th>
+                                   </tr>
+                                   </thead>
+                                   <tbody>
+                                <apex:repeat value="{!Helper.CIList}" var="i">
+                                <tr class="{!IF(i.id = CurrentItem.id, 'highLight', '')}">
+                                <td>
+                                   <apex:commandLink status="save-lead-status" action="{!EditCondition}" value="Edit" rerender="mainPageBlock" immediate="true" rendered="{!!IsCompleted}">
+                            <apex:param name="edCondition" value="{!rowNumProp}" assignTo="{!edCondition}"/>
+                        </apex:commandLink>
+                                </td>
+                                <td>
+                                    <apex:outputLabel escape="false" value="{!i.Ref}"/>
+
+                                </td>
+                                <td>
+                                    <apex:outputLabel escape="false" value="{!i.Html}">  </apex:outputLabel>
+                                </td>
+                                <td>
+                                    <apex:inputCheckbox disabled="true" value="{!i.UW_Allowed}"/>
+                                </td>
+                                <td>
+                                    <apex:inputCheckbox disabled="true" value="{!i.Reat_Allowed}"/>
+                                </td>
+                                
+                             <td >{!if(i.Satisfied,'Yes','No')}</td>
+                                
+                                </tr>
+                                <tr>
+                                    <td colspan="6">{!i.notes}</td>
+                                </tr>
+                                <apex:variable var="rowNumProp" value="{!rowNumProp+ 1}"/>
+                                 </apex:repeat>
+                                 </tbody>
+                                 </table>
+        </div>  
+        
+        <div>
+             <apex:outputPanel rendered="{!CurrentItem != null && !CanEdit}">
+              <div style="padding: 20px; border: solid 1px #ccc;margin-bottom: 20px;">
+                 You do not have access to edit the special condition
+                 <br/><br/>
+                 <apex:commandButton reRender="mainPageBlock" status="save-lead-status" value="Cancel" action="{!Cancel}"/>
+                 </div>
+             </apex:outputPanel>
+        
+             <apex:outputPanel rendered="{!CurrentItem != null && CanEdit}">
+                                    <div style="padding: 20px; border: solid 1px #ccc;margin-bottom: 20px;">
+                                    <h2>Satisfy Condition</h2>
+                                    <table width="100%">
+                                    <tr>
+                                    <td>Notes:</td>
+                                    <td>Condition:</td>
+                                    </tr>
+                                    <tr><td width="50%">
+                                    <apex:inputTextarea rows="5" style="width:90%;" value="{!CurrentItem.Notes}"/> 
+                                    </td>
+                                    <td valign="top">
+                                        <apex:outputLabel escape="false" value="{!CurrentItem.HTML}"></apex:outputLabel>
+                                    </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>
+                                        Is satisfied ?
+                                            <apex:inputCheckbox value="{!CurrentItem.Satisfied}"/>
+                                                   
+                                        
+                                        </td>
+                                        
+                                    </tr>
+                                    
+                                    
+                                    </table>
+                                    
+                                    <apex:commandButton reRender="mainPageBlock" status="save-lead-status" value="Save" action="{!Hide}"/>    
+                                    <apex:commandButton reRender="mainPageBlock" status="save-lead-status" value="Quick Save" action="{!Save}"/>
+                                    <apex:commandButton reRender="mainPageBlock" status="save-lead-status" value="Cancel" action="{!Cancel}"/>
+                                    
+                                    </div>
+                                    </apex:outputPanel>
+        </div>                                
+                                
+            </div>             
+                                <div style="padding:30px;">
+                                
+                                <apex:commandButton styleClass="redBtn" value="Save" action="{!Complete}" rendered="{!!IsCompleted }"/> 
+                                
+                                </div>
+                                    </apex:outputPanel>
+                                </div>
+                                
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </apex:form>
+
+        </body>
+</apex:page>

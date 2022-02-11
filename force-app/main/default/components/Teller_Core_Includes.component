@@ -1,0 +1,77 @@
+<apex:component >
+
+    <!-- 3rd party libraries -->
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/libraries/angular-scroll.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/libraries/signature_pad.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/libraries/linq.min.js')}"/>
+
+    <!-- angular application -->
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/app/app.js')}"/>
+    
+    <!-- angular directives -->
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/directives/directives.js')}"/>
+    
+    <!-- angular state/route library -->
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/app/routes.js')}"/> 
+
+    <!-- angular controllers -->
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/controllers/controller_core.js')}"/> 
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/controllers/controller_customer.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/controllers/controller_customerdetails.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/controllers/controller_mandates.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/controllers/controller_accountfunctions.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/controllers/controller_account.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/controllers/controller_transaction.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/controllers/controller_cameracapture.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/controllers/controller_scannercapture.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/controllers/controller_tillmanagement.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/controllers/controller_depository.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/controllers/controller_activities.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/controllers/controller_activitydetail.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/controllers/controller_transactionhistory.js')}"/> 
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/controllers/controller_preapprovedcase.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/controllers/controller_account_mandates.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/controllers/controller_account_activity.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/controllers/controller_foreignexchange.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/controllers/controller_transaction_step_fxdenominations.js')}"/>    
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/controllers/controller_onlinebanking.js')}"/>
+    
+    <!-- Temporary -->
+    <!-- <apex:includeScript value="{!URLFOR($Resource.Teller_Includes_Temp, '/Teller_Includes_Temp/controller_transactionhistory.js')}"/>  -->
+    <!-- <apex:stylesheet value="{!URLFOR($Resource.Teller_Includes_Temp, '/Teller_Includes_Temp/ptemp.css')}"/> -->
+<!--<apex:includeScript value="{!URLFOR($Resource.Teller_Includes_Temp, '/Teller_Includes_Temp/controller_activitydetail.js')}"/>   
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes_Temp, '/Teller_Includes_Temp/controller_activities_temp.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.Teller_Includes_Temp, '/Teller_Includes_Temp/temp.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.Teller_Includes_Temp, '/Teller_Includes_Temp/materialdesign.css')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes_Temp, '/Teller_Includes_Temp/service_reporting.js')}"/> -->
+
+    <!-- angular services -->
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/service/service_teller.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/service/service_application.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/service/service_customer.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/service/service_accounts.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/service/service_mandates.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/service/service_parameters.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/service/service_transactions.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/service/service_messagebroker.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/service/service_statetransition.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/service/service_tillmanagement.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/service/service_reporting.js')}"/>
+
+    <!-- angular filters -->
+    <apex:includeScript value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/js/filters/filter_library.js')}"/>
+
+    <!-- css -->
+    <apex:stylesheet value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/css/structure.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/css/navigation.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/css/wait.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/css/core.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/css/mobile.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/css/page.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/css/accounttemplate.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/css/modal.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/css/imagecapturecrop.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/css/materialdesign.css')}" />
+    <!-- <apex:stylesheet value="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/css/engage_page_mode.css')}" />  -->
+    
+</apex:component>

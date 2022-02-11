@@ -1,0 +1,60 @@
+@charset "UTF-8";
+/* CSS Document */
+
+#advertPromos { width:714px;  }
+#advertPromos .row { margin-bottom:15px; }
+
+
+
+/* 1 col layout */
+#advertPromos .row.cols1 { display:block; padding:0px; }
+#advertPromos .row.cols1  .advertPromo {
+	width:714px;
+	height:155px;
+	background-image: url(../../graphics/modules/adverts/advertPromoBg714-155.png);
+	background-repeat: no-repeat;
+	background-position: center top;
+	border: 1px solid transparent;
+}
+.flashBanner { text-align:center; }
+.flashBanner:hover { cursor:pointer;}
+
+
+
+/* 2 col layout */
+#advertPromos .row.cols2 { display:block; padding-right:1px; }
+#advertPromos .row.cols2  .advertPromo {
+	width:347px;
+	height:155px;
+	background-image: url(../../graphics/modules/adverts/advertPromoBg347-155.png);
+	background-repeat: no-repeat;
+	background-position: center top;
+	border: 1px solid transparent;
+}
+#advertPromos .row.cols2  .advertPromo.one { margin:0 15px 0 0; }
+
+
+
+/* 3 col layout */
+#advertPromos .row.cols3 { display:block; padding-right:1px; }
+#advertPromos .row.cols3  .advertPromo {
+	width:225px;
+	height:155px;
+	background-image: url(../../graphics/modules/adverts/advertPromoBg225-155.png);
+	background-repeat: no-repeat;
+	background-position: center top;
+	border: 1px solid transparent;
+}
+#advertPromos .row.cols3  .advertPromo.two { margin:0 15px 0 15px; }
+
+
+
+
+.advertPromo { 
+	display:block; 
+	float:left; 
+}
+/* psuedo class wont work in IE6 thou */
+#advertPromos .row.cols1 .advertPromo:hover,
+#advertPromos .row.cols2 .advertPromo:hover,
+#advertPromos .row.cols3 .advertPromo:hover {background-position: center bottom; border: 1px solid #212a63;}

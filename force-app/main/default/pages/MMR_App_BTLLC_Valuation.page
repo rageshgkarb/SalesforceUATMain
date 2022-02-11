@@ -1,0 +1,62 @@
+<apex:page showheader="false" sidebar="false" controller="MMR_App_BTLLC_Valuation" doctype="html-5.0" action="{!Setup}"><!-- C0644 -->
+    <head>
+        <c:MMR_PageHeader ></c:MMR_PageHeader>
+    </head>
+    <body>
+
+        <c:MMR_Header title="Application - Valuation Information" numapps="{!numapplying}" opp="{!bopp}" />
+        <div class="container">
+            <c:MMR_App_BTLLC_Nav active="3" eventid="{!EventId}" rendered="{!!IsCompleted}" />
+            <c:MMR_App_BTLLC_Nav_Links active="3" eventid="{!EventId}" rendered="{!IsCompleted}" />
+
+            <apex:form id="aForm" styleclass="form-horizontal">
+                <apex:pagemessages ></apex:pagemessages>
+                <div class="panel panel-primary">
+                    <div class="panel-body">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-sm-4">
+                                        Select valuation type
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <apex:selectlist styleclass="form-control" value="{!ValuationId }" size="1">
+                                            <apex:selectoptions value="{!ValuationTypes}"> </apex:selectoptions>
+                                        </apex:selectlist>
+                                    </div>
+                                </div>
+                            </div>
+                            <apex:datatable value="{!Valuations}" var="v" border="" width="100%" styleclass="table table-bordered">
+                                <apex:column >
+                                    <apex:facet name="header">Type of valuation</apex:facet>
+                                    <apex:outputfield value="{!v.Type_of_valuation__c}" />
+                                </apex:column>
+                                <apex:column >
+                                    <apex:facet name="header">Price of valuation</apex:facet>
+                                    <apex:outputfield value="{!v.Price_of_valuation__c}" />
+                                </apex:column>
+                                <apex:column >
+                                    <apex:facet name="header">Min property price</apex:facet>
+                                    <apex:outputfield value="{!v.Minimum_property_value__c}" />
+                                </apex:column>
+                                <apex:column >
+                                    <apex:facet name="header">Max property price</apex:facet>
+                                    <apex:outputfield value="{!v.Property_up_to_the_value_of__c}" />
+                                </apex:column>
+                            </apex:datatable>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <apex:commandbutton immediate="true" styleclass="btn-danger" value="Previous" action="{!GoAdditional}" rendered="{!!IsCompleted}" />
+                            <apex:commandbutton styleclass="btn-danger" value="Save" action="{!Save}" rendered="{!!IsCompleted}" />
+                            <apex:commandbutton styleclass="btn-danger" value="Next" action="{!GoPayment}" rendered="{!!IsCompleted}" />
+
+                        </div>
+                    </div>
+            </apex:form>
+
+        </div>
+    </body>
+</apex:page>

@@ -1,0 +1,70 @@
+.regionLoad.ng-hide-add, .regionLoad.ng-hide-remove {
+  -webkit-transition:all linear 0.2s;
+  -moz-transition:all linear 0.2s;
+  -o-transition:all linear 0.2s;
+  transition:all linear 0.2s;
+}
+.regionLoad.ng-hide-add.ng-hide-add-active,
+.regionLoad.ng-hide-remove {
+  opacity:0;
+}
+.regionLoad.ng-hide-add,
+.regionLoad.ng-hide-remove.ng-hide-remove-active {
+  opacity:1;
+}
+
+.waitline{
+  position:absolute;
+  background:#B3995D;
+  width:70%;
+  height:2px;
+  
+}
+.waitbreak{
+  position:absolute;
+  background:#FAFAFA;
+  width:6px;
+  height:2px;  
+}
+
+.waitdot1{
+-webkit-animation: loading 2s infinite;
+-moz-animation: loading 2s infinite;
+-ms-animation: loading 2s infinite;
+-o-animation: loading 2s infinite;
+animation: loading 2s infinite;
+}
+.waitdot2{
+-webkit-animation: loading 2s 0.5s infinite;
+-moz-animation: loading 2s 0.5s infinite;
+-ms-animation: loading 2s 0.5s infinite;
+-o-animation: loading 2s 0.5s infinite;
+animation: loading 2s 0.5s infinite;
+}
+.waitdot3{
+-webkit-animation: loading 2s 1s infinite;
+-moz-animation: loading 2s 1s infinite;
+-ms-animation: loading 2s 1s infinite;
+-o-animation: loading 2s 1s infinite;
+animation: loading 2s 1s infinite;
+}
+
+@keyframes "loading" {
+ from { left: 0; }
+ to { left: 70%; }
+}
+@-moz-keyframes loading {
+ from { left: 0; }
+ to { left: 70%; }
+}
+@-webkit-keyframes "loading" {
+ from { left: 0; }
+ to { left: 70%; }
+}
+@-ms-keyframes "loading" {
+	from { left: 0; }
+ to { left: 70%; }
+}
+ @-o-keyframes "loading" {
+	from { left: 0; }
+ to { left: 70%; }

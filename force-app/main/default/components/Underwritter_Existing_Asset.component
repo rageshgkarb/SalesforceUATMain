@@ -1,0 +1,35 @@
+<apex:component controller="HPPUnderwritterAssetController">
+<apex:attribute name="accounts" type="Asset_Relationship__c[]" description="" assignTo="{!AssetList}"   />
+
+<div class="pbBody">
+<table class="list" width="100%">
+<thead>
+    <tr class="headerRow">
+        <th class="headerRow">Customer Name</th>
+        <th class="headerRow">Account Number</th>
+        <th class="headerRow">Account Type</th>
+        <th class="headerRow">Account Balance</th>                
+        <th class="headerRow">Action</th> 
+    </tr>
+</thead>
+<tbody>    
+    <apex:repeat var="a" value="{!AssetList}">
+    <tr>
+        <td>{!a.Prospect_Customer__r.name}</td>
+        <td>{!a.Account_with_IBB__r.Name}</td>
+        <td>{!a.Account_with_IBB__r.IBB_Product_Name__c}</td>        
+        <td class="valnumber"><apex:outputText value="{0,number,£#,###,##0.00}"><apex:param value="{!a.Account_with_IBB__r.Available_Balance__c}" /></apex:outputText></td>
+        <td><a target="_blank" class="redBtn" href="../{!a.Account_with_IBB__c}">View Record</a></td>
+        
+    </tr>
+    </apex:repeat>  
+    <tr>
+        <td colspan="3" class="valtitle">Sum Total</td>
+        <td><apex:outputText value="{0,number,£#,###,##0.00}"><apex:param value="{!AccountBalance}" /></apex:outputText></td>
+        <td></td>
+    </tr>  
+    
+</tbody>    
+</table>
+</div>
+</apex:component>

@@ -1,0 +1,376 @@
+<!-- C00170 new page -->
+<!-- C00203 Use passed PaymentType -->
+
+<apex:page controller="HPPEventAdHocPaymentController" sidebar="false" showHeader="false" title="Take Payment" action="{!autoRun}">
+  <head>
+      <c:KendoResource ></c:KendoResource>
+      <script type="text/javascript">
+          jQuery (document).ready(function()
+          {
+              var paymentMethodInternalSection = jQuery ("#payment_method_internal_section");
+              var paymentMethodExternalSection = jQuery ("#payment_method_external_section");
+              var paymentMethodNoneSection = jQuery ("#payment_method_none_section");    // C00203
+              var paymentMethodSection = jQuery ("#payment_method_section");
+              var paymentAmountSection = jQuery ("#payment_amount_section");
+              
+              
+          });
+          
+          
+      </script>
+  </head>
+  <body>
+      
+      <apex:form id="aform" >
+          <div id="formWrapper">
+              <c:HPPSummary objAcc="{!Accounts[0]}" objOpp="{!opp}" objExOpp="{!ExOpp}" Product="{!Prod}"></c:HPPSummary>
+              
+              <div id="container">
+                  <table width="100%">
+                      <tr>
+                          <td valign="top" id="Sidebar">
+                              <c:HPPBOMenu oppId="{!Opp.Id}" DirectorId="{!Opp.ProductEventDirector__c}"></c:HPPBOMenu>   
+                              
+                          </td>
+                          <td valign="top" id="contenttd" >
+                             <div id="content">
+                                <h1>
+                                    Ad-hoc Payment
+                                </h1>
+                                <apex:outputPanel id="mainPageBlock">
+                                    <div style="padding:10px;" >
+                                        <apex:pagemessages >
+                                        </apex:pagemessages>
+                                        <apex:pageBlock >
+                                            <apex:pageBlockSection >
+                                                <!-- C00203 start
+                                                <apex:pageBlocksectionItem rendered="{!NOT(showPaymentMethodSection)}">
+                                                    <apex:outputLabel value="Payment Type" />
+                                                    <apex:selectList style="width:200px;" value="{!PaymentTypeId }" size="1" required="true"  >
+                                                        <apex:selectOptions value="{!sltPaymentTypes}"> </apex:selectOptions>
+                                                        <apex:actionSupport event="onchange" action="{!GetPaymentType}" />
+                                                    </apex:selectList>
+                                                 </apex:pageBlocksectionItem>
+                                                 <apex:pageBlockSectionItem rendered="{!showPaymentMethodSection}" >
+                                                     <apex:outputLabel value="Payment Type" />
+                                                     <apex:outputText value="{!PaymentTypeId}" />
+                                                 </apex:pageBlockSectionItem>
+                                                 -->
+                                                 <apex:pageBlocksectionItem rendered="{!NOT(showPaymentMethodSection) && NOT(calledFromElsewhere)}">
+                                                    <apex:outputLabel value="Payment Type" />
+                                                    <apex:selectList style="width:200px;" value="{!PaymentTypeId }" size="1" required="true"  >
+                                                        <apex:selectOptions value="{!sltPaymentTypes}"> </apex:selectOptions>
+                                                        <apex:actionSupport event="onchange" action="{!GetPaymentType}" />
+                                                    </apex:selectList>
+                                                 </apex:pageBlocksectionItem>
+                                                 <apex:pageBlockSectionItem rendered="{!showPaymentMethodSection || calledFromElsewhere}" >
+                                                     <apex:outputLabel value="Payment Type" />
+                                                     <apex:outputText value="{!PaymentTypeId}" />
+                                                 </apex:pageBlockSectionItem>
+                                                 <!-- C00203 end -->
+                                               </apex:pageBlockSection>
+                                            <apex:pageBlockSection >
+                                            </apex:pageBlockSection>
+                                        </apex:pageBlock>
+                                        
+                                       
+                                     </div>
+                                     
+                                     
+                                     
+                                     <!-- PAYMENT METHOD -->
+                                     <div id="payment_method_section" style="{!IF(showPaymentMethodSection, 'display: block; padding:10px;', 'display: none;')}">
+                                        <apex:pageBlock >
+                                            <apex:pageBlockSection >
+                                                
+                                                <apex:pageBlockSectionItem rendered="{!NOT(showPaymentAmountSection)}" >
+                                                    <apex:outputLabel value="Comments" />
+                                                    <apex:inputTextarea value="{!OppPayment.PaymentComments}" />
+                                                </apex:pageBlockSectionItem>
+                                                <apex:pageBlockSectionItem rendered="{!showPaymentAmountSection}" >
+                                                    <apex:outputLabel value="Comments" />
+                                                    <apex:outputText value="{!OppPayment.PaymentComments}" />
+                                                </apex:pageBlockSectionItem>
+                                                <apex:pageBlockSectionItem >
+                                                </apex:pageBlockSectionItem>
+                                                
+                                                <apex:pageBlocksectionItem rendered="{!NOT(showPaymentAmountSection)}">
+                                                    <apex:outputLabel value="Payment Method" />
+                                                    <apex:selectList style="width:200px;" value="{!Method}" size="1" required="true" rendered="{!NOT(IsCompleted)}" >
+                                                        <apex:selectOptions value="{!Methods}"> </apex:selectOptions>
+                                                        <apex:actionSupport event="onchange" action="{!GetThePaymentType3}" />
+                                                    </apex:selectList>
+                                                </apex:pageBlocksectionItem>
+                                                <apex:pageBlockSectionItem rendered="{!showPaymentAmountSection}">
+                                                    <apex:outputLabel value="Payment Method" />
+                                                    <apex:outputText value="{!Method}"  />
+                                                </apex:pageBlockSectionItem>
+                                            </apex:pageBlockSection>
+                                        </apex:pageBlock>
+                                    </div>
+                                    
+                                    <!-- PAYMENT AMOUNT -->
+                                    <!-- C00203 start
+                                    <div id="payment_amount_section" style="{!IF(showPaymentAmountSection, 'display: block; padding:10px;', 'display: none;')}">
+                                    -->
+                                    <div id="payment_amount_section" style="{!IF(showPaymentAmountSection && NOT(paymentMethodNoneAndCalledFromElsewhere), 'display: block; padding:10px;', 'display: none;')}">
+                                    <!-- C00203 end -->
+                                        <apex:pageBlock >
+                                            <apex:pageBlockSection >
+                                                <apex:pageBlocksectionItem rendered="{!NOT(paymentInProgress)}" >
+                                                    <apex:outputLabel value="Payment Amount   £" />
+                                                    
+                                                    <apex:inputText value="{!OppPayment.PaymentAmount}" />
+                                                </apex:pageBlocksectionItem>
+                                                <apex:pageBlocksectionItem rendered="{!paymentInProgress}" >
+                                                    <apex:outputLabel value="Payment Amount" />
+                                                    <apex:outputText value="£{0, number, ###,###.00}" >
+                                                        <apex:param value="{!OppPayment.PaymentAmount}" />
+                                                    </apex:outputText>
+                                                </apex:pageBlocksectionItem>
+                                                 <apex:pageBlocksectionItem >
+                                                    <apex:outputLabel value="Type Amount" />
+                                                    <apex:outputText value="£{0, number, ###,###.00}" >
+                                                        <apex:param value="{!OppPayment.PaymentTypeAmount}" />
+                                                    </apex:outputText>
+                                                </apex:pageBlocksectionItem>
+                                            </apex:pageBlockSection>
+                                        </apex:pageBlock>
+                                    </div>
+                                    
+                                    
+                                    <!-- EXTERNAL PAYMENT -->
+                                    <div id="payment_method_external_section" style="{!IF(showPaymentMethodExternalSection, 'display: block; padding:20px;', 'display: none;')}">
+                                        <h1>External Payment</h1>
+                                        <apex:PageBlock >
+                                            <apex:pageblockSection >
+                                                <apex:pageBlockSectionItem rendered="{!NOT(paymentInProgress)}">
+                                                    <apex:outputLabel value="Sort Code" />
+                                                    <apex:inputText value="{!OppPayment.SortCode}" />
+                                                </apex:pageBlockSectionItem>
+                                                <apex:pageBlockSectionItem rendered="{!(paymentInProgress)}" >
+                                                    <apex:outputLabel value="Sort Code" />
+                                                    <apex:outputText value="{!OppPayment.SortCode}" />
+                                                </apex:pageBlockSectionItem>
+                                                <apex:pageBlockSectionItem rendered="{!NOT(paymentInProgress)}" >
+                                                    <apex:outputLabel value="Account Number" />
+                                                    <apex:inputText value="{!OppPayment.ExternalAccountNumber}" />   
+                                                </apex:pageBlockSectionItem>
+                                                <apex:pageBlockSectionItem rendered="{!(paymentInProgress)}" >
+                                                    <apex:outputLabel value="Account Number" rendered="{!(paymentInProgress)}" />
+                                                    <apex:outputText value="{!OppPayment.ExternalAccountNumber}" />   
+                                                </apex:pageBlockSectionItem>
+                                                <!--
+                                                <apex:pageBlockSectionItem rendered="{!NOT(paymentInProgress)}" >
+                                                    <apex:outputLabel value="Comments" />
+                                                    <apex:inputTextarea value="{!OppPayment.ExternalPaymentComments}" />
+                                                </apex:pageBlockSectionItem>
+                                                <apex:pageBlockSectionItem rendered="{!paymentInProgress}" >
+                                                    <apex:outputLabel value="Comments" />
+                                                    <apex:outputText value="{!OppPayment.ExternalPaymentComments}" />
+                                                </apex:pageBlockSectionItem>
+                                                -->
+                                            </apex:pageblockSection>
+                                            <apex:pageBlockButtons location="bottom" >
+                                                <apex:pageblocksection >
+                                                    <apex:pageBlockSectionItem >
+                                                        <apex:commandButton value="Take Payment"  onclick="ShowDocumentLoad();" action="{!saveThePayment}" rendered="{!NOT(paymentInProgress)}" rerender="mainPageBlock" oncomplete="takeTheExtPayment();"/>
+                                                        <apex:actionFunction name="takeTheExtPayment" action="{!takeExternalPayment}" oncomplete="HideDocumentLoad();" rerender="mainPageBlock" />
+                                                    </apex:pageBlockSectionItem>
+                                                    <apex:pageBlockSectionItem >
+                                                    </apex:pageBlockSectionItem>
+                                                    <apex:pageBlockSectionItem >    
+                                                         <apex:commandButton value="Complete Event" action="{!completeTheEvent}" rendered="{!paymentPerformed}"/>
+                                                    </apex:pageBlockSectionItem>
+                                                </apex:pageblocksection>
+                                            </apex:pageBlockButtons>
+                                        </apex:PageBlock>
+                                    </div>
+                                    <!-- EXTERNAL PAYMENT END -->
+                                    
+                                    <!-- INTERNAL PAYMENT -->
+                                    <div id="payment_method_internal_section" style="{!IF(showPaymentMethodInternalSection, 'display: block; padding:20px;', 'display: none;')}">
+                                        <h1>Internal Payment</h1>
+                                        <apex:PageBlock >
+                                            <apex:pageblockSection >
+                                                <apex:pageBlockSectionItem rendered="{!NOT(paymentInProgress)}">
+                                                    <apex:outputLabel value="Account Number"  />
+                                                    <apex:selectList style="width:200px;" value="{!InternalAccount }" size="1" required="true"  >
+                                                        <apex:selectOptions value="{!InternalAccounts}" /> 
+                                                    </apex:selectList>
+                                                </apex:pageBlockSectionItem>
+                                                <apex:pageBlockSectionItem rendered="{!paymentInProgress}">
+                                                    <apex:outputLabel value="Account Number"  />
+                                                    <apex:outputText value="{!InternalAccount}" />
+                                                </apex:pageBlockSectionItem>
+                                                <apex:pageBlockSectionItem >
+                                                </apex:pageBlockSectionItem>
+                                                <!--
+                                                <apex:pageBlockSectionItem rendered="{!NOT(paymentInProgress)}">
+                                                    <apex:outputLabel value="Comments" />
+                                                    <apex:inputtextarea value="{!OppPayment.InternalPaymentComments}" />
+                                                </apex:pageBlockSectionItem>
+                                                <apex:pageBlockSectionItem rendered="{!paymentInProgress}" >
+                                                    <apex:outputLabel value="Comments" />
+                                                    <apex:outputtext value="{!OppPayment.InternalPaymentComments}" rendered="{!NOT(IsCompleted)}"/>
+                                                </apex:pageBlockSectionItem>
+                                                -->
+                                            </apex:pageblockSection>
+                                            <apex:pageBlockButtons location="bottom" >
+                                                <apex:pageblocksection >
+                                                    <apex:pageBlockSectionItem >
+                                                        <apex:commandButton value="Take Payment" onclick="ShowDocumentLoad();" action="{!saveThePayment}" rendered="{!NOT(paymentInProgress)}" rerender="mainPageBlock" oncomplete="takeTheIntPayment();"/>
+                                                        <apex:actionFunction name="takeTheIntPayment" action="{!takeInternalPayment}" oncomplete="HideDocumentLoad();" rerender="mainPageBlock" />
+                                                    </apex:pageBlockSectionItem>
+                                                    <apex:pageBlockSectionItem >
+                                                    </apex:pageBlockSectionItem>
+                                                    <apex:pageBlockSectionItem rendered="{!NOT(calledFromElsewhere)}" >    
+                                                         <apex:commandButton value="Complete Event" action="{!completeTheEvent}" rendered="{!paymentPerformed}"/>
+                                                    </apex:pageBlockSectionItem>
+                                                    <apex:pageBlockSectionItem rendered="{!calledFromElsewhere}" >    
+                                                         <apex:commandButton value="Continue" action="{!completeTheEvent}" rendered="{!paymentPerformed}"/>
+                                                    </apex:pageBlockSectionItem>
+                                                </apex:pageblocksection>
+                                            </apex:pageBlockButtons>
+                                        </apex:PageBlock>
+                                    </div>
+                                    <!-- INTERNAL PAYMENT END -->
+                                    
+                                    <!-- C00203 start -->
+                                    <!-- NO PAYMENT START -->
+                                    <div id="payment_method_none_section" style="{!IF(showPaymentMethodNoneSection, 'display: block; padding:20px;', 'display: none;')}">
+                                        <h1>No Payment</h1>
+                                        <apex:PageBlock >
+                                            <apex:pageBlockButtons location="bottom" >
+                                                <apex:pageblocksection >
+                                                    <apex:pageBlockSectionItem >
+                                                        <apex:commandButton value="Take Payment" onclick="ShowDocumentLoad();" action="{!saveThePayment}" rendered="{!NOT(paymentInProgress)}" rerender="mainPageBlock" oncomplete="takeTheNonPayment();"/>
+                                                        <apex:actionFunction name="takeTheNonPayment" action="{!takeNonePayment}" oncomplete="HideDocumentLoad();" rerender="mainPageBlock" />
+                                                    </apex:pageBlockSectionItem>
+                                                    <apex:pageBlockSectionItem >
+                                                    </apex:pageBlockSectionItem>
+                                                    <apex:pageBlockSectionItem >    
+                                                         <apex:commandButton value="Continue" action="{!completeTheEvent}" rendered="{!paymentPerformed}"/>
+                                                    </apex:pageBlockSectionItem>
+                                                </apex:pageblocksection>
+                                            </apex:pageBlockButtons>
+                                         </apex:PageBlock>
+                                    </div>        
+                                    <!-- NO PAYMENT END -->
+                                    <!-- CARD PAYMENT -->
+                                    
+                                    <!-- CARD PAYMENT END -->
+                                    
+                                </apex:outputPanel>
+                             </div>
+                          </td>
+                      </tr>
+                  </table>
+              </div>
+          </div>
+      <!--/apex:form-->
+      
+      <div id="fade"></div>
+<div id="overlay">
+Sending Payment to EBS ...
+<br/>
+<br/>
+This may take a few seconds.
+
+<div style="padding-top: 50px;" >
+<img src="{!URLFOR($Resource.ibbstyle, 'images/269.gif')}"></img>
+</div>
+
+
+</div>
+
+<div id="errWindow" style="display:none;" >
+<div style="text-align: center;padding:20px;">
+There was an issue calling AJE.<br/><br/>
+Please contact IT Service Desk.
+
+</div>
+
+</div> 
+
+
+  <div id="fade1"></div>
+<div id="overlay1">
+Sending Payment to EBS ....
+<br/>
+<br/>
+This may take a few seconds.
+
+<div style="padding-top: 50px;" >
+<!--  CPDR01 
+<img src="{!URLFOR($Resource.ibbstyle, 'images/269.gif')}"></img>
+	-->
+<img src="{!URLFOR($Resource.ibbstyleexternal, 'graphics/logos/circular-timer.gif')}"></img>
+</div>
+
+
+</div>
+
+
+            
+        </apex:form>
+        <style type="text/css">
+#overlay, #overlay1 {
+    display: none; /* ensures it’s invisible until it’s called */
+    position: absolute; /* makes the div go into a position that’s absolute to the browser viewing area */
+    left: 25%; /* positions the div half way horizontally */
+    top: 25%; /* positions the div half way vertically */
+    padding: 25px; 
+    border: 2px solid black;
+    background-color: #ffffff;
+    width: 50%;
+    height: 50%;
+    z-index: 100; /* makes the div the top layer, so it’ll lay on top of the other content */
+    text-align: center;
+    font-size: 18px;
+}
+#fade,#fade1 {
+    display: none;  /* ensures it’s invisible until it’s called */
+    position: absolute;  /* makes the div go into a position that’s absolute to the browser viewing area */
+    left: 0%; /* makes the div span all the way across the viewing area */
+    top: 0%; /* makes the div span all the way across the viewing area */
+    background-color: #ccc;
+    -moz-opacity: 0.7; /* makes the div transparent, so you have a cool overlay effect */
+    opacity: .70;
+    filter: alpha(opacity=70);
+    width: 100%;
+    height: 100%;
+    z-index: 90; /* makes the div the second most top layer, so it’ll lay on top of everything else EXCEPT for divs with a higher z-index (meaning the #overlay ruleset) */
+}
+</style>
+
+<script>
+function ShowDocumentLoad()
+{
+    $('#overlay').show('slow');
+    $('#fade').show('slow');
+}
+
+function HideDocumentLoad()
+{
+    $('#overlay').hide('slow');
+    $('#fade').hide('slow');
+}
+function ShowDocumentLoad1()
+{
+    $('#overlay1').show('slow');
+    $('#fade1').show('slow');
+}
+
+function HideDocumentLoad1()
+{
+    $('#overlay1').hide('slow');
+    $('#fade1').hide('slow');
+}
+
+
+
+</script>
+      
+  </body>
+</apex:page>

@@ -1,0 +1,28 @@
+<apex:page controller="HTBTestingController" title="HTB Testing">
+    <apex:form >        
+        <apex:pageBlock title="HTB Testing">
+            <apex:pageBlockSection collapsible="false" columns="2">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Month</apex:outputLabel>
+                    <apex:inputText value="{!month}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Year</apex:outputLabel>
+                	<apex:inputText value="{!year}" />
+				</apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection collapsible="false" columns="1">
+                <apex:outputPanel >
+                    <apex:outputText value="{!message}" />
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton action="{!createMonthRecords}" value="Create Month Data" />
+                <apex:commandButton action="{!deleteMonthRecords}" value="Delete Existing Month Data" />
+                <apex:commandButton action="{!deleteAndCreateMonthRecords}" value="Delete Existing Month Data & Create Month Data" />
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

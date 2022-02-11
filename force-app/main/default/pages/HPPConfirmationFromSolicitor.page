@@ -1,0 +1,59 @@
+<apex:page controller="HPPConfirmationFromSolicitor" sidebar="false" showHeader="false" title="Confirmation from Solicitor ">
+    <head>
+        <c:KendoResource ></c:KendoResource>
+    </head>
+    <body>
+        <apex:form >
+            <div id="formWrapper">
+                <!-- C00095--> 
+                <c:HPPSummary objAcc="{!Accounts[0]}" objOpp="{!opp}" objExOpp="{!ExOpp}" Product="{!Prod}" />
+                <div id="container" >
+                    <table width="100%">
+                        <tr>
+                            <td valign="top" id="sidebar">
+                                <c:HPPBOMenu oppId="{!Opp.Id}"  DirectorId="{!Opp.ProductEventDirector__c}" />
+                            </td>
+                            <td valign="top" id="contenttd">
+                                <div id="content">
+                                    <h1>Confirmation from Solicitor</h1>
+                                
+                                    <apex:outputPanel id="mainPageBlock">
+                                    <div style="padding:20px;">
+                                        <!-- content -->
+                                        
+                                        <apex:pageBlock >
+                                            <apex:pageBlockSection >
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="Please enter the date offer letter was received" />
+                                                    <apex:inputField value="{!exOpp.Confirmation_of_orig_signed_offer_doc_s__c}" required="true" />
+                                                </apex:pageBlockSectionItem>
+                                            </apex:pageBlockSection>
+                                            
+                                            <apex:pageBlockSection >
+                                                <apex:pageBlockSectionItem >
+                                                    <apex:outputLabel value="Case owner" />
+                                                    <apex:inputField value="{!Opp.SGH_Martineau_case_owner__c}" required="false" />
+                                                </apex:pageBlockSectionItem>
+                                            </apex:pageBlockSection>
+                                            
+                                            
+                                            <br> </br>
+                                            Please click on the button below to confirm that the original signed offer letter for <b> {!opp.name} </b> has been received:
+                                        <br> </br>
+                                            <apex:pageBlockButtons location="bottom">
+                                                <apex:commandButton value="Confirm documents received" action="{!complete}" rendered="{!!IsCompleted}" />
+                                            </apex:pageBlockButtons>
+                                        </apex:pageBlock> 
+                                    </div>
+                                    </apex:outputPanel>
+                                </div>
+                                
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+                        
+        </apex:form>
+    </body>
+</apex:page>

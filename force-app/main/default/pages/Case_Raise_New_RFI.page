@@ -1,0 +1,10 @@
+<!--
+/**********************************************************************************
+VF Name: Case_Raise_New_RFI 
+Author: Raiyan
+Created Date:
+Purpose: Visualforce page to invoke "updateCase" method from Case_Raise_New_RFI_Controller class to update the case date changes record 
+Case Number:01864468 
+************************************************************************************/ -->
+<apex:page controller="Case_Raise_New_RFI_Controller" action="{!updateCase}" >
+</apex:page>

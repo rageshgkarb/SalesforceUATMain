@@ -1,0 +1,97 @@
+<apex:page showHeader="false" sidebar="false" controller="MMR_App_Valuation" docType="html-5.0" action="{!Setup}">
+<head>
+    <c:MMR_PageHeader ></c:MMR_PageHeader>   
+
+</head>
+<body>
+
+  
+  <c:MMR_Header title="Application - Valuation Information" numapps="{!numapplying}" opp="{!bopp}"/>
+
+      <div class="container">
+              <c:MMR_App_Nav active="3" EventId="{!EventId}" rendered="{!!IsCompleted}"/>
+              <c:MMR_App_Nav_Links active="3" EventId="{!EventId}" rendered="{!IsCompleted}"/>
+    
+        <apex:form id="aForm" styleClass="form-horizontal">
+     
+        <apex:pageMessages ></apex:pageMessages>
+         <div class="row">
+            <div class="form-group">
+                <div class="col-sm-4">
+                    Select valuation type
+                </div>
+                <div class="col-sm-3">
+                    <apex:selectList styleClass="form-control"  value="{!ValuationId }" size="1" >
+                        <apex:selectOptions value="{!Valuations}"> </apex:selectOptions>
+                    </apex:selectList>
+                </div>
+            </div>
+        </div>
+        
+        <apex:dataTable value="{!valuationTableMap}" var="v" border="" width="100%" styleClass="table table-bordered">
+            <apex:column >
+            <apex:facet name="header">Type of valuation</apex:facet>
+            <apex:outputField value="{!valuationTableMap[v].Type_of_valuation__c}"/>  
+           
+            </apex:column>
+            
+         
+            <apex:column >
+            <apex:facet name="header">Price of valuation</apex:facet>
+            <apex:outputField value="{!valuationTableMap[v].Price_of_valuation__c}" rendered="{!v != null && valuationTableMap[v].RecordTypeId != CustomRecordType}"/>  
+            <apex:inputText value="{!valuationTableMap[v].Price_of_valuation__c}" rendered="{!v != null && valuationTableMap[v].RecordTypeId == CustomRecordType}"/>  
+            </apex:column>
+            
+       
+           <!-- <apex:column rendered="{!valuationTableMap[v].recordtypeId  == CustomRecordType && v.id != null}">
+                <apex:facet name="header">Price of valuation</apex:facet>
+                <apex:inputText value="{!getValuationPrice[v]}"/>  
+            </apex:column> -->
+            
+             <!-- <apex:column rendered="{!valuationTableMap[v].recordtypeId  == CustomRecordType}">
+                <apex:facet name="header">Price of valuation</apex:facet>
+                <apex:inputField value="{!valuationTableMap[v].Price_of_valuation__c}"/>  
+            </apex:column> -->
+               
+            
+            <apex:column >
+            <apex:facet name="header">Min property price</apex:facet>
+            <apex:outputField value="{!valuationTableMap[v].Minimum_property_value__c}"/>  </apex:column>
+            <apex:column >
+            <apex:facet name="header">Max property price</apex:facet>
+            <apex:outputField value="{!valuationTableMap[v].Property_up_to_the_value_of__c}"/>  </apex:column>    
+                
+        </apex:dataTable>
+         <!--CO782 REAC changes start-->
+         <apex:outputPanel rendered="{!CONTAINS(opp.Interested_in__c, 'REAC')}">
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <label>Comments</label>
+                                        </div>
+
+                                        <div class="col-sm-6">
+                                            <apex:inputText styleclass="form-control" value="{!comments}"/>
+                                        </div>
+                                    </div>
+                                </div>
+            </apex:outputPanel>
+       <!-- CO782 REAC changes end--> 
+       
+        <div class="row">
+        <div class="col-xs-6">
+            <apex:commandButton immediate="true" styleClass="btn-primary" value="Previous" action="{!GoAdditional}" rendered="{!!IsCompleted}"/>
+            <apex:commandButton styleClass="btn-success" value="Save" action="{!Save}" rendered="{!!IsCompleted}" />
+            
+            <apex:commandButton styleClass="btn-danger" value="Next" action="{!GoPayment}" rendered="{!!IsCompleted}"/>
+           
+            
+        </div>
+        </div>
+      
+        </apex:form>
+        
+      </div>
+     
+</body>
+</apex:page>

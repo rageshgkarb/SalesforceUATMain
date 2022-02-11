@@ -1,0 +1,152 @@
+<apex:page standardController="CongaSettings__c" extensions="CongaSettingsController" >
+<head>
+
+</head>
+<div >
+<apex:form >
+
+<div>
+
+<div style="padding:10px;">
+
+<apex:outputPanel id="panel">
+
+<div style="padding-bottom:20px">
+<h1>DocuGen Document : <apex:inputText value="{!Current.Name}"/> </h1>
+</div>
+
+
+<div>
+<h1>Output Document Name : <apex:inputText value="{!Current.outputname }"/></h1>
+</div>
+
+
+
+
+<div>
+
+<h2>DocuGen Query</h2>
+<apex:selectList value="{!QueryId}" size="1" style="width:300px;">
+<apex:selectOptions value="{!CongaQueries}" ></apex:selectOptions>
+</apex:selectList>
+<apex:commandButton value="Add Query" action="{!AddQuery}" reRender="panel"/>
+
+<table width="100%" style="border: 1px solid #888;">
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Alias</th>
+<th width="60">Order</th>
+<th width="60">Action</th>
+</tr>
+<apex:variable value="{!0}" var="qNum"/>
+<apex:repeat value="{!Current.Queries.Queries}" var="q" >
+<tr>
+<td>{!q.QueryId}</td>
+<td>{!q.Name}</td>
+<td><apex:inputText value="{!q.Alias}" maxlength="5"/>   </td>
+<td ><apex:inputText style="width: 30px;" value="{!q.Order}" maxlength="2"/>   </td>
+ <td >
+       <apex:commandButton value="Remove" action="{!RemoveQuery}" reRender="panel"   >
+      <apex:param name="queryIndex"
+                value="{!qNum}"
+                assignTo="{!QueryIndex}"/> 
+                
+                </apex:commandButton> 
+                </td>
+</tr>
+ <apex:variable var="qNum" value="{!qNum + 1}"/>
+</apex:repeat>
+</table>
+
+
+
+</div>
+<br/><br/>
+
+<div >
+
+
+<h2>DocuGen Template</h2>
+<apex:selectList value="{!TemplateId}" size="1" style="width:300px;">
+<apex:selectOptions value="{!CongaTemplates}" ></apex:selectOptions>
+</apex:selectList>
+<apex:commandButton value="Add Template" action="{!AddTemplate}" reRender="panel"/>
+
+
+<div >
+<table width="100%" class="detailList" style="border: 1px solid #888;">
+<tr>
+<th>Template Name</th>
+<th>Min Apps</th>
+<th width="60">Order</th>
+<th width="60">Action</th>
+</tr>
+<apex:variable value="{!0}" var="tNum"/>
+<apex:repeat value="{!Current.Templates.Templates}" var="t" >
+<tr>
+<td>{!t.Name}</td>
+<td><apex:inputText style="width: 30px;" value="{!t.MinApplicants}"/> </td>
+<td><apex:inputText style="width: 30px;" value="{!t.Order}"/> </td>
+
+<td>
+       <apex:commandButton value="Remove" action="{!RemoveTemplate}" reRender="panel"   >
+      <apex:param name="templateIndex"
+                value="{!tNum}"
+                assignTo="{!TemplateIndex}"/> 
+                
+                </apex:commandButton> 
+                </td>
+
+</tr>
+ <apex:variable var="tNum" value="{!tNum + 1}"/>
+</apex:repeat>
+</table>
+</div>
+
+
+
+
+<div>
+Output as Word <apex:inputField value="{!data.Output_As_Word__c}"/>
+</div>
+<div>
+Use Docugen : <apex:inputField value="{!data.Use_Docugen__c }"/>
+</div>
+<div>
+Merge templates seperately then combine into pdf : <apex:inputField value="{!data.SplitMerge__c}"/>
+</div>
+
+</div>
+</apex:outputPanel>
+</div>
+
+
+</div>
+<apex:commandButton value="Save"  action="{!Save}"/>
+<div style="padding-top: 30px;">
+Test Id (This needs to be a valid salesforce object id)
+<br/>
+<apex:inputText value="{!TestId}"/>
+<br/>
+
+    <div style="padding:20px;">
+    <h2>New Test Links</h2>
+    <table>
+   <tr>
+        <td>Production Docugen</td><td><apex:outputLabel escape="false" value="{!ManualDirectUrlLBUK}"></apex:outputLabel></td>
+    </tr>
+    <tr>
+        <td>Development Docugen</td><td><apex:outputLabel escape="false" value="{!ManualDirectUrlLBUS}"></apex:outputLabel></td>
+    </tr>
+    <tr>
+        <td>Developer localhost</td><td><apex:outputLabel escape="false" value="{!ManualDirectUrlLB}"></apex:outputLabel></td>
+    </tr>
+    </table>
+    </div>
+
+
+</div>
+</apex:form>
+</div>
+</apex:page>

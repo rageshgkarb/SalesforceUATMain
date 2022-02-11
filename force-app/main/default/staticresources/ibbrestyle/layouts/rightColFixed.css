@@ -1,0 +1,27 @@
+@charset "UTF-8";
+@import url("generic.css");
+/* CSS Document for left content right modules */
+
+.wrapper {
+	float: left;
+	width:100%;
+}
+
+#leftColumn { 
+	margin-right: 266px;
+	/*background-color:#FFCC00;*/
+
+}
+/*Set right margin to RightColumnWidth*/
+
+				
+#rightColumn {
+	float: left;
+	width: 266px; /*Width of right column in pixels*/
+	margin-left: -266px; /*Set left margin to -(RightColumnWidth) */
+	/*background: #FDE95E;*/
+}
+
+
+
+

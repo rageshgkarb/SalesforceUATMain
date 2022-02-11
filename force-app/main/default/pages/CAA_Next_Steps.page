@@ -1,0 +1,346 @@
+<apex:page showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false" controller="CAA_NextSteps_Controller"  action="{!SetupNextSteps}">
+   <apex:includeScript value="https://code.jquery.com/jquery-1.9.1.min.js"/>}
+   <apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/datejs/1.0/date.min.js"/>
+   <apex:include pageName="pca__Component"/>
+   <apex:composition template="CAA_Template">
+       <apex:define name="include">
+        <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/controller/controller_payment.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/service/service_payment.js')}" />
+        <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/controller/controller_documents.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/service/service_documents.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/controller/controller_next_steps.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/service/service_next_steps.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.CAA_Includes, '/js/service/service_ftdsetup.js')}"/>
+    </apex:define>   
+ 
+      <apex:define name="body">
+         <div >
+            <div class="row">
+               <div class="col-md-9">      
+                  <div class="SectionHeader">
+                     <div class="numberCircleReverse">5</div>
+                     <!--C0750: CAA Quick Wins Starts-->
+                     <div>Final Stage</div>
+                     <!--C0750: CAA Quick Wins Ends-->
+                  </div>
+                  
+                  <!--C0746--><div id="CAANextSteps" class="PanelContents" ng-controller="controllerNextSteps" ng-init="EventLogId='{!EventLogId}';
+                                                                                          SessionId='{!SessionId}';
+                                                                                          AJEStatus='{!AJEStatus}';
+                                                                                          PaymentMethod='{!PaymentMethod}';
+                                                                                          IsFTD={!isFTD};">
+                  
+         
+                      <c:CAA_Next_Steps_Decline rendered="NextStepsState == 'DECLINE'"/>                      
+                      <c:CAA_Next_Steps_Refer_Docs rendered="NextStepsState == 'DOCS'"/>
+                      <c:CAA_Next_Steps_Refer_FCU rendered="NextStepsState == 'FCU'"/>
+                      <c:CAA_Next_Steps_Refer_Sig rendered="NextStepsState == 'SIG'"/>
+                      <c:CAA_Next_Steps_Accept rendered="NextStepsState == 'ACCEPT'"/>
+                      
+                      <div class="SectionTitle">
+                          Thank you for opening a {!ProductName}
+                      </div>
+                      
+                      <div>
+                          <strong>
+                              We are delighted to welcome you as a customer of Al Rayan Bank - your account is now open
+                          </strong>
+                       
+                      </div>
+                      <div class="SectionBreak"/>
+
+                      <!--C0666-->
+                      <div style="height:90px;font-size:14px;font-weight:bolder;text-align:center;" class="alert alert-danger" ng-show="!PaymentMethod">
+                              Please DO NOT close the browser without selecting the method of deposit. <br/>
+                              IT IS IMPORTANT that you complete this step to proceed further with your application. 
+                      </div>
+                      <div class="SectionBreak"/>
+                      <!--end C0666-->
+
+                      <div>
+                          <div class="SectionTitle">
+                              What you need to do next                          
+                          </div>
+                          
+                          <div class="row">
+                              <div class="col-sm-4">
+                                  <div class="clearfix" style="padding-bottom:10px;">
+                                  <span class="circle-dark circle-lg pull-left">1</span>
+                                  </div>
+                                  
+                                  <div>
+                                      <strong>Make a note </strong>of your reference number
+                                  </div>
+                                  
+                                  <div>
+                                      It is: {!OppReference}
+                                  </div>
+                                  <div>
+                                      <p>
+                                      You will need to quote this when you contact us or make any payments.
+                                      </p>
+                                  </div>
+                                  
+                                  <!--C0666-->
+                                  <div>
+                                      <p>
+                                      Please ensure you clearly type the reference as presented on screen when making all transfers.
+                                      </p>
+                                  </div>
+                                  <div>
+                                    <p>
+                                      <strong>THIS MEANS CAPITAL LETTERS AND NO SPACES.</strong>
+                                    </p>
+                                  </div>
+                                  <!--end C0666-->
+
+                              </div>
+                              
+                              <div class="col-sm-4">
+                                  <div>
+                                  <div class="clearfix" style="padding-bottom:10px;">
+                                  <span class="circle-dark circle-lg pull-left">2</span>
+                                  </div>
+                                  Download your account document from the downloads section below
+                                  </div>
+                              
+                              </div>
+                              
+                              
+                              <div class="col-sm-4">
+                                  <div>
+                                  <div class="clearfix" style="padding-bottom:10px;">
+                                  <span class="circle-dark circle-lg pull-left">3</span>
+                                  </div>
+                                  
+                                  <div>
+                                      <strong>Deposit £{!OppAmount}</strong>
+                                      into your new account
+                                  </div>
+                                  </div>
+                                 
+                                  
+                                  <apex:outputPanel rendered="{!Not(HasExistingPayments)}" layout="none">
+                                      <div class="row">
+                                          <div class="col-xs-6" style="padding:3px;">
+                                              <button style="width:100%;" type="button" class="btn btnArb" ng-disabled="Updating" ng-click="DepositType='transfer'; UpdatePaymentMethod('Bank Transfer');">Transfer</button>
+                                          </div>
+                                          <div class="col-xs-6" style="padding:3px;">
+                                              <button style="width:100%;" type="button" class="btn btnArb" ng-disabled="Updating" ng-click="DepositType='cheque'; UpdatePaymentMethod('Cheque');">Cheque</button>
+                                          </div>
+                                          <apex:outputPanel layout="none" rendered="{!ShowCardPayment}">                                      
+                                              <div class="col-xs-6" style="padding:3px;">
+                                                  <button style="width:100%;" type="button" class="btn btnArb" ng-disabled="Updating" ng-click="DepositType='card'; UpdatePaymentMethod('Debit Card');">Card</button>
+                                              </div>
+                                          </apex:outputPanel>
+                                          <div class="col-xs-6" style="padding:3px;">
+                                              <button style="width:100%;" type="button" class="btn btnArb" ng-disabled="Updating" ng-click="DepositType='branch'; UpdatePaymentMethod('Cash');">Branch</button>
+                                          </div>                          
+                                      </div>
+                                  </apex:outputPanel>  
+                                  
+                                  <apex:outputPanel layout="none" rendered="{!HasExistingPayments}">
+                                    <div class="alert alert-success">
+                                        Card Payment has already been taken
+                                    </div>
+                                </apex:outputPanel> 
+                                 
+                                  </div>                             
+                          </div>
+                      </div>
+                      
+                      <apex:outputPanel rendered="{!HasExistingPayments && !isFTD && !IsGuest }">
+                          <div class="SectionTitle">AJE</div>
+                   
+                          <div class="alert alert-success" ng-show="AJEStatus=='Card Ok _ AJE Success' || AJEStatus=='Suspended _ AJE Success' || AJECompleted">
+                              AJE Successful
+                          </div>
+                          <div class="alert alert-danger" ng-show="AJEError">
+                              {{AJEError}}
+                          </div>
+                       
+                          <div class="" ng-show="(AJEStatus=='Card Ok' || AJEStatus=='Suspended'
+                                                                  || AJEStatus=='Card Ok _ AJE Failed' || AJEStatus=='Suspended _ AJE Failed') && !AJECompleted">
+                             <button class="btn btnArb" ng-click="CallAJE()">Send AJE</button>
+                          </div>
+                          
+                          
+                          
+                      </apex:outputPanel>
+                      
+                      <div ng-show="DepositType">
+                      <div class="SectionBreak"/>
+                      
+                      <apex:outputPanel layout="none" rendered="{!ShowCardPayment}">
+                          <div ng-show="DepositType=='card'">
+                              <c:Card_Payment transactionid="{!TransactionId}" deposit="{!OppAmount}" sessionid="{!SessionId}" eventlogid="{!EventLogID}"
+                                              addressline1="{!Line1}"
+                                              addressline2="{!Line2}"
+                                              city="{!City}"
+                                              county="{!County}"
+                                              postcode="{!PostCode}"
+                                              isguest="{!IsGuest}" autords="{!AutoRDS}" isftd="{!isFTD}"></c:Card_Payment> <!-- C0606 isftd -->  
+                          </div>
+                        </apex:outputPanel>  
+                        
+                        
+                          <div ng-show="DepositType=='cheque'" class="SectionSubHeader" style="font-size:12px;font-weight:normal;">
+                              <div>
+                                 Please write your account number <strong>({!TransferAccountNumber})</strong> clearly on the back of your cheque and post it to <strong>Al Rayan Bank Plc, PO Box 12461, Birmingham, B16 6AQ</strong><br/> 
+                              </div>
+                              <br/> 
+                              <div>
+                                  Please note that we cannot accept cash deposits by post
+                              </div>
+                              
+ 
+                   
+                          
+                          
+                          </div>
+                          
+                          <div ng-show="DepositType=='branch'" class="SectionSubHeader">
+                              <p>
+                                  Paying in branch
+                              </p>
+                              <div class="row">
+                                  Simply visit your local Al Rayan branch or agency with your account number ({!TransferAccountNumber})
+                              </div>
+                              
+                              <div class="link">
+                              You can find your local branch <a href="http://www.alrayanbank.co.uk/useful-info-tools/about-us/branch-finder/" target="_blank">here</a>
+                          </div>
+                          
+                          </div>
+                      <div ng-show="DepositType == 'transfer'" class="SectionSubHeader">
+                          <p>
+                              Paying by transfer
+                          </p>
+                          <div class="row">
+                              <div class="col-sm-4">
+                                  Sort code: 30-00-83
+                              </div>
+                              <div class="col-sm-4">
+                                  Account number: {!TransferAccountNumber}
+                              </div>
+                              <div class="col-sm-4">
+                                  Reference: {!OppReference}
+                              </div>                              
+                          </div>  
+                          
+                                                                                                 
+                      </div>
+                      </div>
+                      <div class="SectionBreak"/>
+                
+                      <c:CAA_Next_Steps_Documents SessionID="{!SessionID}" EventLogId="{!EventLogId}" ShowFSCSDoc="True" IsGuest="{!IsGuest}" ShowR85Documents="{!ShowR85Documents}"/>
+                      
+                      <apex:outputPanel rendered="{!IsFTD && !IsGuest}">
+                          <button ng-show="PaymentMethod" class="btn btnArb" ng-click="Complete()">Next</button>
+                          
+                      <!--C0666-->    
+                         <!-- <div class="alert alert-danger" ng-show="!PaymentMethod">
+                              Please select the method of deposit
+                          </div> -->
+                      <!--end C0666-->
+                              
+                      </apex:outputPanel>
+                      
+                      <c:CAA_Next_Steps_Footer rendered="{!IsGuest}" ></c:CAA_Next_Steps_Footer>
+                  </div>
+               </div>
+               <div class="col-md-3">
+                  <div class="rightcol visible-md visible-lg" id="sidebar" >
+                     <c:CAA_Progress Stage="5" rendered="{!IsGuest}"></c:CAA_Progress>
+                     <c:CAA_Event_Menu rendered="{!Not(IsGuest)}"/>
+                     <div class="alert alert-success" ng-show="ShowSuccessAlert">
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                        {{SuccessAlertText}}
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <!--C0746 Start-->
+         <div id="dialog" style="background:white;border:1px solid rgb(237,237,237);color:black !important">
+            <br/><b style="padding: 0px 18px;">Confirmation required</b><br/><div style="margin-top: 10px;margin-bottom: 25px;padding: 0px 18px;width:300px;">Please select a method of deposit to complete your application.</div>
+        </div>
+        <!--C0746 End-->
+      </apex:define>
+   </apex:composition>
+    
+    <!--C0666-->
+    <!--C0746 Start-->
+    <style>
+    .ui-dialog-titlebar-close{
+        float: right;
+        background-color: transparent;
+        border: 1px solid #bfbcbd;
+        padding: 2px 5px;
+        color: #8e8a8a;
+        font-family: cursive !important;
+    }
+
+.ui-dialog-titlebar{
+    height: 50px;
+    width:310px;
+    background: rgb(237,237,237);
+    border: 1px solid rgb(237,237,237);
+    text-align: center;
+    font-weight:bold;
+}
+
+.ui-widget-overlay{
+    opacity: 0.5;
+    background: black;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1031;
+}
+
+.ui-dialog{
+    z-index: 1032;
+}
+</style> 
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js"></script>
+<!--C0746 End-->
+<script type="text/javascript">
+           var isIE = false || !!document.documentMode;
+            if (!isIE)
+            {
+                //C0746 Start
+                //alert('ATTENTION !!! \n\nIn this page, please select a method of deposit to complete your application.');
+                $(document).ready(function(){
+                   $( "#dialog" ).dialog({modal:true, closeText: "X"});
+                    $('.ui-dialog-titlebar').append('<span class="ui-icon u4i-icon-info" style="/*float: left; margin-right: .3em;*/"><img src="//www.alrayanbank.co.uk/sites/default/files/media/file-uploads/2021-04/logo.png" style="width: 80px;padding: 5px;" /></span>');
+                    $('.ui-dialog-titlebar-close').blur();
+                    $('#dialog').css({'width':'310px'}); 
+               });
+               //C0746 End
+            }
+            
+            window.onbeforeunload = function (e) {
+                e = e || window.event;
+                var paymentmethod = '{!PaymentMethod}';
+                //C0746 Start
+                var ele = angular.element(document.getElementById("CAANextSteps"));
+                if(ele && ele.scope() && ele.scope().PaymentMethod!='' && paymentmethod==''){
+                    paymentmethod = ele.scope().PaymentMethod;
+                }
+                //C0746 End
+                if (e)
+                {
+                    if(paymentmethod == '')
+                     {
+                      var msg = "***************************************\n\n W A I T !!! \n\nplease select a method of deposit to complete your application.\n\n\n***************************************";
+                      return msg;
+                     }
+                }
+
+        };
+</script>
+    <!--end C0666-->
+</apex:page>

@@ -1,0 +1,138 @@
+<apex:component >
+	<div style="height:100%; min-height: 200px;">	
+		<ul class="verticalScroller accountsMenu" style="margin-top: 0px; height: calc(100% - 158px); padding-right: 2px; min-width: 530px; margin-right: 3px;">			
+			<li ng-repeat="item in signatoriesResponse.signatories" style="cursor:pointer; -webkit-user-select: none;">				
+				<div class="signatoryItem" style="height: 100px; background: rgb(247, 247, 247); margin-bottom: 3px;" ng-click="updateSelectedSignatories(item.ProspectCustomerId)">
+					<div class="signatoryIndicator" ng-class="{'signatoryIndicatorSelected' : isSelected(item.ProspectCustomerId) == true}" style="width: 7px; background: rgb(189, 189, 189); float: left;height: 100%;"></div>
+					<div style="float: left; position: relative;">
+						<img width="100px" height="100px" src="/servlet/servlet.FileDownload?file={{item.ImageId}}" onerror="this.onerror=null; this.src='{!URLFOR($Resource.Teller_Includes,'/Teller_Includes/media/user_error.png')}';"></img>
+						<img class="signatoryCheck" ng-class="{'signatoryChecked' : isSelected(item.ProspectCustomerId) == true}" width="100px" height="100px" src="{!URLFOR($Resource.Teller_Includes,'/Teller_Includes/media/checked_corner.png')}" style="position: absolute; left: 0;"></img>
+					</div>
+					<div style="float: left; height: 100%; border: solid 1px rgb(221, 221, 221);margin-left: 3px;">
+						<div style="width: 100%;height: 73px;background: #F4F4F4; border-bottom: #B9B9B9 1px solid;">
+							<img ng-class="imageClass" src="/servlet/servlet.FileDownload?file={{item.SignatureId}}" width="200" style="background: white;"></img>
+							<div class="tileTitleText" style="margin-left: 5px; margin-top: 9px; color: black;">Signature</div>
+						</div>
+					</div>					
+					
+					<div style="float: left; height: 100%; width: calc(100% - 316px); background: rgb(189, 189, 189); margin-left: 3px; padding: 7px; position:relative;">
+						<div style="position:absolute; bottom: 7px; right: 7px;">
+							<div class="textSmallerWhite tag groupTag" ng-if="item.SignatoryGroup !== undefined">GROUP {{item.SignatoryGroup | uppercase}}</div>	
+							<div class="textSmallerWhiteBold tag primaryTag" ng-if="item.PrimaryAccountHolder == 'Yes'" title="Primary Account Holder">P</div>									
+						</div>
+						<div class="textSmallerWhiteBold" style="width:100%; word-wrap: break-word; white-space: pre-wrap;">{{item.CustomerName}} ({{item.CustomerEBSId}})</div>
+						<div class="textBlack" style="font-size: 14px;">Relationship: {{item.RelationshipToPrimaryApplicant}}</div>
+						<div class="textBlack" style="font-size: 14px;">Type: {{item.RelationshipType}}</div>
+					</div>
+    				</div>
+			</li>			
+		</ul>
+
+		<div style="margin-top: 10px; min-height: 62px;">    
+			<div style="width: 430px; background: rgb(247, 247, 247);display: table-cell;" ng-show="pageData.ManagerAuthorisors.Authorisors.length > 0">
+				<div style="background: rgb(215, 215, 215); height: 50px; width: 50px; margin: 6px; float: left; position:relative;">
+					<img ng-show="pageData.ManagerAuthorisors.selectedAuthorisor != null" style="height: 50px; width: 50px; float: left; position:absolute;" ng-src="{{pageData.ManagerAuthorisors.selectedAuthorisor.ImageUrl}}" onError="this.onerror=null; this.src='{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/user_error.png')}';"></img>
+					<img style="height: 75px; width: 75px; position:absolute; top: -25px; left: -25px;" ng-show="pageData.ManagerAuthorisors.selectedAuthorisor.Verified" src="{!URLFOR($Resource.Teller_Includes,'/Teller_Includes/media/checked_corner.png')}"></img>
+				</div>
+				<div style="float: left;padding:  5px;width: 360px;padding-left: 5px;">
+					<c:Teller_Material_Select labelText="Override Authorisor" modelProperty="pageData.ManagerAuthorisors.selectedAuthorisor" width="100%" show="true" disabled="pageData.ManagerAuthorisors.selectedAuthorisor.Verified" datasource="pageData.ManagerAuthorisors.Authorisors" fieldTextName="Name" fieldValueName="AuthorisorId" styleBackground="rgb(247, 247, 247);" styleMarginBottom="0px;" onChange="onManagerChanged(kendoEvent, 'selectedAuthorisor')"></c:Teller_Material_Select>
+				</div>
+			</div>
+
+			<div style="float: left;" ng-show="(pageData.ManagerAuthorisors.selectedAuthorisor != null) || (pageData.ManagerAuthorisors.selectedAuthorisor.Name!='') || (pageData.ManagerAuthorisors.selectedAuthorisor.Verified != true)">
+				<div ng-show="(pageData.ManagerAuthorisors.selectedAuthorisor!=null) && (pageData.ManagerAuthorisors.selectedAuthorisor!='') && (pageData.ManagerAuthorisors.selectedAuthorisor.Verified != true)" style="width: 430px; background: rgb(247, 247, 247);display: table-cell;">
+					
+					<div style="float: left;padding:  5px;width: 422px;padding-left: 67px; margin-bottom: 5px;">
+						<div style="float:left;">
+							<c:Teller_Material_Input type="password" labelText="Password" modelProperty="pageData.ManagerAuthorisors.selectedAuthorisor.Password" width="318px" show="pageData.ManagerAuthorisors.selectedAuthorisor!=''" styleMarginBottom="0px;" infoText="{{pageData.ManagerAuthorisors.selectedAuthorisor.IncorrectPassword == true ? 'Incorrect password' : 'Verified'}}" infoTextNgShow="pageData.ManagerAuthorisors.selectedAuthorisor.IncorrectPassword || pageData.ManagerAuthorisors.selectedAuthorisor.Verified" infoTextIsError="pageData.ManagerAuthorisors.selectedAuthorisor.IncorrectPassword" disabled="pageData.ManagerAuthorisors.selectedAuthorisor.Verified"></c:Teller_Material_Input>
+						</div>
+						<div style="float: right; margin-top: 15px;">
+							<button class="goldButton" style="margin-right: 0px; padding: 3.5px !important; margin-left: -2px;" ng-click="PasswordVerification(pageData.ManagerAuthorisors.selectedAuthorisor)">
+								<img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/sort_direction.png')}" style="height: 25px; transform: rotate(-90deg); -webkit-filter: invert(1);"></img>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>	
+				
+		<!-- 
+		RULES
+		<div ng-show="showRules" class="fadeEffect" style="position:  absolute; max-height: calc(100% - 132px); right: 3px; bottom: 135px;">
+			<table style="width:100%;font-family: simpleMedium;">
+				<tbody>						
+					<tr ng-repeat="item in signatoriesResponse.mandates" style="border-bottom: white 2px solid;">
+						<td style="padding: 15px; background: #B3995D; color: white;">{{item.CcySymbol}}{{item.MandateLimit | number : 2}}</td>
+						<td style="padding: 10px; background: #000000; color: white;">{{item.Grouping}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>	
+		
+		<div ng-init="showRules = false" ng-show="signatoriesResponse.mandates != null && signatoriesResponse.mandates.length > 0" style="position: relative; float: right;width: 61px;height: 62px;background: #A7A7A7;margin-right: 3px;cursor: pointer;" ng-mouseover="showRules = true" ng-mouseleave="showRules = false">  
+			<div class="textSmallWhite" style="font-size: 13px; position: absolute; left: 7px; top: 6px; font-family: simpleMedium;">Rules</div>
+			<img ng-src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/more.png')}" style="height: 4px; width: 20px; position: absolute; bottom: 6px; right: 6px;"></img>
+		</div> 
+		-->
+	</div>
+</apex:component>
+
+
+
+
+
+
+<!-- <apex:component >
+	<div style="height:100% min-height: 200px;">	
+		<ul class="verticalScroller accountsMenu" style="margin-top: 0px; height: calc(100% - 5px); padding-right: 2px; min-width: 530px; margin-right: 3px;">			
+			<li ng-repeat="item in signatoriesResponse.signatories" style="cursor:pointer; -webkit-user-select: none;">				
+				<div class="signatoryItem" style="height: 100px; background: rgb(247, 247, 247); margin-bottom: 3px;" ng-click="updateSelectedSignatories(item.ProspectCustomerId)">
+					<div class="signatoryIndicator" ng-class="{'signatoryIndicatorSelected' : isSelected(item.ProspectCustomerId) == true}" style="width: 7px; background: rgb(189, 189, 189); float: left;height: 100%;"></div>
+					<div style="float: left; position: relative;">
+						<img height="100px" src="/servlet/servlet.FileDownload?file={{item.ImageId}}" onerror="this.onerror=null; this.src='{!URLFOR($Resource.Teller_Includes,'/Teller_Includes/media/user_error.png')}';"></img>
+						<img class="signatoryCheck" ng-class="{'signatoryChecked' : isSelected(item.ProspectCustomerId) == true}" height="100px" src="{!URLFOR($Resource.Teller_Includes,'/Teller_Includes/media/checked_corner.png')}" style="position: absolute; left: 0;"></img>
+					</div>
+					<div style="float: left; height: 100%;background: rgb(221, 221, 221);border: solid 1px rgb(221, 221, 221);margin-left: 3px;">
+						<img ng-class="imageClass" src="/servlet/servlet.FileDownload?file={{item.SignatureId}}" width="200" style="background: white;"></img>
+						<div class="tileTitleText" style="margin-left: 5px; margin-top: 4px; color: black;">Signature</div>
+					</div>					
+					
+					<div style="float: left; height: 100%; width: calc(100% - 316px); background: rgb(189, 189, 189); margin-left: 3px; padding: 7px; position:relative;">
+						<div class="textSmallerWhiteBold" ng-if="item.PrimaryAccountHolder == 'Yes'" title="Primary Account Holder" style="position: absolute; background: rgb(179, 153, 93); width: 30px; height: 30px; bottom: 7px; right: 7px;vertical-align: middle;text-align: center;padding-top: 6px;">P</div>
+						<div class="textSmallerWhiteBold" style="width:100%; word-wrap: break-word; white-space: pre-wrap;">{{item.CustomerName}} ({{item.CustomerEBSId}})</div>
+						<div class="textBlack" style="font-size: 14px;">Relationship: {{item.RelationshipToPrimaryApplicant}}</div>
+						<div class="textBlack" style="font-size: 14px;">Type: {{item.RelationshipType}}</div>
+					</div>
+    				</div>
+			</li>			
+		</ul>
+
+		<div style="margin-top: 15px;" ng-show="pageData.ManagerAuthorisors.Authorisors.length > 0">    
+			<div style="width: 430px; background: rgb(247, 247, 247);display: table-cell;">
+				<div style="background: rgb(215, 215, 215); height: 50px; width: 50px; margin: 6px; float: left; position:relative;">
+					<img ng-show="pageData.ManagerAuthorisors.selectedAuthorisor != null" style="height: 50px; width: 50px; float: left; position:absolute;" ng-src="{{pageData.ManagerAuthorisors.selectedAuthorisor.ImageUrl}}" onError="this.onerror=null; this.src='{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/user_error.png')}';"></img>
+					<img style="height: 75px; width: 75px; position:absolute; top: 25px; left: 25px;" ng-show="pageData.ManagerAuthorisors.selectedAuthorisor.Verified" src="{!URLFOR($Resource.Teller_Includes,'/Teller_Includes/media/checked_corner.png')}"></img>
+				</div>
+				<div style="float: left;padding:  5px;width: 360px;padding-left: 5px;">
+					<c:Teller_Material_Select labelText="Override Authorisor" modelProperty="pageData.ManagerAuthorisors.selectedAuthorisor" width="100%" show="true" disabled="pageData.ManagerAuthorisors.selectedAuthorisor.Verified" datasource="pageData.ManagerAuthorisors.Authorisors" fieldTextName="Name" fieldValueName="AuthorisorId" styleBackground="rgb(247, 247, 247);" styleMarginBottom="0px;" onChange="onManagerChanged(kendoEvent, 'selectedAuthorisor')"></c:Teller_Material_Select>
+				</div>
+			</div>
+
+			<div ng-show="(pageData.ManagerAuthorisors.selectedAuthorisor != null) || (pageData.ManagerAuthorisors.selectedAuthorisor.Name!='') || (pageData.ManagerAuthorisors.selectedAuthorisor.Verified != true)">
+				<div ng-show="(pageData.ManagerAuthorisors.selectedAuthorisor!=null) && (pageData.ManagerAuthorisors.selectedAuthorisor!='') && (pageData.ManagerAuthorisors.selectedAuthorisor.Verified != true)" style="width: 430px; background: rgb(247, 247, 247);display: table-cell;">
+					
+					<div style="float: left;padding:  5px;width: 360px;padding-left: 5px;">
+						<div style="float:left;">
+							<c:Teller_Material_Input type="password" labelText="Password" modelProperty="pageData.ManagerAuthorisors.selectedAuthorisor.Password" width="318px" show="pageData.ManagerAuthorisors.selectedAuthorisor!=''" styleMarginBottom="0px;" infoText="{{pageData.ManagerAuthorisors.selectedAuthorisor.IncorrectPassword == true ? 'Incorrect password' : 'Verified'}}" infoTextNgShow="pageData.ManagerAuthorisors.selectedAuthorisor.IncorrectPassword || pageData.ManagerAuthorisors.selectedAuthorisor.Verified" infoTextIsError="LimitData.pageData.ManagerAuthorisors.selectedAuthorisor.IncorrectPassword" disabled="pageData.ManagerAuthorisors.selectedAuthorisor.Verified"></c:Teller_Material_Input>
+						</div>
+						<div style="float: right; margin-top: 15px;">
+							<button class="goldButton" style="margin-right: 0px; padding: 3.5px !important; margin-left: -2px;" ng-click="PasswordVerification(pageData.ManagerAuthorisors.selectedAuthorisor)">
+								<img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/sort_direction.png')}" style="height: 25px; transform: rotate(-90deg); -webkit-filter: invert(1);"></img>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>	
+	</div>
+</apex:component> -->

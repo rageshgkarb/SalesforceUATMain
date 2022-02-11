@@ -1,0 +1,92 @@
+<apex:page applyBodyTag="false" showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false">
+	<div style="height:calc(100% - 4px); width:100%;" ng-controller="depositoryController">
+		
+		<!-- Page Title -->
+		<div class="pageTitleContainer">
+			<div style="float: left;">
+				<!-- <img class="btn_back" src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_back.png')}"></img> -->
+				<span class="pageTitleGray">Teller Depository</span>
+				<!-- <span class="pageTitleBlack"> {{CustomerDetails.Salutation}} {{CustomerDetails.FirstName}} {{CustomerDetails.LastName}}</span> -->
+			</div>
+			 <div class="toolbar">
+				<div class="toolbarButton" ng-click="GetTellerTillDetails()">
+					<div class="imgCircle">
+						<img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_refresh.png')}"></img>
+					</div>
+					<div class="textSmallestDarkGray caption">REFRESH</div>
+				</div>
+
+
+				<!-- <div class="toolbarButton" ng-show="!ShowViewReason" ng-click="gotoAnchor('CustomerDetails')">
+					<div class="imgCircle">
+						<img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_customer.png')}"></img>
+					</div>
+					<div class="textSmallestDarkGray caption">DETAILS</div>
+				</div> -->
+
+			</div>		 
+		</div>
+		
+		<!-- Page Content -->
+		<div class="pageStructure">
+			<div class="pageContentContainer">
+				
+			<div class="pageContentLeft" ng-init="GetTellerTillDetails()">
+				<div style="margin-top: 15px; margin-left:10px;">
+					 <div style="margin-bottom: 10px;">
+                     	<label class="pageSubTitleGray" style="margin-left: 5px;">My Till</label>
+                     </div>
+					 
+					<div>
+						<div style="height: 74px;">
+							<div class="LastUpdateGray" style="width: 200px; height: 69px; background: rgb(190, 190, 190);">
+								<label class="textSmallerWhite" style="margin-left: 7px;margin-top: 5px;">Name</label>
+								<div style="height: 30px; margin-top:-1px;margin-right:15px;">
+									<div id="tile-content">
+										<div style="float:right;">
+											<label class="textWhite">{{Till.Name}}</label>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="smallTile" ng-class="{tileColourGreen : Till.Status__c == 'Open'}" style="margin-left: 5px; float: left; box-shadow: 1px 1px 1px #B8B8B8;">
+								<div class="tileIndicator"></div>
+							    <div class="tileBody" style="min-width: 130px;">
+							    	<div class="tileContent">
+							        	<label class="tileValue tileValueText ng-binding">{{Till.Status__c}}</label>
+							          	<label class="tileTitle tileTitleText">Status</label>
+							        </div>
+							    </div>
+							</div>
+						</div>
+						
+						<div style="height: 74px;">							
+							<div class="LastUpdateGray" style="width: 340px; height: 69px;background: rgb(200, 180, 133);">
+							    <div style="height: 30px; margin-top: 19px;margin-left: 15px;">
+							        <div id="tile-content">
+							            <div>
+							                <label class="textWhite" style="font-size: 22px;">{{Till.Currency__c | filter_currencytosymbol}} {{Till.Total_Cash_Value__c | number : 2}}</label>
+							            </div>
+							        </div>
+							    </div>
+							    <label class="textSmallerWhite" style="margin-top: -8px;float: right;margin-right: 15px;">Balance</label>
+							</div>
+						</div>
+                    </div>
+
+				</div>
+			</div>
+				
+				<div class="pageContentRight">
+					<div style="height:calc(100% - 15px);" ui-view="viewDepositoryChild" class="verticalScroller"></div>
+				</div>
+				
+				
+			</div>
+		</div>	
+		
+		
+	</div>
+		
+</apex:page>

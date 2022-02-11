@@ -1,0 +1,216 @@
+@charset "UTF-8";
+/* CSS Document */
+
+/* form in columns */
+#columModules .module .moduleContent .fieldGroup { 
+	padding:5px 10px 0 10px;
+	margin: 0 0 6px 0;
+}
+#columModules .module .moduleContent .fieldGroup .field {
+	padding:.3em 0 .3em 0; 
+	margin-bottom:1em;
+	width:216px;
+	/* max width */
+	
+}
+#columModules .module .moduleContent .fieldGroup .fieldMembers { font-size:.85em; }
+
+
+/* field set */
+#columModules .module .moduleContent .fieldGroup fieldset { 
+	margin:0 0 0 0;
+	padding:0 0 0 0;
+}
+#columModules .module .moduleContent .fieldGroup fieldset legend { 
+	display:block; 
+	width:214px; 
+	white-space:normal; 
+	font-size:1.077em;
+	margin-bottom:5px;
+}
+/* for IE */
+	#columModules .module .moduleContent .fieldGroup fieldset legend span { display:block;  }
+	#columModules .module .moduleContent .fieldGroup fieldset legend span span { display:inline; }
+
+
+/* dimensions of label and field widths */
+#columModules .module .moduleContent .fieldGroup .fieldMembers .label { 
+	width:216px;
+	/*background-color:#FFFFFF;*/
+}
+	#columModules .module .moduleContent .fieldGroup .fieldMembers p { font-size:1.267em;  }
+
+
+#columModules .module .moduleContent .fieldGroup .fieldMembers .fieldItems { 
+	display:block; 
+	float:left; 
+	padding:0 0 0 0;
+	/*background-color: #CCCCCC;*/
+	clear:both;
+	vertical-align:top;
+	width:216px;
+}
+
+
+/*#formPage .field.populated .formInput { color:#0000CC; font-weight:bold; padding-top:2px; }
+#formPage .field.populated.notes .formInput p { font-weight:normal; color:#333333; }*/
+
+/* form input contains the help icon */
+#columModules .module .moduleContent .fieldGroup .fieldMembers .fieldItems .formInput { 
+	color:#0000CC; 
+	font-weight:bold; 
+	padding:2px 0 2px 0;
+	width:216px;
+	/*background-color:#FF0000;*/
+}
+#columModules .module .moduleContent .fieldGroup .fieldMembers .fieldItems .formInput p { 
+	font-weight:normal; 
+	/*color:#333333; 
+	background-color:#00FF00;*/
+	display:block;
+	float:left;
+}
+
+/* standard text field - actual width is + 4px */
+#columModules .module .moduleContent .fieldGroup .fieldMembers .fieldItems .formInput input.formField { 
+	width:180px;
+	border: 1px solid #1e1f21;
+	margin:0 0 0 0;
+	outline-color: #ced2d5;
+	outline-style: solid;
+	outline-width: 1px;
+	padding:2px;
+	font-size:1em;
+}
+
+#columModules .module .moduleContent .fieldGroup .fieldMembers .fieldItems .formInput input.formField.correct,
+#columModules .module .moduleContent .fieldGroup .fieldMembers .fieldItems .formInput select.formField.correct,
+#columModules .module .moduleContent .fieldGroup .fieldMembers .fieldItems .formInput textarea.formField.correct { border:1px inset #66cc66;  color:#0000CC;}
+#columModules .module .moduleContent .fieldGroup .fieldMembers .fieldItems .formInput input.formField.error,
+#columModules .module .moduleContent .fieldGroup .fieldMembers .fieldItems .formInput select.formField.error,
+#columModules .module .moduleContent .fieldGroup .fieldMembers .fieldItems .formInput textarea.formField.error { border:1px inset #CC0033;  color:#0000CC; background-color:#F5E5E5; }
+
+
+	#columModules .module .moduleContent .fieldGroup .fieldMembers .fieldItems .formInput input.formField:focus {
+		outline-offset: 0px;
+		outline-color: #7b8aac;
+		outline-style: solid;
+		outline-width: 2px;
+	}
+
+/* validation */
+#columModules .module .moduleContent .item.validation { 
+	border-top:none;
+	padding:8px 10px 0px 10px;
+}
+	#columModules .module .moduleContent .item.validation p {
+		background-color:#F5E5E5;
+		border-top:none;
+		padding:8px 10px 10px 10px;
+		border:1px solid #FF0000;
+	}
+
+/* error message  block under the field */
+#columModules .fieldMembers .errorBlock { clear:both; }
+#columModules  fieldset .fieldMembers .errorBlock { margin-top:.5em; }
+#columModules .errorBlock .fieldError { margin-right:5px; }
+#columModules .errorBlock .fieldValidate p { padding-top:3px; display:block; float:left; width:190px; }
+#columModules .module .moduleContent .fieldGroup .fieldMembers .errorBlock .fieldValidate p { font-size: 1.086em; }
+
+
+#columModules .fieldMembers .fieldCorrect { 
+	display:block;
+	width:15px;
+	height:14px;
+	margin-top:.3em;
+	float:left;
+	background-repeat: no-repeat;
+	background-position: -45px -1238px;
+	background-image: url(../../graphics/modules/IBB-eye-candy.png);
+	margin-left:5px;
+}
+#columModules .fieldMembers .fieldError { 
+	display:block;
+	width:15px;
+	height:14px;
+	margin-top:.3em;
+	float:left;
+	background-repeat: no-repeat;
+	background-position: -30px -1238px;
+	background-image: url(../../graphics/modules/IBB-eye-candy.png);
+	margin-left:5px;
+}
+
+
+
+
+
+
+
+
+
+/* JQuery sliding panel style */
+#columModules .fieldMembers .fieldItems .fieldHelp {
+	display:block; 
+	float:left;
+	height: 16px;
+	width: 16px;
+	margin:0 0 0 10px;
+	/*background-color:#33FFFF;*/
+}
+#columModules  fieldset .fieldMembers  .fieldHelp {
+	display:block; 
+	float:right;
+	height: 16px;
+	width: 16px;
+	margin:0 0 0 10px;
+	/*background-color:#33FFFF;*/
+}
+#columModules .fieldHelpButton {
+	display:block;
+	width:15px;
+	height:14px;
+	margin-top:.3em;
+	float:left;
+	background-repeat: no-repeat;
+	background-position: -15px -1238px;
+	background-image: url(../../graphics/modules/IBB-eye-candy.png);	
+}
+/* hide the print frindly question mark */
+#columModules .fieldHelpButton span { display:none; }
+	
+#columModules .fieldNote { margin-bottom:.5em;}
+
+#columModules span.asterix,
+#columModules .fieldMembers span.asterix,
+#columModules .fieldMembers span.required { color:#FF0000; }
+#columModules .fieldNote .message { 
+	padding:5px 5px 8px 5px;
+	border:1px solid #FFD324;
+	background-color:#FFF6BE;
+	width:204px;
+	color:#817134;
+}
+#columModules .module .moduleContent .fieldGroup .fieldMembers .fieldNote .message p { font-size:1.176em; }
+
+
+
+/* button groups */
+#columModules .module .moduleContent .item.buttonGroup { 
+	border-top:none;
+	padding:8px 10px 15px 10px;
+}
+#columModules .module .moduleContent .item.buttonGroup .terms { display:block; float:left; width:50%; margin-top:.3em; }
+#columModules .module .moduleContent .item.buttonGroup .terms p a {
+	padding:5px 0 6px 15px;
+	background: transparent url(../../graphics/modules/IBB-eye-candy.png) no-repeat left -1111px;
+}
+#columModules .module .moduleContent .item.buttonGroup .terms p a:hover { background: transparent url(../../graphics/modules/IBB-eye-candy.png) no-repeat 1px -1111px;}
+/*#columModules .module .moduleContent .item.buttonGroup .terms p a:active,
+#columModules .module .moduleContent .item.buttonGroup .terms p a:focus {background:  #0033CC url(../../graphics/modules/IBB-eye-candy.png) no-repeat 1px -1111px; color:#FFFFFF; }*/
+
+
+
+#columModules .module .moduleContent .item.buttonGroup p input {font-size: 1.077em;}
+#columModules .module .moduleContent .item.buttonGroup .buttons { float:right; display:block; width:49%; text-align:right; }
+	

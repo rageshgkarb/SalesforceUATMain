@@ -1,0 +1,311 @@
+<apex:page showheader="false" sidebar="false" doctype="html-5.0" standardstylesheets="false" controller="CAA_Core_Controller"
+    action="{!Setup}">
+
+    <apex:composition template="CAA_Template">
+        <apex:define name="include">
+            <apex:includescript value="{!URLFOR($Resource.CAA_Includes, '/js/controller/controller_address.js')}" />
+            <apex:includescript value="{!URLFOR($Resource.CAA_Includes, '/js/controller/controller_selfcertification.js')}" />
+            <apex:includescript value="{!URLFOR($Resource.CAA_Includes, '/js/service/service_applicant_details.js')}" />
+            <apex:includescript value="https://cdnjs.cloudflare.com/ajax/libs/datejs/1.0/date.min.js" />
+            <apex:includescript value="{!URLFOR($Resource.CAA_Includes, '/js/service/service_application.js')}" />
+            <apex:includescript value="{!URLFOR($Resource.CAA_Includes, '/js/service/service_parameters.js')}" />
+
+            <!-- Kendo UI Styles -->
+            <apex:stylesheet value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/styles/kendo.common.min.css')}" />
+            <apex:stylesheet value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/styles/kendo.material.min.css')}" />
+            <apex:stylesheet value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/styles/kendo.dataviz.min.css')}" />
+            <apex:stylesheet value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/styles/kendo.dataviz.material.min.css')}"
+            />
+            <apex:stylesheet value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/styles/kendo.material.mobile.min.css')}"
+            />
+            <!-- Kendo UI -->
+            <apex:includescript value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/js/kendo.all.min.js')}" />
+            <apex:includescript value="{!URLFOR($Resource.Kendo_2015_1_318, '/Kendo_2015_1_318/Kendo/js/cultures/kendo.culture.en-GB.min.js')}"
+            />
+            <!--<apex:include pageName="pca__Component"/>-->
+
+            <link rel="stylesheet" type="text/css" href="//services.postcodeanywhere.co.uk/css/address-3.40.css" />
+            <script type="text/javascript" src="//services.postcodeanywhere.co.uk/js/address-3.40.js"></script>
+        </apex:define>
+
+        <apex:define name="body">
+            <div ng-controller="controllerSelfCertification" ng-init="EventLogId= '{!EventLogId}';SessionId='{!SessionId}'; YPSA={!IsYPSA};  PCA_key='{!$Setup.pca__PostcodeAnywhereSettings__c.pca__Key__c}';">
+                <div class="row">
+                    <div class="col-md-9" style="padding-bottom:10px;">
+                        <c:CAA_Manage_Applicants rendered="{!Not(IsGuest) && !IsANC}" />
+
+                        <div class="SectionHeader">
+                            <div class="numberCircleReverse">2</div>
+                            <div>Personal details (Self Certification)</div>
+                        </div>
+
+                        <apex:outputpanel rendered="{!IsGuest}" layout="none">
+                            <div ng-show="Duplicates">
+                                <div class="PanelContents">
+                                    <c:CAA_Next_Steps_Refer_FCU duplicate="true"></c:CAA_Next_Steps_Refer_FCU>
+                                </div>
+                                <div class="PanelContents">
+                                    <c:CAA_Next_Steps_Footer ></c:CAA_Next_Steps_Footer>
+                                </div>
+                            </div>
+                        </apex:outputpanel>
+
+                        <form name="myform" novalidate="novalidate" ng-hide="Duplicates && {!IsGuest}">
+                            <div>
+                                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="false">
+                                    <div class="panel panel-default">
+                                        <div class="panel-body">
+                                            <div class="SectionTitle">Self Certification</div>
+                                            <div>
+                                                <span><!--Regulations based on OECD common Reporting Standards (CRS) require Al Rayan
+                                                    Bank PLC to collect and report certain information about an account holders
+                                                    tax residency. Each Jurisdiction has its own rules for defining tax residence,
+                                                    and jurisdictions have provided information on how to determine if you're
+                                                    resident in the jurisdiction on the following website: www.oecd.org/tax/automatic-exchange/.If
+                                                    you are completing this form on behalf of the beneficial owner of the
+                                                    account, please fill in their details. In certain circumstances we may
+                                                    be required to share this information with the relevant tax authorities.-->
+
+                                                    Her Majesty’s Revenue and Customs (HMRC) require Al Rayan Bank PLC to collect and
+                                                    report certain information about an account holders tax residency. Each Jurisdiction has
+                                                    its own rules for defining tax residence, and jurisdictions have provided information on
+                                                    how to determine if you're resident in the jurisdiction on the following website:
+                                                    www.oecd.org/tax/automatic-exchange/. If you are completing this form on behalf of the
+                                                    beneficial owner of the account, please fill in their details. In certain circumstances
+                                                    we may be required to share this information with the relevant tax authorities.
+
+
+
+                                                </span>
+                                            </div>
+                                        <!---C0750: CAA Quick Wins Starts-->
+                                            <div class="SectionBreak" />
+                                            <div class="SectionTitle">Tax Residency &amp; Citizenship Information</div>
+                                            <div>
+                                                <span>For the purpose of taxation, please state which country you are a resident for tax
+                                                    purposes and include your Tax Identification Number (TIN) or an equivalent of a TIN in
+                                                    that country. It is mandatory that you include your TIN or where unavailable a reason.
+                                                    If you are solely a tax resident of the United Kingdom, you do not need to provide a TIN </span>
+                                            </div>
+                                            <!---C0750: CAA Quick Wins Ends-->
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="false">
+                                    <!--C0750: CAA Quick Wins Starts-->
+                                    <div class="panel panel-default" ng-repeat="app in Data.Applicants track by app.Id" on-finish-render="ngRepeatFinished" ng-hide="{!IsYPSA}==true && $index!=0" ng-init="serialNo1=['One', 'Two', 'Three', 'Four', 'Five']">
+                                        <c:CAA_SelfCertification_AccHolder model="app" ypsa="{!IsYPSA}" currentaccount="{!IsCurrentAccount}" ftd="{!IsFTD}" isguest="{!IsGuest}" />
+                                    </div>
+                                    <!--C0750: CAA Quick Wins Ends-->
+                                </div>
+
+
+
+
+
+                                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="false" style="display: none;">
+                                    <div class="panel panel-default">
+                                        <div class="panel-body">
+                                        <!--C0750: CAA Quick Wins Starts-->
+                                            <div style="display:none">
+                                        <!--C0750: CAA Quick Wins Ends-->
+                                            <div class="SectionTitle">Section 3: AEoI Declaration</div>
+                                            <div>
+                                                <span>
+                                                    <small>
+                                                        Tax legislations referred to in this form are regulations created to enable automatic exchange of information and include
+                                                        Foreign Account Tax Compliance Act, various agreements to improve
+                                                        international tax compliance entered into between the UK, the Crown
+                                                        Dependencies and the Overseas Territories, and OECD Common Reporting
+                                                        Standard for Automatic Exchange of Financial Account Information,
+                                                        as implemented in the relevant jurisdictions
+                                                    </small>
+                                                </span>
+                                            </div>
+                                            <hr/>
+                                            <div>
+                                                <span>
+                                                    I understand that the information supplied by me is covered by the full provisions of the terms and conditions governing
+                                                    the Account Holder’s relationship with Al Rayan Bank PLC setting out
+                                                    how Al Rayan Bank PLC may use and share the information supplied by me.
+                                                    I acknowledge that the information contained in this form and information
+                                                    regarding the Account Holder and any reportable Account(s) may be provided
+                                                    to the tax authorities of the country in which this account(s) is/are
+                                                    maintained and exchanged with tax authorities of another country or countries
+                                                    in which the Account Holder may be tax resident pursuant to inter-governmental
+                                                    agreements to exchange financial account information. I certify that
+                                                    I am the Account Holder (or I am authorised to sign for the Account Holder)
+                                                    of all account(s) to which this application relates.
+                                                    <strong>
+                                                        I declare that all statements made in this declaration are, to the best of my knowledge and belief, correct and complete</strong>.
+                                                    I undertake to advise Al Rayan Bank PLC within 28 days of any change
+                                                    in circumstances which affects the tax residency status of the individual
+                                                    identified in Section 1 of this form or causes the information contained
+                                                    to become incorrect or incomplete, and to provide Al Rayan Bank PLC with
+                                                    a suitably updated self-certification and declaration within 28 days
+                                                    of such change.
+                                                </span>
+                                            </div>
+                                            <!--C0750: CAA Quick Wins Starts-->
+                                            </div>
+
+
+
+                                            <!--
+                                            <div ng-repeat="app in Data.Applicants track by app.Id" ng-init="serialNo=['One', 'Two', 'Three', 'Four', 'Five']">
+                                            
+                                                <div ng-hide="{!IsYPSA} && $index==0">
+
+                                                <div class="SectionTitle">Applicant {{serialNo[$index]}} - {{app.FirstName}} {{app.LastName}}: Declaration</div>
+
+                                                <div ng-class="{ 'has-error':( myform.Self_Cert_Acknowledged_c{{$index}}.$touched|| Submitted) && myform.Self_Cert_Acknowledged_c{{$index}}.$invalid }">
+                                                    <div class="row">
+                                                        <div class="col-sm-12">
+                                                            <label>
+                                                                <span style="margin-right: 30px;">
+                                                                    I declare that all statements made in this declaration, are to the best of my knowledge and belief, correct and complete
+                                                                </span>
+                                                                <input type="checkbox" ng-required="!({!IsYPSA} && $index==0)" ng-model="app.Self_Cert_Acknowledged_c" name="Self_Cert_Acknowledged_c{{$index}}"
+                                                                />
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <c:CAA_InputError field="Self_Cert_Acknowledged_c" />
+                                                </div>
+
+                                                <div ng-class="{ 'has-error':( myform.Self_Cert_Capacity_c{{$index}}.$touched|| Submitted) && myform.Self_Cert_Capacity_c{{$index}}.$invalid }">
+                                                    <div>
+                                                        <label class="control-label">
+                                                            Please indicate the capacity in which you are signing this form
+                                                        </label>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-sm-8">
+                                                            <select class="form-control arbBox" ng-required="!({!IsYPSA} && $index==0)" ng-model="app.Self_Cert_Capacity_c" name="Self_Cert_Capacity_c{{$index}}"
+                                                                ng-options="option.Key as option.Value  for option in Data.SelfCertCapcity">
+                                                            </select>
+                                                            <c:CAA_InputError field="Self_Cert_Capacity_c" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                              </div>
+                                          </div>
+                                            -->
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <apex:outputpanel rendered="{!Not(IsGuest) && false}">
+                                    <div>
+                                        Submit clicked : {{Submitted}}
+                                    </div>
+                                    <div>
+                                        Form valid : {{myform.$valid}}
+                                    </div>
+                                </apex:outputpanel>
+
+                                <apex:outputpanel rendered="{!Not(IsGuest) && false}" layout="none">
+                                    <button class="btn btnArb" ng-click="Submitted = true;">
+                                        Validate
+                                    </button>
+
+                                    <button class="btn btnArb" ng-click="SaveData()">
+                                        Save
+                                    </button>
+                                </apex:outputpanel>
+
+                                <div>
+                                    <div class="alert alert-danger visible-xs" ng-show="myform.$invalid">
+                                        There is missing required information
+                                    </div>
+
+                                    <button class="btn btnArb" ng-click="Submitted = true;Complete()" ng-hide="HideComplete()">
+                                        <span>
+                                            <strong>Continue</strong>
+                                            <span class="fa-stack fa">
+                                                <i class="fa fa-circle-thin fa-stack-2x"></i>
+                                                <i class="fa fa-chevron-right fa-stack-1x"></i>
+                                            </span>
+                                        </span>
+                                    </button>
+
+                                    <!-- <button class="btn btnArb-danger" ng-click="CompleteOverride()" ng-show="{!Not(IsGuest)} && Duplicates">
+                                        <span>
+                                            <strong>Override</strong> to Section 3
+                                            <span class="fa-stack fa">
+                                                <i class="fa fa-circle-thin fa-stack-2x"></i>
+                                                <i class="fa fa-chevron-right fa-stack-1x"></i>
+                                            </span>
+                                        </span>
+                                    </button> -->
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="rightcol" id="sidebar">
+                            <c:CAA_Progress stage="2" rendered="{!IsGuest}"></c:CAA_Progress>
+                            <c:CAA_Event_Menu rendered="{!Not(IsGuest)}" />
+
+                            <div class="alert alert-danger" ng-show="ErrorAlertText">
+                                <span class="fa fa-thumbs-down" aria-hidden="true"></span>
+                                {{ErrorAlertText}}
+                            </div>
+                            <div style="display:none;">
+                                {{ShowErrors()}}
+                            </div>
+                            <div ng-repeat="app in Data.Applicants" ng-show="Submitted && !Duplicates">
+                                <div class="alert alert-success" ng-show="app.Valid">
+                                    <i class="fa fa-check"></i> {{app.FirstName}} {{app.LastName}}</div>
+                                <div class="alert alert-danger" ng-hide="app.Valid">
+                                    <i class="fa fa-close"></i> {{app.FirstName}} {{app.LastName}}
+                                    <br /> is missing required information</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--left col -->
+            </div>
+        </apex:define>
+
+    </apex:composition>
+    <script>
+        $(function () {
+
+            $('#applicant-accordion').on('show.bs.collapse', function (e) {
+                var prev = $(e.target).prev('.panel-heading');
+
+                var find = prev.find('.panel-title');
+
+                $(e.target).prev('.panel-heading').addClass('active');
+            });
+
+            $('#applicant-accordion').on('hide.bs.collapse', function (e) {
+                //$(this).prev('.panel-heading').not($(e.target)).removeClass('active');
+
+                $(e.target).prev('.panel-heading').removeClass('active');
+            });
+
+        });
+    </script>
+
+    <script>
+        caaApp.directive('onFinishRender', function ($timeout) {
+            return {
+                restrict: 'A',
+                link: function (scope, element, attr) {
+                    if (scope.$last === true) {
+                        $timeout(function () {
+                            scope.$emit('ngRepeatFinished');
+                        });
+                    }
+                }
+            }
+        });
+    </script>
+</apex:page>

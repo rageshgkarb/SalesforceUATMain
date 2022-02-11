@@ -1,0 +1,268 @@
+<apex:component controller="HPPCAA_SummaryController" >
+
+
+<apex:attribute name="objOpp" description="This is the opportunity id." type="Opportunity" required="true" assignTo="{!Opp}"/>
+<apex:attribute name="AROpp" description="This is the opportunity id." type="AffordabilityResults__c" required="false"/>
+<apex:attribute name="objAcc" description="This is the opportunity id." type="Account" required="true"/>
+<apex:attribute name="objExOpp" description="This is the opportunity id." type="HPP_extended_opportunity__c" required="true"/>
+<apex:attribute name="Product" description="This is the opportunity id." type="IBB_Product__c" required="true"/>
+
+<script>
+$( document ).ready(function() {
+$("#underPanel").hide();
+ $("#underSpan").click(function(){
+     $("#underPanel").toggle();
+ });
+ 
+ });
+
+</script>
+
+
+<div class="header">
+                    <h1>{!objOpp.Name + ' (' + objOpp.stagename + ')'}  </h1>
+                    
+                    
+                    <div style="text-align: right;padding-right:10px;padding-top:5px;">
+                        <div>
+                            <apex:outputPanel rendered="{!objOpp.IsPreRewind__c}"><b>Pre Submission Rewind</b></apex:outputPanel>                        
+                        </div>
+                        <div>
+                            <apex:outputPanel rendered="{!objOpp.IsPostRewind__c}"><b>Post Submission Rewind</b></apex:outputPanel>                        
+                        </div> 
+                        <div>
+                            <apex:outputPanel rendered="{!LatestRewind != null}">
+                           
+                            <a style="color:#fff;text-decoration:bold;" href="/{!LatestRewind.id}">Last rewind by {!LatestRewind.Createdby.name} - {!LatestRewind.Name}</a>
+                            </apex:outputPanel>                        
+                        </div> 
+                                           
+                    </div>
+                    
+                    
+                </div>
+
+<div class="k-header" style="padding: 10px;">
+
+<style>
+
+/* CPDR01 */
+#formWrapper .header
+    {
+        background-color: #000 ;
+        border-bottom: 5px solid #b3995d;
+    }
+    
+    h1
+    {
+        
+        font-family: 'Optima LT W01 Medium', Arial, sans-serif;
+        font-weight :500;
+    }
+    
+#underSpan
+{
+    color: #162F61;
+    text-decoration: underline;
+}
+
+#underSpan:hover
+{
+    cursor: pointer;
+}
+
+.altRow
+{
+    background-color: #dbdce1;
+}
+
+.sumTab td + td 
+{
+  padding-left: 50px;  
+}
+
+.tip
+{
+    text-decoration: underline;
+}
+
+#outcome
+{
+  width: 200px;
+}
+
+
+</style>
+<table width="100%" >
+<tr>
+<td>
+
+<table  class="sumTab">
+
+<tr>
+
+    <td  style="text-align: right;">Primary customer name</td>
+    <td    >
+      {!objAcc.Name}
+     
+     
+    </td>
+    </tr>
+    <tr><td style="text-align: right;">Product</td><td><apex:outputField value="{!objOpp.IBB_Product__c}"/></td></tr>
+    <tr><td style="text-align: right;">1st line of address</td><td>{!objOpp.New_Property_street__c}</td></tr>    
+
+    
+</table>
+</td>
+<td>
+
+<table  class="sumTab">
+<tr>
+    <td style="text-align: right;">Finance Required</td>
+    <td>
+    <apex:outputText value="{0,number,£###,###,##0.00}"><apex:param value="{!objOpp.Finance_Required__c}"/></apex:outputText>
+    </td></tr>
+    <!--CO782 REAC changes start-->
+    <!--REAC changes start-->
+     <tr>
+        <td style="text-align: right;">{!IF (CONTAINS(objOpp.Interested_in__c, 'REAC'),'REAC Amount', '')}</td> 
+        <td>
+        <apex:outputText value="{0,number,£###,###,##0.00}"><apex:param value="{!objOpp.REAC_Amount__c }"/></apex:outputText>
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align: right;">{!IF (CONTAINS(objOpp.Interested_in__c, 'REAC'),'Outstanding Finance Amount', '')}</td> 
+        <td>
+        <apex:outputText value="{0,number,£###,###,##0.00}"><apex:param value="{!objOpp.Outstanding_Finance_Amount__c}"/></apex:outputText>
+        </td>
+    </tr>
+    <!-- REAC changes end-->
+    <!--CO782 REAC changes end-->
+    
+    <!-- REAC-III enhancement changes start-->
+     <!--<tr><td style="text-align: right;">Term of finance</td><td>{!objOpp.Term_of_Finance__c} years</td></tr>-->
+     <tr>
+    <td style="text-align: right;">{!IF (CONTAINS(objOpp.Interested_in__c, 'REAC'),'Term of Finance (Outstanding Months)', 'Term of Finance (In Years)')}</td>
+     <td>{!objOpp.Term_of_Finance__c}</td></tr>
+     <!-- REAC-III enhancement changes end-->
+   
+    <tr><td style="text-align: right;">Property value</td><td>
+    <apex:outputText value="{0,number,£###,###,##0.00}"><apex:param value="{!objOpp.Purchase_price_market_value__c}"/></apex:outputText>
+    </td></tr>  
+
+       
+</table>
+
+
+</td>
+
+
+<td>
+
+<table  class="sumTab">
+
+
+    <tr><td style="text-align: right;">No of Applicants</td><td >{!objOpp.Number_of_People_Applying__c}</td></tr>
+    <tr><td style="text-align: right;">Status</td><td>{!objOpp.Status_HPP_CAA__c}</td></tr>
+    <tr><td style="text-align: right;">BDM</td><td>{!objOpp.SellerName__c}</td></tr>    
+    <!--C0785: HPP - Automatic Valuation Model start-->
+    <tr><td style="text-align: right;">FTV%</td><td>{!objOpp.FTV__c}</td></tr>    
+    <!--C0785: HPP - Automatic Valuation Model start-->
+
+</table>
+
+
+</td>
+
+
+
+</tr>
+
+</table>
+
+<span id="underSpan">Application Progress Overview</span>
+<div id="underPanel" style="border: solid 2px #dbdce1;display:none;" >
+<table width="100%" cellspacing="0" cellpadding="0">
+    <tr>
+        <td width="33%">
+            <table class="sumTab" width="100%" cellspacing="0" cellpadding="0">
+                    <tr><td style="text-align: right;">Valuation Received</td><td>
+    <apex:outputText value="{0, date, dd/MM/yyyy}">
+    <apex:param value="{!objExOpp.Valuation_received__c}"/>
+  </apex:outputText>
+    </td></tr>  
+    <tr class="altRow"><td style="text-align: right;">Credit Decision 1</td><td>{!objOpp.Credit_Decision_1__c}</td></tr>
+    <tr><td style="text-align: right;">Credit Decision 2</td><td>{!objOpp.Credit_Decision_2__c}</td></tr>
+    <tr class="altRow"><td style="text-align: right;">Offer Letter sent</td><td>
+    <apex:outputText value="{0, date, dd/MM/yyyy}">
+    <apex:param value="{!objExOpp.Offer_letter_sent__c}"/>
+  </apex:outputText>
+    </td></tr>
+           
+           
+           
+            </table>
+        </td>
+        <td width="33%">
+            <table class="sumTab" width="100%" cellspacing="0" cellpadding="0">
+                    <tr><td style="text-align: right;">Valuation Review Date</td><td>
+    <apex:outputText value="{0, date, dd/MM/yyyy}">
+    <apex:param value="{!objOpp.Valuation_review_date__c}"/>
+  </apex:outputText>
+    </td></tr> 
+    <tr class="altRow"><td style="text-align: right;">Date of Decision</td><td>
+    <apex:outputText value="{0, date, dd/MM/yyyy}">
+    <apex:param value="{!objOpp.Credit_Decision_1_Date__c}"/>
+  </apex:outputText>
+    
+    
+    </td></tr> 
+    
+    
+    <tr><td style="text-align: right;">Date of Decision</td><td>
+     <apex:outputText value="{0, date, dd/MM/yyyy}">
+    <apex:param value="{!objOpp.Credit_Decision_2_Date__c}"/>
+  </apex:outputText>
+    </td></tr>
+    
+    
+    
+    <tr class="altRow"><td style="text-align: right;">Offer Letter Returned</td><td>
+       <apex:outputText value="{0, date, dd/MM/yyyy}">
+    <apex:param value="{!objExOpp.Offer_returned_field__c}"/>
+  </apex:outputText>
+    </td></tr>
+            </table>
+        </td>
+        <td width="33%">
+            <table class="sumTab" width="100%" cellspacing="0" cellpadding="0">
+                    <tr><td style="text-align: right;">Ready for Credit</td><td>
+    <apex:outputText value="{0, date, dd/MM/yyyy}">
+    <apex:param value="{!objOpp.Ready_for_credit__c}"/>
+  </apex:outputText>
+    </td></tr>  
+    <tr class="altRow"><td style="text-align: right;">Underwriter</td><td>{!objOpp.Credit_Decision_1_UW__c}</td></tr>   
+    <tr><td style="text-align: right;">Underwriter</td><td>{!objOpp.Credit_Decision_2_UW__c}</td></tr> 
+    <tr class="altRow"><td style="text-align: right;">&nbsp;</td><td>&nbsp;</td></tr>
+            </table>
+        </td>        
+    </tr>
+
+</table>                        
+                        
+                                      
+        </div>
+
+
+
+
+
+<chatter:feedWithFollowers entityId="{!objOpp.id}"/>
+</div>
+
+
+
+
+
+
+</apex:component>

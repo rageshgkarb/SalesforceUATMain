@@ -1,0 +1,210 @@
+<apex:component >
+
+    <div class="sectionTitle" style="padding-left: 10px; padding-top: 10px;">Summary</div>
+    <div class="verticalScroller" style="height: calc(100% - 40px); overflow-y: auto; overflow-x: hidden; width: calc(100% - 10px);">
+        <div>
+            <div class="sectionTitle" style="padding-left: 10px; padding-top: 10px; font-size: 17px;" ng-if="displayDenominationsSummary">Details</div>
+            <div>
+                <!-- Intial Stage -->
+                <c:Teller_Material_Input type="text" labelText="{{labelDebitAccountNo}}" modelProperty="pageData.DebitAccountNo" width="100%" show="displayDebitAccountNo==true" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px" arbAccountNumberInput="true"></c:Teller_Material_Input>
+                <c:Teller_Material_Input type="text" labelText="{{labelCreditAccountNo}}" modelProperty="pageData.CreditAccountNo" width="100%" show="displayCreditAccountNo==true" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px" arbAccountNumberInput="true"></c:Teller_Material_Input>
+                <c:Teller_Material_Input type="text" labelText="{{labelMyCreditAccounts}}" modelProperty="pageData.CreditAccountNo" width="100%" show="displayMyCreditAccounts==true" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px" arbAccountNumberInput="true"></c:Teller_Material_Input>
+                <c:Teller_Material_Input type="text" labelText="{{labelAccountName}}" modelProperty="pageData.CustomerName" width="100%" show="displayAccountName==true" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px"></c:Teller_Material_Input>
+                <c:Teller_Material_Input type="text" labelText="{{labelTransactionAmount}}" modelProperty="pageData.TransactionAmount" width="100%" show="displayTransactionAmount==true" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px" arbInputFilter="number"
+                    arbInputFilterArgs="2" currencySymbol="pageData.CashCurrency" currencySymbolPadding="15px"></c:Teller_Material_Input>
+                <c:Teller_Material_Input type="text" labelText="{{labelDepositCurrency}}" modelProperty="pageData.DepositCurrency" width="100%" show="displayDepositCurrency==true" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px"></c:Teller_Material_Input>
+                <c:Teller_Material_Input type="text" labelText="{{labelWithdrawalCurrency}}" modelProperty="pageData.WithdrawalCurrency" width="100%" show="displayWithdrawalCurrency==true" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px"></c:Teller_Material_Input>
+                <c:Teller_Material_Input type="text" labelText="{{labelExchangeAmount}}" modelProperty="pageData.ExchangeAmount" width="100%" show="displayExchangeAmount==true" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px" currencySymbol="pageData.TransactionCurrency"
+                    currencySymbolPadding="15px" arbInputFilter="number" arbInputFilterArgs="2"></c:Teller_Material_Input>
+
+                <!-- Select input type -->
+                <c:Teller_Material_Input type="text" labelText="{{labelAmountType}}" modelProperty="pageData.CustomerName" width="100%" show="displayAmountType==true" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px"></c:Teller_Material_Input>
+
+                <c:Teller_Material_Input type="text" labelText="{{labelChargeAmount}}" modelProperty="pageData.ChargeAmount" width="100%" show="displayChargeAmount==true" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px" currencySymbol="pageData.AccountCurrency"
+                    currencySymbolPadding="15px"></c:Teller_Material_Input>
+                <c:Teller_Material_Input type="text" labelText="{{labelBeneficiaryAccountNo}}" modelProperty="pageData.BeneficiaryAccountNo" width="100%" show="displayBeneficiaryAccountNo==true" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px"></c:Teller_Material_Input>
+                <c:Teller_Material_Input type="text" labelText="{{labelBeneficiarySortCode}}" modelProperty="pageData.BeneficiarySortCode" width="100%" show="displayBeneficiarySortCode==true" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px"></c:Teller_Material_Input>
+                <c:Teller_Material_Input type="text" labelText="{{labelTransferType}}" modelProperty="pageData.TransferType" width="100%" show="displayTransferType==true" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px"></c:Teller_Material_Input>
+                <c:Teller_Material_Input type="text" labelText="{{labelNoOfCheques}}" modelProperty="pageData.NoOfCheques" width="100%" show="displayNoOfCheques==true" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px"></c:Teller_Material_Input>
+                <c:Teller_Material_Input type="text" labelText="{{labelChequeSerialNo}}" modelProperty="pageData.ChequeSerialNo" width="100%" show="displayChequeSerialNo==true" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px"></c:Teller_Material_Input>
+                <c:Teller_Material_Input type="text" labelText="{{labelChequeType}}" modelProperty="pageData.ChequeType" width="100%" show="displayChequeType==true" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px"></c:Teller_Material_Input>
+                <c:Teller_Material_Input type="text" labelText="{{labelIssuingBank}}" modelProperty="pageData.IssuingBank" width="100%" show="displayIssuingBank==true" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px"></c:Teller_Material_Input>
+
+                <!-- Select input type -->
+                <c:Teller_Material_Input type="text" labelText="{{labelPaymentPurpose}}" modelProperty="pageData.PaymentPurpose" width="100%" show="displayPaymentPurpose==true" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px"></c:Teller_Material_Input>
+
+                <c:Teller_Material_Input type="text" labelText="{{labelReference}}" modelProperty="pageData.TransactionReference" width="100%" show="displayReference==true" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px"></c:Teller_Material_Input>
+                <c:Teller_Material_Input type="text" labelText="{{labelValueDate}}" modelProperty="pageData.ValueDate" width="100%" show="displayValueDate==true" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px"></c:Teller_Material_Input>
+
+                <div ng-show="displayNarrativeLines==true">
+                    <!-- length 35 -->
+                    <c:Teller_Material_Input type="text" labelText="{{labelNarrativeLines}}" modelProperty="pageData.NarrativeLine1" width="100%" show="displayNarrativeLines==true" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px"></c:Teller_Material_Input>
+                    <c:Teller_Material_Input type="text" labelText="{{labelNarrativeLines}}" modelProperty="pageData.NarrativeLine2" width="100%" show="pageData.NarrativeLine1.length > 0" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px"></c:Teller_Material_Input>
+                    <c:Teller_Material_Input type="text" labelText="{{labelNarrativeLines}}" modelProperty="pageData.NarrativeLine3" width="100%" show="pageData.NarrativeLine2.length > 0" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px"></c:Teller_Material_Input>
+                    <c:Teller_Material_Input type="text" labelText="{{labelNarrativeLines}}" modelProperty="pageData.NarrativeLine4" width="100%" show="pageData.NarrativeLine3.length > 0" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px"></c:Teller_Material_Input>
+                </div>
+
+                <div ng-show="displayPaymentDetails==true">
+                    <c:Teller_Material_Input type="text" labelText="{{labelPaymentDetails}}" modelProperty="pageData.PaymentDetailsLine1" width="100%" show="displayPaymentDetails==true" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px"></c:Teller_Material_Input>
+                    <c:Teller_Material_Input type="text" labelText="{{labelPaymentDetails}}" modelProperty="pageData.PaymentDetailsLine2" width="100%" show="pageData.PaymentDetailsLine1.length > 0" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px"></c:Teller_Material_Input>
+                    <c:Teller_Material_Input type="text" labelText="{{labelPaymentDetails}}" modelProperty="pageData.PaymentDetailsLine3" width="100%" show="pageData.PaymentDetailsLine2.length > 0" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px"></c:Teller_Material_Input>
+                    <c:Teller_Material_Input type="text" labelText="{{labelPaymentDetails}}" modelProperty="pageData.PaymentDetailsLine4" width="100%" show="pageData.PaymentDetailsLine3.length > 0" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px"></c:Teller_Material_Input>
+                </div>
+
+                <div ng-show="displayBeneficiaryDetails==true">
+                    <c:Teller_Material_Input type="text" labelText="{{labelBeneficiaryDetails}}" modelProperty="pageData.BeneficiaryDetailsLine1" width="100%" show="displayBeneficiaryDetails==true" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px"></c:Teller_Material_Input>
+                    <c:Teller_Material_Input type="text" labelText="{{labelBeneficiaryDetails}}" modelProperty="pageData.BeneficiaryDetailsLine2" width="100%" show="pageData.BeneficiaryDetailsLine1.length > 0" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px"></c:Teller_Material_Input>
+                    <c:Teller_Material_Input type="text" labelText="{{labelBeneficiaryDetails}}" modelProperty="pageData.BeneficiaryDetailsLine3" width="100%" show="pageData.BeneficiaryDetailsLine2.length > 0" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px"></c:Teller_Material_Input>
+                    <c:Teller_Material_Input type="text" labelText="{{labelBeneficiaryDetails}}" modelProperty="pageData.BeneficiaryDetailsLine4" width="100%" show="pageData.BeneficiaryDetailsLine3.length > 0" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px"></c:Teller_Material_Input>
+                </div>
+
+                <c:Teller_Material_Input type="text" labelText="{{labelAdditionalNotes}}" modelProperty="pageData.AdditionalNotes" width="100%" show="displayAdditionalNotes==true" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px"></c:Teller_Material_Input>
+
+            </div>
+
+            <div class="sectionTitle" style="padding-left: 10px; padding-top: 10px; font-size: 17px;" ng-if="displayDenominationsSummary">Denominations</div>
+            <div ng-if="displayDenominationsSummary">
+                <table class="textDarkGray" style="width:calc(100% - 50px); margin-left: 20px; margin-top: 5px;">
+                    <div>
+                        <tr ng-repeat="item in pageData.Denominations.TransactionDenonminations track by item.DenominationValue" ng-if="item.NumberSelected > 0">
+                            <td style="padding-bottom: 3px;">{{item.FormattedDenominationValue}}</td>
+                            <td>x</td>
+                            <td style="text-align: right; padding-right: 10px;">{{item.NumberSelected}}</td>
+                            <td>=</td>
+                            <td style="text-align: right;">
+                                <span>{{pageData.CashCurrency | filter_currencytosymbol}}</span>
+                                <span>{{item.DenominationValue * item.NumberSelected | number : 2}}</span>
+                            </td>
+                        </tr>
+                        <tr class="textMediumDarkGray" style="border-top: 1px solid gainsboro; color: gray;">
+                            <td colspan="4">Total</td>
+                            <td style="text-align: right; padding-top: 3px;">
+                                <span>{{pageData.CashCurrency | filter_currencytosymbol}}</span>
+                                <span>{{pageData.Denominations.TotalSelectedValue | number : 2}}</span>
+                            </td>
+                        </tr>
+                    </div>
+                </table>
+            </div>
+
+            <div class="sectionTitle" style="padding-left: 10px; padding-top: 10px; font-size: 17px;" ng-if="displayMandateCheckSummary">Mandates</div>
+            <div ng-if="displayMandateCheckSummary" style="margin-bottom: 20px;">
+                <table class="textDarkGray" style="width:calc(100% - 50px); margin-left: 20px; margin-top: 5px;">
+                    <col width="65px"></col>
+                    <col width="-1"></col>
+                    <tr ng-repeat="item in signatoriesResponse.signatories" ng-if="isSelected(item.ProspectCustomerId) == true">
+                        <td style="padding-bottom: 5px;">
+                            <img class="GrayCircle GoldCircleButton GrayCircleOpen" src="/servlet/servlet.FileDownload?file={{item.ImageId}}" onerror="this.onerror=null; this.src='{!URLFOR($Resource.Teller_Includes,'/Teller_Includes/media/user_error.png')}';" style="box-shadow: rgb(137, 137, 137) 1px 1px 2px; margin-top: 5px; border: 1px solid rgb(149, 149, 149); height: 50px; width: 50px; opacity: 1; transform: none;"></img>
+                        </td>
+                        <td>
+                            <div style="margin-top: 5px;" class="textDarkGray">{{item.CustomerName}} ({{item.CustomerEBSId}})</div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="sectionTitle" style="padding-left: 10px; padding-top: 10px; font-size: 17px;" ng-if="displayFXDenominationsSummary">Details</div>
+            <div>
+                <c:Teller_Material_Input type="text" labelText="Deposit Amount" modelProperty="pageData.FXData.DepositAmount" width="100%" show="displayFXDenominationsSummary==true" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px" arbInputFilter="number"
+                    arbInputFilterArgs="2" currencySymbol="pageData.FXData.DepositCurrencySymbol" currencySymbolPadding="15px"></c:Teller_Material_Input>
+                <c:Teller_Material_Input type="text" labelText="Exchange Rate" modelProperty="pageData.FXData.ExchangeRate" width="100%" show="displayFXDenominationsSummary==true" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px"></c:Teller_Material_Input>
+                <c:Teller_Material_Input type="text" labelText="Withdrawal Amount" modelProperty="pageData.FXData.WithdrawalAmount" width="100%" show="displayFXDenominationsSummary==true" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px" arbInputFilter="number"
+                    arbInputFilterArgs="2" currencySymbol="pageData.FXData.WithdrawalCurrencySymbol" currencySymbolPadding="15px"></c:Teller_Material_Input>
+                <c:Teller_Material_Input type="text" labelText="Deposit Amount" modelProperty="pageData.FXData.RemainderAmount" width="100%" show="displayFXDenominationsSummary==true" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px" arbInputFilter="number"
+                    arbInputFilterArgs="2" currencySymbol="pageData.FXData.RemainderCurrencySymbol" currencySymbolPadding="15px"></c:Teller_Material_Input>
+                <c:Teller_Material_Input type="text" labelText="Reference" modelProperty="pageData.TransactionReference" width="100%" show="displayFXDenominationsSummary==true" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px"></c:Teller_Material_Input>
+
+                <div ng-show="displayFXDenominationsSummary==true">
+                    <!-- length 35 -->
+                    <c:Teller_Material_Input type="text" labelText="Narrative" modelProperty="pageData.NarrativeLine1" width="100%" show="displayFXDenominationsSummary==true" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px"></c:Teller_Material_Input>
+                    <c:Teller_Material_Input type="text" labelText="Narrative" modelProperty="pageData.NarrativeLine2" width="100%" show="pageData.NarrativeLine1 != null && pageData.NarrativeLine1.length > 0" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px"></c:Teller_Material_Input>
+                    <c:Teller_Material_Input type="text" labelText="Narrative" modelProperty="pageData.NarrativeLine3" width="100%" show="pageData.NarrativeLine2 != null && pageData.NarrativeLine2.length > 0" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px"></c:Teller_Material_Input>
+                    <c:Teller_Material_Input type="text" labelText="Narrative" modelProperty="pageData.NarrativeLine4" width="100%" show="pageData.NarrativeLine3 != null && pageData.NarrativeLine3.length > 0" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px"></c:Teller_Material_Input>
+                </div>
+
+                <c:Teller_Material_Input type="text" labelText="Notes for Bank use only" modelProperty="pageData.AdditionalNotes" width="100%" show="displayFXDenominationsSummary==true" disabled="true" styleTransform="scale(0.9,0.9)" styleMarginBottom="0px"></c:Teller_Material_Input>
+
+                <div class="sectionTitle" style="padding-left: 10px; padding-top: 10px; font-size: 17px;" ng-if="displayFXDenominationsSummary">Deposit Denominations</div>
+                <div ng-if="displayFXDenominationsSummary">
+                    <table class="textDarkGray" style="width:calc(100% - 50px); margin-left: 20px; margin-top: 5px;">
+                        <div>
+                            <tr ng-repeat="item in pageData.FXData.DepositDenominations.TransactionDenonminations track by item.DenominationValue" ng-if="item.NumberSelected > 0">
+                                <td style="padding-bottom: 3px;">{{item.FormattedDenominationValue}}</td>
+                                <td>x</td>
+                                <td style="text-align: right; padding-right: 10px;">{{item.NumberSelected}}</td>
+                                <td>=</td>
+                                <td style="text-align: right;">
+                                    <span>{{pageData.FXData.DepositCurrencySymbol}}</span>
+                                    <span>{{item.DenominationValue * item.NumberSelected | number : 2}}</span>
+                                </td>
+                            </tr>
+                            <tr class="textMediumDarkGray" style="border-top: 1px solid gainsboro; color: gray;">
+                                <td colspan="4">Total</td>
+                                <td style="text-align: right; padding-top: 3px;">
+                                    <span>{{pageData.FXData.DepositCurrencySymbol}}</span>
+                                    <span>{{pageData.FXData.DepositDenominations.TotalSelectedValue | number : 2}}</span>
+                                </td>
+                            </tr>
+                        </div>
+                    </table>
+                </div>
+
+                <div class="sectionTitle" style="padding-left: 10px; padding-top: 10px; font-size: 17px;" ng-if="displayFXDenominationsSummary">Withdrawal Denominations</div>
+                <div ng-if="displayFXDenominationsSummary">
+                    <table class="textDarkGray" style="width:calc(100% - 50px); margin-left: 20px; margin-top: 5px;">
+                        <div>
+                            <tr ng-repeat="item in pageData.FXData.WithdrawalDenominations.TransactionDenonminations track by item.DenominationValue" ng-if="item.NumberSelected > 0">
+                                <td style="padding-bottom: 3px;">{{item.FormattedDenominationValue}}</td>
+                                <td>x</td>
+                                <td style="text-align: right; padding-right: 10px;">{{item.NumberSelected}}</td>
+                                <td>=</td>
+                                <td style="text-align: right;">
+                                    <span>{{pageData.FXData.WithdrawalCurrencySymbol}}</span>
+                                    <span>{{item.DenominationValue * item.NumberSelected | number : 2}}</span>
+                                </td>
+                            </tr>
+                            <tr class="textMediumDarkGray" style="border-top: 1px solid gainsboro; color: gray;">
+                                <td colspan="4">Total</td>
+                                <td style="text-align: right; padding-top: 3px;">
+                                    <span>{{pageData.FXData.WithdrawalCurrencySymbol}}</span>
+                                    <span>{{pageData.FXData.WithdrawalDenominations.TotalSelectedValue | number : 2}}</span>
+                                </td>
+                            </tr>
+                        </div>
+                    </table>
+                </div>
+
+                
+                <div class="sectionTitle" style="padding-left: 10px; padding-top: 10px; font-size: 17px;" ng-if="displayFXDenominationsSummary">Remainder Denominations</div>
+                <div ng-if="displayFXDenominationsSummary">
+                    <table class="textDarkGray" style="width:calc(100% - 50px); margin-left: 20px; margin-top: 5px;">
+                        <div>
+                            <tr ng-repeat="item in pageData.FXData.RemainderDenominations.TransactionDenonminations track by item.DenominationValue" ng-if="item.NumberSelected > 0">
+                                <td style="padding-bottom: 3px;">{{item.FormattedDenominationValue}}</td>
+                                <td>x</td>
+                                <td style="text-align: right; padding-right: 10px;">{{item.NumberSelected}}</td>
+                                <td>=</td>
+                                <td style="text-align: right;">
+                                    <span>{{pageData.FXData.RemainderCurrencySymbol}}</span>
+                                    <span>{{item.DenominationValue * item.NumberSelected | number : 2}}</span>
+                                </td>
+                            </tr>
+                            <tr class="textMediumDarkGray" style="border-top: 1px solid gainsboro; color: gray;">
+                                <td colspan="4">Total</td>
+                                <td style="text-align: right; padding-top: 3px;">
+                                    <span>{{pageData.FXData.RemainderCurrencySymbol}}</span>
+                                    <span>{{pageData.FXData.RemainderDenominations.TotalSelectedValue | number : 2}}</span>
+                                </td>
+                            </tr>
+                        </div>
+                    </table>
+                </div>
+                <div style="height: 20px"></div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</apex:component>

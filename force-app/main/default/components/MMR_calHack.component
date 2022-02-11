@@ -1,0 +1,17 @@
+<apex:component rendered="true">
+<span id="hideMyParent"></span>
+<script type="text/javascript">
+$(document).ready(function() { 
+var startYear=1900;
+var endYear=new Date().getFullYear();
+var optionsString=''; 
+if(startYear<endYear){
+    for(i=startYear;i<endYear+1;i++){
+        optionsString += "<option value=\""+i+"\">"+i+"</option>";
+    } 
+    $('#calYearPicker').html(optionsString);
+} 
+//$('#sidebarDiv #hideMyParent').parent().parent().hide();
+});
+</script>
+</apex:component>

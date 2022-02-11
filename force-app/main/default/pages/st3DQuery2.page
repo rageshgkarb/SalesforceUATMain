@@ -1,0 +1,20 @@
+<apex:page showHeader="false" sidebar="false">
+    <div id="formdiv">
+    <body >
+        <form name="form" id="form" action="{!$CurrentPage.parameters.action}" method="POST" target="_self">
+            <input type="hidden" id="PaReq" name="PaReq" value="{!$CurrentPage.parameters.pareq}" />
+            <input type="hidden" id="TermUrl" name="TermUrl" value="{!$CurrentPage.parameters.termurl}" />
+            <input type="hidden" id="MD" name="MD" value="{!$CurrentPage.parameters.md}" />
+        </form>
+     <!--   <iframe name="my_frame" src="{!$CurrentPage.parameters.action}" height="100%" width="100%">
+        </iframe> -->
+    </body>
+    </div>
+       
+    <script> 
+        window.onload = function () 
+        { 
+            document.getElementById('form').submit(); 
+        } 
+    </script> 
+</apex:page>

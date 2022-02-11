@@ -1,0 +1,239 @@
+@charset "UTF-8";
+/* CSS Document for IBB top menus */
+.level1 ul,
+.level2 ul,
+.level3 ul {
+	margin: 0;
+	padding: 0;
+	float: left;
+	width: 100%;
+	list-style:none;
+}
+.level1 li,
+.level2 li,
+.level3 li { 
+	display: inline;
+	list-style:none;
+}
+/* ========== level 1 ========== */
+.level1 { 
+	width:100%;
+	background-color: #607092;
+	background-image: url(../../graphics/modules/IBB-eye-candy.png);
+	background-repeat: repeat-x;
+	background-position: 0px 0px;
+	border-bottom: 1px solid #161C4C;
+}
+.level1 ul {
+	border-width: 1px 0;
+	background-color: #607092;
+	background-image: url(../../graphics/modules/IBB-eye-candy.png);
+	background-repeat: repeat-x;
+	background-position: 0px 0px;
+	width:auto;
+	border-right:1px solid #DADEE1;
+}
+.level1 ul li { }
+.level1 li a {
+	float: left;
+	color: white;
+	padding:0 0 0 0;
+	text-decoration: none;
+	background-image: url(../../graphics/modules/IBB-eye-candy.png);
+	background-repeat: repeat-x;
+	background-position: 0px 0px;
+}
+.level1 li a span {
+	display:block;
+	padding: 11px 19px 11px 19px;
+	background-image: url(../../graphics/modules/IBB-eye-candy.png);
+	background-repeat: no-repeat;
+	background-position: right -92px;
+	border-left:1px solid #DADEE1;
+	font-size:1.231em;
+}
+.level1 li a:visited {
+	color: white;
+}
+.level1 li a:hover {
+	color: white;
+	background-color: #1A2155;
+	background-image: url(../../graphics/modules/IBB-eye-candy.png);
+	background-repeat: repeat-x;
+	background-position: 0px -184px;
+}
+	.level1 li a:hover span {
+		color: white;
+		background-color: #1A2155;
+		background-image: url(../../graphics/modules/IBB-eye-candy.png);
+		background-repeat: repeat-x;
+		background-position: left -184px;
+		border-left:1px solid #DADEE1;
+	}
+.level1 li.selected a,
+.level1 li.selected a:hover {
+	color: white;
+	background-color: #1A2155;
+	background-image: url(../../graphics/modules/IBB-eye-candy.png);
+	background-repeat: repeat-x;
+	background-position: right -184px;
+	border-left:1px solid transparent;
+}
+	.level1 li.selected a span,
+	.level1 li.selected a span :hover {
+		color: white;
+		background-color: transparent;
+		background-image: url(../../graphics/modules/IBB-eye-candy.png);
+		background-repeat: no-repeat;
+		background-position: right -276px;
+		border-left:1px solid transparent;
+	}
+
+
+	
+
+
+
+/* ========== level 2 ==========  .ddcolortabs */
+.level 2 {
+	voice-family: "\"}\"";
+	voice-family: inherit;
+}
+.level2 ul {
+	background: #161C4C;
+	border-top:1px solid #161C4C;
+	width:1000px;
+}
+
+.level2 li {
+	display:inline;
+	margin:0 1px 0 0;
+	padding:0;
+	text-transform: capitalize;
+}
+.level2 a {
+	background: #161C4C;
+	margin:0 2px 0 0;
+	padding:0 0 1px 3px;
+	text-decoration:none;
+	float:left;
+	color:#FFFFFF;
+	font-size:.938em;
+}
+
+.level2 li a {
+	color: #FFFFFF;
+	background-color: #161C4C;
+	background-image: url(../../graphics/modules/IBB-eye-candy.png);
+	background-repeat: no-repeat;
+	background-position: left -368px;
+}
+
+.level2 li a:hover, 
+.level2 li.active a,
+.level2 li.active a:hover {
+	color: #000000;
+	background-color: #F0F0F0;
+	background-image: url(../../graphics/modules/IBB-eye-candy.png);
+	background-repeat: no-repeat;
+	background-position: left -466px;
+}
+
+.level2 li span { 
+	padding: 11px 21px 12px 21px;
+	display:block;
+}
+.level2 li a:hover span,
+.level2 li.active a span {
+	display:block;
+	background-image: url(../../graphics/modules/IBB-eye-candy.png);
+	background-repeat: no-repeat;
+	background-position: right -564px;
+}
+.level2 a span{
+	float:none;
+	font-size:1.23em;
+}
+.level2 a.current, 
+.level2 a.current span{ /*currently selected tab*/
+	background-color: #8cb85c;
+}
+
+/* ========== level 3 ==========  .ddcolortabs */
+
+
+
+.level3 {
+	padding: 0;
+	width: 100%;
+	background: #DBDBDB;
+	voice-family: "\"}\"";
+	voice-family: inherit;
+}
+
+.level3 ul {
+	font-size:.75em;
+}
+
+.level3 li {
+	display:inline;
+	margin:0 1px 0 1px;
+	padding:0;
+	text-transform: capitalize;
+}
+
+
+.level3 a {
+	float:left;
+	color: black;
+	margin:1px 1px 0 0;
+	padding:0 0 0 3px;
+	text-decoration:none;
+	letter-spacing: 1px;
+	border-top: 1px solid #FFFFFF;
+	background-image: url(../../graphics/modules/topmenu/leavel3-ready-left.png);
+	background-repeat: no-repeat;
+	background-position: left bottom;
+	padding-left:29px;
+}
+
+.level3 a span {
+	float:left;
+	display:block;
+	padding: 9px 19px 10px 0;
+	background-color: transparent;
+	background-image: url(../../graphics/modules/topmenu/leavel3-ready-right.png);
+	background-repeat: no-repeat;
+	background-position: right bottom;
+	font-size:1.334em;
+}
+
+.level3 li.current a,
+.level3 a:hover {
+	float:left;
+	color: black;
+	margin:1px 1px 0 0;
+	padding:0 0 0 3px;
+	text-decoration:none;
+	letter-spacing: 1px;
+	border-top: 1px solid #666666;
+	background-image: url(../../graphics/modules/topmenu/leavel3-over-left.png);
+	background-repeat: no-repeat;
+	background-position: left bottom;
+	padding-left:29px;
+}
+
+.level3 li.current a span,
+.level3 a:hover span {
+	float:left;
+	display:block;
+	padding: 9px 19px 10px 0;
+	background-color: transparent;
+	background-image: url(../../graphics/modules/topmenu/leavel3-over-right.png);
+	background-repeat: no-repeat;
+	background-position: right bottom;
+}
+
+
+
+

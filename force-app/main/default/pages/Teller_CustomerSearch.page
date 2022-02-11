@@ -1,0 +1,95 @@
+<apex:page applyBodyTag="false" showHeader="false" sidebar="false"  docType="html-5.0" standardStylesheets="false">
+    
+    <div style="height:calc(100% - 4px); width:100%;" ng-controller="controllerCustomer" ng-init="Initialise()">
+        <!-- Page Title -->
+        <div class="pageTitleContainer">
+            <div style="float: left;">
+                <!-- <img class="btn_back" src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_back.png')}" ui-sref="customers"></img> -->
+                <span class="pageTitleGray">Customer Search</span>
+            </div>
+            <!-- <div class="toolbar">
+                <div class="toolbarButton" ng-click="onClickRefresh()">
+                    <div class="imgCircle">
+                        <img src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/btn_refresh.png')}"></img>
+                    </div>
+                    <div class="textSmallestDarkGray caption">REFRESH</div>
+                </div>
+            </div>     -->
+        </div>
+        
+        <!-- Page Content -->
+        <div class="pageStructure">
+            <div class="pageContentContainer">
+                
+                <div class="hidden-xs pageContentLeft">
+                    <div style="margin-top: 15px; margin-left:10px;">
+                        <div style="margin-bottom: 10px;">
+                            <label class="pageSubTitleGray" style="margin-left: 5px;">Recent</label>
+                        </div>
+                        <div class="verticalScroller verticalScrollSection" style="position: fixed; height: calc(100% - 200px); width: 360px;" ng-show="RecentCustomers.length != 0">
+                            <div>
+                                <div ng-repeat="customer in RecentCustomers" class="searchResultItem" style="width: calc(100% - 12px); border: 1px solid rgb(207, 207, 206); width: 343px;" ng-click="GotoCustomer(customer)">
+                                    <div style="float: left;">
+                                        <img style="box-shadow: 0 0 3px black; border-radius: 50%; height:55px; width:55px;" ng-src="{{customer.ImageURL}}" onError="this.onerror=null; this.src='{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/user_error.png')}';"></img>
+                                    </div>
+                                    <div style="padding-left: 73px;">
+                                        <div style="font-size: 17px; font-family: simpleBold; font-weight: normal; margin-top: -3px; white-space: nowrap; overflow-x: hidden;" ng-bind-html="customer.Name"></div>
+                                        <div style="font-size: 15px; font-family: simple; margin-top: -2px; white-space: nowrap; overflow-x: hidden;" ng-bind-html="customer.Address"></div>
+                                        <div style="font-size: 15px; font-family: simple; margin-top: -2px;">Date of birth: {{customer.DOB  | date:'dd/MM/yyyy'}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="pageContentRight">
+                    <div class="mb-removeMargin" style="margin-top:15px; height:100%; padding-bottom: 10px; padding-right: 10px; padding-left: 10px;">
+                        <div style="margin-bottom: 10px;">
+                            <label class="pageSubTitleGray hidden-xs" style="margin-left: 5px;">Search</label>
+                        </div>
+                        <div class="mb-searchBar" style="margin-top: 20px; margin-left: 5px; height: 80px;">
+                            <div style="float:left; width: calc(100% - 55px);" ng-init="InitialiseSearchBar()">
+                                <input class="searchInput" arb-focus="searchOpen" style="font-family: simple;" kendo-auto-complete="kendo-auto-complete" ng-model="SearchCriteria" k-options="SearchAutoCompleteOptions" arb-Enter="FindCustomer()" id="customerSearchInput" k-on-open="autoCompleteOpen(kendoEvent)"></input>
+                            </div>
+                            <div class="goldButton" style="float: right; width:48px; height:48px; margin-top: 1px;" ng-click="FindCustomer()">
+                                <img class="" src="{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/search.png')}" style="height: 35px; -webkit-filter: invert(1); filter: invert(1); margin-left: -5px;"></img>
+                            </div>
+							
+							<!-- mobile recent list -->
+							<div class="visible-xs-block mb-recentSearch">
+								 <div ng-repeat="customer in RecentCustomers" ng-click="GotoCustomer(customer)" style="float: right; margin-left: 15px; cursor:pointer;">
+									 <img style="box-shadow: 0 0 3px black; border-radius: 50%; height:40px; width:40px;" ng-src="{{customer.ImageURL}}" onError="this.onerror=null; this.src='{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/user_error.png')}';"></img>
+								</div>
+								<!-- <img ng-src="null" onerror="this.onerror=null; this.src='/resource/1444823894000/Teller_Includes/Teller_Includes/media/user_error.png';" style="box-shadow: 0 0 3px black; border-radius: 50%; height: 40px; width: 40px;" src="/resource/1444823894000/Teller_Includes/Teller_Includes/media/user_error.png">
+								<img ng-src="null" onerror="this.onerror=null; this.src='/resource/1444823894000/Teller_Includes/Teller_Includes/media/user_error.png';" style="box-shadow: 0 0 3px black; border-radius: 50%; height: 40px; width: 40px;" src="/resource/1444823894000/Teller_Includes/Teller_Includes/media/user_error.png">
+								<img ng-src="null" onerror="this.onerror=null; this.src='/resource/1444823894000/Teller_Includes/Teller_Includes/media/user_error.png';" style="box-shadow: 0 0 3px black; border-radius: 50%; height: 40px; width: 40px;" src="/resource/1444823894000/Teller_Includes/Teller_Includes/media/user_error.png"><img ng-src="null" onerror="this.onerror=null; this.src='/resource/1444823894000/Teller_Includes/Teller_Includes/media/user_error.png';" style="box-shadow: 0 0 3px black; border-radius: 50%; height: 40px; width: 40px;" src="/resource/1444823894000/Teller_Includes/Teller_Includes/media/user_error.png"> -->
+  							</div>						
+							
+                        </div>
+                        <div style="height: 100%;">
+                            <div style="display: inline-block;">
+                                <label class="pageSubTitleGray md-mobileText" style="margin-left: 5px;" ng-show="SearchButtonPressed">Results ({{SearchResults.length}})</label>
+                            </div>
+                            <div class="customerSearchResults verticalScroller verticalScrollSection" style="height: calc(100% - 180px);" ng-show="SearchResults.length != 0">
+                                
+                                <div style="margin-top: 20px; padding-left:2px;">
+                                    <div ng-repeat="customer in SearchResults" class="searchResultItem" ng-click="GotoCustomer(customer)">
+                                        <div style="float: left;">
+                                            <img style="box-shadow: 0 0 3px black; border-radius: 50%; height:55px; width:55px;" ng-src="{{customer.ImageURL}}" onError="this.onerror=null; this.src='{!URLFOR($Resource.Teller_Includes, '/Teller_Includes/media/user_error.png')}';"></img>
+                                        </div>
+                                        <div style="float:left; margin-left: 11px; width: calc(100% - 70px); white-space: nowrap;">
+                                            <div class="searchResultsCustName" style="font-size: 17px; font-family: simpleBold; font-weight: normal; margin-top: -3px; overflow: hidden;" ng-bind-html="customer.Name"></div>
+                                            <div class="searchResultsCustDetails" style="font-size: 15px; font-family: simple; margin-top: -2px; overflow: hidden;" ng-bind-html="customer.Address"></div>
+                                            <div class="searchResultsCustDetails" style="font-size: 15px; font-family: simple; margin-top: -2px; overflow: hidden;">Date of birth: {{customer.DOB  | date:'dd/MM/yyyy'}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</apex:page>
