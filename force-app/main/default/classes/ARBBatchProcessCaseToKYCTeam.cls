@@ -26,8 +26,6 @@ global class ARBBatchProcessCaseToKYCTeam implements Database.Batchable<KYC_Auto
 			DateTime currentDateTime = (DateTime) todaysDate ;
 			String currentDay = currentDateTime.format('EEEE');
 			String currentMonth = currentDateTime.format('MMMM');
-			System.debug (' dayOfWeek ' + currentDay );
-			System.debug ( ' currentMonth ' + currentMonth );
 
 			caseSettingsListMap = ARBCommonUtils.fetchKYCCaseSettingsMap ();
 
@@ -81,7 +79,6 @@ global class ARBBatchProcessCaseToKYCTeam implements Database.Batchable<KYC_Auto
 				System.debug ('currentKYCSettings' + currentKYCSettings.Case_Subject__c +'===='+currentKYCSettings.Case_Triggger_Day__c + ' - ' + currentKYCSettings.Case_Trigger_Frequency__c);
 				kycSettingsIdList.add( currentKYCSettings.Id );
 			}
-			System.debug('kycSettingsRecordList' + kycSettingsRecordList );
 		}
 
     }
